@@ -1,0 +1,17 @@
+[project]
+name = "landfall"
+version = "0.1.0"
+description = "Agent that drafts FEMA damage assessments from post-hurricane aerial photos"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = ["numpy>=1.26"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["landfall"]
