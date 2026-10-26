@@ -43,6 +43,8 @@ Categories (FEMA PDA Guide, Individual Assistance), as seen from the air:
 - major: structural damage, e.g. large parts of the roof gone, walls collapsed, house shifted.
 - destroyed: the house is gone or a total loss: empty slab or lot, pile of debris where it stood.
 
+Flooding: the PDA Guide judges water depth in the living space. 18 inches or more is major, less is minor; water only under a raised house (pilings) is affected. Many houses here are raised. If water stood high around a house and you can't tell whether it is raised, say so and set needs_human to true.
+
 Be careful: trees and long shadows can hide a roof without damaging it, a house can lean differently in the two photos, and the pre-storm photo is from Feb 2023, so a lot that was empty then may have a new house now.
 
 Answer with JSON only, no other text:
@@ -91,11 +93,20 @@ def describe(m: Measures, extra: dict) -> str:
     else:
         lines.append(f"Share of the pre-storm structure not found in the post-storm photo: {m.roof_loss:.0%}.")
     lines.append(f"Alignment: {extra.get('status', 'unknown')} (matched = its own roof was found; neighbors = placed from nearby houses because its roof was not found where expected).")
-    lines.append("Flood depth: not measured yet." if m.flood_ft is None else f"Estimated flood depth: {m.flood_ft:.1f} ft.")
+    if m.flood_ft is None:
+        lines.append("Flood depth: not measured.")
+    elif m.flood_ft == 0:
+        lines.append("Flood depth: the storm water surface did not reach the ground here.")
+    else:
+        lines.append(
+            f"Storm water stood about {m.flood_ft:.1f} ft above the ground at this building "
+            "(surveyed high-water mark and tide gauge minus lidar ground elevation). "
+            "How much reached the living space depends on how high the first floor is, which these photos don't show."
+        )
     return "\n".join(lines)
 
 
-def _chat(url: str, key: str, model: str, messages: list[dict], max_tokens: int = 3000) -> str:
+def _chat(url: str, key: str, model: str, messages: list[dict], max_tokens: int = 8000) -> str:
     import requests
 
     for attempt in range(4):

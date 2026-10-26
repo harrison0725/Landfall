@@ -16,6 +16,7 @@ Day 1. Working so far:
 - `landfall/sam.py`: SAM 3.1 concept masks ("roof") on Meta Model API.
 - `landfall/measure.py`: the building's structure mask (SAM "roof", "house" and "building" combined) before and after, matched by shape so a house that leans a few meters still counts, and the share that is gone.
 - `landfall/agent.py`: Muse Spark Open looks at each before/after pair with the measurements and proposes a FEMA category; the verifier checks it and the model revises; unsure calls go to Muse Spark for a second opinion. Every step is kept in a trace.
+- `landfall/flood.py`: storm water surface from USGS high-water marks and NOAA tide gauges, ground from USGS 3DEP lidar, depth above ground per building.
 - `landfall/fema.py`: FEMA category definitions and the deterministic verifier the agent's calls are checked against.
 
 Reproduce the Cedar Key data (about a minute, plus about 2 minutes of SAM calls):
@@ -25,10 +26,14 @@ pip install -e ".[data,sam,dev]"
 python scripts/prepare_area.py --area cedar_key     # imagery, outlines, alignment
 python scripts/review_sheet.py --area cedar_key     # contact sheets to check alignment by eye
 META_API_KEY=... python scripts/segment_area.py --area cedar_key   # SAM 3.1 masks and structure loss
+python scripts/flood_area.py --area cedar_key      # flood depth: high-water marks + tide gauge minus lidar ground
 BASETEN_API_KEY=... META_API_KEY=... python scripts/assess_area.py --area cedar_key   # agent drafts a category per building
+python scripts/score_eval.py --area cedar_key      # compare with the hand labels in eval/
 ```
 
-Coming next: tarp/debris/water prompts, flood depth, a 50-building hand-labeled eval set, and the area-level agent (plan, ask questions, write the PDA summary).
+Evaluation: 50 Cedar Key buildings labeled by hand from the photos (`eval/`). The agent matches the label exactly on 37 of 50 and within one category on all 50. 11 of the 13 disagreements were already sent to human review. See `eval/cedar_key_score.txt` and the caveats in `eval/cedar_key_labels.json`.
+
+Coming next: debris and tarp prompts (both silent misses were debris in the yard), a second labeler, and the area-level agent (plan, answer questions, write the PDA summary).
 
 ## Meta models
 

@@ -40,6 +40,8 @@ def main() -> None:
     windows = {r["id"]: Window(*r["window"]) for r in al["buildings"]}
     feats = {f["properties"]["id"]: f for f in json.loads((d / "buildings.geojson").read_text())["features"]}
     damage = json.loads((d / "damage.json").read_text())
+    flood_path = d / "flood.json"
+    flood = {b["id"]: b["flood_ft"] for b in json.loads(flood_path.read_text())["buildings"]} if flood_path.exists() else {}
 
     order = sorted(damage, key=lambda r: -1 if r["structure_loss"] is None else -r["structure_loss"])
     if args.only:
@@ -51,7 +53,7 @@ def main() -> None:
     def run(r: dict):
         bid = r["id"]
         loss = r["structure_loss"]
-        m = Measures(roof_loss=loss or 0.0, tarp_share=0.0, debris_share=0.0, flood_ft=None, aligned=loss is not None)
+        m = Measures(roof_loss=loss or 0.0, tarp_share=0.0, debris_share=0.0, flood_ft=flood.get(bid), aligned=loss is not None)
         pre = np.asarray(Image.open(d / "crops" / f"{bid}_pre.png").convert("RGB"))
         post = np.asarray(Image.open(d / "crops" / f"{bid}_post.png").convert("RGB"))
         ring = [tuple(p) for p in feats[bid]["geometry"]["coordinates"][0][:-1]]
@@ -71,6 +73,7 @@ def main() -> None:
             decided_by=a.decided_by,
             verified=a.verified,
             structure_loss=loss,
+            flood_ft=flood.get(bid),
             trace=a.trace,
         )
 

@@ -1,0 +1,55 @@
+== aerial labels
+50 labeled buildings (44 the labeler is sure of)
+exact category: 37/50; within one step: 50/50
+exact on sure labels: 32/44
+destroyed: 4/5 found, 0 false
+confusion (rows = label, cols = agent):
+              none  affec  minor  major  destr
+       none     31      9      0      0      0
+   affected      3      2      0      0      0
+      minor      0      0      0      0      0
+      major      0      0      0      0      0
+  destroyed      0      0      0      1      4
+disagreements:
+  b010: label none, agent affected [sent to review]
+  b012: label none, agent affected [sent to review]
+  b017: label none, agent affected [sent to review]
+  b024: label none, agent affected [sent to review]
+  b063: label affected, agent none
+  b067: label affected, agent none [sent to review]
+  b076: label none, agent affected [sent to review]
+  b098: label destroyed, agent major [sent to review]
+  b110: label affected, agent none
+  b122: label none, agent affected [sent to review]
+  b136: label none, agent affected [sent to review]
+  b139: label none (unsure), agent affected [sent to review]
+  b142: label none, agent affected [sent to review]
+11 of 13 disagreements were already sent to human review
+
+== aerial labels + flood rule (water >= 0.5 ft around the house -> at least Affected)
+50 labeled buildings (44 the labeler is sure of)
+exact category: 37/50; within one step: 50/50
+exact on sure labels: 33/44
+destroyed: 4/5 found, 0 false
+confusion (rows = label, cols = agent):
+              none  affec  minor  major  destr
+       none     22      0      0      0      0
+   affected     12     11      0      0      0
+      minor      0      0      0      0      0
+      major      0      0      0      0      0
+  destroyed      0      0      0      1      4
+disagreements:
+  b000: label affected, agent none [sent to review]
+  b003: label affected, agent none [sent to review]
+  b004: label affected, agent none [sent to review]
+  b009: label affected, agent none [sent to review]
+  b011: label affected (unsure), agent none [sent to review]
+  b043: label affected, agent none [sent to review]
+  b063: label affected, agent none
+  b067: label affected, agent none [sent to review]
+  b078: label affected, agent none [sent to review]
+  b098: label destroyed, agent major [sent to review]
+  b110: label affected, agent none
+  b135: label affected (unsure), agent none [sent to review]
+  b148: label affected, agent none [sent to review]
+11 of 13 disagreements were already sent to human review

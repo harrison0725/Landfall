@@ -27,3 +27,12 @@ Building period: Oct 26 to Nov 4, 2026 (confirmed at the kickoff on Oct 26).
 - First version forced the model to agree with the measurements and turned mask noise into 42 "Minor" calls. Two changes fixed it: the minor roof-loss threshold went from 5% to 15% (the noise level between flights), and a model that disagrees with the numbers now sends the building to an assessor instead of giving in.
 - Run on all 150: 5 Destroyed (exactly the five destroyed houses), 11 Affected, 134 no visible damage. 17 went to human review, each with a sentence on what the measurement got wrong (trees over the roof, misplaced outline, new build since 2023). 20 calls went to Muse Spark.
 - 31 tests passing.
+
+### Oct 26, late: flood depth and a first evaluation
+
+- Flood: the USGS STN API moved to `api.waterdata.usgs.gov/stnservices`. Helene has one surveyed high-water mark in Cedar Key: 10.96 ft NAVD88, a seed line inside a bathroom, 5.8 ft above ground. The NOAA Cedar Key tide gauge peaked at 10.84 ft NAVD88 (Sep 27, 04:42 UTC). The two agree, and their median, 10.9 ft, is used as the water surface. Ground comes from USGS 3DEP 1 m lidar (EPQS) at each building's centroid. 70 of 150 buildings had water above ground, up to 11.6 ft. The old town on the ridge stayed dry, and all five destroyed houses sit on low ground near the water.
+- FEMA flood rule: the PDA criteria are about water in the living space (the 18-inch line between Minor and Major, from state field guides derived from the PDA Guide). We only know depth above ground, and many houses here are on pilings, so water around a house only proves Affected unless the first-floor height is known. `Measures.first_floor_ft` is there for when it is.
+- Hand labels: 50 buildings (45 random plus the 5 destroyed), labeled by eye from the photo pairs before comparing with the agent. Caveats are in `eval/cedar_key_labels.json`: one labeler, not a trained assessor, and aerial labels can't see flood inside a house.
+- Score: 37/50 exact, 50/50 within one category, 4 of 5 destroyed called Destroyed (the fifth called Major, with walls still standing), and no false Destroyed. 11 of 13 disagreements were already flagged for human review. The two silent misses are debris in the yard (Affected) that the agent called no damage.
+- Six buildings failed on the first full run because the model ran out of tokens while reasoning. The limit went from 3,000 to 8,000 tokens and the six reran cleanly.
+- 36 tests passing.
