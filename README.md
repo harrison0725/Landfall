@@ -33,7 +33,7 @@ Coming next: fewer false roof-loss alarms, tarp/debris/water prompts, flood dept
 | Model | Role |
 |---|---|
 | SAM 3.1 (Meta Model API) | Roof, tarp, debris and water masks on both photo dates |
-| Muse Spark Open (Baseten, `meta-models/muse-spark-open-1026`) | Default agent: assigns categories, plans, writes new SAM prompts |
+| Muse Spark Open (Baseten, `meta-models/muse-spark-open`) | Default agent: assigns categories, plans, writes new SAM prompts |
 | Muse Spark (Meta Model API) | Second opinion on low-confidence calls |
 | Muse Voice Transcribe | Voice questions |
 
