@@ -19,3 +19,11 @@ Building period: Oct 26 to Nov 4, 2026 (confirmed at the kickoff on Oct 26).
 - Eyeballed all 150 on contact sheets: about 133 of 150 sit within roughly 1.5 m of the right spot. The misses are mostly taller downtown buildings that lean further than their neighbors.
 - First SAM 3.1 run (300 crops, "roof"): all five visibly destroyed houses in the set have their roof in the pre-storm mask and nothing in the post-storm one. About 20 more buildings are false alarms where SAM missed a roof in the dark post-storm photo or the placement was off.
 - 26 tests passing.
+
+### Oct 26, night: fewer false alarms, first agent run
+
+- The "roof" prompt alone missed about one roof in six in the dark post-storm flight. The structure mask now combines "roof", "house" and "building". The post-storm side is segmented on a window 4 m wider and matched to the pre-storm shape, which absorbs leaning and misplaced houses. Buildings flagged at 25% loss or more dropped from 27 to 11, and all five destroyed houses are still flagged.
+- Agent loop (`landfall/agent.py`): Muse Spark Open on Baseten sees each before/after pair with the measurements and proposes a FEMA category. The verifier checks the call, and the model can revise it or stand by it and send it to human review. Calls below 0.7 confidence go to Muse Spark 1.3 for a second opinion.
+- First version forced the model to agree with the measurements and turned mask noise into 42 "Minor" calls. Two changes fixed it: the minor roof-loss threshold went from 5% to 15% (the noise level between flights), and a model that disagrees with the numbers now sends the building to an assessor instead of giving in.
+- Run on all 150: 5 Destroyed (exactly the five destroyed houses), 11 Affected, 134 no visible damage. 17 went to human review, each with a sentence on what the measurement got wrong (trees over the roof, misplaced outline, new build since 2023). 20 calls went to Muse Spark.
+- 31 tests passing.

@@ -1,7 +1,12 @@
 """Run SAM 3.1 concept prompts on every building's pre and post crop and
-measure roof loss over the building outline.
+measure how much of the pre-storm structure is still there.
 
-    python scripts/segment_area.py --area cedar_key --prompts roof
+    python scripts/segment_area.py --area cedar_key
+
+One prompt alone misses too much in the dark post-storm flight ("roof" missed
+about one roof in six that "house" or "building" found), so the structure is
+the union of all three. The post-storm side is segmented on a wider window
+and matched by shape, which absorbs the few meters the alignment can be off.
 
 Raw SAM output lines are cached under data/<area>/sam/ so reruns are free.
 """
@@ -11,7 +16,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from pathlib import Path
 
 import numpy as np
@@ -21,9 +26,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from landfall import sam  # noqa: E402
 from landfall.geo import Window, outline_to_window_pixels  # noqa: E402
-from landfall.measure import coverage, polygon_mask, roof_loss  # noqa: E402
+from landfall.measure import best_overlap, coverage, polygon_mask, structure_mask  # noqa: E402
 
 SCALE = 4
+PAD = 16  # px (~4 m) the post-storm house may sit from where alignment put it
 
 
 def stretch(img: np.ndarray, low: float = 1.0, high: float = 99.0) -> np.ndarray:
@@ -43,11 +49,22 @@ def cached_line(cache: Path, img: np.ndarray, prompt: str) -> str:
     return text
 
 
+def cached_masks(txt: Path, shape: tuple[int, int]) -> list[np.ndarray]:
+    """Decoded masks for a cached SAM line. Decoding is pure Python and slow
+    (~1 s per line), so the result is stored next to the line."""
+    npz = txt.with_suffix(".npz")
+    if npz.exists():
+        return list(np.load(npz)["masks"])
+    masks = [x.mask for x in sam.parse(txt.read_text(), shape, SCALE)]
+    np.savez_compressed(npz, masks=np.array(masks, dtype=bool).reshape(len(masks), *shape))
+    return masks
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--area", default="cedar_key")
     ap.add_argument("--out", type=Path, default=Path("data"))
-    ap.add_argument("--prompts", nargs="+", default=["roof"])
+    ap.add_argument("--prompts", nargs="+", default=["roof", "house", "building"])
     ap.add_argument("--workers", type=int, default=8)
     args = ap.parse_args()
     d = args.out / args.area
@@ -56,42 +73,64 @@ def main() -> None:
     feats = {f["properties"]["id"]: f for f in json.loads((d / "buildings.geojson").read_text())["features"]}
     (d / "sam").mkdir(exist_ok=True)
 
-    jobs = []
-    for r in al["buildings"]:
-        for side in ("pre", "post"):
-            for p in args.prompts:
-                jobs.append((r["id"], side, p))
+    x0, y0 = al["summary"]["mosaic_origin"]
+    post_mosaic = np.asarray(Image.open(d / "post.png").convert("RGB"))
 
-    def run(job):
+    def image(bid: str, side: str) -> np.ndarray:
+        if side == "pre":
+            return np.asarray(Image.open(d / "crops" / f"{bid}_pre.png").convert("RGB"))
+        r = by_id[bid]
+        w = Window(*r["window"])
+        ys = w.y0 - y0 + r["dy"] - PAD
+        xs = w.x0 - x0 + r["dx"] - PAD
+        return post_mosaic[ys : ys + w.height + 2 * PAD, xs : xs + w.width + 2 * PAD]
+
+    def txt(job) -> Path:
         bid, side, p = job
-        img = stretch(np.asarray(Image.open(d / "crops" / f"{bid}_{side}.png").convert("RGB")))
-        line = cached_line(d / "sam" / f"{bid}_{side}_{p.replace(' ', '_')}_s.txt", img, p)
-        return job, sam.parse(line, img.shape[:2], SCALE)
+        name = "pre" if side == "pre" else "postctx"
+        return d / "sam" / f"{bid}_{name}_{p.replace(' ', '_')}_s.txt"
 
+    def fetch(job):
+        bid, side, p = job
+        img = stretch(image(bid, side))
+        cached_line(txt(job), img, p)
+        return img.shape[:2]
+
+    by_id = {r["id"]: r for r in al["buildings"]}
+    jobs = [(r["id"], side, p) for r in al["buildings"] for side in ("pre", "post") for p in args.prompts]
     with ThreadPoolExecutor(args.workers) as pool:
-        dets = dict(pool.map(run, jobs))
-    print(f"{len(jobs)} SAM calls done (cached ones skipped)")
+        shapes = list(pool.map(fetch, jobs))
+    with ProcessPoolExecutor() as pool:
+        masks = list(pool.map(cached_masks, [txt(j) for j in jobs], shapes, chunksize=8))
+    dets = dict(zip(jobs, masks))
+    print(f"{len(jobs)} SAM results ready (cached calls skipped)")
 
     out = []
     for r in al["buildings"]:
         bid = r["id"]
         w = Window(*r["window"])
         ring = [tuple(p) for p in feats[bid]["geometry"]["coordinates"][0][:-1]]
-        fp = polygon_mask(outline_to_window_pixels(ring, zoom, w), (w.height, w.width), dilate_px=2)
-        rec = dict(id=bid, status=r["status"])
-        for p in args.prompts:
-            pre = coverage([x.mask for x in dets[(bid, "pre", p)]], fp)
-            post = coverage([x.mask for x in dets[(bid, "post", p)]], fp)
-            rec[f"{p}_pre"] = round(pre, 3)
-            rec[f"{p}_post"] = round(post, 3)
-        if "roof" in args.prompts:
-            loss = roof_loss(rec["roof_pre"], rec["roof_post"])
-            rec["roof_loss"] = None if loss is None else round(loss, 3)
+        pts = outline_to_window_pixels(ring, zoom, w)
+        fp = polygon_mask(pts, (w.height, w.width), dilate_px=2)
+        pre_masks = [m for p in args.prompts for m in dets[(bid, "pre", p)]]
+        post_masks = [m for p in args.prompts for m in dets[(bid, "post", p)]]
+        pre = structure_mask(pre_masks, fp) & polygon_mask(pts, fp.shape, dilate_px=6)
+        post_ctx = np.zeros((w.height + 2 * PAD, w.width + 2 * PAD), bool)
+        for m in post_masks:
+            post_ctx |= m
+        cover = coverage([pre], fp)
+        kept, sdx, sdy = best_overlap(pre, post_ctx, PAD)
+        rec = dict(id=bid, status=r["status"], pre_cover=round(cover, 3))
+        if cover < 0.3:
+            rec.update(structure_loss=None, note="pre-storm structure not found on the outline")
+        else:
+            rec.update(structure_loss=round(1 - kept, 3), shift=[sdx, sdy])
         out.append(rec)
-    (d / "roof.json").write_text(json.dumps(out, indent=1))
-    losses = [x["roof_loss"] for x in out if x.get("roof_loss") is not None]
-    print(f"roof loss measured for {len(losses)}/{len(out)} buildings")
-    print("buildings with >=25% roof loss:", [x["id"] for x in out if (x.get("roof_loss") or 0) >= 0.25])
+    (d / "damage.json").write_text(json.dumps(out, indent=1))
+    measured = [x for x in out if x["structure_loss"] is not None]
+    print(f"structure loss measured for {len(measured)}/{len(out)} buildings")
+    for lo, hi in ((0.6, 1.01), (0.25, 0.6)):
+        print(f"loss {lo:.0%}+:" if hi > 1 else f"loss {lo:.0%}-{hi:.0%}:", [x["id"] for x in measured if lo <= x["structure_loss"] < hi])
 
 
 if __name__ == "__main__":

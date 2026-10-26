@@ -138,6 +138,7 @@ def main() -> None:
 
     ok = sum(r["aligned"] for r in results)
     summary = dict(
+        mosaic_origin=[area.x0, area.y0],  # global pixel of pre.png / post.png (0, 0)
         area=args.area,
         zoom=ZOOM,
         m_per_px=round(meters_per_pixel(cfg["center"][1], ZOOM), 3),

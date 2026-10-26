@@ -14,7 +14,8 @@ Day 1. Working so far:
 - `landfall/sources.py`: downloads NOAA post-storm tiles, warps NAIP pre-storm photos into the same pixel grid, and pulls Microsoft building outlines.
 - `landfall/align.py`: finds each building's pre-storm roof in the post-storm photo (edge matching, then a check against its neighbors). Buildings whose roof is not where the neighbors say it should be are flagged, which is how destroyed houses show up.
 - `landfall/sam.py`: SAM 3.1 concept masks ("roof") on Meta Model API.
-- `landfall/measure.py`: roof cover over the outline, before and after, and roof loss.
+- `landfall/measure.py`: the building's structure mask (SAM "roof", "house" and "building" combined) before and after, matched by shape so a house that leans a few meters still counts, and the share that is gone.
+- `landfall/agent.py`: Muse Spark Open looks at each before/after pair with the measurements and proposes a FEMA category; the verifier checks it and the model revises; unsure calls go to Muse Spark for a second opinion. Every step is kept in a trace.
 - `landfall/fema.py`: FEMA category definitions and the deterministic verifier the agent's calls are checked against.
 
 Reproduce the Cedar Key data (about a minute, plus about 2 minutes of SAM calls):
@@ -23,10 +24,11 @@ Reproduce the Cedar Key data (about a minute, plus about 2 minutes of SAM calls)
 pip install -e ".[data,sam,dev]"
 python scripts/prepare_area.py --area cedar_key     # imagery, outlines, alignment
 python scripts/review_sheet.py --area cedar_key     # contact sheets to check alignment by eye
-META_API_KEY=... python scripts/segment_area.py --area cedar_key   # SAM 3.1 roof masks
+META_API_KEY=... python scripts/segment_area.py --area cedar_key   # SAM 3.1 masks and structure loss
+BASETEN_API_KEY=... META_API_KEY=... python scripts/assess_area.py --area cedar_key   # agent drafts a category per building
 ```
 
-Coming next: fewer false roof-loss alarms, tarp/debris/water prompts, flood depth, and the agent loop on Muse Spark Open.
+Coming next: tarp/debris/water prompts, flood depth, a 50-building hand-labeled eval set, and the area-level agent (plan, ask questions, write the PDA summary).
 
 ## Meta models
 

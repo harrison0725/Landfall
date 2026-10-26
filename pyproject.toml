@@ -4,11 +4,11 @@ version = "0.1.0"
 description = "Agent that drafts FEMA damage assessments from post-hurricane aerial photos"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-dependencies = ["numpy>=1.26", "opencv-python-headless>=4.9"]
+dependencies = ["numpy>=1.26", "opencv-python-headless>=4.9", "requests>=2.31"]
 
 [project.optional-dependencies]
 data = ["pillow>=10", "rasterio>=1.3", "shapely>=2", "pystac-client>=0.7", "planetary-computer>=1.0"]
-sam = ["requests>=2.31", "meta-sam-parser>=0.1", "pillow>=10"]
+sam = ["meta-sam-parser>=0.1", "pillow>=10"]
 dev = ["pytest>=8"]
 
 

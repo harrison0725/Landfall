@@ -31,7 +31,9 @@ class Category(IntEnum):
 @dataclass(frozen=True)
 class Thresholds:
     # Share of the pre-storm roof area missing in the post-storm photo.
-    roof_loss_minor: float = 0.05
+    # Masks of undamaged Cedar Key houses differ by up to ~15% between the
+    # two flights (shadows, trees, lean), so anything below that is noise.
+    roof_loss_minor: float = 0.15
     roof_loss_major: float = 0.25
     roof_loss_destroyed: float = 0.60
     # Water depth above ground at the building, in feet.
