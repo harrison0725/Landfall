@@ -11,10 +11,22 @@ An agent that turns post-hurricane aerial photos into a draft FEMA Preliminary D
 Day 1. Working so far:
 
 - `landfall/geo.py`: Web Mercator math to turn building outlines into pixel crops of aerial tiles.
-- `landfall/align.py`: lines up each building's pre-storm and post-storm crop with an edge-based shift search, and flags crops it can't align with confidence.
+- `landfall/sources.py`: downloads NOAA post-storm tiles, warps NAIP pre-storm photos into the same pixel grid, and pulls Microsoft building outlines.
+- `landfall/align.py`: finds each building's pre-storm roof in the post-storm photo (edge matching, then a check against its neighbors). Buildings whose roof is not where the neighbors say it should be are flagged, which is how destroyed houses show up.
+- `landfall/sam.py`: SAM 3.1 concept masks ("roof") on Meta Model API.
+- `landfall/measure.py`: roof cover over the outline, before and after, and roof loss.
 - `landfall/fema.py`: FEMA category definitions and the deterministic verifier the agent's calls are checked against.
 
-Coming next: imagery download for Cedar Key (Hurricane Helene), SAM 3.1 segmentation, flood depth, and the agent loop on Muse Spark Open.
+Reproduce the Cedar Key data (about a minute, plus about 2 minutes of SAM calls):
+
+```
+pip install -e ".[data,sam,dev]"
+python scripts/prepare_area.py --area cedar_key     # imagery, outlines, alignment
+python scripts/review_sheet.py --area cedar_key     # contact sheets to check alignment by eye
+META_API_KEY=... python scripts/segment_area.py --area cedar_key   # SAM 3.1 roof masks
+```
+
+Coming next: fewer false roof-loss alarms, tarp/debris/water prompts, flood depth, and the agent loop on Muse Spark Open.
 
 ## Meta models
 
