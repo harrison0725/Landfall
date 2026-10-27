@@ -65,20 +65,20 @@ function stormFlights(storm) {
   return flightLists[storm];
 }
 let flightToken = 0;
-function setFlight(flight) {
+function setFlight(flight, anyFlight = false) {
   if (after) map.removeLayer(after);
   after = null;
   applyLayer();
   const token = ++flightToken;
-  if (!flight) return;
+  if (!flight && !anyFlight) return;
   // the storm's other flights fill the map around this one: all after the storm, never older photos
   const storm = (state.spec && state.spec.storm) || $("storm").value;
   stormFlights(storm).then((fs) => {
-    if (token !== flightToken) return;
-    const flights = fs.filter((f) => f.name !== flight).concat([{ name: flight }]);
+    if (token !== flightToken || !fs.length) return;
+    const flights = flight ? fs.filter((f) => f.name !== flight).concat([{ name: flight }]) : fs;
     after = new NoaaStack({
       flights, maxZoom: 21, maxNativeZoom: 20, zIndex: 1,
-      attribution: `NOAA Emergency Response Imagery (${flight}; other flights after it, around it)`,
+      attribution: flight ? `NOAA Emergency Response Imagery (${flight}; other flights after it, around it)` : "NOAA Emergency Response Imagery (flights after it)",
     });
     applyLayer();
   });
@@ -543,6 +543,15 @@ async function boot() {
   $("area").innerHTML = `<option value="">Pick one…</option>` + done.map((a) => `<option value="${esc(a.name)}">${esc(title(a.name))}</option>`).join("");
   if (pick) $("area").value = pick.name;
   $("area").addEventListener("change", () => { if ($("area").value) location.search = `?area=${encodeURIComponent($("area").value)}`; });
+  // picking a disaster goes there: its finished example area, else where its photos are
+  $("storm").addEventListener("change", () => {
+    const key = $("storm").value;
+    const own = done.filter((a) => a.spec && a.spec.storm === key);
+    const example = own.find((a) => !a.name.startsWith("box_")) || own[0];
+    if (example) { location.search = `?area=${encodeURIComponent(example.name)}`; return; }
+    const s = storms.find((x) => x.key === key);
+    if (s && s.view && s.view.length) location.search = `?at=${s.view.join(",")}&storm=${encodeURIComponent(key)}`;
+  });
   if (pick) {
     state.spec = pick.spec;
     if (pick.spec) $("storm").value = pick.spec.storm;
@@ -553,7 +562,15 @@ async function boot() {
   } else {
     applyLayer();
   }
-  if (at) { const [la, lo, z] = at.split(",").map(Number); map.setView([la, lo], z || 17); }
+  if (at) {
+    const [la, lo, z] = at.split(",").map(Number);
+    map.setView([la, lo], z || 17);
+    const key = params.get("storm");
+    if (key && storms.some((x) => x.key === key)) {
+      $("storm").value = key;
+      setFlight(null, true);  // NOAA storms: every after-storm flight; Maxar ones keep the street map
+    }
+  }
   state.sid = (await session).id;
   const ev = new EventSource(`/api/sessions/${state.sid}/events`);
   ev.onmessage = (m) => handle(JSON.parse(m.data));

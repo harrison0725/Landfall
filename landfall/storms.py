@@ -36,6 +36,7 @@ class Storm:
     kind: str = "hurricane"  # hurricane, wildfire, earthquake or flood: decides what damage looks like
     catalog: str = ""  # NOAA catalog when it isn't the key (yearly ones like 2025_eri hold many events)
     until: str = ""  # last flight date for this event in a shared catalog
+    view: tuple = ()  # (lat, lon, zoom) where its photos are, for picking it in the menu
 
     @property
     def provider(self) -> str:
@@ -45,25 +46,25 @@ class Storm:
 STORMS = {
     s.key: s
     for s in [
-        Storm("helene", "Hurricane Helene", "2024-09-26", "2024 Helene"),
-        Storm("milton", "Hurricane Milton", "2024-10-09", "2024 Milton"),
-        Storm("idalia", "Hurricane Idalia", "2023-08-30", "2023 Idalia"),
-        Storm("ian", "Hurricane Ian", "2022-09-28", "2022 Ian"),
+        Storm("helene", "Hurricane Helene", "2024-09-26", "2024 Helene", view=(29.137, -83.035, 15)),
+        Storm("milton", "Hurricane Milton", "2024-10-09", "2024 Milton", view=(27.33, -82.54, 14)),
+        Storm("idalia", "Hurricane Idalia", "2023-08-30", "2023 Idalia", view=(29.66, -83.39, 14)),
+        Storm("ian", "Hurricane Ian", "2022-09-28", "2022 Ian", view=(26.45, -81.95, 14)),
         # Outside the US: Maxar Open Data. Dates are landfall on the place
         # most of the event's imagery covers.
-        Storm("melissa", "Hurricane Melissa", "2025-10-28", "", "Hurricane-Melissa-Oct-2025", "Jamaica, Cuba, Haiti"),
-        Storm("fiona", "Hurricane Fiona", "2022-09-18", "", "Hurricane-Fiona-9-19-2022", "Puerto Rico, Dominican Republic"),
-        Storm("maria", "Hurricane Maria", "2017-09-20", "", "Hurricane-Maria-PuertoRico-Oct-2017", "Puerto Rico"),
-        Storm("chido", "Cyclone Chido", "2024-12-14", "", "Cyclone-Chido-Dec15", "Mayotte"),
-        Storm("mocha", "Cyclone Mocha", "2023-05-14", "", "BayofBengal-Cyclone-Mocha-May-23", "Myanmar, Bangladesh"),
-        Storm("ditwah", "Cyclone Ditwah", "2025-11-28", "", "Cyclone-Ditwah-Sri-Lanka-Nov-2025", "Sri Lanka"),
-        Storm("kalmaegi", "Typhoon Kalmaegi", "2025-11-04", "", "Typhoon-Kalmaegi-Nov-2025", "Philippines"),
-        Storm("emnati", "Cyclone Emnati", "2022-02-22", "", "cyclone-emnati22", "Madagascar"),
+        Storm("melissa", "Hurricane Melissa", "2025-10-28", "", "Hurricane-Melissa-Oct-2025", "Jamaica, Cuba, Haiti", view=(18.465, -77.915, 14)),
+        Storm("fiona", "Hurricane Fiona", "2022-09-18", "", "Hurricane-Fiona-9-19-2022", "Puerto Rico, Dominican Republic", view=(18.007, -66.669, 13)),
+        Storm("maria", "Hurricane Maria", "2017-09-20", "", "Hurricane-Maria-PuertoRico-Oct-2017", "Puerto Rico", view=(18.405, -66.138, 13)),
+        Storm("chido", "Cyclone Chido", "2024-12-14", "", "Cyclone-Chido-Dec15", "Mayotte", view=(-12.834, 45.207, 13)),
+        Storm("mocha", "Cyclone Mocha", "2023-05-14", "", "BayofBengal-Cyclone-Mocha-May-23", "Myanmar, Bangladesh", view=(20.325, 92.785, 13)),
+        Storm("ditwah", "Cyclone Ditwah", "2025-11-28", "", "Cyclone-Ditwah-Sri-Lanka-Nov-2025", "Sri Lanka", view=(6.942, 79.937, 13)),
+        Storm("kalmaegi", "Typhoon Kalmaegi", "2025-11-04", "", "Typhoon-Kalmaegi-Nov-2025", "Philippines", view=(14.487, 121.073, 12)),
+        Storm("emnati", "Cyclone Emnati", "2022-02-22", "", "cyclone-emnati22", "Madagascar", view=(-23.374, 47.657, 13)),
         # Other disasters. NOAA flew the LA fires and the Texas floods into its
         # 2025 catalog, so a date window picks out each event's flights.
-        Storm("la_fires", "Los Angeles wildfires", "2025-01-07", "", where="Los Angeles, United States", kind="wildfire", catalog="2025_eri", until="2025-01-31"),
-        Storm("texas_floods", "Texas Hill Country floods", "2025-07-04", "2025 July TX Flood", where="Texas, United States", kind="flood", catalog="2025_eri", until="2025-07-31"),
-        Storm("myanmar_quake", "Myanmar earthquake", "2025-03-28", "", "Earthquake-Myanmar-March-2025", "Myanmar", kind="earthquake"),
+        Storm("la_fires", "Los Angeles wildfires", "2025-01-07", "", where="Los Angeles, United States", kind="wildfire", catalog="2025_eri", until="2025-01-31", view=(34.19, -118.13, 14)),
+        Storm("texas_floods", "Texas Hill Country floods", "2025-07-04", "2025 July TX Flood", where="Texas, United States", kind="flood", catalog="2025_eri", until="2025-07-31", view=(30.07, -99.24, 14)),
+        Storm("myanmar_quake", "Myanmar earthquake", "2025-03-28", "", "Earthquake-Myanmar-March-2025", "Myanmar", kind="earthquake", view=(21.959, 96.118, 15)),
     ]
 }
 

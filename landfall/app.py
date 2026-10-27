@@ -200,7 +200,7 @@ def _missing_for_assessing() -> list[str]:
 
 @app.get("/api/storms")
 def storms() -> list[dict]:
-    return [{"key": s.key, "name": s.name, "landfall": s.landfall, "where": s.where, "imagery": s.provider, "kind": s.kind} for s in STORMS.values()]
+    return [{"key": s.key, "name": s.name, "landfall": s.landfall, "where": s.where, "imagery": s.provider, "kind": s.kind, "view": list(s.view)} for s in STORMS.values()]
 
 
 @app.get("/api/storms/{key}/flights")
