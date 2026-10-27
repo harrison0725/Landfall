@@ -1,0 +1,34 @@
+{
+ "name": "cedar_key",
+ "center": [
+  -83.0355,
+  29.1375
+ ],
+ "bbox": [
+  -83.06,
+  29.12,
+  -83.01,
+  29.16
+ ],
+ "storm": "helene",
+ "noaa_flight": "20240928b-rgb",
+ "landfall": "2024-09-26",
+ "stn_event": "2024 Helene",
+ "n_buildings": 150,
+ "min_area_m2": 40.0,
+ "hwm_radius_km": 5.0,
+ "gauges": [
+  {
+   "station": "8727520",
+   "name": "Cedar Key",
+   "lon": -83.0317,
+   "lat": 29.135
+  }
+ ],
+ "imagery": "noaa",
+ "post_hrefs": [],
+ "pre_hrefs": [],
+ "post_label": "",
+ "pre_label": "",
+ "pre_date": ""
+}

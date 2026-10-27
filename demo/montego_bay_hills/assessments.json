@@ -1,0 +1,3272 @@
+[
+ {
+  "id": "b000",
+  "category": "none",
+  "confidence": 0.95,
+  "evidence": "Red tile roof is fully visible and unchanged within yellow outline in post-storm photo with no damage; 100% roof-loss flag is false due to segmentation failure to detect the clearly visible roof.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.97,
+     "evidence": "Red tile roof within yellow outline appears intact and unchanged between pre- and post-storm photos with no missing roof sections, collapse, or visible damage despite automated 100% not-found flag which is contradicted by imagery.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.97,
+     "evidence": "Red tile roof within yellow outline is fully intact and unchanged in post-storm photo with no collapse or debris. Automated 100% roof-loss flag is false - segmentation failed to detect the clearly visible roof.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.95,
+     "evidence": "Red tile roofs within the yellow outline remain fully intact in the post-storm image with same shape and color as pre-storm and no missing sections, collapse, or debris.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.95,
+     "evidence": "Red tile roof is fully visible and unchanged within yellow outline in post-storm photo with no damage; 100% roof-loss flag is false due to segmentation failure to detect the clearly visible roof.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b003",
+  "category": "destroyed",
+  "confidence": 0.84,
+  "evidence": "Pre-storm intact grey roof inside yellow outline is completely absent post-storm; footprint contains only exposed orange interior and scattered white/grey rubble with no intact roof, matching 100% roof loss and total loss rather than repairable major damage.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.72,
+     "evidence": "Pre-storm intact grey roof fills yellow outline; post-storm large portions of roof are missing with orange interior/exposed material and white/grey rubble scattered within the footprint, walls still roughly in place, not an empty slab or cleared lot.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Major, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.84,
+     "evidence": "Pre-storm intact grey roof inside yellow outline is completely absent post-storm; footprint contains only exposed orange interior and scattered white/grey rubble with no intact roof, matching 100% roof loss and total loss rather than repairable major damage.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "error": "second opinion failed: 400 Client Error: Bad Request for url: https://api.meta.ai/v1/chat/completions"
+   }
+  ]
+ },
+ {
+  "id": "b020",
+  "category": "destroyed",
+  "confidence": 0.85,
+  "evidence": "Pre-storm intact red tile roof inside yellow outline is completely gone post-storm with footprint filled by light-gray rubble and no intact roof visible.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.58,
+     "evidence": "Pre-storm intact red tile roof fills the yellow outline; post-storm the red roof is completely gone and the footprint is filled with light-gray exposed interior/rubble retaining the L-shaped outline, indicating large-scale roof loss/collapse but not an empty slab or cleared lot.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Major, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.82,
+     "evidence": "Pre-storm red tile roof intact in yellow outline; post-storm 100% of red roof gone with no intact roof visible and footprint filled by light-gray rubble/debris pile, confirming total loss and supporting the 100% not-found measurement.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.85,
+     "evidence": "Pre-storm intact red tile roof inside yellow outline is completely gone post-storm with footprint filled by light-gray rubble and no intact roof visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "satellite rule",
+    "note": "damage seen on satellite photos: field check"
+   }
+  ]
+ },
+ {
+  "id": "b027",
+  "category": "minor",
+  "confidence": 0.55,
+  "evidence": "Post-storm photo still shows the reddish-brown complex roof filling the yellow outline as in pre-storm, so the automated 100% roof-loss is wrong from contrast-stretch gray-white color shift misclassification. Pale gray-white patches on west and north sides suggest partial covering loss/tarping but walls stand with no slab exposure or debris pile.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.42,
+     "evidence": "Yellow outline still contains the large complex roof seen pre-storm; post-storm roof shows intact form but light-gray patches on north and southwest sections consistent with missing covering or tarps, with no visible wall collapse or debris pile in low-resolution view.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.4,
+     "evidence": "Post-storm photo still shows the same large complex reddish-brown roof filling the yellow outline as pre-storm, so the 100% roof-loss measurement is wrong due to misclassification from contrast-stretch/color change; light-gray patches on north and southwest suggest possible covering loss/tarp but no walls collapsed, no slab/debris pile and no clearance.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.55,
+     "evidence": "Reddish-brown roof still fills the yellow outline in post-storm as in pre-storm, so not destroyed; broad light-gray patches on west and north sides suggest roof-covering loss or tarping with no wall collapse or debris pile.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.55,
+     "evidence": "Post-storm photo still shows the reddish-brown complex roof filling the yellow outline as in pre-storm, so the automated 100% roof-loss is wrong from contrast-stretch gray-white color shift misclassification. Pale gray-white patches on west and north sides suggest partial covering loss/tarping but walls stand with no slab exposure or debris pile.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b037",
+  "category": "destroyed",
+  "confidence": 0.61,
+  "evidence": "Pre-storm shows intact light-gray rectangular roof inside outline; post-storm same footprint shows no intact roof, only fragmented mottled rubble consistent with 100% roof loss and total loss, with no empty-lot demolition indicators.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.46,
+     "evidence": "Pre-storm left photo shows intact light-gray rectangular roof inside yellow outline; post-storm right photo shows same footprint with fragmented, mottled gray-brown surface and irregular roof texture indicating large sections missing, not an empty slab, but low resolution and neighbor-based alignment make extent uncertain.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Major, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.61,
+     "evidence": "Pre-storm shows intact light-gray rectangular roof inside outline; post-storm same footprint shows no intact roof, only fragmented mottled rubble consistent with 100% roof loss and total loss, with no empty-lot demolition indicators.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "error": "second opinion failed: 400 Client Error: Bad Request for url: https://api.meta.ai/v1/chat/completions"
+   }
+  ]
+ },
+ {
+  "id": "b042",
+  "category": "minor",
+  "confidence": 0.5,
+  "evidence": "Post-storm view still shows the building standing with central reddish roof intact inside the yellow outline, so the 100% roof-loss is false. The measurement failed due to neighbors-based alignment after the tall building leaned off its outline in angled satellite view, and two new dark patches on the north flat roof support minor covering damage.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.48,
+     "evidence": "Building is still visible inside yellow outline with reddish central roof intact; north light-gray roof area now shows two dark rectangular patches suggesting missing covering/tarps but walls not collapsed and no clear debris pile in blurry angled satellite view, contradicting 100% not-found metric which used neighbor-based alignment",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.46,
+     "evidence": "Post-storm satellite still shows building inside yellow outline with central reddish roof intact; 100% 'not found' is wrong due to neighbor-based alignment - roof was not found where expected because angled satellite makes tall building lean off outline, not because it is gone; dark north patches suggest covering loss/tarp",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.5,
+     "evidence": "Tall building still stands inside yellow outline with central red roof intact; 100% not-found is artifact of angled satellite lean off outline requiring neighbor-based alignment. Two dark rectangular patches on north flat roof absent pre-storm suggest covering loss or tarping.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.5,
+     "evidence": "Post-storm view still shows the building standing with central reddish roof intact inside the yellow outline, so the 100% roof-loss is false. The measurement failed due to neighbors-based alignment after the tall building leaned off its outline in angled satellite view, and two new dark patches on the north flat roof support minor covering damage.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b048",
+  "category": "destroyed",
+  "confidence": 0.88,
+  "evidence": "Red-roof building in yellow outline on left is reduced to mottled gray-brown rubble/debris in right post-storm image with no intact roof or walls remaining, while adjacent orange-roof building to the north remains intact.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.84,
+     "evidence": "Red-roof building in yellow outline on left is collapsed to rubble/debris in post-storm right image with no intact roof or walls remaining, only scattered wreckage within footprint",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.88,
+     "evidence": "Red-roof building in yellow outline on left is reduced to mottled gray-brown rubble/debris in right post-storm image with no intact roof or walls remaining, while adjacent orange-roof building to the north remains intact.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "satellite rule",
+    "note": "damage seen on satellite photos: field check"
+   }
+  ]
+ },
+ {
+  "id": "b049",
+  "category": "none",
+  "confidence": 0.85,
+  "evidence": "Post-storm photo shows intact red-tile roof fully filling yellow outline matching pre-storm with no missing sections. Automated 100% not-found is wrong because neighbor-based alignment failed to detect the present roof at expected location.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.93,
+     "evidence": "Post-storm image shows intact orange/red tiled roof filling yellow outline matching pre-storm appearance with no missing sections, collapse, tarp, or debris. Automated 100% not-found appears to be misalignment; structure is clearly present.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.85,
+     "evidence": "Post-storm photo shows intact red-tile roof fully filling yellow outline matching pre-storm, with no missing sections or debris. Automated 100% not-found is incorrect; roof was not detected at expected location so alignment was placed from neighbors, but the roof is clearly present and undamaged in the imagery.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.85,
+     "evidence": "Red-tile roof fills the yellow outline in the post-storm view matching the pre-storm roof with no missing sections, collapse, or debris visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.85,
+     "evidence": "Post-storm photo shows intact red-tile roof fully filling yellow outline matching pre-storm with no missing sections. Automated 100% not-found is wrong because neighbor-based alignment failed to detect the present roof at expected location.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 100%)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b022",
+  "category": "destroyed",
+  "confidence": 0.91,
+  "evidence": "Pre-storm intact red and gray roof inside yellow outline is completely gone in post-storm, replaced by bright white rubble/debris filling the footprint with no intact roof or walls remaining.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.996,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.93,
+     "evidence": "Pre-storm intact red and gray roof inside yellow outline is replaced in post-storm by a white rubble/debris pile filling the footprint with no intact roof or walls remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.91,
+     "evidence": "Pre-storm intact red and gray roof inside yellow outline is completely gone in post-storm, replaced by bright white rubble/debris filling the footprint with no intact roof or walls remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "satellite rule",
+    "note": "damage seen on satellite photos: field check"
+   }
+  ]
+ },
+ {
+  "id": "b013",
+  "category": "affected",
+  "confidence": 0.62,
+  "evidence": "Post-storm roof still fills the yellow outline with the same brown center and gray surround visible, showing only darker mottling with no collapse or empty slab. The automated 99% roof-loss misread contrast-stretch discoloration as missing structure.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 0.993,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.58,
+     "evidence": "Roof remains visible inside yellow outline in post-storm image matching pre-storm footprint; no collapse, wall failure, or empty slab seen, only surface mottling/debris inconsistent with 99% 'not found' metric.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Affected, but the measurements alone justify at least Destroyed (roof loss 99%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.62,
+     "evidence": "Post-storm photo clearly shows intact roof with same brown/gray pattern filling the yellow outline, no collapse or empty slab; the automated 99% 'not found' roof-loss is wrong, misreading discoloration/contrast-stretch and scattered debris as missing structure despite matched alignment.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Affected, but the measurements alone justify at least Destroyed (roof loss 99%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.65,
+     "evidence": "Post-storm roof still fills the yellow outline with the central brown section and surrounding gray flat roof visible as in pre-storm, showing only darker mottling/discoloration with no collapse, large missing section, or empty slab.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Affected, but the measurements alone justify at least Destroyed (roof loss 99%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.62,
+     "evidence": "Post-storm roof still fills the yellow outline with the same brown center and gray surround visible, showing only darker mottling with no collapse or empty slab. The automated 99% roof-loss misread contrast-stretch discoloration as missing structure.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Affected, but the measurements alone justify at least Destroyed (roof loss 99%)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b043",
+  "category": "minor",
+  "confidence": 0.55,
+  "evidence": "Post-storm dark multi-gable roof still fills the yellow outline so the 98% not-found measure is false, with SAM missing due to neighbors-based alignment plus heavy tree shadow and contrast-stretch. Center is mottled with bluish tarp-like tone but footprint and walls remain, indicating repairable covering loss.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 0.983,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.58,
+     "evidence": "Pre-storm crisp multi-gable roof is mottled and fragmented in post-storm view inside yellow outline with indistinct ridgelines and central blue discoloration suggesting covering/collapse, while 98% not-found flag is on neighbors alignment so georeference is uncertain and slab is not empty.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Major, but the measurements alone justify at least Destroyed (roof loss 98%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.57,
+     "evidence": "Post-storm photo still shows dark multi-gable roof filling yellow outline so 98% not-found is false - SAM missed roof due to neighbors-based alignment and heavy shadow/contrast-stretch, but roof is mottled/fragmented with central bluish wash indicating large roof damage not just cosmetic, yet structure not gone so not destroyed.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Major, but the measurements alone justify at least Destroyed (roof loss 98%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.55,
+     "evidence": "Roof still fills yellow outline with footprint and walls intact so not destroyed, but central roof is mottled with bluish tone suggesting covering loss/tarp, while west edge is obscured by heavy tree shadow.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, but the measurements alone justify at least Destroyed (roof loss 98%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.55,
+     "evidence": "Post-storm dark multi-gable roof still fills the yellow outline so the 98% not-found measure is false, with SAM missing due to neighbors-based alignment plus heavy tree shadow and contrast-stretch. Center is mottled with bluish tarp-like tone but footprint and walls remain, indicating repairable covering loss.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, but the measurements alone justify at least Destroyed (roof loss 98%)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b035",
+  "category": "none",
+  "confidence": 0.65,
+  "evidence": "Post-storm shows an intact white roof centered in the yellow outline with surrounding compound walls standing and no debris pile. The 94% not-found is a false miss from neighbor-based misplacement/satellite lean and red-to-white roof-color change so the roof was not found where expected.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 0.941,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.65,
+     "evidence": "Despite 94% not-found, a white intact roof is visible inside/near the yellow outline and the surrounding wall footprint from the pre-storm image is still present with no debris pile; the mismatch is due to roof-colour change and neighbour-based alignment, not destruction.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 94%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.62,
+     "evidence": "Post-storm image shows an intact white roof centered in/near the yellow outline with the surrounding wall/compound still standing and no debris pile; the 94% not-found is a false miss from neighbor-based misplacement/satellite lean and roof-color change (red to white) so the roof was not found where expected, not destroyed.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 94%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.7,
+     "evidence": "Post-storm view shows an intact white roof centered in the yellow outline with the surrounding compound walls still standing and no wreckage or debris pile, consistent with construction progress from the red pre-storm roof rather than storm loss.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 94%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.65,
+     "evidence": "Post-storm shows an intact white roof centered in the yellow outline with surrounding compound walls standing and no debris pile. The 94% not-found is a false miss from neighbor-based misplacement/satellite lean and red-to-white roof-color change so the roof was not found where expected.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 94%)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b009",
+  "category": "destroyed",
+  "confidence": 0.89,
+  "evidence": "Pre-storm intact dark roof inside yellow outline is absent post-storm; footprint is filled with dark rubble/debris with no intact roof visible, consistent with 92% structure not found.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 0.923,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.89,
+     "evidence": "Pre-storm intact dark roof inside yellow outline is absent post-storm; footprint is filled with dark rubble/debris with no intact roof visible, consistent with 92% structure not found.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "error": "second opinion failed: 400 Client Error: Bad Request for url: https://api.meta.ai/v1/chat/completions"
+   }
+  ]
+ },
+ {
+  "id": "b015",
+  "category": "none",
+  "confidence": 0.65,
+  "evidence": "Yellow-outlined white flat roof around central green courtyard is still present and intact in post-storm matching pre-storm with no collapse or debris. The 88% not-found score is a segmentation error from contrast-stretch and shadow darkening changing color threshold, not actual roof loss.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 0.883,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.62,
+     "evidence": "Roof structure including white flat roof and central green-roofed courtyard remains visible inside yellow outline in post-storm image with no obvious missing sections, wall collapse, or debris, despite 88% computational change score suggesting segmentation/color shift rather than destruction.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 88%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.58,
+     "evidence": "Yellow-outlined roof and central green courtyard remain clearly visible and intact in post-storm photo matching pre-storm footprint; 88% not-found score is a segmentation error from contrast-stretch/shadow darkening changing color threshold, not actual roof loss - no missing roof, collapse, or debris field seen.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 88%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.78,
+     "evidence": "Yellow-outlined white flat roof around central green courtyard is still present in post-storm image matching pre-storm footprint with no missing roof, collapse, or debris field.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 88%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.65,
+     "evidence": "Yellow-outlined white flat roof around central green courtyard is still present and intact in post-storm matching pre-storm with no collapse or debris. The 88% not-found score is a segmentation error from contrast-stretch and shadow darkening changing color threshold, not actual roof loss.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 88%)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b026",
+  "category": "none",
+  "confidence": 0.75,
+  "evidence": "Post-storm view shows the light roof/patio and central pool intact inside the yellow outline matching pre-storm with no collapse; the 87% not-found metric is false due to segmentation failing on the low-contrast light roof.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 0.869,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.92,
+     "evidence": "Yellow-outlined building's roof and footprint remain visible and appear intact in post-storm image matching pre-storm, with no roof loss, collapse, or debris visible; 87% not-found metric is inconsistent with visual evidence.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 87%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.78,
+     "evidence": "Post-storm image shows roof/pool structure still intact within yellow outline matching pre-storm with no collapse or debris visible; 87% not-found metric is false - segmentation failed to match intact light-colored roof/patio due to low contrast/similar tone.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 87%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.8,
+     "evidence": "Flat roof/patio and central pool remain in place inside the yellow outline in the post-storm view matching the pre-storm layout with no roof loss, collapse, or debris visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 87%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.75,
+     "evidence": "Post-storm view shows the light roof/patio and central pool intact inside the yellow outline matching pre-storm with no collapse; the 87% not-found metric is false due to segmentation failing on the low-contrast light roof.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Destroyed (roof loss 87%)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b001",
+  "category": "major",
+  "confidence": 0.6,
+  "evidence": "Post-storm yellow outline still holds dark fragmented debris-covered roof filling the footprint, not an empty slab or cleared lot. The 80% not-found is overestimated because mud staining and large tree shadow on the west hide the roof and the outline is placed from neighbors after its roof was not found at expected location.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 0.805,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.62,
+     "evidence": "Post-storm image shows most of the reddish roof within the yellow outline is gone, replaced by dark fragmented/collapsed roof and exposed interior, but a debris pile/slab remains rather than a cleared lot. Alignment is from neighbors because roof not found at expected location, so damage is extensive but not confirmed as total loss.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Major, but the measurements alone justify at least Destroyed (roof loss 80%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.58,
+     "evidence": "Post-storm roof inside yellow outline is dark, fragmented and debris-covered but still fills the footprint with structure/debris present, not an empty slab or cleared lot; the 80% not-found is overestimated because mud/dark staining and large tree shadow on the west side hide roof and alignment is from neighbors after its roof was not found at expected location.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Major, but the measurements alone justify at least Destroyed (roof loss 80%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.6,
+     "evidence": "Post-storm yellow outline still contains a dark mottled fragmented roof mass about the size of the pre-storm reddish roof, not an empty slab or cleared lot. The surface is heavily discolored and broken up with tree shadow obscuring the west side and alignment from neighbors.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Major, but the measurements alone justify at least Destroyed (roof loss 80%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.6,
+     "evidence": "Post-storm yellow outline still holds dark fragmented debris-covered roof filling the footprint, not an empty slab or cleared lot. The 80% not-found is overestimated because mud staining and large tree shadow on the west hide the roof and the outline is placed from neighbors after its roof was not found at expected location.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Major, but the measurements alone justify at least Destroyed (roof loss 80%)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b002",
+  "category": "none",
+  "confidence": 0.6,
+  "evidence": "Red roof inside yellow outline looks intact and unchanged with no visible roof loss, but automated structure-loss was not measured and alignment is unreliable so cannot be quantified.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.88,
+     "evidence": "Red roof structure within yellow outline appears intact and unchanged between pre and post images with no missing roof, collapse, or debris visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.62,
+     "evidence": "Automated structure-loss was not measured and pre/post alignment is unreliable, but the red-roof building inside the yellow outline appears visually intact and unchanged with no obvious roof loss or debris; misalignment/low resolution prevents confident quantification and requires human review.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.68,
+     "evidence": "Red roof and adjacent light-colored roof inside the yellow outline look the same pre- to post-storm with no missing roof, collapse, or debris visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.6,
+     "evidence": "Red roof inside yellow outline looks intact and unchanged with no visible roof loss, but automated structure-loss was not measured and alignment is unreliable so cannot be quantified.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b004",
+  "category": "none",
+  "confidence": 0.55,
+  "evidence": "Light-tan roof at south end of yellow outline appears intact and unchanged between pre- and post-storm views with no visible loss or debris. Structure loss was not measured and alignment is neighbor-estimated so the outline is only approximate, with trees/shadow obscuring the north part.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.62,
+     "evidence": "Light-colored roof at the southern end of the yellow outline is visible and intact in both pre- and post-storm images with no missing roof covering, wall collapse, or debris/floodwater; northern vegetated portion of outline is also unchanged. Alignment is estimated from neighbors so outline is approximate.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.58,
+     "evidence": "Intact light-toned roof persists at south end of yellow outline in both pre- and post-storm views with no visible roof loss, collapse, or flood debris. Pre-storm roof was not found at outline so alignment was estimated from neighbors, making structure-loss measurement unreliable and outline only approximate.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.6,
+     "evidence": "Light-tan roof at south end of yellow outline appears intact and unchanged between pre- and post-storm views with no roof loss, collapse, or debris visible. Outline is approximate from neighbor alignment and north part is obscured by trees/shadow.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.55,
+     "evidence": "Light-tan roof at south end of yellow outline appears intact and unchanged between pre- and post-storm views with no visible loss or debris. Structure loss was not measured and alignment is neighbor-estimated so the outline is only approximate, with trees/shadow obscuring the north part.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b007",
+  "category": "none",
+  "confidence": 0.65,
+  "evidence": "Roof appears intact and unchanged within yellow outline in both images with no visible damage, but automated structure-loss was not measured because pre-storm roof was not found on the outline so alignment is unreliable.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.82,
+     "evidence": "Pre- and post-storm roof appears intact within yellow outline with no missing sections, collapse, or shift; no debris piles or water visible around structure.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.65,
+     "evidence": "Roof appears intact and unchanged within yellow outline in both images with no visible damage, but automated structure-loss was not measured because pre-storm roof was not found on the outline so alignment/roof-loss is unreliable and requires human review.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.7,
+     "evidence": "Gray hip roof fills the yellow outline in both pre- and post-storm images with unchanged shape and covering, no missing sections, tarp, collapse, or debris visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.65,
+     "evidence": "Roof appears intact and unchanged within yellow outline in both images with no visible damage, but automated structure-loss was not measured because pre-storm roof was not found on the outline so alignment is unreliable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b014",
+  "category": "none",
+  "confidence": 0.35,
+  "evidence": "The yellow outline is neighbor-placed and lies southwest of the actual long white roof, so structure loss was not measured and roof-loss is unreliable. The visible white-roofed building immediately northeast of the outline looks intact with no obvious missing roof.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.42,
+     "evidence": "Pre-storm roof was not found and yellow outline covers only bare ground in both images with no debris; post-storm a long white-roofed building sits immediately adjacent to the outline and appears intact, consistent with the reported neighbor-based alignment offset, with no visible damage in or around the outline.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.35,
+     "evidence": "Yellow outline is misaligned by neighbor-based placement and does not cover the roof in either image; the actual long white-roofed building sits immediately northeast of the outline and appears intact with no visible roof damage, but offset makes roof-loss/structure-loss measurement unreliable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.4,
+     "evidence": "Yellow outline is offset southwest and does not cover the roof in either image. The actual long white-roof building immediately northeast of the outline shows an intact white roof with no visible missing sections.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.35,
+     "evidence": "The yellow outline is neighbor-placed and lies southwest of the actual long white roof, so structure loss was not measured and roof-loss is unreliable. The visible white-roofed building immediately northeast of the outline looks intact with no obvious missing roof.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b024",
+  "category": "affected",
+  "confidence": 0.48,
+  "evidence": "Visually the multi-gabled orange tile roof remains largely intact inside the yellow outline with only mottled dark discoloration post-storm and no large missing sections or collapse. Alignment is neighbors-derived and misaligned \u2014 pre-storm roof was not found on the outline so roof-loss was not measured and is unreliable.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.58,
+     "evidence": "Multi-gabled orange tile roof remains present inside the yellow outline in both images with no large roof sections missing or walls collapsed; post-storm roof shows mottled dark discoloration and scattered debris consistent with cosmetic covering loss only.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.48,
+     "evidence": "Alignment is neighbors-derived and misaligned \u2014 pre-storm roof was not found on the outline so roof-loss is not measured and unreliable. Visually the multi-gabled orange tile roof remains largely intact inside the yellow outline in both images with only mottled dark discoloration/debris post-storm and no large missing sections, wall collapse, or debris pile seen.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.5,
+     "evidence": "The orange tile multi-gabled roof remains in place inside the yellow outline in the post-storm view with only mottled dark patches consistent with debris/discoloration and no large missing sections, wall collapse or debris pile.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.48,
+     "evidence": "Visually the multi-gabled orange tile roof remains largely intact inside the yellow outline with only mottled dark discoloration post-storm and no large missing sections or collapse. Alignment is neighbors-derived and misaligned \u2014 pre-storm roof was not found on the outline so roof-loss was not measured and is unreliable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b025",
+  "category": "none",
+  "confidence": 0.4,
+  "evidence": "Despite the matched alignment flag, the very blurry low-resolution pre/post views do not confidently line up and show only similar dark/light roof areas with no clear structural loss, so roof-loss comparison is unreliable.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.68,
+     "evidence": "Pre-storm intact dark roof and lighter extension inside yellow outline are largely missing post-storm, with dark exposed interior and broken roof debris visible within the footprint, consistent with large structural roof loss.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Major, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.55,
+     "evidence": "Post-storm image within yellow outline shows similar dark and light roof areas as pre-storm with no clear structural loss; differences are blur/contrast and low-resolution with uncertain alignment, so no reliable visible damage.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.5,
+     "evidence": "Pre- and post-storm views show similar dark upper and light lower roof areas inside yellow outline with no clear missing roof, collapse, or debris. Post-storm image is very blurry/low-resolution with uncertain alignment, so no reliable visible damage.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.4,
+     "evidence": "Despite the matched alignment flag, the very blurry low-resolution pre/post views do not confidently line up and show only similar dark/light roof areas with no clear structural loss, so roof-loss comparison is unreliable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b028",
+  "category": "none",
+  "confidence": 0.4,
+  "evidence": "Post-storm image is very blurry but the house mass still appears within the yellow outline with no clear collapse or wreckage. Alignment is neighbor-placed because the pre-storm roof was not found on the outline, so roof-loss was not measured and the outline position is unreliable.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.58,
+     "evidence": "Pre-storm building has intact gray roof with two sections inside yellow outline; post-storm northern roof section is missing exposing reddish interior/debris while footprint remains, indicating large roof loss. Alignment was from neighbors because roof not found at outline and no debris piles were automatically detected, so view is blurry and shifted.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Major, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.42,
+     "evidence": "Post-storm image is very blurry and alignment is from neighbors because pre-storm roof was not found on the outline, so roof loss is unreliable and no clear structural damage or debris can be confirmed within the yellow outline compared to pre-storm.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.4,
+     "evidence": "Post-storm view is very blurry and the yellow outline is neighbor-aligned because the pre-storm roof was not found, so comparison is unreliable; roof mass appears still present with no clear collapse or debris pile visible.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.4,
+     "evidence": "Post-storm image is very blurry but the house mass still appears within the yellow outline with no clear collapse or wreckage. Alignment is neighbor-placed because the pre-storm roof was not found on the outline, so roof-loss was not measured and the outline position is unreliable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b030",
+  "category": "none",
+  "confidence": 0.3,
+  "evidence": "Yellow outline was placed from neighbors because pre-storm roof was not found, so alignment is low confidence and roof-loss is unreliable; pre-storm shows dark vegetated lot with no distinct roof and post-storm shows mottled light fill with no clear slab or debris pile.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.48,
+     "evidence": "Pre-storm yellow outline shows dark bare ground/vegetation with no clear roof (roof not found). Post-storm same outline shows fragmented white/gray rubble pile with no intact roof and bright debris at south end.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Destroyed, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.35,
+     "evidence": "Pre-storm roof not found so yellow outline placed from neighbors and pre/post alignment is low confidence, roof-loss unreliable; pre-storm shows dark vegetated lot with no distinct roof and post-storm shows mottled light fill with no clear bare slab or compact debris pile that would justify destroyed, consistent with Segment Anything finding no debris piles.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.3,
+     "evidence": "Pre-storm view inside yellow outline is dark vegetation with no distinct roof and placement is from neighbors so alignment is uncertain. Post-storm view is mottled light fill with no clear bare slab, wreckage or compact debris pile.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.3,
+     "evidence": "Yellow outline was placed from neighbors because pre-storm roof was not found, so alignment is low confidence and roof-loss is unreliable; pre-storm shows dark vegetated lot with no distinct roof and post-storm shows mottled light fill with no clear slab or debris pile.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b033",
+  "category": "none",
+  "confidence": 0.55,
+  "evidence": "Post-storm roof still fills yellow outline with no visible collapse, but automated alignment is unreliable because pre-storm roof was not found on the outline so structure loss was not measured.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.84,
+     "evidence": "Yellow-outlined building is present in both images with intact roof filling the footprint in the post-storm view; no missing roof sections, collapsed walls, or debris field is visible and alignment is matched to its own roof.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.56,
+     "evidence": "Post-storm roof still fills yellow outline with no visible collapse, but pre-storm roof was not found on the outline so structure loss was not measured and alignment is low confidence, making automated roof-loss unreliable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.62,
+     "evidence": "Post-storm roof still fills the yellow outline with no visible collapse, hole, or missing section; the brown to white color shift appears due to contrast stretch and viewing angle, with no debris piles visible.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.55,
+     "evidence": "Post-storm roof still fills yellow outline with no visible collapse, but automated alignment is unreliable because pre-storm roof was not found on the outline so structure loss was not measured.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b036",
+  "category": "none",
+  "confidence": 0.62,
+  "evidence": "Roof inside yellow outline looks visually intact and unchanged, but structure-loss was not measured because pre-storm roof was not found on the outline and alignment is unreliable so numbers cannot be trusted.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.78,
+     "evidence": "Roof within yellow outline appears intact and unchanged between pre- and post-storm photos with no missing covering, collapse, or shift visible; no debris or flooding is evident around the structure.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.62,
+     "evidence": "Roof inside yellow outline looks visually intact and unchanged with no missing cover or debris in both photos, but automated structure-loss was not measured and alignment is low-confidence/unreliable so numbers cannot be trusted.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.65,
+     "evidence": "Roof area inside yellow outline looks the same pre- and post-storm with green and flat sections intact and dark rooftop features still in place, showing no missing cover or structural change.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.62,
+     "evidence": "Roof inside yellow outline looks visually intact and unchanged, but structure-loss was not measured because pre-storm roof was not found on the outline and alignment is unreliable so numbers cannot be trusted.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b044",
+  "category": "none",
+  "confidence": 0.4,
+  "evidence": "Pre-storm outline covers only dense vegetation with no roof, post-storm shows intact commercial roofs and pavement with no wreckage; alignment is neighbors-based because its own roof was not found and structure-loss was not measured, so outline is misplaced and loss numbers are unreliable.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.52,
+     "evidence": "Pre-storm outline covers dense tree/vegetation with no clearly identifiable roof (roof not found on outline). Post-storm shows large intact light-colored warehouse roof and adjacent dark roof/paved loading area overlapping the outline with no visible roof loss, collapse, or debris, suggesting new construction after Feb 2023 or alignment offset from neighbors.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.4,
+     "evidence": "Pre-storm shows vegetated/empty lot with no roof visible inside yellow outline; post-storm shows intact large commercial roofs and paved loading area overlapping outline with no damage. Structure-loss not measured and alignment is from neighbors because its own roof was not found, so outline is offset/misplaced and roof-loss numbers are unreliable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.4,
+     "evidence": "Pre-storm outline covers only dense vegetation with no roof visible; post-storm outline overlays intact commercial roofs and paved loading area with no damage or wreckage, indicating new development or misplaced outline from neighbors alignment.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.4,
+     "evidence": "Pre-storm outline covers only dense vegetation with no roof, post-storm shows intact commercial roofs and pavement with no wreckage; alignment is neighbors-based because its own roof was not found and structure-loss was not measured, so outline is misplaced and loss numbers are unreliable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b045",
+  "category": "none",
+  "confidence": 0.6,
+  "evidence": "Central red roof appears intact in both views with no visible missing sections, but pre/post images are mis-registered and alignment was estimated from neighbors because the roof was not found on the outline so structure-loss was not measured and is unreliable.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.85,
+     "evidence": "Red-roofed structure remains fully intact inside yellow outline in both pre- and post-storm aerials with no missing roof sections, wall collapse, or displacement; post-storm appearance matches pre-storm.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.64,
+     "evidence": "Red roof appears intact inside yellow outline in both pre- and post-storm views with no visible missing sections or debris, but automated structure-loss was not measured and alignment was estimated from neighbors because the roof was not found on the outline, with slight mis-registration between images, so visual assessment is unreliable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.7,
+     "evidence": "Central red hip roof is intact and unchanged inside the yellow outline in pre- and post-storm views with no missing sections, collapse, or debris visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.6,
+     "evidence": "Central red roof appears intact in both views with no visible missing sections, but pre/post images are mis-registered and alignment was estimated from neighbors because the roof was not found on the outline so structure-loss was not measured and is unreliable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b047",
+  "category": "major",
+  "confidence": 0.6,
+  "evidence": "Automated roof-loss was unmeasured with neighbor-based alignment and SAM debris detection is unreliable for scattered debris. Post photo shows intact pre-storm dark roof replaced by fragmented collapsed roof with missing sections and exposed interior across most of footprint.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.75,
+     "evidence": "Pre-storm shows intact dark roof inside yellow outline; post-storm shows large sections of roof gone/collapsed with exposed interior and debris/rubble throughout the footprint, indicating major structural damage.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Major, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.56,
+     "evidence": "Automated roof-loss not measured because pre-storm roof was not found on the outline and alignment is neighbor-based, so roof-loss/debris measures are unreliable; post photo shows large roof sections missing/collapsed across southern two-thirds of footprint with scattered debris/exposed interior, but low resolution and uncertain alignment require human review.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Major, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.6,
+     "evidence": "Pre-storm shows intact dark roof inside outline; post-storm shows fragmented collapsed roof with missing sections and exposed interior/debris across central and southern footprint, not a cleared lot.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Major, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.6,
+     "evidence": "Automated roof-loss was unmeasured with neighbor-based alignment and SAM debris detection is unreliable for scattered debris. Post photo shows intact pre-storm dark roof replaced by fragmented collapsed roof with missing sections and exposed interior across most of footprint.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Major, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b050",
+  "category": "none",
+  "confidence": 0.2,
+  "evidence": "Both pre- and post-storm views show only dense green vegetation/trees inside the yellow outline with no roof visible, so the neighbor-based alignment is misplaced and the not-measured structure loss is unreliable.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.35,
+     "evidence": "Both pre- and post-storm images show only dense green vegetation/trees within the yellow outline with no discernible roof, walls, slab or debris; pre-storm roof was not found at the outline and alignment is estimated from neighbors so no structure can be assessed.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.25,
+     "evidence": "Only dense green vegetation/trees visible inside yellow outline in both pre- and post-storm images with no roof, slab or debris discernible; pre-storm roof was not found on the outline and alignment was estimated from neighbors, so the not-measured structure-loss is unreliable and no storm damage can be verified from the air.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.2,
+     "evidence": "Dense green vegetation/trees fill the yellow outline in both pre- and post-storm images with no roof, slab or debris discernible, so tree cover and neighbor-based alignment prevent verification of any structure or damage.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.2,
+     "evidence": "Both pre- and post-storm views show only dense green vegetation/trees inside the yellow outline with no roof visible, so the neighbor-based alignment is misplaced and the not-measured structure loss is unreliable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b051",
+  "category": "none",
+  "confidence": 0.5,
+  "evidence": "Both pre- and post-storm views show only roofless walls/rubble with no intact roof and no new wreckage, but alignment is neighbors-placed because its roof was not found where expected so outline placement and roof loss are unreliable.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.6,
+     "evidence": "Pre-storm (left) shows no intact roof within the yellow outline, only roofless walls/rubble which is identical to post-storm (right) condition with no new wreckage, debris field or roof loss indicating storm damage; structure was already in ruins before the storm.",
+     "needs_human": true,
+     "demolished": true
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.7,
+     "evidence": "Pre-storm left and post-storm right both show only roofless wall shells and rubble inside the yellow outline with no intact roof, unchanged with no new collapse or debris field indicating storm damage.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.5,
+     "evidence": "Both pre- and post-storm views show only roofless walls/rubble with no intact roof and no new wreckage, but alignment is neighbors-placed because its roof was not found where expected so outline placement and roof loss are unreliable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b052",
+  "category": "none",
+  "confidence": 0.2,
+  "evidence": "Both pre- and post-storm images show only dense vegetation canopy inside the yellow outline with no discernible roof, so the neighbor-based alignment is misplaced and roof-loss is unreliable with no damage evaluable.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.31,
+     "evidence": "No roof is discernible inside the yellow outline in either the pre- or post-storm image; dense vegetation/tree canopy covers the footprint in both with no debris, slab, or damage visible, and alignment was estimated from neighbors so placement is uncertain.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.25,
+     "evidence": "Pre-storm roof was not found in the outline and alignment is from neighbors only, so roof-loss is unreliable; both pre- and post-images show only dense vegetation/canopy inside the yellow outline with no discernible roof, debris, or damage to evaluate.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.2,
+     "evidence": "Both pre- and post-storm views show only dense green vegetation/canopy inside the yellow outline with no discernible roof or structure. Alignment is from neighbors only, so the outline location is unreliable and damage cannot be evaluated.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.2,
+     "evidence": "Both pre- and post-storm images show only dense vegetation canopy inside the yellow outline with no discernible roof, so the neighbor-based alignment is misplaced and roof-loss is unreliable with no damage evaluable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b053",
+  "category": "none",
+  "confidence": 0.4,
+  "evidence": "Pre and post views are misaligned with heavy shadow so the 'matched' alignment is unreliable and structure-loss could not be measured; yellow outline still shows dark roof segment with no obvious missing cover, collapse or debris.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.67,
+     "evidence": "Yellow outline encloses dark shingled roof section which appears intact in post-storm view with no missing roof covering, wall collapse, or debris pile; adjacent light roof also remains and no wreckage is visible, with dark shadow over west side limiting but not showing damage.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.48,
+     "evidence": "Pre-storm roof was not found on outline so structure-loss not measured and 'matched' alignment is unreliable; visually yellow outline still shows dark shingle roof segment without obvious missing cover, collapse, or debris, but heavy shadow and poor pre/post registration limit confident assessment.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.45,
+     "evidence": "Yellow outline still contains dark roof segment in post-storm image with no obvious missing cover, collapse or debris, but heavy shadow covers much of the roof and pre/post registration is poor.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.4,
+     "evidence": "Pre and post views are misaligned with heavy shadow so the 'matched' alignment is unreliable and structure-loss could not be measured; yellow outline still shows dark roof segment with no obvious missing cover, collapse or debris.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b055",
+  "category": "none",
+  "confidence": 0.3,
+  "evidence": "Outline is neighbors-aligned because its roof was not found at expected location so roof-loss is unreliable, and both images are extremely blurry showing only a faint light mass with no clear roof, collapse, or debris to confirm damage.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.34,
+     "evidence": "Pre-storm left shows only a faint light-gray rectangle/slab inside the yellow outline with no clearly detected roof so alignment is estimated from neighbors, post-storm right shows a similar bright white/gray mass still inside the outline with no clear large roof loss, wall collapse, empty slab or obvious debris pile visible at this very blurry low-resolution satellite view; outline may be offset so damage cannot be confirmed.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.32,
+     "evidence": "Yellow outline is neighbors-aligned because its roof was not found at the expected location so roof-loss is unreliable, and both pre/post images are extremely blurry with only a faint light mass inside the outline showing no clear roof, collapse, or debris pile to confirm damage.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.3,
+     "evidence": "Both pre- and post-storm images are extremely blurry showing only a faint pale mass inside the yellow outline with no discernible roof, collapse, or debris pile to confirm damage.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.3,
+     "evidence": "Outline is neighbors-aligned because its roof was not found at expected location so roof-loss is unreliable, and both images are extremely blurry showing only a faint light mass with no clear roof, collapse, or debris to confirm damage.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b056",
+  "category": "none",
+  "confidence": 0.2,
+  "evidence": "Post-storm outline is covered by white cloud/haze so roof and walls cannot be verified; the outline was placed from neighboring houses and roof-loss was not measured, so alignment is unreliable.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.3,
+     "evidence": "Post-storm view is obscured by white cloud/debris covering most of the yellow outline so roof and walls cannot be verified; alignment was placed from neighbors because pre-storm roof was not found on outline, so location is uncertain.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Destroyed, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.25,
+     "evidence": "Post-storm photo is obscured by white cloud/haze covering the yellow outline so the roof and walls cannot be verified; the outline is placed from neighboring houses, not its own roof, so pre/post alignment is uncertain and roof-loss is unreliable, and no verifiable damage is visible through the cloud.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.25,
+     "evidence": "Post-storm image is obscured by white cloud/haze covering the yellow outline so the roof and walls cannot be verified. The outline is placed from neighboring houses because its own roof was not found, so alignment is uncertain.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.2,
+     "evidence": "Post-storm outline is covered by white cloud/haze so roof and walls cannot be verified; the outline was placed from neighboring houses and roof-loss was not measured, so alignment is unreliable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b012",
+  "category": "none",
+  "confidence": 0.75,
+  "evidence": "Post-storm photo shows the red multi-gable roof fully intact within the yellow outline with no missing covering or debris; the 39% not-found is false from the long dark west-edge shadow and off-nadir lean/contrast-stretch, not roof loss.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 0.393,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.68,
+     "evidence": "Large red-tile roof remains fully visible inside the yellow outline in post-storm image with no missing roof sections, wall collapse, or visible debris; 39% mask non-overlap appears due to shadow/viewing-angle differences not structural loss and alignment is matched.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Major (roof loss 39%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.7,
+     "evidence": "Post-storm photo shows the full red multi-gable roof still intact within the yellow outline with no missing covering, wall collapse, or debris visible; the 39% 'not found' is a false positive from the long dark shadow on the west edge and off-nadir lean/contrast-stretch shifting roof texture, not roof loss.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Major (roof loss 39%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.85,
+     "evidence": "Post-storm photo shows the red multi-gable roof fully present within the yellow outline with no missing covering, tarp, collapse, or debris. The 39% not-found share is from the dark west-edge shadow and lean/texture shift, not roof loss.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Major (roof loss 39%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.75,
+     "evidence": "Post-storm photo shows the red multi-gable roof fully intact within the yellow outline with no missing covering or debris; the 39% not-found is false from the long dark west-edge shadow and off-nadir lean/contrast-stretch, not roof loss.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Major (roof loss 39%)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b019",
+  "category": "none",
+  "confidence": 0.72,
+  "evidence": "Post-storm red roof still fills yellow outline with no missing sections, tarp or debris; the 37% 'not found' is SAM mismatch from contrast-stretched darkening/color shift, not actual roof loss.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 0.374,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.85,
+     "evidence": "Red roof remains intact within yellow outline in post-storm photo with no missing sections, tarp, or wall loss visible; appearance matches pre-storm photo.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Major (roof loss 37%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.72,
+     "evidence": "Post-storm roof fully visible filling yellow outline with no missing sections, tarp, wall collapse or debris matching pre-storm; 37% 'not found' is SAM mismatch from contrast-stretched darkening/color shift, not actual roof loss.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Major (roof loss 37%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.78,
+     "evidence": "Post-storm red roof still fills the yellow outline matching pre-storm shape with no missing sections, tarp, collapse, or debris.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Major (roof loss 37%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.72,
+     "evidence": "Post-storm red roof still fills yellow outline with no missing sections, tarp or debris; the 37% 'not found' is SAM mismatch from contrast-stretched darkening/color shift, not actual roof loss.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Major (roof loss 37%)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b040",
+  "category": "major",
+  "confidence": 0.62,
+  "evidence": "Yellow-outlined house still stands with southeast red roof intact but northwest third inside outline dark/missing versus pre-storm red roof, matching 36% unmatched; no tree, shadow, or misalignment explains the difference.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.363,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.58,
+     "evidence": "Yellow-outlined house still stands but ~36% of pre-storm roof not found post-storm; northwest portion of roof inside outline is discolored/damaged/missing covering while southeast sections remain visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.55,
+     "evidence": "House still stands with southeast red roof sections visible and walls intact; northwest third inside outline is dark/discolored and unmatched, suggesting partial roof-cover loss or tarp but possibly tree/shadow obscuration.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, but the measurements alone justify at least Major (roof loss 36%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.62,
+     "evidence": "Yellow-outlined house still stands with southeast red roof intact but northwest third inside outline dark/missing versus pre-storm red roof, matching 36% unmatched; no tree, shadow, or misalignment explains the difference.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "satellite rule",
+    "note": "damage seen on satellite photos: field check"
+   }
+  ]
+ },
+ {
+  "id": "b034",
+  "category": "none",
+  "confidence": 0.7,
+  "evidence": "Post-storm roof is uniformly red and intact with no missing sections, tarps or collapse. The 23% 'not found' is false loss from parallax/lean shift west of the yellow footprint exposing light wall/ground on the east side, not storm damage.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 0.231,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.78,
+     "evidence": "Red roof remains intact and fully within the yellow outline in the post-storm image with no visible missing sections, tarps, or structural collapse; appearance is consistent with pre-storm aside from contrast stretch.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Minor (roof loss 23%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.62,
+     "evidence": "Post-storm roof is still uniformly red and intact with no missing sections, tarps or collapse; the 23% 'not found' is a false gap on the east side where the roof appears shifted west of the yellow pre-storm footprint and the light wall/ground is exposed by different lean/parallax, not storm damage.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Minor (roof loss 23%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.85,
+     "evidence": "Post-storm view shows the same uniformly red roof intact with no missing covering, tarp, or collapse. The gap on the east side of the yellow outline is exposed light wall/ground from different lean/parallax, not structural loss.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Minor (roof loss 23%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.7,
+     "evidence": "Post-storm roof is uniformly red and intact with no missing sections, tarps or collapse. The 23% 'not found' is false loss from parallax/lean shift west of the yellow footprint exposing light wall/ground on the east side, not storm damage.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Minor (roof loss 23%)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b029",
+  "category": "minor",
+  "confidence": 0.65,
+  "evidence": "Pre-storm dark/tan roof is uniformly bright white in post-storm view consistent with tarp over lost roof covering with a small dark central exposed area, while footprint and walls remain aligned with no collapse or debris pile.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.193,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.62,
+     "evidence": "Pre-storm dark/tan roof is now uniformly bright white inside the yellow outline, consistent with a tarp over lost roof covering, with a small dark central area; walls remain aligned and intact and no major structural collapse or debris pile is visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.65,
+     "evidence": "Pre-storm dark/tan roof is uniformly bright white in post-storm view consistent with tarp over lost roof covering with a small dark central exposed area, while footprint and walls remain aligned with no collapse or debris pile.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "satellite rule",
+    "note": "damage seen on satellite photos: field check"
+   }
+  ]
+ },
+ {
+  "id": "b018",
+  "category": "none",
+  "confidence": 0.78,
+  "evidence": "Red roof section and surrounding flat gray roof remain fully visible within the yellow outline in the post-storm image and match pre-storm appearance with no missing roof sections, collapse, or debris.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.146,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.78,
+     "evidence": "Red roof section and surrounding flat gray roof remain fully visible within the yellow outline in the post-storm image and match pre-storm appearance with no missing roof sections, collapse, or debris.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b005",
+  "category": "none",
+  "confidence": 0.7,
+  "evidence": "Post-storm roof and walls remain inside yellow outline with no missing sections, tarps, or debris piles; the 14% not-found reflects neighbor-based misplacement/lean and contrast stretch, not visible structural or roof-covering loss.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.136,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.62,
+     "evidence": "Post-storm image within yellow outline shows mottled/discolored roof with partial covering loss but overall walls and footprint remain aligned; ~14% of pre-storm structure not found is consistent with repairable roof damage, not collapse or clearance, with no debris pile detected.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.7,
+     "evidence": "Post-storm roof and walls remain inside yellow outline with no missing sections, tarps, or debris piles; the 14% not-found reflects neighbor-based misplacement/lean and contrast stretch, not visible structural or roof-covering loss.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b006",
+  "category": "none",
+  "confidence": 0.9,
+  "evidence": "Yellow outline remains centered on intact multi-gable roof in post-storm view; roof color/pattern matches pre-storm with no visible missing sections, tarp, or debris.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.122,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.9,
+     "evidence": "Yellow outline remains centered on intact multi-gable roof in post-storm view; roof color/pattern matches pre-storm with no visible missing sections, tarp, or debris.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b032",
+  "category": "none",
+  "confidence": 0.84,
+  "evidence": "Roof outline fully intact in post-storm with no missing sections, no blue tarp, and walls unchanged; 10% not-found and blue tint are contrast/lighting with no visible covering loss or debris.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.103,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.75,
+     "evidence": "Structure remains within yellow outline with ~10% change; post-storm roof shows large blue tarps covering missing roof covering with no wall collapse or major structural loss.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.84,
+     "evidence": "Roof outline fully intact in post-storm with no missing sections, no blue tarp, and walls unchanged; 10% not-found and blue tint are contrast/lighting with no visible covering loss or debris.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b021",
+  "category": "none",
+  "confidence": 0.92,
+  "evidence": "Yellow-outlined building's central hipped roof and light-colored perimeter roof are intact and unchanged between pre- and post-storm images with no missing covering, collapse, or debris visible.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.081,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.92,
+     "evidence": "Yellow-outlined building's central hipped roof and light-colored perimeter roof are intact and unchanged between pre- and post-storm images with no missing covering, collapse, or debris visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b016",
+  "category": "minor",
+  "confidence": 0.85,
+  "evidence": "Post-storm shows a vivid blue rectangular tarp centered where the pre-storm roof was uniformly red, indicating repairable roof-covering loss. The 7% not-found metric misses this because the roof structure is still present and matched, so footprint overlap stays high despite covering damage.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 0.069,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.87,
+     "evidence": "Post-storm roof shows a large blue tarp over the red-roofed southern section indicating missing roof covering; yellow-outlined building footprint remains intact with walls standing and no major structural collapse.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.84,
+     "evidence": "Post-storm photo shows a vivid rectangular blue tarp centered on the southern red roof where the pre-storm roof was uniformly red, indicating missing roof covering/repairable damage. The 7% not-found matched footprint metric is misleading because the roof structure is still present and detected, so it does not capture tarp/covering loss.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.85,
+     "evidence": "Post-storm image shows a bright blue rectangular tarp centered on the previously uniformly red roof, with the roof structure still present within the yellow outline, indicating repairable roof-covering loss.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.85,
+     "evidence": "Post-storm shows a vivid blue rectangular tarp centered where the pre-storm roof was uniformly red, indicating repairable roof-covering loss. The 7% not-found metric misses this because the roof structure is still present and matched, so footprint overlap stays high despite covering damage.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b054",
+  "category": "none",
+  "confidence": 0.72,
+  "evidence": "Post-storm photo shows roof still present inside yellow outline with no clear missing covering, wall collapse, or debris pile; apparent orange tint is contrast-stretch artifact not definitive roof loss, and 7% not-found reflects neighbors-based placement offset.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.068,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.62,
+     "evidence": "Structure remains within yellow outline but post-storm roof shows orange exposed patch on north section indicating partial roof covering loss, consistent with minor repairable damage; no wall collapse or slab visible despite 7% footprint not matched.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.72,
+     "evidence": "Post-storm photo shows roof still present inside yellow outline with no clear missing covering, wall collapse, or debris pile; apparent orange tint is contrast-stretch artifact not definitive roof loss, and 7% not-found reflects neighbors-based placement offset.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b008",
+  "category": "none",
+  "confidence": 0.82,
+  "evidence": "Roof remains fully visible and intact within yellow outline in post-storm image with no missing sections, wall collapse, or shift; 7% not-found is within alignment noise and no debris piles are visible.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.066,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.82,
+     "evidence": "Roof remains fully visible and intact within yellow outline in post-storm image with no missing sections, wall collapse, or shift; 7% not-found is within alignment noise and no debris piles are visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b038",
+  "category": "none",
+  "confidence": 0.82,
+  "evidence": "Roof remains fully present within yellow outline in post-storm image with no visible missing sections, wall collapse, or debris pile; overall form matches pre-storm photo.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.064,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.82,
+     "evidence": "Roof remains fully present within yellow outline in post-storm image with no visible missing sections, wall collapse, or debris pile; overall form matches pre-storm photo.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b039",
+  "category": "none",
+  "confidence": 0.71,
+  "evidence": "Post-storm roof footprint is intact inside yellow outline consistent with 3% not-found and no debris; the pale mottling is diffuse reflectance from contrast-stretch, not discrete missing covering, wall collapse or debris field.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.026,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.67,
+     "evidence": "Roof structure remains in place inside yellow outline but post-storm image shows multiple irregular light-colored areas where roof covering appears missing/exposed underlayment, no wall collapse or building shift visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.71,
+     "evidence": "Post-storm roof footprint is intact inside yellow outline consistent with 3% not-found and no debris; the pale mottling is diffuse reflectance from contrast-stretch, not discrete missing covering, wall collapse or debris field.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b017",
+  "category": "none",
+  "confidence": 0.71,
+  "evidence": "Pre-storm red roof structure is still present inside the yellow outline in the post-storm image (neighbor-aligned and slightly offset) with no missing roof sections, wall collapse or debris pile visible; roof color and shape match pre-storm.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.019,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.71,
+     "evidence": "Pre-storm red roof structure is still present inside the yellow outline in the post-storm image (neighbor-aligned and slightly offset) with no missing roof sections, wall collapse or debris pile visible; roof color and shape match pre-storm.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b023",
+  "category": "none",
+  "confidence": 0.88,
+  "evidence": "Yellow-outlined building shows intact red and light-gray roof sections in both pre- and post-storm images with no missing covering, collapse, or debris; 2% not-found is within alignment noise.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.015,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.88,
+     "evidence": "Yellow-outlined building shows intact red and light-gray roof sections in both pre- and post-storm images with no missing covering, collapse, or debris; 2% not-found is within alignment noise.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b011",
+  "category": "none",
+  "confidence": 0.76,
+  "evidence": "Post-storm roof within yellow outline matches pre-storm with same light-colored central area and intact footprint; no visible roof loss, structural collapse, or debris field, with only 1% of structure not found.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.01,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.76,
+     "evidence": "Post-storm roof within yellow outline matches pre-storm with same light-colored central area and intact footprint; no visible roof loss, structural collapse, or debris field, with only 1% of structure not found.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b010",
+  "category": "none",
+  "confidence": 0.93,
+  "evidence": "Yellow-outlined roof is fully present post-storm with intact shape and covering; no missing sections, collapse, or debris visible.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.93,
+     "evidence": "Yellow-outlined roof is fully present post-storm with intact shape and covering; no missing sections, collapse, or debris visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b031",
+  "category": "none",
+  "confidence": 0.65,
+  "evidence": "The light-colored roof visible pre-storm is still present post-storm, appearing bright white just west of the yellow outline due to oblique satellite lean, with no missing sections, collapsed walls, or debris field.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.48,
+     "evidence": "Pre-storm white roof inside yellow outline appears mottled gray/discolored post-storm suggesting partial roofing loss but walls and footprint remain; image is blurry low-resolution satellite with off-nadir lean and alignment was placed from neighbors not its own roof, so damage extent is uncertain and no clear collapse or debris is visible.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.62,
+     "evidence": "Post-storm roof inside yellow outline remains intact and light-colored with no missing sections, collapsed walls, or debris visible, matching pre-storm appearance; the gray mottling is contrast-stretch/lighting variation not structural damage, consistent with 0% structure not found and no debris detected.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.65,
+     "evidence": "The light-colored roof visible pre-storm is still present post-storm, appearing bright white just west of the yellow outline due to oblique satellite lean, with no missing sections, collapsed walls, or debris field.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b041",
+  "category": "none",
+  "confidence": 0.84,
+  "evidence": "Roof structure remains fully present and visually unchanged inside the yellow outline between pre- and post-storm images with no missing covering, collapse, or debris visible.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.84,
+     "evidence": "Roof structure remains fully present and visually unchanged inside the yellow outline between pre- and post-storm images with no missing covering, collapse, or debris visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b046",
+  "category": "none",
+  "confidence": 0.92,
+  "evidence": "Post-storm roof appears fully intact and continuous within and slightly beyond the yellow outline, with bright white appearance consistent with contrast-stretch, no missing roof sections, wall collapse, or debris visible.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.92,
+     "evidence": "Post-storm roof appears fully intact and continuous within and slightly beyond the yellow outline, with bright white appearance consistent with contrast-stretch, no missing roof sections, wall collapse, or debris visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ }
+]

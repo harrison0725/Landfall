@@ -30,6 +30,11 @@ from .session import Session, area_geojson
 from .storms import STORMS
 
 ROOT = Path(os.environ.get("LANDFALL_DATA", "data"))
+# Hosted publicly, new assessments need this code (they spend API credits);
+# unset, anyone running the app can assess anything.
+ACCESS_CODE = os.environ.get("LANDFALL_ACCESS_CODE", "")
+MAX_BUILDINGS = int(os.environ.get("LANDFALL_MAX_BUILDINGS", "150"))
+TURNS_PER_HOUR = int(os.environ.get("LANDFALL_TURNS_PER_HOUR", "0"))  # per visitor; 0 = no limit
 STATIC = Path(__file__).resolve().parent.parent / "app"
 
 app = FastAPI(title="Landfall")
@@ -63,7 +68,30 @@ class Turn(BaseModel):
     text: str
     box: list[float] | None = None
     storm: str | None = None
+    access_code: str | None = None
 
+
+RECENT: dict[str, list[float]] = {}
+
+
+def _rate_limit(request: Request) -> None:
+    """Questions and voice clips cost model calls; cap each visitor."""
+    if not TURNS_PER_HOUR:
+        return
+    import time
+
+    who = request.headers.get("x-forwarded-for", request.client.host if request.client else "?").split(",")[0].strip()
+    now = time.time()
+    hits = [t for t in RECENT.get(who, []) if now - t < 3600]
+    if len(hits) >= TURNS_PER_HOUR:
+        raise HTTPException(429, "That's the limit of questions for this hour on the public copy. Try again later.")
+    RECENT[who] = [*hits, now]
+
+
+def _code_ok(code: str | None) -> bool:
+    import hmac
+
+    return not ACCESS_CODE or hmac.compare_digest((code or "").encode(), ACCESS_CODE.encode())
 
 def _area_dir(area: str) -> Path:
     d = (ROOT / area).resolve()
@@ -75,6 +103,11 @@ def _area_dir(area: str) -> Path:
 @app.get("/")
 def index() -> FileResponse:
     return FileResponse(STATIC / "index.html")
+
+
+@app.get("/api/config")
+def config() -> dict:
+    return {"access_code_required": bool(ACCESS_CODE), "max_buildings": MAX_BUILDINGS}
 
 
 @app.get("/api/storms")
@@ -135,12 +168,13 @@ def after_overlay(area: str) -> dict:
     from .geo import pixel_to_lonlat
 
     d = _area_dir(area)
-    if not (d / "post.png").exists() or not (d / "alignment.json").exists():
+    if not (d / "post.png").exists() and not (d / "post_size.json").exists():
         raise HTTPException(404, "no after-storm mosaic yet")
     from PIL import Image
 
     x0, y0 = json.loads((d / "alignment.json").read_text())["summary"]["mosaic_origin"]
-    w, h = Image.open(d / "post.png").size
+    # shipped demo areas keep only a preview, with the full mosaic's size beside it
+    w, h = json.loads((d / "post_size.json").read_text()) if not (d / "post.png").exists() else Image.open(d / "post.png").size
     w_lon, n_lat = pixel_to_lonlat(x0, y0, 19)
     e_lon, s_lat = pixel_to_lonlat(x0 + w, y0 + h, 19)
     return {"url": f"/api/areas/{area}/after.jpg", "bounds": [[s_lat, w_lon], [n_lat, e_lon]]}
@@ -152,7 +186,7 @@ def after_jpg(area: str) -> Response:
 
     d = _area_dir(area)
     out = d / "post_preview.jpg"
-    if not out.exists() or out.stat().st_mtime < (d / "post.png").stat().st_mtime:
+    if (d / "post.png").exists() and (not out.exists() or out.stat().st_mtime < (d / "post.png").stat().st_mtime):
         im = Image.open(d / "post.png").convert("RGB")
         im.thumbnail((4096, 4096))
         im.save(out, quality=85)
@@ -202,12 +236,18 @@ def new_session(body: NewSession) -> dict:
 
 
 @app.post("/api/sessions/{sid}/turn")
-def turn(sid: str, body: Turn) -> dict:
+def turn(sid: str, body: Turn, request: Request) -> dict:
     live = LIVE.get(sid)
     if live is None:
         raise HTTPException(404, "no such session")
     if live.busy:
         raise HTTPException(409, "the agent is still working on the last message")
+    allowed = _code_ok(body.access_code)
+    if body.box and not allowed:
+        raise HTTPException(403, "Assessing a new area needs the access code. You can still ask about the finished areas.")
+    _rate_limit(request)
+    live.session.may_run_pipeline = allowed
+    live.session.max_buildings = MAX_BUILDINGS
     live.busy = True
     live.emit("user", text=body.text, box=body.box)
 
@@ -254,6 +294,7 @@ def events(sid: str, request: Request, since: int = 0) -> StreamingResponse:
 async def transcribe(request: Request) -> dict:
     from .voice import transcribe as run
 
+    _rate_limit(request)
     wav = await request.body()
     if not wav or len(wav) > 10_000_000:
         raise HTTPException(400, "send 16-bit mono WAV, under 10 MB")

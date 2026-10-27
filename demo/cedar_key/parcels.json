@@ -1,0 +1,4042 @@
+{
+ "b000": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1974,
+   "EFF_YR_BLT": 1982,
+   "TOT_LVG_AR": 1088,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 194018,
+   "LND_VAL": 44000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1974, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1974,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b001": {
+  "parcel": {
+   "DOR_UC": "000",
+   "ACT_YR_BLT": 0,
+   "EFF_YR_BLT": 0,
+   "TOT_LVG_AR": 0,
+   "NO_RES_UNT": 0,
+   "NO_BULDNG": 0,
+   "JV": 51780,
+   "LND_VAL": 49500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "no year built on record (the current roll drops destroyed buildings): unknown",
+  "year_built": null,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 0,
+  "land_use": "000",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b002": {
+  "parcel": {
+   "DOR_UC": "086",
+   "ACT_YR_BLT": 1962,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 6851,
+   "NO_RES_UNT": 8,
+   "NO_BULDNG": 6,
+   "JV": 1863798,
+   "LND_VAL": 990000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1962, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1962,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 8,
+  "land_use": "086",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b003": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1945,
+   "EFF_YR_BLT": 1998,
+   "TOT_LVG_AR": 1470,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 250185,
+   "LND_VAL": 90750,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1945, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1945,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b004": {
+  "parcel": {
+   "DOR_UC": "000",
+   "ACT_YR_BLT": 0,
+   "EFF_YR_BLT": 0,
+   "TOT_LVG_AR": 0,
+   "NO_RES_UNT": 0,
+   "NO_BULDNG": 0,
+   "JV": 51780,
+   "LND_VAL": 49500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "no year built on record (the current roll drops destroyed buildings): unknown",
+  "year_built": null,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 0,
+  "land_use": "000",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b005": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 2007,
+   "EFF_YR_BLT": 2007,
+   "TOT_LVG_AR": 1472,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 350654,
+   "LND_VAL": 68750,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 7.9,
+  "basis": "built 2007, after flood rules: floor at the BFE (12 ft NAVD88, zone AE)",
+  "year_built": 2007,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 7.9,
+  "floor_high_ft": 7.9
+ },
+ "b006": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1949,
+   "EFF_YR_BLT": 1985,
+   "TOT_LVG_AR": 800,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 215851,
+   "LND_VAL": 93500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1949, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1949,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b007": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1919,
+   "EFF_YR_BLT": 1995,
+   "TOT_LVG_AR": 724,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 189405,
+   "LND_VAL": 66000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1919, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1919,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b008": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1975,
+   "EFF_YR_BLT": 1981,
+   "TOT_LVG_AR": 796,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 199488,
+   "LND_VAL": 74800,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "built 1975, in the years communities were joining the flood program: unknown",
+  "year_built": 1975,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b009": {
+  "parcel": {
+   "DOR_UC": "086",
+   "ACT_YR_BLT": 1962,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 6851,
+   "NO_RES_UNT": 8,
+   "NO_BULDNG": 6,
+   "JV": 1863798,
+   "LND_VAL": 990000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1962, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1962,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 8,
+  "land_use": "086",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b010": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1930,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 1304,
+   "NO_RES_UNT": 2,
+   "NO_BULDNG": 2,
+   "JV": 243628,
+   "LND_VAL": 71500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1930, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1930,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 2,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b011": {
+  "parcel": {
+   "DOR_UC": "000",
+   "ACT_YR_BLT": 0,
+   "EFF_YR_BLT": 0,
+   "TOT_LVG_AR": 0,
+   "NO_RES_UNT": 0,
+   "NO_BULDNG": 0,
+   "JV": 77000,
+   "LND_VAL": 77000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "no year built on record (the current roll drops destroyed buildings): unknown",
+  "year_built": null,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 0,
+  "land_use": "000",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b012": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 830,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 174686,
+   "LND_VAL": 69850,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b013": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1920,
+   "EFF_YR_BLT": 1966,
+   "TOT_LVG_AR": 1020,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 198615,
+   "LND_VAL": 99000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1920, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1920,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b014": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1988,
+   "TOT_LVG_AR": 1992,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 464101,
+   "LND_VAL": 132000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b015": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1964,
+   "EFF_YR_BLT": 1979,
+   "TOT_LVG_AR": 1092,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 243105,
+   "LND_VAL": 77000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1964, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1964,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b016": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1951,
+   "EFF_YR_BLT": 1951,
+   "TOT_LVG_AR": 1272,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 180940,
+   "LND_VAL": 77000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1951, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1951,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b017": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1930,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 1304,
+   "NO_RES_UNT": 2,
+   "NO_BULDNG": 2,
+   "JV": 243628,
+   "LND_VAL": 71500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1930, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1930,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 2,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b018": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1990,
+   "TOT_LVG_AR": 2816,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 814811,
+   "LND_VAL": 220000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b019": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1925,
+   "EFF_YR_BLT": 1978,
+   "TOT_LVG_AR": 1690,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 302128,
+   "LND_VAL": 77000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1925, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1925,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b020": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1925,
+   "EFF_YR_BLT": 1997,
+   "TOT_LVG_AR": 878,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 228452,
+   "LND_VAL": 88000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1925, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1925,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b021": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1935,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 1520,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 328336,
+   "LND_VAL": 115500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1935, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1935,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b022": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1990,
+   "TOT_LVG_AR": 2816,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 814811,
+   "LND_VAL": 220000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b023": {
+  "parcel": {
+   "DOR_UC": "000",
+   "ACT_YR_BLT": 0,
+   "EFF_YR_BLT": 0,
+   "TOT_LVG_AR": 0,
+   "NO_RES_UNT": 0,
+   "NO_BULDNG": 0,
+   "JV": 77480,
+   "LND_VAL": 77000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "no year built on record (the current roll drops destroyed buildings): unknown",
+  "year_built": null,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 0,
+  "land_use": "000",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b024": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1910,
+   "EFF_YR_BLT": 1989,
+   "TOT_LVG_AR": 660,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 187671,
+   "LND_VAL": 78540,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1910, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1910,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b025": {
+  "parcel": {
+   "DOR_UC": "086",
+   "ACT_YR_BLT": 1962,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 6851,
+   "NO_RES_UNT": 8,
+   "NO_BULDNG": 6,
+   "JV": 1863798,
+   "LND_VAL": 990000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1962, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1962,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 8,
+  "land_use": "086",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b026": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1988,
+   "TOT_LVG_AR": 1302,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 343901,
+   "LND_VAL": 132000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b027": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1920,
+   "EFF_YR_BLT": 1978,
+   "TOT_LVG_AR": 660,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 174935,
+   "LND_VAL": 72600,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1920, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1920,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b028": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1935,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 1520,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 328336,
+   "LND_VAL": 115500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1935, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1935,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b029": {
+  "parcel": {
+   "DOR_UC": "086",
+   "ACT_YR_BLT": 1962,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 6851,
+   "NO_RES_UNT": 8,
+   "NO_BULDNG": 6,
+   "JV": 1863798,
+   "LND_VAL": 990000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1962, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1962,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 8,
+  "land_use": "086",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b030": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1975,
+   "EFF_YR_BLT": 1975,
+   "TOT_LVG_AR": 1881,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 336719,
+   "LND_VAL": 96250,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "built 1975, in the years communities were joining the flood program: unknown",
+  "year_built": 1975,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b031": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1920,
+   "EFF_YR_BLT": 1978,
+   "TOT_LVG_AR": 660,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 174935,
+   "LND_VAL": 72600,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1920, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1920,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b032": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1987,
+   "EFF_YR_BLT": 1987,
+   "TOT_LVG_AR": 612,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 139482,
+   "LND_VAL": 55000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 1987,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b033": {
+  "parcel": {
+   "DOR_UC": "071",
+   "ACT_YR_BLT": 1952,
+   "EFF_YR_BLT": 2002,
+   "TOT_LVG_AR": 4546,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 3,
+   "JV": 711066,
+   "LND_VAL": 305250,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1952, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1952,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "071",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b034": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1981,
+   "TOT_LVG_AR": 928,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 363666,
+   "LND_VAL": 82500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b035": {
+  "parcel": {
+   "DOR_UC": "071",
+   "ACT_YR_BLT": 1952,
+   "EFF_YR_BLT": 2002,
+   "TOT_LVG_AR": 4546,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 3,
+   "JV": 711066,
+   "LND_VAL": 305250,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1952, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1952,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "071",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b036": {
+  "parcel": {
+   "DOR_UC": "086",
+   "ACT_YR_BLT": 1962,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 6851,
+   "NO_RES_UNT": 8,
+   "NO_BULDNG": 6,
+   "JV": 1863798,
+   "LND_VAL": 990000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1962, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1962,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 8,
+  "land_use": "086",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b037": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1970,
+   "EFF_YR_BLT": 1978,
+   "TOT_LVG_AR": 1134,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 234872,
+   "LND_VAL": 99000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1970, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1970,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b038": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1940,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 938,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 223950,
+   "LND_VAL": 105875,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1940, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1940,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b039": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1938,
+   "EFF_YR_BLT": 1988,
+   "TOT_LVG_AR": 1287,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 271284,
+   "LND_VAL": 82500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1938, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1938,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b040": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 2019,
+   "EFF_YR_BLT": 2019,
+   "TOT_LVG_AR": 720,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 262326,
+   "LND_VAL": 82500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 4.8,
+  "basis": "built 2019, after flood rules: floor at the BFE (13 ft NAVD88, zone AE)",
+  "year_built": 2019,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 4.8,
+  "floor_high_ft": 4.8
+ },
+ "b041": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1998,
+   "EFF_YR_BLT": 1998,
+   "TOT_LVG_AR": 1042,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 253163,
+   "LND_VAL": 71500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 1998,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b042": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1884,
+   "EFF_YR_BLT": 1988,
+   "TOT_LVG_AR": 2466,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 499266,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1884, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1884,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b043": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 2019,
+   "EFF_YR_BLT": 2019,
+   "TOT_LVG_AR": 1488,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 463703,
+   "LND_VAL": 96250,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.6,
+  "basis": "built 2019, after flood rules: floor at the BFE (12 ft NAVD88, zone AE)",
+  "year_built": 2019,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.6,
+  "floor_high_ft": 1.6
+ },
+ "b044": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1930,
+   "EFF_YR_BLT": 1988,
+   "TOT_LVG_AR": 1040,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 311371,
+   "LND_VAL": 82500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1930, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1930,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b045": {
+  "parcel": {
+   "DOR_UC": "008",
+   "ACT_YR_BLT": 1980,
+   "EFF_YR_BLT": 1992,
+   "TOT_LVG_AR": 3735,
+   "NO_RES_UNT": 6,
+   "NO_BULDNG": 1,
+   "JV": 663520,
+   "LND_VAL": 107800,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "built 1980, in the years communities were joining the flood program: unknown",
+  "year_built": 1980,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 6,
+  "land_use": "008",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b046": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1920,
+   "EFF_YR_BLT": 1969,
+   "TOT_LVG_AR": 840,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 146118,
+   "LND_VAL": 55000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1920, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1920,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b047": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1992,
+   "EFF_YR_BLT": 1992,
+   "TOT_LVG_AR": 2906,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 722995,
+   "LND_VAL": 231000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 1992,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b048": {
+  "parcel": {
+   "DOR_UC": "086",
+   "ACT_YR_BLT": 1962,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 6851,
+   "NO_RES_UNT": 8,
+   "NO_BULDNG": 6,
+   "JV": 1863798,
+   "LND_VAL": 990000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1962, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1962,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 8,
+  "land_use": "086",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b049": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1993,
+   "EFF_YR_BLT": 1993,
+   "TOT_LVG_AR": 1200,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 308827,
+   "LND_VAL": 100000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "built 1993, in the years communities were joining the flood program: unknown",
+  "year_built": 1993,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b050": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1952,
+   "EFF_YR_BLT": 1968,
+   "TOT_LVG_AR": 2101,
+   "NO_RES_UNT": 2,
+   "NO_BULDNG": 2,
+   "JV": 297797,
+   "LND_VAL": 143000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1952, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1952,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 2,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b051": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1902,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 2116,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 469708,
+   "LND_VAL": 99000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1902, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1902,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b052": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1903,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 1100,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 272001,
+   "LND_VAL": 99000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1903, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1903,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b053": {
+  "parcel": {
+   "DOR_UC": "086",
+   "ACT_YR_BLT": 1962,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 3567,
+   "NO_RES_UNT": 4,
+   "NO_BULDNG": 3,
+   "JV": 1048705,
+   "LND_VAL": 550000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1962, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1962,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 4,
+  "land_use": "086",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b054": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1996,
+   "EFF_YR_BLT": 1996,
+   "TOT_LVG_AR": 510,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 145856,
+   "LND_VAL": 66000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 1996,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b055": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1930,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 756,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 168954,
+   "LND_VAL": 82500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1930, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1930,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b056": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1951,
+   "EFF_YR_BLT": 1994,
+   "TOT_LVG_AR": 1134,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 2,
+   "JV": 367118,
+   "LND_VAL": 132000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1951, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1951,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b057": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1952,
+   "EFF_YR_BLT": 1968,
+   "TOT_LVG_AR": 2101,
+   "NO_RES_UNT": 2,
+   "NO_BULDNG": 2,
+   "JV": 297797,
+   "LND_VAL": 143000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1952, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1952,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 2,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b058": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1915,
+   "EFF_YR_BLT": 1993,
+   "TOT_LVG_AR": 1480,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 354326,
+   "LND_VAL": 116500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1915, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1915,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b059": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1925,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 1826,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 388477,
+   "LND_VAL": 122650,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1925, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1925,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b060": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1992,
+   "EFF_YR_BLT": 1992,
+   "TOT_LVG_AR": 2122,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 552484,
+   "LND_VAL": 116160,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 1992,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b061": {
+  "parcel": {
+   "DOR_UC": "071",
+   "ACT_YR_BLT": 1950,
+   "EFF_YR_BLT": 1981,
+   "TOT_LVG_AR": 1572,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 129412,
+   "LND_VAL": 77000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1950, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1950,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "071",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b062": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1998,
+   "EFF_YR_BLT": 2006,
+   "TOT_LVG_AR": 1312,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 366123,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 1998,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b063": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1998,
+   "TOT_LVG_AR": 1258,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 367216,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b064": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1930,
+   "EFF_YR_BLT": 1975,
+   "TOT_LVG_AR": 1508,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 330039,
+   "LND_VAL": 107250,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1930, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1930,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b065": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1978,
+   "TOT_LVG_AR": 1270,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 359558,
+   "LND_VAL": 96000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b066": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1954,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 1373,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 312357,
+   "LND_VAL": 99000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1954, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1954,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b067": {
+  "parcel": {
+   "DOR_UC": "086",
+   "ACT_YR_BLT": 1962,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 3567,
+   "NO_RES_UNT": 4,
+   "NO_BULDNG": 3,
+   "JV": 1048705,
+   "LND_VAL": 550000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1962, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1962,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 4,
+  "land_use": "086",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b068": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1940,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 1696,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 389633,
+   "LND_VAL": 120000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1940, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1940,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b069": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1949,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 936,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 305394,
+   "LND_VAL": 145000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1949, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1949,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b070": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1998,
+   "EFF_YR_BLT": 2006,
+   "TOT_LVG_AR": 1312,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 366123,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 1998,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b071": {
+  "parcel": {
+   "DOR_UC": "071",
+   "ACT_YR_BLT": 1954,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 1432,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 340264,
+   "LND_VAL": 154000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1954, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1954,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "071",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b072": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1940,
+   "EFF_YR_BLT": 1968,
+   "TOT_LVG_AR": 1438,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 281537,
+   "LND_VAL": 99000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1940, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1940,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b073": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1968,
+   "TOT_LVG_AR": 1327,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 90082,
+   "LND_VAL": 48000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b074": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1925,
+   "EFF_YR_BLT": 1978,
+   "TOT_LVG_AR": 1345,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 353418,
+   "LND_VAL": 99000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1925, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1925,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b075": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1925,
+   "EFF_YR_BLT": 1979,
+   "TOT_LVG_AR": 848,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 212984,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1925, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1925,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b076": {
+  "parcel": {
+   "DOR_UC": "071",
+   "ACT_YR_BLT": 1953,
+   "EFF_YR_BLT": 1990,
+   "TOT_LVG_AR": 7968,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 869381,
+   "LND_VAL": 440000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1953, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1953,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "071",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b077": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1920,
+   "EFF_YR_BLT": 2003,
+   "TOT_LVG_AR": 1746,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 514352,
+   "LND_VAL": 127050,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1920, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1920,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b078": {
+  "parcel": {
+   "DOR_UC": "012",
+   "ACT_YR_BLT": 1945,
+   "EFF_YR_BLT": 1991,
+   "TOT_LVG_AR": 2036,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 412917,
+   "LND_VAL": 216000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1945, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1945,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "012",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b079": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1999,
+   "EFF_YR_BLT": 1999,
+   "TOT_LVG_AR": 2000,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 493579,
+   "LND_VAL": 143550,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 1999,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b080": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1940,
+   "EFF_YR_BLT": 1968,
+   "TOT_LVG_AR": 1438,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 281537,
+   "LND_VAL": 99000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1940, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1940,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b081": {
+  "parcel": {
+   "DOR_UC": "000",
+   "ACT_YR_BLT": 0,
+   "EFF_YR_BLT": 0,
+   "TOT_LVG_AR": 0,
+   "NO_RES_UNT": 0,
+   "NO_BULDNG": 0,
+   "JV": 140250,
+   "LND_VAL": 140250,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "no year built on record (the current roll drops destroyed buildings): unknown",
+  "year_built": null,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 0,
+  "land_use": "000",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b082": {
+  "parcel": {
+   "DOR_UC": "002",
+   "ACT_YR_BLT": 1967,
+   "EFF_YR_BLT": 2000,
+   "TOT_LVG_AR": 672,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 172699,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1967, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1967,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "002",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b083": {
+  "parcel": {
+   "DOR_UC": "012",
+   "ACT_YR_BLT": 1993,
+   "EFF_YR_BLT": 2000,
+   "TOT_LVG_AR": 1242,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 275273,
+   "LND_VAL": 161500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 4.3,
+  "basis": "built 1993, after flood rules: floor at the BFE (13 ft NAVD88, zone AE)",
+  "year_built": 1993,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "012",
+  "floor_low_ft": 4.3,
+  "floor_high_ft": 4.3
+ },
+ "b084": {
+  "parcel": {
+   "DOR_UC": "086",
+   "ACT_YR_BLT": 1962,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 3567,
+   "NO_RES_UNT": 4,
+   "NO_BULDNG": 3,
+   "JV": 1048705,
+   "LND_VAL": 550000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1962, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1962,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 4,
+  "land_use": "086",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b085": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1978,
+   "EFF_YR_BLT": 1995,
+   "TOT_LVG_AR": 2201,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 527131,
+   "LND_VAL": 148500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "built 1978, in the years communities were joining the flood program: unknown",
+  "year_built": 1978,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b086": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1965,
+   "EFF_YR_BLT": 1984,
+   "TOT_LVG_AR": 640,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 158446,
+   "LND_VAL": 62400,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1965, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1965,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b087": {
+  "parcel": null,
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "no year built on record (the current roll drops destroyed buildings): unknown",
+  "year_built": null,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 0,
+  "land_use": null,
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b088": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1968,
+   "EFF_YR_BLT": 1978,
+   "TOT_LVG_AR": 576,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 164485,
+   "LND_VAL": 77000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1968, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1968,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b089": {
+  "parcel": {
+   "DOR_UC": "091",
+   "ACT_YR_BLT": 1968,
+   "EFF_YR_BLT": 1986,
+   "TOT_LVG_AR": 1242,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 183921,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1968, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1968,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "091",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b090": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1978,
+   "TOT_LVG_AR": 1000,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 273538,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b091": {
+  "parcel": {
+   "DOR_UC": "089",
+   "ACT_YR_BLT": 1990,
+   "EFF_YR_BLT": 1992,
+   "TOT_LVG_AR": 3964,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 734582,
+   "LND_VAL": 550000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 1990,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "089",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b092": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1904,
+   "EFF_YR_BLT": 1980,
+   "TOT_LVG_AR": 1188,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 257807,
+   "LND_VAL": 101448,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1904, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1904,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b093": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1949,
+   "EFF_YR_BLT": 1998,
+   "TOT_LVG_AR": 780,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 275948,
+   "LND_VAL": 77000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1949, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1949,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b094": {
+  "parcel": {
+   "DOR_UC": "039",
+   "ACT_YR_BLT": 0,
+   "EFF_YR_BLT": 0,
+   "TOT_LVG_AR": 0,
+   "NO_RES_UNT": 0,
+   "NO_BULDNG": 0,
+   "JV": 440000,
+   "LND_VAL": 440000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "no year built on record (the current roll drops destroyed buildings): unknown",
+  "year_built": null,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 0,
+  "land_use": "039",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b095": {
+  "parcel": {
+   "DOR_UC": "039",
+   "ACT_YR_BLT": 0,
+   "EFF_YR_BLT": 0,
+   "TOT_LVG_AR": 0,
+   "NO_RES_UNT": 0,
+   "NO_BULDNG": 0,
+   "JV": 440000,
+   "LND_VAL": 440000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "no year built on record (the current roll drops destroyed buildings): unknown",
+  "year_built": null,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 0,
+  "land_use": "039",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b096": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1905,
+   "EFF_YR_BLT": 1996,
+   "TOT_LVG_AR": 1582,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 505536,
+   "LND_VAL": 222750,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1905, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1905,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b097": {
+  "parcel": {
+   "DOR_UC": "086",
+   "ACT_YR_BLT": 1962,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 3336,
+   "NO_RES_UNT": 4,
+   "NO_BULDNG": 2,
+   "JV": 923449,
+   "LND_VAL": 495000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1962, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1962,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 4,
+  "land_use": "086",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b098": {
+  "parcel": {
+   "DOR_UC": "039",
+   "ACT_YR_BLT": 0,
+   "EFF_YR_BLT": 0,
+   "TOT_LVG_AR": 0,
+   "NO_RES_UNT": 0,
+   "NO_BULDNG": 0,
+   "JV": 440000,
+   "LND_VAL": 440000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "no year built on record (the current roll drops destroyed buildings): unknown",
+  "year_built": null,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 0,
+  "land_use": "039",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b099": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1940,
+   "EFF_YR_BLT": 1978,
+   "TOT_LVG_AR": 1249,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 161558,
+   "LND_VAL": 144000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1940, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1940,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b100": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1904,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 1182,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 234406,
+   "LND_VAL": 55000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1904, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1904,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b101": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 2005,
+   "EFF_YR_BLT": 2005,
+   "TOT_LVG_AR": 676,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 518747,
+   "LND_VAL": 240000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 3.2,
+  "basis": "built 2005, after flood rules: floor at the BFE (14 ft NAVD88, zone AE)",
+  "year_built": 2005,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 3.2,
+  "floor_high_ft": 3.2
+ },
+ "b102": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1998,
+   "EFF_YR_BLT": 1998,
+   "TOT_LVG_AR": 1532,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 413086,
+   "LND_VAL": 102550,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 2.4,
+  "basis": "built 1998, after flood rules: floor at the BFE (12 ft NAVD88, zone AE)",
+  "year_built": 1998,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 2.4,
+  "floor_high_ft": 2.4
+ },
+ "b103": {
+  "parcel": {
+   "DOR_UC": "027",
+   "ACT_YR_BLT": 1954,
+   "EFF_YR_BLT": 1980,
+   "TOT_LVG_AR": 4789,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 267439,
+   "LND_VAL": 112000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1954, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1954,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "027",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b104": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 2012,
+   "EFF_YR_BLT": 2012,
+   "TOT_LVG_AR": 1200,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 302827,
+   "LND_VAL": 88302,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 2012,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b105": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1984,
+   "EFF_YR_BLT": 1993,
+   "TOT_LVG_AR": 960,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 2,
+   "JV": 180450,
+   "LND_VAL": 67200,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "built 1984, in the years communities were joining the flood program: unknown",
+  "year_built": 1984,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b106": {
+  "parcel": {
+   "DOR_UC": "039",
+   "ACT_YR_BLT": 0,
+   "EFF_YR_BLT": 0,
+   "TOT_LVG_AR": 0,
+   "NO_RES_UNT": 0,
+   "NO_BULDNG": 0,
+   "JV": 440000,
+   "LND_VAL": 440000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "no year built on record (the current roll drops destroyed buildings): unknown",
+  "year_built": null,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 0,
+  "land_use": "039",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b107": {
+  "parcel": {
+   "DOR_UC": "039",
+   "ACT_YR_BLT": 0,
+   "EFF_YR_BLT": 0,
+   "TOT_LVG_AR": 0,
+   "NO_RES_UNT": 0,
+   "NO_BULDNG": 0,
+   "JV": 440000,
+   "LND_VAL": 440000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "no year built on record (the current roll drops destroyed buildings): unknown",
+  "year_built": null,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 0,
+  "land_use": "039",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b108": {
+  "parcel": {
+   "DOR_UC": "039",
+   "ACT_YR_BLT": 1880,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 3677,
+   "NO_RES_UNT": 2,
+   "NO_BULDNG": 2,
+   "JV": 779495,
+   "LND_VAL": 209000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1880, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1880,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 2,
+  "land_use": "039",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b109": {
+  "parcel": {
+   "DOR_UC": "071",
+   "ACT_YR_BLT": 1945,
+   "EFF_YR_BLT": 1991,
+   "TOT_LVG_AR": 6636,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 3,
+   "JV": 746829,
+   "LND_VAL": 385000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1945, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1945,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "071",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b110": {
+  "parcel": {
+   "DOR_UC": "004",
+   "ACT_YR_BLT": 1995,
+   "EFF_YR_BLT": 1995,
+   "TOT_LVG_AR": 1024,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 30000,
+   "LND_VAL": 29999,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "VE",
+   "STATIC_BFE": 21.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 3.2,
+  "basis": "built 1995, after flood rules: floor at the BFE (21 ft NAVD88, zone VE)",
+  "year_built": 1995,
+  "flood_zone": "VE",
+  "bfe_ft": 21.0,
+  "units": 1,
+  "land_use": "004",
+  "floor_low_ft": 3.2,
+  "floor_high_ft": 3.2
+ },
+ "b111": {
+  "parcel": {
+   "DOR_UC": "004",
+   "ACT_YR_BLT": 1995,
+   "EFF_YR_BLT": 1995,
+   "TOT_LVG_AR": 1024,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 30000,
+   "LND_VAL": 29999,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AO",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": null,
+  "basis": "built 1995, in the years communities were joining the flood program: unknown",
+  "year_built": 1995,
+  "flood_zone": "AO",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "004",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b112": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1973,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 1020,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 343062,
+   "LND_VAL": 132000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1973, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1973,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b113": {
+  "parcel": {
+   "DOR_UC": "086",
+   "ACT_YR_BLT": 1962,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 3336,
+   "NO_RES_UNT": 4,
+   "NO_BULDNG": 2,
+   "JV": 923449,
+   "LND_VAL": 495000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1962, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1962,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 4,
+  "land_use": "086",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b114": {
+  "parcel": {
+   "DOR_UC": "039",
+   "ACT_YR_BLT": 0,
+   "EFF_YR_BLT": 0,
+   "TOT_LVG_AR": 0,
+   "NO_RES_UNT": 0,
+   "NO_BULDNG": 0,
+   "JV": 440000,
+   "LND_VAL": 440000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "VE",
+   "STATIC_BFE": 15.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "no year built on record (the current roll drops destroyed buildings): unknown",
+  "year_built": null,
+  "flood_zone": "VE",
+  "bfe_ft": 15.0,
+  "units": 0,
+  "land_use": "039",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b115": {
+  "parcel": {
+   "DOR_UC": "071",
+   "ACT_YR_BLT": 1945,
+   "EFF_YR_BLT": 1991,
+   "TOT_LVG_AR": 6636,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 3,
+   "JV": 746829,
+   "LND_VAL": 385000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1945, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1945,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "071",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b116": {
+  "parcel": {
+   "DOR_UC": "071",
+   "ACT_YR_BLT": 2002,
+   "EFF_YR_BLT": 2002,
+   "TOT_LVG_AR": 1360,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 341774,
+   "LND_VAL": 124300,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 2002,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "071",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b117": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1930,
+   "EFF_YR_BLT": 1977,
+   "TOT_LVG_AR": 1024,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 272863,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1930, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1930,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b118": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1915,
+   "EFF_YR_BLT": 1981,
+   "TOT_LVG_AR": 2096,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 536985,
+   "LND_VAL": 227700,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1915, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1915,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b119": {
+  "parcel": {
+   "DOR_UC": "004",
+   "ACT_YR_BLT": 1995,
+   "EFF_YR_BLT": 1995,
+   "TOT_LVG_AR": 1024,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 30000,
+   "LND_VAL": 29999,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "VE",
+   "STATIC_BFE": 21.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 3.3,
+  "basis": "built 1995, after flood rules: floor at the BFE (21 ft NAVD88, zone VE)",
+  "year_built": 1995,
+  "flood_zone": "VE",
+  "bfe_ft": 21.0,
+  "units": 1,
+  "land_use": "004",
+  "floor_low_ft": 3.3,
+  "floor_high_ft": 3.3
+ },
+ "b120": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 2014,
+   "EFF_YR_BLT": 2014,
+   "TOT_LVG_AR": 1332,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 481901,
+   "LND_VAL": 137500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 2014,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b121": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1920,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 1152,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 259088,
+   "LND_VAL": 110682,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1920, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1920,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b122": {
+  "parcel": {
+   "DOR_UC": "079",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1982,
+   "TOT_LVG_AR": 5088,
+   "NO_RES_UNT": 2,
+   "NO_BULDNG": 2,
+   "JV": 666928,
+   "LND_VAL": 180000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 2,
+  "land_use": "079",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b123": {
+  "parcel": {
+   "DOR_UC": "011",
+   "ACT_YR_BLT": 1965,
+   "EFF_YR_BLT": 1973,
+   "TOT_LVG_AR": 5031,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 410184,
+   "LND_VAL": 265920,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1965, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1965,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "011",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b124": {
+  "parcel": {
+   "DOR_UC": "004",
+   "ACT_YR_BLT": 1995,
+   "EFF_YR_BLT": 1995,
+   "TOT_LVG_AR": 1024,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 30000,
+   "LND_VAL": 29999,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "VE",
+   "STATIC_BFE": 21.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 3.1,
+  "basis": "built 1995, after flood rules: floor at the BFE (21 ft NAVD88, zone VE)",
+  "year_built": 1995,
+  "flood_zone": "VE",
+  "bfe_ft": 21.0,
+  "units": 1,
+  "land_use": "004",
+  "floor_low_ft": 3.1,
+  "floor_high_ft": 3.1
+ },
+ "b125": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 2019,
+   "EFF_YR_BLT": 2019,
+   "TOT_LVG_AR": 924,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 309028,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 2019,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b126": {
+  "parcel": {
+   "DOR_UC": "004",
+   "ACT_YR_BLT": 1981,
+   "EFF_YR_BLT": 1981,
+   "TOT_LVG_AR": 1120,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 225000,
+   "LND_VAL": 1,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "VE",
+   "STATIC_BFE": 15.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "built 1981, in the years communities were joining the flood program: unknown",
+  "year_built": 1981,
+  "flood_zone": "VE",
+  "bfe_ft": 15.0,
+  "units": 1,
+  "land_use": "004",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b127": {
+  "parcel": {
+   "DOR_UC": "004",
+   "ACT_YR_BLT": 1995,
+   "EFF_YR_BLT": 1995,
+   "TOT_LVG_AR": 1024,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 30000,
+   "LND_VAL": 29999,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "VE",
+   "STATIC_BFE": 21.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 6.3,
+  "basis": "built 1995, after flood rules: floor at the BFE (21 ft NAVD88, zone VE)",
+  "year_built": 1995,
+  "flood_zone": "VE",
+  "bfe_ft": 21.0,
+  "units": 1,
+  "land_use": "004",
+  "floor_low_ft": 6.3,
+  "floor_high_ft": 6.3
+ },
+ "b128": {
+  "parcel": {
+   "DOR_UC": "000",
+   "ACT_YR_BLT": 0,
+   "EFF_YR_BLT": 0,
+   "TOT_LVG_AR": 0,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 0,
+   "JV": 32435,
+   "LND_VAL": 28800,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "no year built on record (the current roll drops destroyed buildings): unknown",
+  "year_built": null,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "000",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b129": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1918,
+   "EFF_YR_BLT": 1957,
+   "TOT_LVG_AR": 1540,
+   "NO_RES_UNT": 3,
+   "NO_BULDNG": 1,
+   "JV": 222863,
+   "LND_VAL": 88000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1918, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1918,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 3,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b130": {
+  "parcel": {
+   "DOR_UC": " ",
+   "ACT_YR_BLT": 0,
+   "EFF_YR_BLT": 0,
+   "TOT_LVG_AR": 0,
+   "NO_RES_UNT": 0,
+   "NO_BULDNG": 0,
+   "JV": 0,
+   "LND_VAL": 0,
+   "ASMNT_YR": 0
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": null,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 0,
+  "land_use": " ",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b131": {
+  "parcel": {
+   "DOR_UC": "079",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1982,
+   "TOT_LVG_AR": 5088,
+   "NO_RES_UNT": 2,
+   "NO_BULDNG": 2,
+   "JV": 666928,
+   "LND_VAL": 180000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 2,
+  "land_use": "079",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b132": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1912,
+   "EFF_YR_BLT": 2006,
+   "TOT_LVG_AR": 1184,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 400681,
+   "LND_VAL": 82500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1912, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1912,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b133": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1925,
+   "EFF_YR_BLT": 1995,
+   "TOT_LVG_AR": 1702,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 392712,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1925, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1925,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b134": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1981,
+   "EFF_YR_BLT": 1981,
+   "TOT_LVG_AR": 1239,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 375663,
+   "LND_VAL": 165000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 1981,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b135": {
+  "parcel": {
+   "DOR_UC": "004",
+   "ACT_YR_BLT": 1981,
+   "EFF_YR_BLT": 1981,
+   "TOT_LVG_AR": 1120,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 250000,
+   "LND_VAL": 1,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "VE",
+   "STATIC_BFE": 15.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "built 1981, in the years communities were joining the flood program: unknown",
+  "year_built": 1981,
+  "flood_zone": "VE",
+  "bfe_ft": 15.0,
+  "units": 1,
+  "land_use": "004",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b136": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1978,
+   "EFF_YR_BLT": 1978,
+   "TOT_LVG_AR": 1020,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 243626,
+   "LND_VAL": 99000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "built 1978, in the years communities were joining the flood program: unknown",
+  "year_built": 1978,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b137": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 2009,
+   "EFF_YR_BLT": 2009,
+   "TOT_LVG_AR": 1280,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 490566,
+   "LND_VAL": 144000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "VE",
+   "STATIC_BFE": 15.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 9.8,
+  "basis": "built 2009, after flood rules: floor at the BFE (15 ft NAVD88, zone VE)",
+  "year_built": 2009,
+  "flood_zone": "VE",
+  "bfe_ft": 15.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 9.8,
+  "floor_high_ft": 9.8
+ },
+ "b138": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 2009,
+   "EFF_YR_BLT": 2009,
+   "TOT_LVG_AR": 1280,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 410188,
+   "LND_VAL": 74250,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 14.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 7.8,
+  "basis": "built 2009, after flood rules: floor at the BFE (14 ft NAVD88, zone AE)",
+  "year_built": 2009,
+  "flood_zone": "AE",
+  "bfe_ft": 14.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 7.8,
+  "floor_high_ft": 7.8
+ },
+ "b139": {
+  "parcel": {
+   "DOR_UC": "012",
+   "ACT_YR_BLT": 1940,
+   "EFF_YR_BLT": 1984,
+   "TOT_LVG_AR": 1040,
+   "NO_RES_UNT": 0,
+   "NO_BULDNG": 1,
+   "JV": 105748,
+   "LND_VAL": 56000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "VE",
+   "STATIC_BFE": 15.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1940, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1940,
+  "flood_zone": "VE",
+  "bfe_ft": 15.0,
+  "units": 0,
+  "land_use": "012",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b140": {
+  "parcel": {
+   "DOR_UC": "004",
+   "ACT_YR_BLT": 1992,
+   "EFF_YR_BLT": 1992,
+   "TOT_LVG_AR": 448,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 256500,
+   "LND_VAL": 1,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AO",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": null,
+  "basis": "built 1992, in the years communities were joining the flood program: unknown",
+  "year_built": 1992,
+  "flood_zone": "AO",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "004",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b141": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 2009,
+   "EFF_YR_BLT": 2009,
+   "TOT_LVG_AR": 1632,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 415591,
+   "LND_VAL": 74250,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "VE",
+   "STATIC_BFE": 15.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 9.7,
+  "basis": "built 2009, after flood rules: floor at the BFE (15 ft NAVD88, zone VE)",
+  "year_built": 2009,
+  "flood_zone": "VE",
+  "bfe_ft": 15.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 9.7,
+  "floor_high_ft": 9.7
+ },
+ "b142": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1988,
+   "TOT_LVG_AR": 1674,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 482896,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 12.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "AE",
+  "bfe_ft": 12.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b143": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 1815,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 430617,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b144": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1985,
+   "TOT_LVG_AR": 2640,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 857111,
+   "LND_VAL": 413160,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b145": {
+  "parcel": {
+   "DOR_UC": "067",
+   "ACT_YR_BLT": 0,
+   "EFF_YR_BLT": 0,
+   "TOT_LVG_AR": 0,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 0,
+   "JV": 25343,
+   "LND_VAL": 4200,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "VE",
+   "STATIC_BFE": 15.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": null,
+  "basis": "no year built on record (the current roll drops destroyed buildings): unknown",
+  "year_built": null,
+  "flood_zone": "VE",
+  "bfe_ft": 15.0,
+  "units": 1,
+  "land_use": "067",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": null
+ },
+ "b146": {
+  "parcel": {
+   "DOR_UC": "012",
+   "ACT_YR_BLT": 1901,
+   "EFF_YR_BLT": 1984,
+   "TOT_LVG_AR": 3750,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 338543,
+   "LND_VAL": 90000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1901, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1901,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "012",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b147": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 2006,
+   "EFF_YR_BLT": 2006,
+   "TOT_LVG_AR": 1280,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 322052,
+   "LND_VAL": 82500,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "zone X, no elevation required: likely 1-3 ft above ground",
+  "year_built": 2006,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b148": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1925,
+   "EFF_YR_BLT": 1983,
+   "TOT_LVG_AR": 1152,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 192407,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "AE",
+   "STATIC_BFE": 13.0,
+   "V_DATUM": "NAVD88"
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1925, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1925,
+  "flood_zone": "AE",
+  "bfe_ft": 13.0,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ },
+ "b149": {
+  "parcel": {
+   "DOR_UC": "001",
+   "ACT_YR_BLT": 1925,
+   "EFF_YR_BLT": 1995,
+   "TOT_LVG_AR": 1702,
+   "NO_RES_UNT": 1,
+   "NO_BULDNG": 1,
+   "JV": 392712,
+   "LND_VAL": 110000,
+   "ASMNT_YR": 2026
+  },
+  "zone": {
+   "FLD_ZONE": "X",
+   "STATIC_BFE": -9999.0,
+   "V_DATUM": ""
+  },
+  "floor_ft": 1.0,
+  "basis": "built 1925, before flood rules: likely 1-3 ft above ground",
+  "year_built": 1925,
+  "flood_zone": "X",
+  "bfe_ft": null,
+  "units": 1,
+  "land_use": "001",
+  "floor_low_ft": 1.0,
+  "floor_high_ft": 3.0
+ }
+}

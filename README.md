@@ -27,6 +27,10 @@ Day 1. Working so far:
 - `landfall/packet.py`: a printable evidence packet per building for an insurance claim or a FEMA application: the photo pair with dates, what the photos show, flood water with its sources, the property record, the repair range and how the draft was made.
 - `landfall/area.py`: the area agent. Muse Spark Open calls tools over the building drafts (overview, find buildings, open one building, plan a field route, PDA totals, repair costs, urgent needs) to answer questions and draft the PDA summary. Every number it reports comes from a tool result, and building ids in its answer are checked against the area.
 
+## Hosted copy
+
+The app runs on Hugging Face Spaces from `deploy/huggingface/` (a Dockerfile that builds this repository at one commit); `.github/workflows/deploy-space.yml` redeploys on every push to main. It ships with four finished areas from `demo/` (Cedar Key and Treasure Island after Helene, two in Montego Bay after Melissa). Anyone can open them and ask questions (30 an hour each); assessing a new area spends API credits, so it needs the access code set as the Space secret `LANDFALL_ACCESS_CODE`, and boxes are capped at 60 buildings.
+
 ## Run the app
 
 ```

@@ -76,14 +76,16 @@ class AreaSpec:
         return self.post_label or f"NOAA emergency response flight {self.noaa_flight}"
 
     @classmethod
-    def for_box(cls, name: str, bbox: tuple[float, float, float, float], storm: str, n_buildings: int = 60) -> AreaSpec:
+    def for_box(
+        cls, name: str, bbox: tuple[float, float, float, float], storm: str, n_buildings: int = 60, cache: Path = Path("data") / "cache"
+    ) -> AreaSpec:
         """Look up the flight and gauges for a box drawn on the map."""
         from .storms import STORMS, find_flight, nearest_gauges
 
         s = STORMS[storm]
         center = ((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2)
         if s.provider == "maxar":
-            return cls._maxar(name, bbox, center, s, n_buildings)
+            return cls._maxar(name, bbox, center, s, n_buildings, cache)
         f = find_flight(storm, bbox)
         if f is None:
             raise LookupError(f"NOAA has no {s.name} imagery over this box")
@@ -91,10 +93,10 @@ class AreaSpec:
         return cls(name, center, tuple(bbox), storm, f.name, s.landfall, s.stn_event, n_buildings, gauges=gauges)
 
     @classmethod
-    def _maxar(cls, name, bbox, center, s, n_buildings) -> AreaSpec:
+    def _maxar(cls, name, bbox, center, s, n_buildings, cache) -> AreaSpec:
         from .maxar import passes, pick
 
-        found = passes(s.maxar_event, tuple(bbox), Path("data") / "cache")
+        found = passes(s.maxar_event, tuple(bbox), cache)
         after, before = pick(found, s.landfall, True), pick(found, s.landfall, False)
         if not after:
             raise LookupError(f"Maxar has no clear {s.name} imagery after {s.landfall} over this box")

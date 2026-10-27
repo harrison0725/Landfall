@@ -19,7 +19,7 @@ const STEP = {
 
 const $ = (id) => document.getElementById(id);
 const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-const state = { sid: null, area: null, box: null, busy: false, drawing: false, layer: "after", features: {}, steps: [], spec: null };
+const state = { config: {}, sid: null, area: null, box: null, busy: false, drawing: false, layer: "after", features: {}, steps: [], spec: null };
 
 // ---------------------------------------------------------------- map
 const map = L.map("map", { zoomControl: false }).setView([29.1375, -83.0355], 16);
@@ -302,12 +302,27 @@ async function send(e) {
   $("input").value = "";
   $("context").textContent = "";
   setBusy(true);
-  const body = { text, box: state.box, storm: state.box ? $("storm").value : null };
+  let code = null;
+  if (state.box && state.config.access_code_required) {
+    code = stored("landfall-code") || window.prompt("Assessing a new area spends API credits, so this public copy needs an access code. Enter it, or cancel and ask about the finished areas.");
+    if (!code) {
+      add(div("msg error", "Assessing a new area needs the access code. Pick a finished area from the Area menu and ask about it."));
+      setBusy(false);
+      return;
+    }
+  }
+  const body = { text, box: state.box, storm: state.box ? $("storm").value : null, access_code: code };
   if (state.box) { outlines.clearLayers(); state.features = {}; }
   state.box = null;
   const r = await fetch(`/api/sessions/${state.sid}/turn`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
-  if (!r.ok) { add(div("msg error", esc((await r.json()).detail || r.statusText))); setBusy(false); }
+  if (!r.ok) {
+    if (r.status === 403) store("landfall-code", null);
+    add(div("msg error", esc((await r.json()).detail || r.statusText)));
+    setBusy(false);
+  } else if (code) store("landfall-code", code);
 }
+function stored(k) { try { return localStorage.getItem(k); } catch { return null; } }
+function store(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch { /* private window */ } }
 $("compose").addEventListener("submit", send);
 $("input").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) send(e); });
 
@@ -411,6 +426,7 @@ async function boot() {
   const storms = await (await fetch("/api/storms")).json();
   const group = (label, rows) => `<optgroup label="${label}">${rows.map((s) => `<option value="${s.key}">${esc(s.name)} (${esc(s.where)}, ${s.landfall.slice(0, 4)})</option>`).join("")}</optgroup>`;
   $("storm").innerHTML = group("United States: NOAA aerial photos", storms.filter((s) => s.imagery === "noaa")) + group("Worldwide: Maxar satellite photos", storms.filter((s) => s.imagery === "maxar"));
+  state.config = await (await fetch("/api/config")).json();
   const areas = await (await fetch("/api/areas")).json();
   const params = new URLSearchParams(location.search);
   const at = params.get("at");
@@ -418,6 +434,10 @@ async function boot() {
   const s = await (await fetch("/api/sessions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ area: pick && pick.assessed ? pick.name : null }) })).json();
   state.sid = s.id;
   state.area = s.area;
+  const done = areas.filter((a) => a.assessed);
+  $("area").innerHTML = `<option value="">Pick one…</option>` + done.map((a) => `<option value="${esc(a.name)}">${esc(title(a.name))}</option>`).join("");
+  if (pick) $("area").value = pick.name;
+  $("area").addEventListener("change", () => { if ($("area").value) location.search = `?area=${encodeURIComponent($("area").value)}`; });
   if (pick) {
     state.spec = pick.spec;
     if (pick.spec) $("storm").value = pick.spec.storm;
@@ -435,7 +455,11 @@ async function boot() {
     agentMessage(
       `I've drafted damage categories for **${title(pick.name)}**. Ask me about it, or draw a new area on the map and I'll assess that too.`
     );
-    suggestions(["Which houses should a field team check first?", "Write the draft PDA summary", "Which flooded houses could really be Major?"]);
+    suggestions(
+      pick.spec && pick.spec.imagery === "maxar"
+        ? ["Which buildings should a field team check first?", "Write the draft damage summary", "How many households may be out of their homes?"]
+        : ["Which houses should a field team check first?", "Write the draft PDA summary", "Which flooded houses could really be Major?"]
+    );
   } else {
     agentMessage("Draw an area on the map after a hurricane, and I'll draft FEMA damage categories for every building in it.");
   }

@@ -72,6 +72,9 @@ PIPELINE_TOOLS = [
 ]
 
 
+PIPELINE_NAMES = {t["function"]["name"] for t in PIPELINE_TOOLS}
+
+
 class Session:
     """Holds the chat history and the area; one turn at a time."""
 
@@ -83,6 +86,10 @@ class Session:
         self.messages: list[dict] = [{"role": "system", "content": SYSTEM}]
         self.lock = threading.Lock()
         self.on_event = lambda kind, **f: None
+        # A hosted copy turns this off for visitors without the access code:
+        # the pipeline spends API credits, questions about finished areas don't.
+        self.may_run_pipeline = True
+        self.max_buildings = 150
 
     # ---- tools ---------------------------------------------------------
 
@@ -92,12 +99,17 @@ class Session:
 
     def call(self, name: str, args: dict) -> dict:
         emit = self.on_event
+        if not self.may_run_pipeline and name in PIPELINE_NAMES:
+            return {
+                "error": "This public copy only answers questions about areas already assessed. Assessing a new area needs the access code "
+                "(it spends API credits). Tell the user, and suggest one of the finished areas."
+            }
         try:
             if name == "locate_imagery":
                 if self.box is None:
                     return {"error": "no box drawn yet; ask the user to draw one on the map"}
-                n = max(5, min(int(args.get("max_buildings") or 60), 150))
-                spec = AreaSpec.for_box(self.area or _name(self.box), self.box, args.get("storm", "helene"), n)
+                n = max(5, min(int(args.get("max_buildings") or 60), self.max_buildings))
+                spec = AreaSpec.for_box(self.area or _name(self.box), self.box, args.get("storm", "helene"), n, cache=self.root / "cache")
                 spec.save(self.root)
                 self.area = spec.name
                 emit("area", name=spec.name, bbox=spec.bbox, flight=spec.noaa_flight or None)
