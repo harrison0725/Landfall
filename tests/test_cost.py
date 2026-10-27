@@ -35,3 +35,23 @@ def test_first_floor_from_records():
     assert first_floor(1950, "AE", 12.0, 4.0)["floor_high_ft"] == 3.0
     assert first_floor(None, "AE", 12.0, 4.0)["floor_high_ft"] is None
     assert stories(7.0) == 2 and stories(None) == 1
+
+
+def test_country_rate_from_jrc_table_and_aliases():
+    import pytest
+
+    from landfall.cost import country_rate
+
+    jm = country_rate("Jamaica")
+    assert jm["country"] == "Jamaica" and 20 < jm["usd_per_sqft"] < 40
+    assert country_rate("TheBahamas")["country"] == "Bahamas, The"
+    with pytest.raises(LookupError):
+        country_rate("Mayotte")
+
+
+def test_no_fema_50_percent_rule_abroad():
+    from landfall.cost import estimate
+
+    feats = {"b1": {"properties": {"area_m2": 100.0, "height": 3.0}}}
+    out = estimate([{"id": "b1", "category": "destroyed"}], feats, {}, {"usd_per_sqft": 28.0}, {}, us=False)
+    assert out["substantial_damage_likely"] == [] and out["total_high_usd"] > 0

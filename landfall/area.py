@@ -100,7 +100,12 @@ class Area:
             "water_observations": flood.get("observations", []),
         }
         if costs:
-            meta["building_values"] = f"{costs['rate']['source']}, {costs['rate']['roll_year']} roll: median ${costs['rate']['usd_per_sqft']:.0f}/sq ft from {costs['rate']['homes']} homes nearby"
+            r = costs["rate"]
+            meta["building_values"] = (
+                f"{r['source']}: ${r['usd_per_sqft']:.0f}/sq ft"
+                if r.get("country")
+                else f"{r['source']}, {r['roll_year']} roll: median ${r['usd_per_sqft']:.0f}/sq ft from {r['homes']} homes nearby"
+            )
         area = cls(name, buildings, meta)
         area.costs, area.needs = costs, needs
         return area
@@ -220,7 +225,8 @@ class Area:
                 {"id": x["id"], "cost_usd": [x["cost_low_usd"], x["cost_high_usd"]], "value_usd": x["value_usd"], "driver": x["driver"], "first_floor": x["floor_basis"]}
                 for x in rows
             ],
-            "note": "Planning ranges from tax-roll values (market value, not replacement cost) and FEMA P-784 flood bands; the 50% substantial-damage call is the floodplain manager's.",
+            "note": c.get("note")
+            or "Planning ranges from tax-roll values (market value, not replacement cost) and FEMA P-784 flood bands; the 50% substantial-damage call is the floodplain manager's.",
         }
 
     def urgent_needs(self, limit: int = 10) -> dict:

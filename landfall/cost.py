@@ -20,6 +20,14 @@ house built at grade (floor about 1 ft above the ground). Visible damage
 gives a range by category (CATEGORY_SHARE, Landfall's planning ranges). A
 building's range is the larger of the two at each end.
 
+Outside Florida there is no tax roll to read, so the building value is the
+country's average from the European Commission's Joint Research Centre
+global flood damage database (Huizinga et al. 2017): the maximum damage to a
+residential building's structure per square meter, in 2010 euros, built
+from construction costs scaled by GDP per capita for each country. That is
+a national average at 2010 prices, so it's rougher than the tax roll and
+low for today; the output says so.
+
 FEMA's 50% rule: a building in a flood zone whose repairs cost half its
 value or more is "substantially damaged" and has to be brought up to
 current flood rules (often elevated). Buildings whose high end reaches 50%
@@ -123,14 +131,70 @@ def local_rate(bbox: tuple[float, float, float, float], pad: float = 0.01) -> di
     }
 
 
+JRC = Path(__file__).parent / "data" / "jrc_max_damage.json"
+EUR_USD_2010 = 1.3257  # ECB euro reference rate, 2010 average
+# Microsoft's building dataset and the JRC table spell some countries differently
+ALIASES = {
+    "thebahamas": "Bahamas, The",
+    "iran": "Iran, Islamic Rep.",
+    "russia": "Russian Federation",
+    "venezuela": "Venezuela, RB",
+    "syria": "Syrian Arab Republic",
+    "democraticrepublicofthecongo": "Congo, Dem. Rep.",
+    "congodrc": "Congo, Dem. Rep.",
+    "republicofthecongo": "Congo, Rep.",
+    "ivorycoast": "Cote d'Ivoire",
+    "thegambia": "Gambia, The",
+    "laos": "Lao PDR",
+    "kyrgyzstan": "Kyrgyz Republic",
+    "czechia": "Czech Republic",
+    "slovakia": "Slovak Republic",
+    "egypt": "Egypt, Arab Rep.",
+    "brunei": "Brunei Darussalam",
+    "republicofyemen": "Yemen, Rep.",
+    "kingdomofsaudiarabia": "Saudi Arabia",
+    "sultanateofoman": "Oman",
+    "stateofqatar": "Qatar",
+    "saintlucia": "St. Lucia",
+}
+
+
+def _key(name: str) -> str:
+    return "".join(c for c in name.lower() if c.isalpha())
+
+
+def country_rate(country: str | None) -> dict:
+    """A national average building value per sq ft, from the JRC table."""
+    table = json.loads(JRC.read_text())
+    values = {_key(k): (k, v) for k, v in table["residential_structure_eur_m2"].items()}
+    if not country:
+        raise LookupError("country unknown")
+    name = ALIASES.get(_key(country))
+    hit = values.get(_key(name)) if name else values.get(_key(country))
+    if not hit:
+        raise LookupError(f"no national building value for {country} in the JRC table")
+    name, eur_m2 = hit
+    return {
+        "usd_per_sqft": round(eur_m2 * EUR_USD_2010 / SQFT_PER_M2, 2),
+        "country": name,
+        "eur_per_m2_2010": eur_m2,
+        "roll_year": 2010,
+        "homes": None,
+        "source": f"European Commission JRC global flood damage database (Huizinga et al. 2017), national average for {name}, 2010 prices",
+    }
+
+
 def stories(height_m: float | None) -> int:
     if not height_m or height_m <= 0:
         return 1
     return max(1, min(4, round(height_m / STORY_M)))
 
 
-def estimate(drafts: list[dict], feats: dict[str, dict], floods: dict[str, float | None], rate: dict, floors: dict[str, dict] | None = None) -> dict:
-    """Per-building ranges and area totals."""
+def estimate(
+    drafts: list[dict], feats: dict[str, dict], floods: dict[str, float | None], rate: dict, floors: dict[str, dict] | None = None, us: bool = True
+) -> dict:
+    """Per-building ranges and area totals. `us` False drops FEMA's 50% rule,
+    which only applies under the US flood insurance program."""
     out = []
     for a in drafts:
         if "category" not in a:
@@ -158,8 +222,8 @@ def estimate(drafts: list[dict], feats: dict[str, dict], floods: dict[str, float
                 floor_low_ft=fl.get("floor_low_ft"),
                 floor_high_ft=fl.get("floor_high_ft"),
                 floor_basis=fl.get("basis"),
-                substantial_damage_possible=high >= 0.5,
-                substantial_damage_likely=low >= 0.5,
+                substantial_damage_possible=us and high >= 0.5,
+                substantial_damage_likely=us and low >= 0.5,
             )
         )
     return {

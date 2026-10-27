@@ -48,6 +48,7 @@ def facts(d: Path, bid: str) -> dict:
     return dict(
         id=bid,
         area=d.name,
+        dir=str(d),
         draft=drafts[bid],
         props=feats.get(bid, {}),
         ground_ft=ground.get(bid),
@@ -109,6 +110,13 @@ def render(d: Path, bid: str, pair_png: bytes) -> str:
             ),
         ]
 
+    rate = (_read(Path(f["dir"]) / "costs.json") or {}).get("rate", {})
+    value_basis = (
+        f"Building value is {rate['country']}'s national average per square meter from the European Commission JRC flood damage database (2010 prices), times this building's floor area; damage share follows the drafted category."
+        if rate.get("country")
+        else "Building value is the local median value per square foot of living area on the tax roll times this building's floor area. Flood damage follows FEMA P-784 Appendix E bands."
+    )
+
     def table(rows):
         return "<table>" + "".join(f"<tr><th>{e(str(k))}</th><td>{e(str(v))}</td></tr>" for k, v in rows) + "</table>"
 
@@ -160,7 +168,7 @@ tr+tr th,tr+tr td{{border-top:1px solid #eef1f3}} ul{{padding-left:18px;margin:4
 {table(rows_record)}
 <p class="sub">From the Florida Department of Revenue statewide tax roll and FEMA's National Flood Hazard Layer. No owner names or addresses are stored.</p>
 
-{f'<h2>Repair cost (planning range)</h2>{table(rows_cost)}<p class="sub">Building value is the local median value per square foot of living area on the tax roll times this building&#39;s floor area. Flood damage follows FEMA P-784 Appendix E bands. A contractor&#39;s or adjuster&#39;s estimate replaces this.</p>' if rows_cost else ''}
+{f'<h2>Repair cost (planning range)</h2>{table(rows_cost)}<p class="sub">{e(value_basis)} A contractor&#39;s or adjuster&#39;s estimate replaces this.</p>' if rows_cost else ''}
 
 <h2>How the draft was made</h2>
 <ul>{trace or '<li>No trace recorded.</li>'}</ul>

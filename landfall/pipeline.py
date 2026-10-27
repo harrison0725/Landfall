@@ -753,10 +753,17 @@ def costs(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
     try:
         rate = cost.local_rate(spec.bbox if spec.name != "cedar_key" else _drafted_bbox(feats))
     except (LookupError, OSError) as e:
-        # Building values come from Florida's statewide tax roll; elsewhere
-        # there is no public source to price repairs from, so say so.
-        (d / "costs.json").unlink(missing_ok=True)
-        log("costs", error=f"no repair costs here: building values come from Florida's tax roll ({e})")
+        # No Florida tax roll here: price repairs from the country's average
+        # building value instead, and skip FEMA's US-only 50% rule.
+        from .sources import ms_country
+
+        country = ms_country(spec.bbox, root / "cache")
+        try:
+            rate = cost.country_rate(country)
+        except LookupError as e2:
+            (d / "costs.json").unlink(missing_ok=True)
+            log("costs", error=f"no repair costs here: no Florida tax roll ({e}) and {e2}")
+            rate = None
         needs = rank(drafts, floods, {})
         (d / "needs.json").write_text(json.dumps(needs, indent=1))
         log(
@@ -766,7 +773,18 @@ def costs(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
             note="no property records here, so each building counts as one household",
             first=[r["id"] for r in needs["buildings"][:8]],
         )
-        return {}
+        if rate is None:
+            return {}
+        log("country_rate", country=rate["country"], usd_per_sqft=rate["usd_per_sqft"], basis="national average, 2010 prices")
+        out = cost.estimate(drafts, feats, floods, rate, {}, us=False)
+        out["note"] = (
+            f"Building values are {rate['country']}'s national average from the European Commission JRC flood damage database "
+            "(2010 prices, converted at the 2010 euro rate), not local property records: a rough planning number, likely low for today. "
+            "FEMA's 50% substantial-damage rule is a US rule and isn't applied."
+        )
+        (d / "costs.json").write_text(json.dumps(out, indent=1))
+        log("costs", total_low_usd=out["total_low_usd"], total_high_usd=out["total_high_usd"], basis="national average")
+        return out
     log("local_rate", usd_per_sqft=rate["usd_per_sqft"], homes=rate["homes"], roll_year=rate["roll_year"])
     floors = parcels.lookup(d)
     known = [f for f in floors.values() if f.get("floor_high_ft") is not None]

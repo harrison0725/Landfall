@@ -195,6 +195,23 @@ def naip_mosaic(scene: NaipScene, window: Window, zoom: int) -> tuple[np.ndarray
 # --- Buildings: Microsoft footprints ---------------------------------------
 
 
+def _ms_links(cache_dir: Path) -> list[dict]:
+    path = cache_dir / "ms_dataset_links.csv"
+    if not path.exists():
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(_get(MS_LINKS_URL)[0])
+    return list(csv.DictReader(io.StringIO(path.read_text())))
+
+
+def ms_country(bbox: tuple[float, float, float, float], cache_dir: Path) -> str | None:
+    """The country Microsoft files a box's buildings under (e.g. "Jamaica",
+    "UnitedStates"); the first one on a border."""
+    w, s, e, n = bbox
+    qk = quadkey((w + e) / 2, (s + n) / 2)
+    names = [r["Location"] for r in _ms_links(cache_dir) if r["QuadKey"] == qk]
+    return names[0] if names else None
+
+
 def quadkey(lon: float, lat: float, zoom: int = 9) -> str:
     n = 2**zoom
     x = int((lon + 180) / 360 * n)
@@ -222,8 +239,7 @@ def ms_buildings(
     cache_dir.mkdir(parents=True, exist_ok=True)
     path = cache_dir / f"ms_{region or 'any'}_{qk}.geojsonl.gz"
     if not path.exists():
-        links, _ = _get(MS_LINKS_URL)
-        rows = [r for r in csv.DictReader(io.StringIO(links.decode())) if r["QuadKey"] == qk and (region is None or r["Location"] == region)]
+        rows = [r for r in _ms_links(cache_dir) if r["QuadKey"] == qk and (region is None or r["Location"] == region)]
         if not rows:
             raise LookupError(f"no Microsoft footprints for quadkey {qk}" + (f" in {region}" if region else ""))
         # a quadkey on a border has one file per country; keep them all
