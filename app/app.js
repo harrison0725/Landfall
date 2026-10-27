@@ -232,7 +232,7 @@ function endStep(result) {
   current.el.classList.add(failed ? "failed" : "done");
   const secs = ((performance.now() - current.t0) / 1000).toFixed(0);
   current.el.querySelector(".meta").textContent = `${secs}s`;
-  if (failed) stepLine(result.error);
+  if (failed) { stepLine(result.error); current.el.open = true; }  // show why without a click
   current = null;
 }
 
