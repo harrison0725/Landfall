@@ -1,0 +1,26 @@
+# Render Blueprint: Dashboard -> New -> Blueprint -> pick this repository.
+# The free plan (512 MB, 0.1 CPU) serves the finished areas and answers
+# questions; assessing a new area is too slow there, so it stays behind the
+# access code.
+services:
+  - type: web
+    name: landfall
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/config
+    envVars:
+      - key: META_API_KEY
+        sync: false
+      - key: BASETEN_API_KEY
+        sync: false
+      - key: LANDFALL_ACCESS_CODE
+        sync: false
+      - key: LANDFALL_MAX_BUILDINGS
+        value: "30"
+      - key: LANDFALL_TURNS_PER_HOUR
+        value: "30"
+      - key: LANDFALL_PROCS
+        value: "1"
+      - key: LANDFALL_WORKERS
+        value: "6"

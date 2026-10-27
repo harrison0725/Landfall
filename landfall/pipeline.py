@@ -18,6 +18,7 @@ from __future__ import annotations
 import collections
 import json
 import math
+import os
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from dataclasses import asdict, dataclass, field
 from datetime import date, timedelta
@@ -335,6 +336,29 @@ def _sam_line(cache: Path, img: np.ndarray, prompt: str, scale: int) -> None:
         cache.write_text(sam.request(img, prompt, scale))
 
 
+# Small hosts (512 MB) set these: LANDFALL_PROCS=1 decodes masks in this
+# process instead of one process per CPU, LANDFALL_WORKERS caps how many
+# images are in flight to the APIs at once.
+PROCS = int(os.environ.get("LANDFALL_PROCS", "0")) or None
+WORKERS = int(os.environ.get("LANDFALL_WORKERS", "0"))
+
+
+def _w(n: int) -> int:
+    return min(n, WORKERS) if WORKERS else n
+
+
+def _decode_all(fn, *args) -> list:
+    if PROCS == 1:
+        return list(map(fn, *args))
+    with ProcessPoolExecutor(PROCS) as pool:
+        return list(pool.map(fn, *args, chunksize=8))
+
+
+def _union(txt: Path, shape: tuple[int, int], scale: int) -> np.ndarray:
+    m = _masks(txt, shape, scale)
+    return m.any(0) if len(m) else np.zeros(shape, bool)
+
+
 def _masks(txt: Path, shape: tuple[int, int], scale: int = SAM_SCALE) -> np.ndarray:
     """Decoded masks for a cached SAM line, stacked (n, h, w). Decoding is
     pure Python and slow (~1 s per line), so the result is stored next to it."""
@@ -416,10 +440,9 @@ def segment(spec: AreaSpec, root: Path, log: Log = _quiet, workers: int = 24, pr
 
     jobs = [(r["id"], side, p) for r in al["buildings"] for side in ("pre", "post") for p in prompts]
     log("sam", calls=len(jobs), prompts=prompts)
-    with ThreadPoolExecutor(workers) as pool:
+    with ThreadPoolExecutor(_w(workers)) as pool:
         shapes = list(pool.map(fetch, jobs))
-    with ProcessPoolExecutor() as pool:
-        masks = list(pool.map(_masks, [txt(j) for j in jobs], shapes, chunksize=8))
+    masks = _decode_all(_masks, [txt(j) for j in jobs], shapes)
     dets = dict(zip(jobs, masks))
 
     out = []
@@ -580,11 +603,9 @@ def debris(spec: AreaSpec, root: Path, log: Log = _quiet, workers: int = 24) -> 
     jobs = [(r["id"], "post", p) for r in al["buildings"] for p in DEBRIS_PROMPTS + TARP_PROMPTS]
     jobs += [(r["id"], "pre", p) for r in al["buildings"] for p in DEBRIS_PROMPTS]
     log("sam", calls=len(jobs), prompts=DEBRIS_PROMPTS + TARP_PROMPTS)
-    with ThreadPoolExecutor(workers) as pool:
+    with ThreadPoolExecutor(_w(workers)) as pool:
         shapes = list(pool.map(fetch, jobs))
-    with ProcessPoolExecutor() as pool:
-        stacks = list(pool.map(_masks, [txt(j) for j in jobs], shapes, [YARD_SCALE] * len(jobs), chunksize=8))
-    unions = {j: (s.any(0) if len(s) else np.zeros(sh, bool)) for j, s, sh in zip(jobs, stacks, shapes)}
+    unions = dict(zip(jobs, _decode_all(_union, [txt(j) for j in jobs], shapes, [YARD_SCALE] * len(jobs))))
 
     out = []
     for r in al["buildings"]:
@@ -725,7 +746,7 @@ def assess(
         )
         return rec
 
-    with ThreadPoolExecutor(workers) as pool:
+    with ThreadPoolExecutor(_w(workers)) as pool:
         results = list(pool.map(run, order))
     path = d / "assessments.json"
     if (only or limit) and path.exists():

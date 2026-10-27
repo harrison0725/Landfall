@@ -29,7 +29,7 @@ Day 1. Working so far:
 
 ## Hosted copy
 
-The app runs on Hugging Face Spaces from `deploy/huggingface/` (a Dockerfile that builds this repository at one commit); `.github/workflows/deploy-space.yml` redeploys on every push to main. It ships with four finished areas from `demo/` (Cedar Key and Treasure Island after Helene, two in Montego Bay after Melissa). Anyone can open them and ask questions (30 an hour each); assessing a new area spends API credits, so it needs the access code set as the Space secret `LANDFALL_ACCESS_CODE`, and boxes are capped at 60 buildings.
+The public copy runs on Render's free plan from `render.yaml` (Docker, redeployed on every push to main). It ships with four finished areas from `demo/` (Cedar Key and Treasure Island after Helene, two in Montego Bay after Melissa): anyone can open them, click buildings and ask questions (30 an hour each). The free plan has a tenth of a CPU, too little to assess a new area in reasonable time, so drawing a new box needs the access code set as `LANDFALL_ACCESS_CODE`. On a machine with a few CPUs a 60-building box takes about 4 minutes. `deploy/huggingface/` holds the same setup for a Hugging Face Space.
 
 ## Run the app
 
