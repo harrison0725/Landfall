@@ -201,6 +201,8 @@ def after_overlay(area: str) -> dict:
     d = _area_dir(area)
     if (d / "tiles.json").exists():  # shipped demo areas: map tiles cut from the same imagery
         return {"tiles": json.loads((d / "tiles.json").read_text())}
+    if shared := _shared_tiles(d):  # a new box inside a shipped area's tiles: same look
+        return {"tiles": shared}
     if not (d / "post.png").exists() and not (d / "post_size.json").exists():
         raise HTTPException(404, "no after-storm mosaic yet")
     from PIL import Image
@@ -223,6 +225,26 @@ def tile(name: str, z: int, x: int, y: int) -> Response:
         if (base / f"{y}.{ext}").exists():
             return FileResponse(base / f"{y}.{ext}", media_type=kind, headers={"Cache-Control": "max-age=86400"})
     raise HTTPException(404)
+
+
+def _shared_tiles(d: Path) -> list[dict]:
+    """Tile layers from finished areas of the same storm that overlap this area."""
+    if not (d / "spec.json").exists():
+        return []
+    spec = json.loads((d / "spec.json").read_text())
+    w, s, e, n = spec["bbox"]
+    out: dict[str, dict] = {}
+    for other in sorted(ROOT.glob("*/tiles.json")):
+        o = other.parent / "spec.json"
+        if not o.exists() or json.loads(o.read_text()).get("storm") != spec.get("storm"):
+            continue
+        layers = json.loads(other.read_text())
+        for t in [layers] if isinstance(layers, dict) else layers:
+            (ts, tw), (tn, te) = t["bounds"]
+            if tw < e and te > w and ts < n and tn > s:
+                out.setdefault(t["url"], t)
+    # wide, coarse layers first so sharper ones draw on top
+    return sorted(out.values(), key=lambda t: t["max_native_zoom"])
 
 
 @app.get("/api/areas/{area}/after.jpg")
