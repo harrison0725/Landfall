@@ -82,6 +82,7 @@ button { font: inherit; }
 .map-tools .field, .tool, .seg { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 1px 3px rgb(0 0 0 / 0.15); }
 .field { display: flex; align-items: center; gap: 6px; padding: 4px 8px; font-size: 0.8rem; color: var(--muted); }
 .field select { font: inherit; color: var(--ink); background: transparent; border: 0; }
+@media (min-width: 861px) { #area { min-width: 10.5em; } }
 .tool { padding: 7px 12px; cursor: pointer; color: var(--ink); font-weight: 500; }
 .tool.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .seg { display: flex; overflow: hidden; }
