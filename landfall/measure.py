@@ -50,7 +50,7 @@ def structure_mask(masks: list[np.ndarray], footprint: np.ndarray, min_inside: f
     return out
 
 
-def best_overlap(pre: np.ndarray, post_ctx: np.ndarray, pad: int) -> tuple[float, int, int]:
+def best_overlap(pre: np.ndarray, post_ctx: np.ndarray, pad: int, tolerance: int = 0) -> tuple[float, int, int]:
     """How much of the pre-storm structure mask reappears in the post-storm
     masks, allowing the post-storm house to sit up to `pad` px away.
 
@@ -66,6 +66,13 @@ def best_overlap(pre: np.ndarray, post_ctx: np.ndarray, pad: int) -> tuple[float
         return 0.0, 0, 0
     if not post_ctx.any():
         return 0.0, 0, 0
-    r = cv2.matchTemplate(post_ctx.astype(np.float32), pre.astype(np.float32), cv2.TM_CCORR)
+    post = post_ctx.astype(np.uint8)
+    if tolerance:
+        # The two photos are taken from different angles: a roof's edges
+        # shift a little and walls show on one side. Grow the post-storm
+        # masks by `tolerance` px so that edge drift is not counted as loss.
+        k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * tolerance + 1, 2 * tolerance + 1))
+        post = cv2.dilate(post, k)
+    r = cv2.matchTemplate(post.astype(np.float32), pre.astype(np.float32), cv2.TM_CCORR)
     _, best, _, (ix, iy) = cv2.minMaxLoc(r)
     return float(best / n), ix - pad, iy - pad
