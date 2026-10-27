@@ -25,24 +25,28 @@ const state = { config: {}, sid: null, area: null, box: null, busy: false, drawi
 const map = L.map("map", { zoomControl: false }).setView([29.1375, -83.0355], 16);
 L.control.zoom({ position: "bottomright" }).addTo(map);
 const streets = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 21, maxNativeZoom: 19, attribution: "© OpenStreetMap contributors",
-});
-// fills the map around the after-storm photos, which cover only the flight or the drafted area
-const world = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-  maxZoom: 21, maxNativeZoom: 18, zIndex: 0, attribution: "Around the storm photos: Esri World Imagery (before the storm)",
+  maxZoom: 21, maxNativeZoom: 19, zIndex: 0, attribution: "© OpenStreetMap contributors",
 });
 let after = null;
 const outlines = L.geoJSON(null, { style: styleFor, onEachFeature: bindFeature }).addTo(map);
 let boxLayer = null;
 
+function noaa(name, zIndex, bounds) {
+  // only the area's own flight is credited by name; the rest share one line
+  const attribution = bounds ? "NOAA Emergency Response Imagery (other flights after the storm)" : `NOAA Emergency Response Imagery (${name})`;
+  return L.tileLayer(`https://stormscdn.ngs.noaa.gov/${name}/{z}/{x}/{y}`, { maxZoom: 21, maxNativeZoom: 20, zIndex, bounds, attribution });
+}
 function setFlight(flight) {
   if (after) map.removeLayer(after);
-  after = flight
-    ? L.tileLayer(`https://stormscdn.ngs.noaa.gov/${flight}/{z}/{x}/{y}`, {
-        maxZoom: 21, maxNativeZoom: 20, zIndex: 1, attribution: `NOAA Emergency Response Imagery (${flight})`,
-      })
-    : null;
+  after = flight ? L.layerGroup([noaa(flight, 2)]) : null;
   applyLayer();
+  if (!flight) return;
+  // the storm's other flights fill the map around this one: all after the storm, never older photos
+  const group = after;
+  const storm = (state.spec && state.spec.storm) || $("storm").value;
+  fetch(`/api/storms/${storm}/flights`).then((r) => (r.ok ? r.json() : [])).then((fs) => {
+    fs.filter((f) => f.name !== flight).forEach((f) => group.addLayer(noaa(f.name, 1, f.bounds)));
+  });
 }
 async function setOverlay(area) {
   // storms outside NOAA's coverage: show the after-storm mosaic Landfall built
@@ -50,23 +54,19 @@ async function setOverlay(area) {
   if (!r.ok) return;
   const o = await r.json();
   if (after) map.removeLayer(after);
+  // shipped areas: map tiles, a wide after-storm layer under a sharp one; drawn areas: their own mosaic
   after = o.tiles
-    ? L.tileLayer(o.tiles.url, {
-        maxZoom: 21, maxNativeZoom: o.tiles.max_native_zoom, minNativeZoom: o.tiles.min_zoom, zIndex: 1, attribution: o.tiles.attribution,
-      })
+    ? L.layerGroup([].concat(o.tiles).map((t, i) => L.tileLayer(t.url, {
+        maxZoom: 21, maxNativeZoom: t.max_native_zoom, minNativeZoom: t.min_zoom, zIndex: i + 1, bounds: t.bounds, attribution: t.attribution,
+      })))
     : L.imageOverlay(`${o.url}?t=${Date.now()}`, o.bounds, { attribution: "Maxar Open Data (CC BY-NC 4.0)" });
   applyLayer();
 }
 function applyLayer() {
-  if (state.layer === "after" && after) {
-    map.removeLayer(streets);
-    world.addTo(map);
-    after.addTo(map);
-  } else {
-    if (after) map.removeLayer(after);
-    map.removeLayer(world);
-    streets.addTo(map);
-  }
+  // the street map stays underneath: past the last after-storm photo it shows, never older photos
+  streets.addTo(map);
+  if (state.layer === "after" && after) after.addTo(map);
+  else if (after) map.removeLayer(after);
   outlines.bringToFront();
 }
 document.querySelectorAll(".seg button").forEach((b) =>

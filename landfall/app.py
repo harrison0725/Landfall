@@ -13,6 +13,7 @@ server-sent events.
 from __future__ import annotations
 
 import io
+import functools
 import json
 import os
 import threading
@@ -113,6 +114,25 @@ def config() -> dict:
 @app.get("/api/storms")
 def storms() -> list[dict]:
     return [{"key": s.key, "name": s.name, "landfall": s.landfall, "where": s.where, "imagery": s.provider} for s in STORMS.values()]
+
+
+@app.get("/api/storms/{key}/flights")
+def storm_flights(key: str) -> list[dict]:
+    """Every NOAA flight after the storm, so the map shows after-storm photos
+    beyond the one flight an area was drafted from."""
+    if key not in STORMS or STORMS[key].provider != "noaa":
+        return []
+    return _flights(key)
+
+
+@functools.lru_cache(maxsize=16)
+def _flights(key: str) -> list[dict]:
+    from .storms import flights
+
+    try:
+        return [{"name": f.name, "bounds": [[f.bounds[1], f.bounds[0]], [f.bounds[3], f.bounds[2]]]} for f in flights(key) if f.date >= STORMS[key].landfall]
+    except Exception:
+        return []
 
 
 @app.get("/api/areas")

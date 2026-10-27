@@ -137,10 +137,11 @@ def pick(found: list[Pass], landfall: str, after: bool) -> list[Pass]:
     return side
 
 
-def mosaic(hrefs: list[str], window: Window, zoom: int) -> tuple[np.ndarray, np.ndarray]:
+def mosaic(hrefs: list[str], window: Window, zoom: int, overview: int | None = None) -> tuple[np.ndarray, np.ndarray]:
     """Warp visual COGs into a Web Mercator pixel window, first href first,
     later ones filling only where earlier ones had no data. Reads only the
-    blocks the window needs."""
+    blocks the window needs. `overview` reads a coarser level of each COG
+    (0 is half resolution), for wide, zoomed-out views."""
     import rasterio
     from rasterio.enums import Resampling
     from rasterio.transform import from_bounds
@@ -154,10 +155,14 @@ def mosaic(hrefs: list[str], window: Window, zoom: int) -> tuple[np.ndarray, np.
         for h in hrefs:
             if ok.all():
                 break
-            with rasterio.open(h) as src, WarpedVRT(
-                src, crs="EPSG:3857", transform=transform, width=window.width, height=window.height, resampling=Resampling.bilinear, nodata=0
-            ) as vrt:
-                a = np.moveaxis(vrt.read(indexes=[1, 2, 3]), 0, -1)
+            opts = {} if overview is None else {"overview_level": overview}
+            with rasterio.open(h, **opts) as src:
+                if src.count < 3:  # not a color image
+                    continue
+                with WarpedVRT(
+                    src, crs="EPSG:3857", transform=transform, width=window.width, height=window.height, resampling=Resampling.bilinear, nodata=0
+                ) as vrt:
+                    a = np.moveaxis(vrt.read(indexes=[1, 2, 3]), 0, -1)
             have = a.any(axis=2) & ~ok
             rgb[have] = a[have]
             ok |= have
