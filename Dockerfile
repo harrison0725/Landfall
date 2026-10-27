@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir -e ".[app,data,sam]" && cp -r demo data && chown 
 USER user
 ENV LANDFALL_DATA=/app/data PYTHONUNBUFFERED=1
 EXPOSE 7860
-CMD ["uvicorn", "landfall.app:app", "--host", "0.0.0.0", "--port", "7860"]
+CMD uvicorn landfall.app:app --host 0.0.0.0 --port ${PORT:-7860}
