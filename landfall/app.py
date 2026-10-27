@@ -109,7 +109,26 @@ def index() -> FileResponse:
 @app.get("/api/config")
 def config() -> dict:
     missing = _missing_for_assessing()
-    return {"access_code_required": bool(ACCESS_CODE), "max_buildings": MAX_BUILDINGS, "can_assess": not missing, "missing": missing}
+    return {"access_code_required": bool(ACCESS_CODE), "max_buildings": MAX_BUILDINGS, "can_assess": not missing, "missing": missing, "meta_api": _meta_api_status()}
+
+
+_meta_checked: list = [0.0, None]
+
+
+def _meta_api_status() -> str:
+    """Whether this server's Meta API key is accepted (status only, checked at most every 10 minutes)."""
+    import time
+
+    import requests
+
+    if time.time() - _meta_checked[0] > 600:
+        try:
+            r = requests.get("https://api.meta.ai/v1/models", headers={"Authorization": f"Bearer {os.environ.get('META_API_KEY', '')}"}, timeout=15)
+            _meta_checked[1] = "ok" if r.ok else f"HTTP {r.status_code}"
+        except Exception as e:
+            _meta_checked[1] = type(e).__name__
+        _meta_checked[0] = time.time()
+    return _meta_checked[1]
 
 
 @functools.lru_cache(maxsize=1)
