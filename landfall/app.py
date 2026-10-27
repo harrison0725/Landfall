@@ -21,7 +21,7 @@ from pathlib import Path
 
 import numpy as np
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -109,12 +109,37 @@ def building(area: str, bid: str) -> dict:
     drafts = {a["id"]: a for a in json.loads((d / "assessments.json").read_text())} if (d / "assessments.json").exists() else {}
     if bid not in drafts:
         raise HTTPException(404, f"no draft for {bid}")
-    return drafts[bid]
+    from .packet import facts
+
+    f = facts(d, bid)
+    rec = f["parcel"]
+    return {
+        **drafts[bid],
+        "cost": f["cost"],
+        "need": f["need"],
+        "record": {k: rec.get(k) for k in ("year_built", "flood_zone", "bfe_ft", "basis", "land_use")} if rec else None,
+    }
 
 
 @app.get("/api/areas/{area}/pair/{bid}.png")
 def pair(area: str, bid: str) -> Response:
     """Before | after with the outline, the same picture the agent saw."""
+    return Response(_pair_png(area, bid), media_type="image/png", headers={"Cache-Control": "max-age=3600"})
+
+
+@app.get("/api/areas/{area}/packet/{bid}", response_class=HTMLResponse)
+def packet(area: str, bid: str) -> HTMLResponse:
+    """Printable evidence packet for one building."""
+    from .packet import render
+
+    d = _area_dir(area)
+    try:
+        return HTMLResponse(render(d, bid, _pair_png(area, bid)))
+    except KeyError:
+        raise HTTPException(404, f"no draft for {bid}") from None
+
+
+def _pair_png(area: str, bid: str) -> bytes:
     from PIL import Image
 
     from .agent import pair_image
@@ -132,7 +157,7 @@ def pair(area: str, bid: str) -> Response:
     import base64
 
     url = pair_image(pre, post, pts, scale=3)
-    return Response(base64.b64decode(url.split(",", 1)[1]), media_type="image/png", headers={"Cache-Control": "max-age=3600"})
+    return base64.b64decode(url.split(",", 1)[1])
 
 
 @app.post("/api/sessions")

@@ -41,6 +41,8 @@ class Area:
     name: str
     buildings: dict[str, dict]  # id -> merged record
     meta: dict
+    costs: dict | None = None
+    needs: dict | None = None
 
     @classmethod
     def load(cls, root: Path, name: str) -> Area:
@@ -50,6 +52,10 @@ class Area:
         flood = json.loads((d / "flood.json").read_text()) if (d / "flood.json").exists() else {"buildings": []}
         ground = {b["id"]: b.get("ground_ft") for b in flood["buildings"]}
         summary = json.loads((d / "alignment.json").read_text())["summary"]
+        costs = json.loads((d / "costs.json").read_text()) if (d / "costs.json").exists() else None
+        needs = json.loads((d / "needs.json").read_text()) if (d / "needs.json").exists() else None
+        cost_of = {c["id"]: c for c in (costs or {}).get("buildings", [])}
+        need_of = {n["id"]: n for n in (needs or {}).get("buildings", [])}
         buildings = {}
         for bid, a in drafts.items():
             p = feats.get(bid, {})
@@ -71,13 +77,30 @@ class Area:
                 "area_m2": p.get("area_m2"),
                 "objections": [o for t in a.get("trace", []) for o in t.get("verifier", [])],
             }
+            if bid in cost_of:
+                c = cost_of[bid]
+                buildings[bid]["repair_cost_usd"] = [c["cost_low_usd"], c["cost_high_usd"]]
+                buildings[bid]["building_value_usd"] = c["value_usd"]
+                buildings[bid]["substantial_damage"] = "likely" if c["substantial_damage_likely"] else "possible" if c["substantial_damage_possible"] else "no"
+                buildings[bid]["first_floor"] = c.get("floor_basis")
+            if bid in need_of:
+                n = need_of[bid]
+                buildings[bid]["households"] = n["households"]
+                buildings[bid]["displaced"] = "likely" if n["likely_displaced"] else "possibly" if n["possibly_displaced"] else "no"
+                buildings[bid]["water_inside_ft"] = n["water_inside_ft"]
+                buildings[bid]["urgency"] = n["score"]
+                buildings[bid]["urgency_reasons"] = n["reasons"]
         meta = {
             "post_storm_photos": f"NOAA emergency response flight {summary.get('noaa_flight')}",
             "pre_storm_photos": f"USDA NAIP, {summary.get('naip_date')}",
             "water_surface_ft_navd88": flood.get("surface_ft_navd88"),
             "water_observations": flood.get("observations", []),
         }
-        return cls(name, buildings, meta)
+        if costs:
+            meta["building_values"] = f"{costs['rate']['source']}, {costs['rate']['roll_year']} roll: median ${costs['rate']['usd_per_sqft']:.0f}/sq ft from {costs['rate']['homes']} homes nearby"
+        area = cls(name, buildings, meta)
+        area.costs, area.needs = costs, needs
+        return area
 
     # ---- tools -------------------------------------------------------------
 
@@ -178,6 +201,49 @@ class Area:
         )
         return out
 
+    def repair_costs(self, limit: int = 10) -> dict:
+        """Area repair cost range and the costliest buildings."""
+        if not self.costs:
+            return {"error": "costs not estimated yet for this area"}
+        c = self.costs
+        rows = sorted(c["buildings"], key=lambda x: -x["cost_high_usd"])[: max(1, min(int(limit), 50))]
+        return {
+            "total_usd": [c["total_low_usd"], c["total_high_usd"]],
+            "substantially_damaged_likely": c["substantial_damage_likely"],
+            "substantially_damaged_possible": len(c["substantial_damage_possible"]),
+            "building_values": self.meta.get("building_values"),
+            "costliest": [
+                {"id": x["id"], "cost_usd": [x["cost_low_usd"], x["cost_high_usd"]], "value_usd": x["value_usd"], "driver": x["driver"], "first_floor": x["floor_basis"]}
+                for x in rows
+            ],
+            "note": "Planning ranges from tax-roll values (market value, not replacement cost) and FEMA P-784 flood bands; the 50% substantial-damage call is the floodplain manager's.",
+        }
+
+    def urgent_needs(self, limit: int = 10) -> dict:
+        """Households likely out of their homes, and who to reach first."""
+        if not self.needs:
+            return {"error": "needs not estimated yet for this area"}
+        n = self.needs
+        rows = n["buildings"][: max(1, min(int(limit), 50))]
+        return {
+            "households_likely_displaced": n["households_likely_displaced"],
+            "households_possibly_displaced": n["households_possibly_displaced"],
+            "businesses_or_lodging_hit": n.get("businesses_or_lodging_hit", []),
+            "most_urgent_first": [
+                {
+                    "id": r["id"],
+                    "category": r["category"],
+                    "households": r["households"],
+                    "displaced": "likely" if r["likely_displaced"] else "possibly" if r["possibly_displaced"] else "no",
+                    "water_inside_ft": r["water_inside_ft"],
+                    "why": r["reasons"],
+                    "lat_lon": f"{self.buildings[r['id']]['lat']:.5f}, {self.buildings[r['id']]['lon']:.5f}" if r["id"] in self.buildings else None,
+                }
+                for r in rows
+            ],
+            "note": "Households come from residential units on the tax roll; water inside uses the first-floor estimate from year built and flood zone.",
+        }
+
     # ---- plumbing ----------------------------------------------------------
 
     def call(self, name: str, args: dict) -> dict:
@@ -187,6 +253,8 @@ class Area:
             "get_building": self.get_building,
             "plan_inspections": self.plan_inspections,
             "pda_totals": self.pda_totals,
+            "repair_costs": self.repair_costs,
+            "urgent_needs": self.urgent_needs,
         }.get(name)
         if fn is None:
             return {"error": f"unknown tool {name}"}
@@ -251,6 +319,22 @@ TOOLS = [
             "name": "pda_totals",
             "description": "Counts per PDA category (affected, minor, major, destroyed) with how many need review and how many had 1.5 ft or more of water around them.",
             "parameters": {"type": "object", "properties": {}},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "repair_costs",
+            "description": "Repair cost range for the area and the costliest buildings, from local tax-roll building values and FEMA flood-damage bands, with FEMA's 50% substantial-damage flags.",
+            "parameters": {"type": "object", "properties": {"limit": {"type": "integer"}}},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "urgent_needs",
+            "description": "Households likely or possibly displaced, businesses and lodging hit, and the buildings to reach first with the reasons and coordinates.",
+            "parameters": {"type": "object", "properties": {"limit": {"type": "integer"}}},
         },
     },
 ]
@@ -366,5 +450,7 @@ PDA_REQUEST = """Write the draft Preliminary Damage Assessment summary for this 
 2. Damage by category: a table of affected, minor, major and destroyed counts, with how many of each need a field check.
 3. Flooding: how deep the water was, how it was measured, and why the flood-only houses may be undercounted.
 4. Destroyed and major: each building by id with one line of evidence.
-5. Field inspection plan: the route for the first team, with the number of stops and the walking distance.
-6. Limits: what aerial drafts can't see, and that these are drafts for trained assessors."""
+5. Who needs help first: households likely displaced, businesses and lodging hit, and the five most urgent buildings with why.
+6. Repair cost: the area range, how many buildings are likely substantially damaged under FEMA's 50% rule, and where the values come from.
+7. Field inspection plan: the route for the first team, with the number of stops and the walking distance.
+8. Limits: what aerial drafts can't see, and that these are drafts for trained assessors."""

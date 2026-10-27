@@ -31,7 +31,8 @@ You can also assess a new area. When the user gives you a box, work through thes
 4. measure_flood: surveyed water surface minus lidar ground at each building.
 5. look_for_debris: debris piles in the yard and blue tarps on roofs.
 6. draft_categories: the per-building agent drafts a FEMA category for each building, worst-measured first.
-Then give a short first report: totals, the worst buildings by id, and what needs a field check. Before each step, say in one short sentence what you are doing and why. If a step reports a problem (few buildings aligned, no flood data), say what it means for the results and carry on."""
+7. estimate_costs_and_needs: repair cost ranges from local tax-roll values, FEMA's 50% substantial-damage flags, and households likely displaced.
+Then give a short first report: totals, repair cost range, households likely displaced, the most urgent buildings by id, and what needs a field check. Before each step, say in one short sentence what you are doing and why. If a step reports a problem (few buildings aligned, no flood data), say what it means for the results and carry on."""
 )
 
 PIPELINE_TOOLS = [
@@ -61,6 +62,11 @@ PIPELINE_TOOLS = [
             "draft_categories",
             "Draft a FEMA category for each building: Muse Spark Open looks at the photo pair and the measurements, a checker objects to calls the numbers don't support, unsure calls go to Muse Spark.",
             {"limit": {"type": "integer", "description": "only the N worst-measured buildings (default all)"}},
+        ),
+        (
+            "estimate_costs_and_needs",
+            "Repair cost range per building and for the area (local building values from the Florida tax roll, FEMA flood-damage bands, first-floor height estimated from year built and FEMA flood zone), the 50% substantial-damage flags, and households likely displaced.",
+            {},
         ),
     ]
 ]
@@ -108,6 +114,7 @@ class Session:
                 "measure_flood": "flood",
                 "look_for_debris": "debris",
                 "draft_categories": "assess",
+                "estimate_costs_and_needs": "costs",
             }.get(name)
             if stage:
                 if not self.area:
@@ -125,6 +132,8 @@ class Session:
                     emit("buildings", area=self.area)
                 if stage == "assess":
                     return {"done": True, **next((e for e in reversed(events) if e["event"] == "assessed"), {})}
+                if stage == "costs":
+                    emit("buildings", area=self.area)
                 # stage summaries are what the model needs; per-building chatter is for the UI
                 return {"done": True, "summary": [e for e in events if e["event"] not in ("building",)]}
             if not self.area or not (self.root / self.area / "assessments.json").exists():

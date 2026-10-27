@@ -81,3 +81,13 @@ Building period: Oct 26 to Nov 4, 2026 (confirmed at the kickoff on Oct 26).
   - A town often spans two NAIP scenes; the pre-storm mosaic now fills scene edges from the neighboring scene.
   - The prepare step warns when another storm hit between the pre-storm photos and this one (Idalia, for anything with 2023 photos), and the flood step widens its search for high-water marks when none are close, saying the depths are rougher.
 - Cedar Key eval unchanged after all this: 47/50 and 48/50, Destroyed 5/5 against Claude's labels.
+
+### Oct 27: repair cost, who needs help first, claim packets
+
+Harry asked for features from a list (damage detection, severity, repair cost, insurance claim help, damage mapping, emergency priorities). Detection, severity and mapping already exist; windows and walls can't be seen in photos taken straight down. Added the other three:
+
+- Repair cost (`cost.py`, `parcels.py`): local building value per square foot from the Florida statewide tax roll (Cedar Key $190 from 631 homes, Treasure Island $257 from 1,480), times each building's floor area. Damage share is the larger of a range by drafted category and FEMA P-784's flood bands. The first-floor height comes from the year built and the FEMA flood zone: built 1985 or later in a zone with a base flood elevation means the floor is at the BFE; before 1975 means 1 to 3 ft above ground. That took the Cedar Key range from $5M–$48M down to $7.9M–$19.4M, with 20 buildings likely substantially damaged under FEMA's 50% rule and 51 possibly.
+- The current roll is after the storm, so destroyed houses have no year built; their floor stays unknown and the range stays wide.
+- Who needs help first (`priority.py`): Cedar Key has 16 households likely displaced and 32 possibly. The four destroyed buildings on the waterfront are a motel (land use 039), so they count as lodging lost, not households; they are listed separately with eight other businesses.
+- Claim packet (`packet.py`): one printable page per building, opened from the map card.
+- The agent gets `estimate_costs_and_needs` as a pipeline step and `repair_costs` and `urgent_needs` as question tools; the PDA summary gained "Who needs help first" and "Repair cost" sections.

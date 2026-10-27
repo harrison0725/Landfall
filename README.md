@@ -21,7 +21,10 @@ Day 1. Working so far:
 - `landfall/pipeline.py`: the stages (prepare, segment, flood, debris, assess) as library functions with progress events; the scripts, the agent and the app all call these.
 - `landfall/session.py` and `landfall/app.py`: the conversation the app runs. The agent gets the pipeline stages as tools, so it runs the assessment itself, then answers questions with the area tools.
 - `landfall/storms.py`: finds the NOAA post-storm flight and tide gauges for any box, from NOAA's own flight catalog.
-- `landfall/area.py`: the area agent. Muse Spark Open calls tools over the building drafts (overview, find buildings, open one building, plan a field route, PDA totals) to answer questions and draft the PDA summary. Every number it reports comes from a tool result, and building ids in its answer are checked against the area.
+- `landfall/cost.py` and `landfall/parcels.py`: repair cost ranges. Building values come from the Florida tax roll (median value per square foot of the homes nearby); flood damage follows FEMA's P-784 bands, with the first-floor height estimated from the year built and the FEMA flood zone. Buildings whose repairs could reach half their value are flagged under FEMA's 50% substantial-damage rule. No owner names or addresses are kept.
+- `landfall/priority.py`: who needs help first. Households likely displaced (Major or Destroyed, or 18 inches or more of water inside at the estimated floor height), motels and shops listed separately, and buildings ranked by urgency.
+- `landfall/packet.py`: a printable evidence packet per building for an insurance claim or a FEMA application: the photo pair with dates, what the photos show, flood water with its sources, the property record, the repair range and how the draft was made.
+- `landfall/area.py`: the area agent. Muse Spark Open calls tools over the building drafts (overview, find buildings, open one building, plan a field route, PDA totals, repair costs, urgent needs) to answer questions and draft the PDA summary. Every number it reports comes from a tool result, and building ids in its answer are checked against the area.
 
 ## Run the app
 
@@ -80,6 +83,9 @@ pytest
 | High-water marks | USGS Flood Event Viewer | US government work, public domain |
 | Ground elevation | USGS 3DEP | US government work, public domain |
 | Damage categories | FEMA Preliminary Damage Assessment Guide | Public guidance |
+| Building values, year built, units | Florida Department of Revenue statewide cadastral (county property appraisers) | Public record |
+| Flood zones and base flood elevations | FEMA National Flood Hazard Layer | US government work, public domain |
+| Flood damage bands | FEMA P-784 Substantial Damage Estimator, Appendix E | Public guidance |
 
 ## Third-party code and tools
 

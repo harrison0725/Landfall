@@ -113,3 +113,5 @@ button { font: inherit; }
   .map-wrap { order: 1; }
 }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+.packet { display: inline-block; margin: 2px 0 4px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); text-decoration: none; font-size: 0.85rem; }
+.packet:hover { border-color: var(--muted); }

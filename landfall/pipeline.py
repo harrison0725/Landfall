@@ -661,7 +661,53 @@ def assess(
     return results
 
 
-STAGES = {"prepare": prepare, "segment": segment, "flood": flood, "debris": debris, "assess": assess}
+# ---------------------------------------------------------------- costs
+
+
+def costs(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
+    """Repair cost ranges from the drafts and local building values."""
+    from . import cost, parcels
+
+    d = root / spec.name
+    _, feats = _load(d)
+    drafts = json.loads((d / "assessments.json").read_text())
+    floods = {}
+    if (d / "flood.json").exists():
+        floods = {b["id"]: b["flood_ft"] for b in json.loads((d / "flood.json").read_text()).get("buildings", [])}
+    rate = cost.local_rate(spec.bbox if spec.name != "cedar_key" else _drafted_bbox(feats))
+    log("local_rate", usd_per_sqft=rate["usd_per_sqft"], homes=rate["homes"], roll_year=rate["roll_year"])
+    floors = parcels.lookup(d)
+    known = [f for f in floors.values() if f.get("floor_high_ft") is not None]
+    log("first_floors", estimated=len(known), of=len(floors), low=sum(f["floor_high_ft"] <= 3.0 for f in known))
+    out = cost.estimate(drafts, feats, floods, rate, floors)
+    (d / "costs.json").write_text(json.dumps(out, indent=1))
+    from .priority import rank
+
+    needs = rank(drafts, floods, floors)
+    (d / "needs.json").write_text(json.dumps(needs, indent=1))
+    log(
+        "needs",
+        households_likely_displaced=needs["households_likely_displaced"],
+        households_possibly_displaced=needs["households_possibly_displaced"],
+        first=[r["id"] for r in needs["buildings"][:8]],
+    )
+    log(
+        "costs",
+        total_low_usd=out["total_low_usd"],
+        total_high_usd=out["total_high_usd"],
+        substantial_likely=len(out["substantial_damage_likely"]),
+        substantial_possible=len(out["substantial_damage_possible"]),
+    )
+    return out
+
+
+def _drafted_bbox(feats: dict) -> tuple[float, float, float, float]:
+    xs = [f["properties"]["centroid"][0] for f in feats.values()]
+    ys = [f["properties"]["centroid"][1] for f in feats.values()]
+    return (min(xs), min(ys), max(xs), max(ys))
+
+
+STAGES = {"prepare": prepare, "segment": segment, "flood": flood, "debris": debris, "assess": assess, "costs": costs}
 
 
 def spec_for(root: Path, name: str) -> AreaSpec:

@@ -320,6 +320,11 @@ async function openBuilding(id) {
     ["Water above ground", a && a.flood_ft != null ? `${a.flood_ft.toFixed(1)} ft` : "unknown"],
     ...(a && a.demolished ? [["Note", "gone before the storm (demolished)"]] : []),
     ["Debris in yard", a && a.debris_share ? `${Math.round(a.debris_share * 100)}%` : "none found"],
+    ...(a && a.record ? [["First floor", a.record.basis || "unknown"]] : []),
+    ...(a && a.need && a.need.water_inside_ft[1] > 0 ? [["Water inside", `${a.need.water_inside_ft[0].toFixed(1)}–${a.need.water_inside_ft[1].toFixed(1)} ft (estimate)`]] : []),
+    ...(a && a.need ? [["Households", a.need.households ? `${a.need.households}${a.need.likely_displaced ? ", likely displaced" : a.need.possibly_displaced ? ", possibly displaced" : ""}` : "none (not a home)"]] : []),
+    ...(a && a.cost ? [["Repair cost", `${usd(a.cost.cost_low_usd)}–${usd(a.cost.cost_high_usd)} of ${usd(a.cost.value_usd)}`]] : []),
+    ...(a && a.cost && a.cost.substantial_damage_possible ? [["FEMA 50% rule", a.cost.substantial_damage_likely ? "likely substantially damaged" : "possibly substantially damaged"]] : []),
   ];
   $("card-body").innerHTML = `
     <h2>${esc(id)} ${cat ? `<span class="pill ${cat}" style="--c:var(--${cat})">${LABEL[cat]}</span>` : ""}${a && a.needs_human ? `<span class="pill" style="--c:var(--review)">Field check</span>` : ""}</h2>
@@ -327,8 +332,13 @@ async function openBuilding(id) {
     <div class="cap"><span>Before (NAIP)</span><span>After (NOAA, brightened)</span></div>
     <p>${a ? esc(a.evidence) : "Not drafted yet."}</p>
     <dl class="kv">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
+    ${a ? `<p><a class="packet" href="/api/areas/${state.area}/packet/${id}" target="_blank" rel="noopener">Evidence packet for a claim (printable)</a></p>` : ""}
     ${trace.length ? `<div class="trace"><b>How the call was made</b>${trace.map(traceRow).join("")}</div>` : ""}`;
   $("card").hidden = false;
+}
+function usd(x) {
+  if (x == null) return "?";
+  return x >= 1e6 ? `$${(x / 1e6).toFixed(1)}M` : `$${Math.round(x / 1e3)}k`;
 }
 function traceRow(t) {
   if (t.model === "flood rule") return `<div class="t">Flood rule raised ${esc(t.raised_from)} to ${esc(t.to)}.</div>`;
