@@ -5,7 +5,7 @@ assistance application is filed.
 The packet is one self-contained HTML page (the photo pair is embedded), so
 it prints, saves as PDF from the browser, or attaches to an email as is. It
 carries the same facts as the draft and says plainly that it's a draft from
-aerial photos, not an adjuster's or FEMA's determination.
+aerial or satellite photos, not an adjuster's or FEMA's determination.
 """
 
 from __future__ import annotations
@@ -25,12 +25,35 @@ def _read(p: Path):
     return json.loads(p.read_text()) if p.exists() else None
 
 
+def model_name(m: str) -> str:
+    """The model's product name, not its API id."""
+    mid = str(m or "").rsplit("/", 1)[-1].lower()
+    return "Muse Spark Open" if "spark-open" in mid else "Muse Spark" if "muse-spark" in mid else mid
+
+
 def _usd(x: float | None) -> str:
     return "unknown" if x is None else f"${x:,.0f}"
 
 
 def _ft(x: float | None) -> str:
     return "unknown" if x is None else f"{x:.1f} ft"
+
+
+def satellite(photos: dict) -> bool:
+    """Photos came from Maxar satellites (storms outside the US), not NOAA flights."""
+    return "maxar" in (photos.get("post_source") or "").lower()
+
+
+def before_source(photos: dict) -> str:
+    return photos.get("pre_source") or f"USDA NAIP, {photos.get('naip_date') or 'unknown date'}"
+
+
+def after_source(photos: dict) -> str:
+    if photos.get("post_source"):
+        return photos["post_source"]
+    flight = photos.get("noaa_flight") or ""
+    day = f"{flight[:4]}-{flight[4:6]}-{flight[6:8]}" if flight[:8].isdigit() else ""
+    return f"NOAA emergency response flight {day}".strip()
 
 
 def facts(d: Path, bid: str) -> dict:
@@ -68,6 +91,9 @@ def render(d: Path, bid: str, pair_png: bytes) -> str:
     lon, lat = (p.get("centroid") or [None, None])[:2]
     img = "data:image/png;base64," + base64.b64encode(pair_png).decode()
     obs = f["flood"].get("observations", [])
+    photos = f["photos"]
+    sat = satellite(photos)
+    flood_known = bool(f["flood"].get("buildings") or obs or a.get("flood_ft") is not None)
 
     rows_draft = [
         ("Draft category", LABEL.get(cat, cat)),
@@ -88,15 +114,20 @@ def render(d: Path, bid: str, pair_png: bytes) -> str:
     ]
     rows_water += [(o["source"], f"{o['elev_ft']:.1f} ft NAVD88. {o.get('note', '')}") for o in obs]
 
-    rows_record = [
-        ("Year built", pr.get("year_built") or "not on the current roll"),
-        ("Flood zone", f"{pr.get('flood_zone') or 'unknown'}" + (f", base flood elevation {pr['bfe_ft']:g} ft NAVD88" if pr.get("bfe_ft") is not None else "")),
-        ("First floor (estimate)", pr.get("basis") or "unknown"),
-    ]
+    rows_record = (
+        []
+        if sat
+        else [
+            ("Year built", pr.get("year_built") or "not on the current roll"),
+            ("Flood zone", f"{pr.get('flood_zone') or 'unknown'}" + (f", base flood elevation {pr['bfe_ft']:g} ft NAVD88" if pr.get("bfe_ft") is not None else "")),
+            ("First floor (estimate)", pr.get("basis") or "unknown"),
+        ]
+    )
     if n:
         lo, hi = n["water_inside_ft"]
-        rows_record.append(("Water inside (estimate)", "none" if hi <= 0 else f"{lo:.1f} to {hi:.1f} ft"))
-        rows_record.append(("Households on the roll", str(n["households"])))
+        if flood_known:
+            rows_record.append(("Water inside (estimate)", "none" if hi <= 0 else f"{lo:.1f} to {hi:.1f} ft"))
+        rows_record.append(("Households" if sat else "Households on the roll", f"{n['households']} (counted as one per building)" if sat else str(n["households"])))
 
     rows_cost = []
     if c:
@@ -104,11 +135,14 @@ def render(d: Path, bid: str, pair_png: bytes) -> str:
             ("Building value (estimate)", f"{_usd(c['value_usd'])} ({c['sqft']:,} sq ft, {c['stories']} {'story' if c['stories'] == 1 else 'stories'})"),
             ("Repair cost range", f"{_usd(c['cost_low_usd'])} to {_usd(c['cost_high_usd'])} ({round(c['share_low'] * 100)}% to {round(c['share_high'] * 100)}% of value)"),
             ("What drives the high end", c["driver"]),
-            (
-                "FEMA 50% rule",
-                "likely substantially damaged" if c["substantial_damage_likely"] else "possibly substantially damaged" if c["substantial_damage_possible"] else "below 50%",
-            ),
         ]
+        if not sat:
+            rows_cost.append(
+                (
+                    "FEMA 50% rule",
+                    "likely substantially damaged" if c["substantial_damage_likely"] else "possibly substantially damaged" if c["substantial_damage_possible"] else "below 50%",
+                )
+            )
 
     rate = (_read(Path(f["dir"]) / "costs.json") or {}).get("rate", {})
     value_basis = (
@@ -126,14 +160,31 @@ def render(d: Path, bid: str, pair_png: bytes) -> str:
         if t.get("model") == "flood rule":
             return f"<li>Flood rule raised {e(t['raised_from'].lower())} to {e(t['to'].lower())}: surveyed water stood around the building.</li>"
         if t.get("error"):
-            return f"<li>{e(str(t['model']).split('/')[-1])}: {e(t['error'][:160])}</li>"
+            return f"<li>{e(model_name(t['model']))}: {e(t['error'][:160])}</li>"
         ans = t.get("answer", {})
         obj = "; ".join(t.get("verifier") or []) or "no objection"
-        return f"<li><b>{e(str(t['model']).split('/')[-1])}</b> said {e(str(ans.get('category', '')).lower())} ({ans.get('confidence')}). Checker: {e(obj)}</li>"
+        return f"<li><b>{e(model_name(t['model']))}</b> said {e(str(ans.get('category', '')).lower())} ({ans.get('confidence')}). Checker: {e(obj)}</li>"
 
     trace = "".join(trace_row(t) for t in a.get("trace", []))
     when = dt.date.today().isoformat()
-    photos = f["photos"]
+    kind = "satellite" if sat else "aerial"
+    record_note = (
+        "Building outline from Microsoft's global building footprints. Outside the US no property records are used, so each building counts as one household. No owner names or addresses are stored."
+        if sat
+        else "From the Florida Department of Revenue statewide tax roll and FEMA's National Flood Hazard Layer. No owner names or addresses are stored."
+    )
+    water_html = table(rows_water) if flood_known else "<p>Unknown. There is no surveyed flood data for this area, and satellite photos can't show how deep the water was.</p>"
+    advice = (
+        """<li>File with each insurance policy that covers the building; wind and flood are often covered separately.</li>
+<li>Register with the national disaster agency or the government relief program for this storm, and keep the reference number.</li>
+<li>Add your own photos of every room, the water line on the walls, and damaged belongings before they are thrown out, plus receipts for repairs and lodging.</li>
+<li>Before rebuilding, ask the local building authority which permits and building standards apply.</li>"""
+        if sat
+        else """<li>Flood damage is covered by flood insurance (the National Flood Insurance Program or a private flood policy), not a standard homeowners policy; wind damage usually goes to the homeowners or windstorm policy. File with each that applies.</li>
+<li>Uninsured or underinsured losses: register with FEMA at DisasterAssistance.gov or 1-800-621-3362.</li>
+<li>Add your own photos of every room, the water line on the walls, and damaged belongings before they are thrown out, plus receipts for repairs and lodging.</li>
+<li>If the repair cost is near half the building&#39;s value, ask the county floodplain manager about the substantial-damage determination before rebuilding; it can require raising the building, and flood policies with Increased Cost of Compliance coverage help pay for that.</li>"""
+    )
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Evidence packet {e(bid)}</title>
@@ -151,22 +202,22 @@ tr+tr th,tr+tr td{{border-top:1px solid #eef1f3}} ul{{padding-left:18px;margin:4
 <button class="print" onclick="print()">Print or save as PDF</button>
 <h1>Damage evidence packet: building {e(bid)}</h1>
 <p class="sub">{e(f['area'].replace('_', ' ').title())} · {f'{lat:.5f}, {lon:.5f}' if lat is not None else ''} · prepared {when} by Landfall</p>
-<div class="draft"><b>Draft from aerial photos.</b> This is not an insurance adjuster's estimate or a FEMA determination. It collects the public evidence about this building so the people filing and reviewing a claim start from the same facts.</div>
+<div class="draft"><b>Draft from {kind} photos.</b> This is not an insurance adjuster's estimate or {"an official damage determination" if sat else "a FEMA determination"}. It collects the public evidence about this building so the people filing and reviewing a claim start from the same facts.</div>
 
 <h2>Before and after</h2>
-<img src="{img}" alt="Before and after aerial photos of building {e(bid)}">
-<div class="cap"><span>Before: {e(photos.get('pre_source') or f"USDA NAIP, {photos.get('naip_date', 'unknown date')}")}</span><span>After: {e(photos.get('post_source') or f"NOAA emergency response flight {photos.get('noaa_flight', '')}")} (brightened)</span></div>
+<img src="{img}" alt="Before and after {kind} photos of building {e(bid)}">
+<div class="cap"><span>Before: {e(before_source(photos))}</span><span>After: {e(after_source(photos))}{"" if sat else " (brightened)"}</span></div>
 
 <h2>What the photos show</h2>
 <p>{e(a.get('evidence', ''))}</p>
 {table(rows_draft)}
 
 <h2>Flood water</h2>
-{table(rows_water)}
+{water_html}
 
-<h2>Property record</h2>
-{table(rows_record)}
-<p class="sub">From the Florida Department of Revenue statewide tax roll and FEMA's National Flood Hazard Layer. No owner names or addresses are stored.</p>
+<h2>{"Households" if sat else "Property record"}</h2>
+{table(rows_record) if rows_record else ""}
+<p class="sub">{e(record_note)}</p>
 
 {f'<h2>Repair cost (planning range)</h2>{table(rows_cost)}<p class="sub">{e(value_basis)} A contractor&#39;s or adjuster&#39;s estimate replaces this.</p>' if rows_cost else ''}
 
@@ -175,9 +226,6 @@ tr+tr th,tr+tr td{{border-top:1px solid #eef1f3}} ul{{padding-left:18px;margin:4
 
 <h2>For the claim or application</h2>
 <ul>
-<li>Flood damage is covered by flood insurance (the National Flood Insurance Program or a private flood policy), not a standard homeowners policy; wind damage usually goes to the homeowners or windstorm policy. File with each that applies.</li>
-<li>Uninsured or underinsured losses: register with FEMA at DisasterAssistance.gov or 1-800-621-3362.</li>
-<li>Add your own photos of every room, the water line on the walls, and damaged belongings before they are thrown out, plus receipts for repairs and lodging.</li>
-<li>If the repair cost is near half the building&#39;s value, ask the county floodplain manager about the substantial-damage determination before rebuilding; it can require raising the building, and flood policies with Increased Cost of Compliance coverage help pay for that.</li>
+{advice}
 </ul>
 </body></html>"""

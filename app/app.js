@@ -51,7 +51,9 @@ async function setOverlay(area) {
 }
 function applyLayer() {
   if (state.layer === "after" && after) {
-    map.removeLayer(streets);
+    // satellite mosaics cover only the drafted area: keep the street map around them
+    if (after instanceof L.ImageOverlay) streets.addTo(map);
+    else map.removeLayer(streets);
     after.addTo(map);
   } else {
     if (after) map.removeLayer(after);
@@ -341,7 +343,7 @@ async function openBuilding(id) {
   const trace = (a && a.trace) || [];
   const rows = [
     ["Confidence", a && a.confidence != null ? a.confidence.toFixed(2) : "–"],
-    ["Decided by", a ? a.decided_by : "–"],
+    ["Decided by", a ? modelName(a.decided_by) : "–"],
     ["Structure missing", a && a.structure_loss != null ? `${Math.round(a.structure_loss * 100)}%` : "not measured"],
     ["Water above ground", a && a.flood_ft != null ? `${a.flood_ft.toFixed(1)} ft` : "unknown"],
     ...(a && a.demolished ? [["Note", "gone before the storm (demolished)"]] : []),
@@ -349,30 +351,44 @@ async function openBuilding(id) {
     ...(a && a.record ? [["First floor", a.record.basis || "unknown"]] : []),
     ...(a && a.need && a.need.water_inside_ft[1] > 0 ? [["Water inside", `${a.need.water_inside_ft[0].toFixed(1)}–${a.need.water_inside_ft[1].toFixed(1)} ft (estimate)`]] : []),
     ...(a && a.need ? [["Households", a.need.households ? `${a.need.households}${a.need.likely_displaced ? ", likely displaced" : a.need.possibly_displaced ? ", possibly displaced" : ""}` : "none (not a home)"]] : []),
-    ...(a && a.cost ? [["Repair cost", `${usd(a.cost.cost_low_usd)}–${usd(a.cost.cost_high_usd)} of ${usd(a.cost.value_usd)}`]] : []),
+    ...(a && a.cost ? [["Repair cost", a.cost.cost_high_usd ? `${usd(a.cost.cost_low_usd)}–${usd(a.cost.cost_high_usd)} of ${usd(a.cost.value_usd)}` : `none seen (value ${usd(a.cost.value_usd)})`]] : []),
     ...(a && a.cost && a.cost.substantial_damage_possible ? [["FEMA 50% rule", a.cost.substantial_damage_likely ? "likely substantially damaged" : "possibly substantially damaged"]] : []),
   ];
   $("card-body").innerHTML = `
     <h2>${esc(id)} ${cat ? `<span class="pill ${cat}" style="--c:var(--${cat})">${LABEL[cat]}</span>` : ""}${a && a.needs_human ? `<span class="pill" style="--c:var(--review)">Field check</span>` : ""}</h2>
-    <img src="/api/areas/${state.area}/pair/${id}.png" alt="Before and after aerial photos of ${esc(id)}">
-    <div class="cap"><span>Before (${esc(a && a.photos ? a.photos.before.split(" (")[0] : "NAIP")})</span><span>After (${esc(a && a.photos ? a.photos.after.split(" (")[0] : "NOAA")})</span></div>
+    <img src="/api/areas/${state.area}/pair/${id}.png" alt="Before and after photos of ${esc(id)}">
+    <div class="cap"><span>Before: ${esc(a && a.photos ? shortSource(a.photos.before) : "NAIP")}</span><span>After: ${esc(a && a.photos ? shortSource(a.photos.after) : "NOAA")}</span></div>
     <p>${a ? esc(a.evidence) : "Not drafted yet."}</p>
     <dl class="kv">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
     ${a ? `<p><a class="packet" href="/api/areas/${state.area}/packet/${id}" target="_blank" rel="noopener">Evidence packet for a claim (printable)</a></p>` : ""}
     ${trace.length ? `<div class="trace"><b>How the call was made</b>${trace.map(traceRow).join("")}</div>` : ""}`;
   $("card").hidden = false;
 }
+function modelName(m) {
+  const id = String(m || "").split("/").pop();
+  if (/spark-open/i.test(id)) return "Muse Spark Open";
+  if (/muse-spark/i.test(id)) return "Muse Spark";
+  return id || "–";
+}
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function shortSource(s) {
+  // "Maxar WV02 2025-10-31 (1030..., 0.49 m)" -> "Maxar, Oct 2025"; "USDA NAIP, 2023-02-15" -> "NAIP, Feb 2023"
+  const d = String(s).match(/(\d{4})-(\d{2})-\d{2}/);
+  const who = /maxar/i.test(s) ? "Maxar" : /naip/i.test(s) ? "NAIP" : /noaa/i.test(s) ? "NOAA" : String(s).split(" (")[0];
+  return d ? `${who}, ${MONTHS[+d[2] - 1]} ${d[1]}` : who;
+}
 function usd(x) {
   if (x == null) return "?";
+  if (x === 0) return "$0";
   return x >= 1e6 ? `$${(x / 1e6).toFixed(1)}M` : `$${Math.round(x / 1e3)}k`;
 }
 function traceRow(t) {
   if (t.model === "satellite rule") return `<div class="t">Satellite photos: damage calls go to a field check.</div>`;
   if (t.model === "flood rule") return `<div class="t">Flood rule raised ${esc(t.raised_from)} to ${esc(t.to)}.</div>`;
-  if (t.error) return `<div class="t">${esc(t.model)}: unreadable answer, asked again.</div>`;
+  if (t.error) return `<div class="t">${esc(modelName(t.model))}: unreadable answer, asked again.</div>`;
   const a = t.answer || {};
   const obj = (t.verifier || []).map((o) => `<div class="obj">Checker: ${esc(o)}</div>`).join("");
-  return `<div class="t"><div><b>${esc(String(t.model).split("/").pop())}</b> said ${esc(String(a.category || "").toLowerCase())} (${a.confidence})</div>${obj || "<div>Checker: no objection.</div>"}</div>`;
+  return `<div class="t"><div><b>${esc(modelName(t.model))}</b> said ${esc(String(a.category || "").toLowerCase())} (${a.confidence})</div>${obj || "<div>Checker: no objection.</div>"}</div>`;
 }
 $("card-close").addEventListener("click", () => { $("card").hidden = true; });
 

@@ -142,13 +142,13 @@ def building(area: str, bid: str) -> dict:
     drafts = {a["id"]: a for a in json.loads((d / "assessments.json").read_text())} if (d / "assessments.json").exists() else {}
     if bid not in drafts:
         raise HTTPException(404, f"no draft for {bid}")
-    from .packet import facts
+    from .packet import after_source, before_source, facts
 
     f = facts(d, bid)
     rec = f["parcel"]
     return {
         **drafts[bid],
-        "photos": {"before": f["photos"].get("pre_source") or "NAIP", "after": f["photos"].get("post_source") or "NOAA"},
+        "photos": {"before": before_source(f["photos"]), "after": after_source(f["photos"])},
         "cost": f["cost"],
         "need": f["need"],
         "record": {k: rec.get(k) for k in ("year_built", "flood_zone", "bfe_ft", "basis", "land_use")} if rec else None,
