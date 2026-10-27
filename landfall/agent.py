@@ -93,6 +93,16 @@ def describe(m: Measures, extra: dict) -> str:
     else:
         lines.append(f"Share of the pre-storm structure not found in the post-storm photo: {m.roof_loss:.0%}.")
     lines.append(f"Alignment: {extra.get('status', 'unknown')} (matched = its own roof was found; neighbors = placed from nearby houses because its roof was not found where expected).")
+    if extra.get("debris_share") is not None:
+        if m.debris_share >= 0.05:
+            lines.append(
+                f"Segment Anything marked possible debris piles over {m.debris_share:.0%} of the yard (about 8 m around the house). "
+                "It sometimes marks dark tree canopy as debris, so check the photo."
+            )
+        else:
+            lines.append("Segment Anything found no debris piles around the house (it misses light, scattered debris).")
+    if m.tarp_share >= 0.05:
+        lines.append(f"Segment Anything marked {m.tarp_share:.0%} of the roof as a blue tarp. Check it is not just a blue-tinted roof.")
     if m.flood_ft is None:
         lines.append("Flood depth: not measured.")
     elif m.flood_ft == 0:

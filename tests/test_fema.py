@@ -11,6 +11,7 @@ def test_intact_dry_house():
 
 def test_tarp_means_at_least_minor():
     assert floor_from_measures(m(tarp=0.1)) is Category.MINOR
+    assert floor_from_measures(m(tarp=0.02)) is Category.NONE  # mask noise
 
 
 def test_flood_raises_intact_roof():

@@ -37,6 +37,10 @@ class Thresholds:
     roof_loss_minor: float = 0.15
     roof_loss_major: float = 0.25
     roof_loss_destroyed: float = 0.60
+    # SAM's "blue tarp" and "pile of debris" masks also land on blue-cast
+    # roofs and dark tree canopy now and then; small shares are noise.
+    tarp_minor: float = 0.05
+    debris_affected: float = 0.05
     # Flood. The PDA Guide judges water depth *in the living space*: 18
     # inches or more is Major, less is Minor (state field guides derived from
     # it agree on the 18-inch line). We measure depth above ground, so the
@@ -51,7 +55,7 @@ class Thresholds:
 class Measures:
     roof_loss: float  # 0..1
     tarp_share: float  # 0..1 of roof covered by blue tarp
-    debris_share: float  # 0..1 of the crop margin covered by debris
+    debris_share: float  # 0..1 of the yard around the house covered by new debris
     flood_ft: float | None  # water depth above ground at the building; None when unknown
     aligned: bool  # did pre/post alignment succeed with confidence
     first_floor_ft: float | None = None  # living floor height above ground; None when unknown
@@ -70,9 +74,9 @@ def floor_from_measures(m: Measures, t: Thresholds = Thresholds()) -> Category:
         cat = Category.DESTROYED
     elif m.roof_loss >= t.roof_loss_major:
         cat = Category.MAJOR
-    elif m.roof_loss >= t.roof_loss_minor or m.tarp_share > 0:
+    elif m.roof_loss >= t.roof_loss_minor or m.tarp_share >= t.tarp_minor:
         cat = Category.MINOR
-    elif m.debris_share > 0.02:
+    elif m.debris_share >= t.debris_affected:
         cat = Category.AFFECTED
 
     living = m.flood_living_ft

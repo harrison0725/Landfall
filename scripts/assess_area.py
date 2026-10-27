@@ -40,6 +40,8 @@ def main() -> None:
     windows = {r["id"]: Window(*r["window"]) for r in al["buildings"]}
     feats = {f["properties"]["id"]: f for f in json.loads((d / "buildings.geojson").read_text())["features"]}
     damage = json.loads((d / "damage.json").read_text())
+    debris_path = d / "debris.json"
+    debris = {b["id"]: b for b in json.loads(debris_path.read_text())} if debris_path.exists() else {}
     flood_path = d / "flood.json"
     flood = {b["id"]: b["flood_ft"] for b in json.loads(flood_path.read_text())["buildings"]} if flood_path.exists() else {}
 
@@ -53,13 +55,20 @@ def main() -> None:
     def run(r: dict):
         bid = r["id"]
         loss = r["structure_loss"]
-        m = Measures(roof_loss=loss or 0.0, tarp_share=0.0, debris_share=0.0, flood_ft=flood.get(bid), aligned=loss is not None)
+        yard = debris.get(bid, {})
+        m = Measures(
+            roof_loss=loss or 0.0,
+            tarp_share=yard.get("tarp_share", 0.0),
+            debris_share=yard.get("debris_share", 0.0),
+            flood_ft=flood.get(bid),
+            aligned=loss is not None,
+        )
         pre = np.asarray(Image.open(d / "crops" / f"{bid}_pre.png").convert("RGB"))
         post = np.asarray(Image.open(d / "crops" / f"{bid}_post.png").convert("RGB"))
         ring = [tuple(p) for p in feats[bid]["geometry"]["coordinates"][0][:-1]]
         outline = outline_to_window_pixels(ring, zoom, windows[bid])
         try:
-            a = assess(bid, pre, post, outline, m, r, escalate=not args.no_escalate)
+            a = assess(bid, pre, post, outline, m, {**r, **yard}, escalate=not args.no_escalate)
         except Exception as e:  # keep going; one bad building should not stop the area
             print(f"{bid}: failed: {e}")
             return dict(id=bid, error=str(e))
@@ -74,12 +83,19 @@ def main() -> None:
             verified=a.verified,
             structure_loss=loss,
             flood_ft=flood.get(bid),
+            debris_share=m.debris_share,
+            tarp_share=m.tarp_share,
             trace=a.trace,
         )
 
     with ThreadPoolExecutor(args.workers) as pool:
         results = list(pool.map(run, order))
-    (d / "assessments.json").write_text(json.dumps(results, indent=1))
+    path = d / "assessments.json"
+    if args.only and path.exists():
+        # a partial rerun replaces just those buildings in the full run
+        new = {r["id"]: r for r in results}
+        results = [new.pop(r["id"], r) for r in json.loads(path.read_text())] + list(new.values())
+    path.write_text(json.dumps(results, indent=1))
     print(collections.Counter(r.get("category", "error") for r in results))
 
 

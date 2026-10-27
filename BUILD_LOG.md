@@ -42,3 +42,10 @@ Building period: Oct 26 to Nov 4, 2026 (confirmed at the kickoff on Oct 26).
 - Harry labeled the same 50 buildings blind on a web page (same photo pairs, shuffled order, no other labels shown). His labels are in `eval/cedar_key_labels_harry.json`.
 - The labelers agree on 43/50 (kappa 0.49, low because almost everything is "none"), and all 50 are within one category. They split on yard debris (5 houses: Claude said Affected, Harry said none) and on b094 and b098 (Claude said Destroyed, Harry said Major).
 - Against Harry's labels the agent gets 38/50 exact (40/50 with the flood rule) and 50/50 within one, and 11 of 12 disagreements were already sent to review. The Affected-or-none line is where people disagree too, so the agent's misses there are within human noise.
+
+### Oct 27: debris and tarps
+
+- SAM 3.1 finds nothing for "debris" on a tight building crop. With about 16 m of yard around the house and the phrase "pile of debris" (or "trash pile") it does find heavy debris, but it misses scattered branches and shingles and now and then marks dark tree canopy. A hit is evidence; a miss is not proof of a clean yard.
+- `scripts/debris_area.py` measures new debris in an 8 m ring around each house (post-storm masks minus pre-storm ones) and the share of the roof SAM calls "blue tarp". 750 SAM calls, about $1.90.
+- 5 of 150 houses have debris over 5% of the yard, and 1 roof (b087) is mostly marked as a tarp. These numbers go to the model as hints and raise the verifier floor (tarp ≥5% → Minor, debris ≥5% → Affected).
+- Rerunning those 6: b098 went from Major to Destroyed (the model now cites the debris piles), and b087 went to Major with review (a possible full-roof tarp and 10.6 ft of water). Destroyed is now 5/5 against Claude's labels and 3/3 plus 2 extra against Harry's (he called b094 and b098 Major). The two light-debris misses (b063, b110) are still misses.
