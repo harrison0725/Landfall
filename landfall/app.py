@@ -128,7 +128,34 @@ def index() -> FileResponse:
 @app.get("/api/config")
 def config() -> dict:
     missing = _missing_for_assessing()
-    return {"access_code_required": bool(ACCESS_CODE), "max_buildings": MAX_BUILDINGS, "can_assess": not missing, "missing": missing, "meta_api": _meta_api_status()}
+    return {
+        "access_code_required": bool(ACCESS_CODE),
+        "max_buildings": MAX_BUILDINGS,
+        "can_assess": not missing,
+        "missing": missing,
+        "meta_api": _meta_api_status(),
+        "host": _host(),
+    }
+
+
+@functools.lru_cache(maxsize=1)
+def _host() -> dict:
+    """CPU share and memory this container gets, and whether the fast mask
+    decoder loaded: what decides how long a new box takes."""
+    from . import sam
+
+    cpus = mem = None
+    try:
+        quota, period = Path("/sys/fs/cgroup/cpu.max").read_text().split()
+        cpus = round(int(quota) / int(period), 2) if quota != "max" else os.cpu_count()
+    except (OSError, ValueError):
+        cpus = os.cpu_count()
+    try:
+        raw = Path("/sys/fs/cgroup/memory.max").read_text().strip()
+        mem = None if raw == "max" else int(raw) // 2**20
+    except (OSError, ValueError):
+        pass
+    return {"cpus": cpus, "memory_mb": mem, "fast_masks": bool(sam._decoder())}
 
 
 _meta_checked: list = [0.0, None]
