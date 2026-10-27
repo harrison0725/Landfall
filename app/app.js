@@ -31,25 +31,61 @@ let after = null;
 const outlines = L.geoJSON(null, { style: styleFor, onEachFeature: bindFeature }).addTo(map);
 let boxLayer = null;
 
-function noaa(name, zIndex, bounds) {
-  // only the area's own flight is credited by name; the rest share one line
-  const attribution = bounds ? "NOAA Emergency Response Imagery (other flights after the storm)" : `NOAA Emergency Response Imagery (${name})`;
-  return L.tileLayer(`https://stormscdn.ngs.noaa.gov/${name}/{z}/{x}/{y}`, { maxZoom: 21, maxNativeZoom: 20, zIndex, bounds, attribution });
+// One layer for every NOAA flight of the storm. Each map tile waits for all the
+// flights that cover it and draws them in one go, the area's own flight last so it
+// wins wherever it has photos. Separate layers per flight showed whichever flight
+// loaded first, then swapped to another day's photo as the rest arrived.
+const NoaaStack = L.GridLayer.extend({
+  createTile(coords, done) {
+    const tile = document.createElement("canvas");
+    const size = this.getTileSize();
+    tile.width = size.x;
+    tile.height = size.y;
+    const tb = this._tileCoordsToBounds(coords);
+    const fs = this.options.flights.filter((f) => !f.bounds || L.latLngBounds(f.bounds).intersects(tb));
+    let left = fs.length;
+    const finish = () => {
+      const ctx = tile.getContext("2d");
+      imgs.forEach((im) => { if (im.naturalWidth) ctx.drawImage(im, 0, 0, size.x, size.y); });
+      done(null, tile);
+    };
+    const imgs = fs.map((f) => {
+      const im = new Image();
+      im.onload = im.onerror = () => { if (--left === 0) finish(); };
+      im.src = `https://stormscdn.ngs.noaa.gov/${f.name}/${coords.z}/${coords.x}/${coords.y}`;
+      return im;
+    });
+    if (!fs.length) setTimeout(finish);
+    return tile;
+  },
+});
+const flightLists = {};
+function stormFlights(storm) {
+  flightLists[storm] = flightLists[storm] || fetch(`/api/storms/${storm}/flights`).then((r) => (r.ok ? r.json() : [])).catch(() => []);
+  return flightLists[storm];
 }
+let flightToken = 0;
 function setFlight(flight) {
   if (after) map.removeLayer(after);
-  after = flight ? L.layerGroup([noaa(flight, 2)]) : null;
+  after = null;
   applyLayer();
+  const token = ++flightToken;
   if (!flight) return;
   // the storm's other flights fill the map around this one: all after the storm, never older photos
-  const group = after;
   const storm = (state.spec && state.spec.storm) || $("storm").value;
-  fetch(`/api/storms/${storm}/flights`).then((r) => (r.ok ? r.json() : [])).then((fs) => {
-    fs.filter((f) => f.name !== flight).forEach((f) => group.addLayer(noaa(f.name, 1, f.bounds)));
+  stormFlights(storm).then((fs) => {
+    if (token !== flightToken) return;
+    const flights = fs.filter((f) => f.name !== flight).concat([{ name: flight }]);
+    after = new NoaaStack({
+      flights, maxZoom: 21, maxNativeZoom: 20, zIndex: 1,
+      attribution: `NOAA Emergency Response Imagery (${flight}; other flights after the storm around it)`,
+    });
+    applyLayer();
   });
 }
 async function setOverlay(area) {
   // storms outside NOAA's coverage: show the after-storm mosaic Landfall built
+  flightToken++;
   const r = await fetch(`/api/areas/${area}/after`);
   if (!r.ok) return;
   const o = await r.json();
