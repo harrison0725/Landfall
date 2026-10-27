@@ -96,7 +96,8 @@ async function loadBuildings(fit) {
   state.features = {};
   outlines.clearLayers();
   outlines.addData(gj);
-  if (fit && gj.features.length) map.fitBounds(outlines.getBounds(), { padding: [30, 30] });
+  // same framing for every area: all drafted buildings in view, never closer than street level
+  if (fit && gj.features.length) map.fitBounds(outlines.getBounds(), { padding: [30, 30], maxZoom: 18 });
 }
 function paintBuilding(id, props) {
   const layer = state.features[id];
@@ -341,18 +342,22 @@ async function openBuilding(id) {
   const a = r.ok ? await r.json() : null;
   const cat = a ? a.category : p.category;
   const trace = (a && a.trace) || [];
+  // every area gets the same rows in the same order; what we can't know there says so
+  const us = !(state.spec && state.spec.imagery === "maxar");
+  const need = a && a.need;
+  const cost = a && a.cost;
   const rows = [
     ["Confidence", a && a.confidence != null ? a.confidence.toFixed(2) : "–"],
     ["Decided by", a ? modelName(a.decided_by) : "–"],
     ["Structure missing", a && a.structure_loss != null ? `${Math.round(a.structure_loss * 100)}%` : "not measured"],
-    ["Water above ground", a && a.flood_ft != null ? `${a.flood_ft.toFixed(1)} ft` : "unknown"],
-    ...(a && a.demolished ? [["Note", "gone before the storm (demolished)"]] : []),
     ["Debris in yard", a && a.debris_share ? `${Math.round(a.debris_share * 100)}%` : "none found"],
-    ...(a && a.record ? [["First floor", a.record.basis || "unknown"]] : []),
-    ...(a && a.need && a.need.water_inside_ft[1] > 0 ? [["Water inside", `${a.need.water_inside_ft[0].toFixed(1)}–${a.need.water_inside_ft[1].toFixed(1)} ft (estimate)`]] : []),
-    ...(a && a.need ? [["Households", a.need.households ? `${a.need.households}${a.need.likely_displaced ? ", likely displaced" : a.need.possibly_displaced ? ", possibly displaced" : ""}` : "none (not a home)"]] : []),
-    ...(a && a.cost ? [["Repair cost", a.cost.cost_high_usd ? `${usd(a.cost.cost_low_usd)}–${usd(a.cost.cost_high_usd)} of ${usd(a.cost.value_usd)}` : `none seen (value ${usd(a.cost.value_usd)})`]] : []),
-    ...(a && a.cost && a.cost.substantial_damage_possible ? [["FEMA 50% rule", a.cost.substantial_damage_likely ? "likely substantially damaged" : "possibly substantially damaged"]] : []),
+    ["Water above ground", a && a.flood_ft != null ? `${a.flood_ft.toFixed(1)} ft` : us ? "none surveyed here" : "unknown (no flood survey)"],
+    ["First floor", a && a.record && a.record.basis ? a.record.basis : us ? "unknown" : "unknown (no property records)"],
+    ["Water inside", !us ? "unknown" : need && need.water_inside_ft[1] > 0 ? `${need.water_inside_ft[0].toFixed(1)}–${need.water_inside_ft[1].toFixed(1)} ft (estimate)` : "none"],
+    ["Households", need ? (need.households ? `${need.households}${need.likely_displaced ? ", likely displaced" : need.possibly_displaced ? ", possibly displaced" : ""}` : "none (not a home)") : "–"],
+    ["Repair cost", cost ? (cost.cost_high_usd ? `${usd(cost.cost_low_usd)}–${usd(cost.cost_high_usd)} of ${usd(cost.value_usd)}` : `none seen (value ${usd(cost.value_usd)})`) : "–"],
+    ["50% rule", !us ? "US rule, not used here" : cost ? (cost.substantial_damage_likely ? "likely substantially damaged" : cost.substantial_damage_possible ? "possibly substantially damaged" : "below 50%") : "–"],
+    ...(a && a.demolished ? [["Note", "gone before the storm (demolished)"]] : []),
   ];
   $("card-body").innerHTML = `
     <h2>${esc(id)} ${cat ? `<span class="pill ${cat}" style="--c:var(--${cat})">${LABEL[cat]}</span>` : ""}${a && a.needs_human ? `<span class="pill" style="--c:var(--review)">Field check</span>` : ""}</h2>
@@ -468,17 +473,21 @@ async function boot() {
   const ev = new EventSource(`/api/sessions/${state.sid}/events`);
   ev.onmessage = (m) => handle(JSON.parse(m.data));
   if (pick && pick.assessed) {
-    agentMessage(
-      `I've drafted damage categories for **${title(pick.name)}**. Ask me about it, or draw a new area on the map and I'll assess that too.`
-    );
-    suggestions(
-      pick.spec && pick.spec.imagery === "maxar"
-        ? ["Which buildings should a field team check first?", "Write the draft damage summary", "How many households may be out of their homes?"]
-        : ["Which houses should a field team check first?", "Write the draft PDA summary", "Which flooded houses could really be Major?"]
-    );
+    agentMessage(introFor(pick));
+    suggestions(["Which buildings should a field team check first?", "Write the draft damage summary", "How many households may be out of their homes?"]);
   } else {
     agentMessage("Draw an area on the map after a hurricane, and I'll draft FEMA damage categories for every building in it.");
   }
 }
 boot();
+function introFor(pick) {
+  // one format for every area: what was drafted, from which photos, and the tally
+  const feats = Object.values(state.features).map((l) => l.feature.properties);
+  const n = (c) => feats.filter((p) => p.category === c).length;
+  const storm = ($("storm").selectedOptions[0] || {}).text || "";
+  const photos = pick.spec && pick.spec.imagery === "maxar" ? "satellite" : "aerial";
+  const tally = ["destroyed", "major", "minor", "affected", "none"].map((c) => `${n(c)} ${LABEL[c].toLowerCase()}`).join(", ");
+  const check = feats.filter((p) => p.needs_human).length;
+  return `I've drafted damage categories for **${feats.length} buildings in ${title(pick.name)}** after ${storm.split(" (")[0] || "the storm"}, from before and after ${photos} photos: ${tally}. ${check} need a field check.\n\nAsk me about it, or draw a new area on the map and I'll assess that too.`;
+}
 function title(name) { return name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()); }
