@@ -22,5 +22,5 @@ services:
         value: "30"
       - key: LANDFALL_PROCS
         value: "1"
-      - key: LANDFALL_WORKERS
-        value: "6"
+      - key: LANDFALL_CONCURRENCY
+        value: "24"
