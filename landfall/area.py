@@ -416,13 +416,14 @@ def run_tools(
     going. `call(name, args)` runs a tool; `on_event(kind, **fields)` hears
     each step as it happens.
     """
-    from .agent import _post
+    from .agent import REASONING_EFFORT, _post
 
     url, key, model = model_for(use_spark)
+    effort = {"reasoning_effort": REASONING_EFFORT} if REASONING_EFFORT != "default" else {}
     emit = on_event or (lambda kind, **f: None)
     steps: list[dict] = []
     for _ in range(max_steps):
-        msg = _post(url, key, {"model": model, "messages": messages, "tools": tools, "max_tokens": max_tokens})["choices"][0]["message"]
+        msg = _post(url, key, {"model": model, "messages": messages, "tools": tools, "max_tokens": max_tokens, **effort})["choices"][0]["message"]
         calls = msg.get("tool_calls") or []
         text = msg.get("content") or ""
         messages.append({"role": "assistant", "content": text, **({"tool_calls": calls} if calls else {})})
@@ -443,7 +444,7 @@ def run_tools(
             steps.append({"tool": name, "args": args})
             messages.append({"role": "tool", "tool_call_id": c["id"], "content": json.dumps(result, default=str)})
     messages.append({"role": "user", "content": "Answer now with what you have; no more tools."})
-    msg = _post(url, key, {"model": model, "messages": messages, "max_tokens": max_tokens})["choices"][0]["message"]
+    msg = _post(url, key, {"model": model, "messages": messages, "max_tokens": max_tokens, **effort})["choices"][0]["message"]
     messages.append({"role": "assistant", "content": msg.get("content") or ""})
     return Answer(msg.get("content") or "", steps, model)
 

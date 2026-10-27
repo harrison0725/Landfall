@@ -20,6 +20,7 @@ import gzip
 import io
 import json
 import math
+import re
 import time
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -245,9 +246,19 @@ def ms_buildings(
         # a quadkey on a border has one file per country; keep them all
         path.write_bytes(b"".join(_get(r["Url"])[0] for r in rows))
 
+    # A quadkey file holds a few hundred thousand buildings; parsing each
+    # one to find the few dozen in the box took ~10 s of CPU. Skip lines whose
+    # first vertex is far from the box (a house is far smaller than PAD).
+    first = re.compile(r'"coordinates"\s*:\s*\[\s*\[\s*\[\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)')
+    pad = 0.005
     out = []
     with gzip.open(path, "rt") as f:
         for line in f:
+            m = first.search(line)
+            if m:
+                lon, lat = float(m.group(1)), float(m.group(2))
+                if not (w - pad <= lon <= e + pad and s - pad <= lat <= n + pad):
+                    continue
             feat = json.loads(line)
             c = shape(feat["geometry"]).centroid
             if w <= c.x <= e and s <= c.y <= n:

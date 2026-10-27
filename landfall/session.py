@@ -14,6 +14,7 @@ import json
 import traceback
 import re
 import threading
+from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
 
 from .area import ORDER, TOOLS as AREA_TOOLS, Area, run_tools
@@ -92,6 +93,8 @@ class Session:
         # the pipeline spends API credits, questions about finished areas don't.
         self.may_run_pipeline = True
         self.max_buildings = 150
+        self.pool = ThreadPoolExecutor(2)
+        self.ahead: dict[str, Future] = {}
 
     # ---- tools ---------------------------------------------------------
 
@@ -147,7 +150,19 @@ class Session:
                     events.append({"event": kind, **fields})
                     emit("progress", stage=stage, event=kind, **fields)
 
-                STAGES[stage](spec, self.root, log, **kwargs)
+                ahead = self.ahead.pop(stage, None)
+                if ahead is not None:
+                    # Started early, alongside measure_structures: wait for it
+                    # and replay its progress as if it ran now.
+                    done, early = ahead.result()
+                    for e in early:
+                        log(**e)
+                    if isinstance(done, Exception):
+                        raise done
+                else:
+                    if stage == "segment":
+                        self._start_ahead(spec)
+                    STAGES[stage](spec, self.root, log, **kwargs)
                 if stage == "prepare":
                     emit("buildings", area=self.area)
                 if stage == "assess":
@@ -164,6 +179,23 @@ class Session:
             emit("progress", stage=name, event="error", message=f"{type(e).__name__}: {e}"[:200])
             return {"error": f"{type(e).__name__}: {e}"[:400]}
 
+    def _start_ahead(self, spec: AreaSpec) -> None:
+        """Flood and debris need only the prepared area, not the structure
+        masks, so run them while measure_structures does. Most of each is
+        waiting on Meta's and USGS's APIs, so they overlap almost entirely."""
+
+        def run(stage: str):
+            early: list[dict] = []
+            try:
+                STAGES[stage](spec, self.root, lambda kind, **f: early.append({"kind": kind, **f}))
+                return None, early
+            except Exception as e:  # raised again when the tool is called
+                return e, early
+
+        for stage in ("debris", "flood"):
+            if stage not in self.ahead:
+                self.ahead[stage] = self.pool.submit(run, stage)
+
     # ---- turns ---------------------------------------------------------
 
     def turn(self, text: str, box: tuple[float, float, float, float] | None = None, storm: str | None = None) -> str:
@@ -171,6 +203,7 @@ class Session:
             if box is not None:
                 self.box = tuple(round(v, 6) for v in box)
                 self.area = None
+                self.ahead = {}
                 w, s, e, n = self.box
                 text = (
                     f"{text}\n\n[The user drew a box on the map: west {w}, south {s}, east {e}, north {n}"

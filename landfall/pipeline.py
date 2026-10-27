@@ -356,7 +356,7 @@ def _sam_all(jobs: list, fetch, workers: int, log: Log) -> set:
         failed = [f for f in pool.map(safe, jobs) if f]
     if failed:
         log("sam_retry", failed=len(failed), of=len(jobs), error=failed[0][1])
-        time.sleep(10)
+        time.sleep(2)
         with ThreadPoolExecutor(2) as pool:
             failed = [f for f in pool.map(safe, [j for j, _ in failed]) if f]
     if failed and len(failed) == len(jobs):
