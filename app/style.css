@@ -85,6 +85,12 @@ button { font: inherit; }
 .map-tools .field, .tool, .seg { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 1px 3px rgb(0 0 0 / 0.15); }
 .field { display: flex; align-items: center; gap: 6px; padding: 4px 8px; font-size: 0.8rem; color: var(--muted); }
 .field select { font: inherit; color: var(--ink); background: transparent; border: 0; }
+.field.place { position: relative; }
+.field.place input { font: inherit; color: var(--ink); background: transparent; border: 0; outline: 0; width: 13em; }
+#place-results { position: absolute; top: calc(100% + 4px); left: 0; min-width: 100%; width: max-content; max-width: 360px; margin: 0; padding: 4px 0; list-style: none; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 8px rgb(0 0 0 / 0.2); }
+#place-results li { padding: 6px 10px; cursor: pointer; color: var(--ink); }
+#place-results li:hover, #place-results li:focus { background: var(--line); outline: 0; }
+#place-results li small { display: block; color: var(--muted); }
 @media (min-width: 861px) { #area { min-width: 10.5em; } }
 .tool { padding: 7px 12px; cursor: pointer; color: var(--ink); font-weight: 500; }
 .tool.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
@@ -118,6 +124,7 @@ button { font: inherit; }
   .map-tools { right: 12px; left: 8px; top: 8px; gap: 6px; }
   .field { min-width: 0; max-width: 100%; }
   .field select { min-width: 0; max-width: 100%; text-overflow: ellipsis; }
+  .field.place input { width: 9em; }
   .tool, .seg button { padding: 6px 9px; font-size: 0.8rem; }
   .legend { left: 8px; bottom: 8px; grid-template-columns: auto auto; gap: 2px 10px; padding: 6px 8px; font-size: 0.7rem; }
   .leaflet-control-attribution { max-width: 60vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.65rem; }

@@ -233,8 +233,65 @@ def areas() -> list[dict]:
             from .pipeline import CEDAR_KEY
 
             spec = CEDAR_KEY.__dict__
-        out.append({"name": d.name, "assessed": (d / "assessments.json").exists(), "spec": spec})
+        label = (d / "label.txt").read_text().strip() if (d / "label.txt").exists() else None
+        if label is None and spec:
+            _name_later(d, spec["center"])
+        out.append({"name": d.name, "assessed": (d / "assessments.json").exists(), "spec": spec, "label": label})
     return out
+
+
+_naming: set[str] = set()
+
+
+def _name_later(d: Path, center) -> None:
+    """Name an area after its place ("Cedar Key, Florida") in the background;
+    the menu shows the folder name until then."""
+    if d.name in _naming:
+        return
+    _naming.add(d.name)
+
+    def run() -> None:
+        from .places import name_of
+
+        try:
+            label = name_of(round(center[1], 5), round(center[0], 5))
+            if label:
+                (d / "label.txt").write_text(label)
+        except Exception:
+            _naming.discard(d.name)  # try again on a later visit
+
+    threading.Thread(target=run, daemon=True).start()
+
+
+@app.get("/api/places")
+def places(q: str) -> list[dict]:
+    """Places matching a search, each with the disasters that have photos of it."""
+    from .places import disasters_at, search
+
+    q = q.strip()[:120]
+    if not q:
+        return []
+    try:
+        rows = search(q)[:5]
+    except Exception:
+        raise HTTPException(502, "place search is not answering; try again in a moment")
+    for r in rows:
+        r["disasters"] = disasters_at(r["lon"], r["lat"], r["bbox"], ROOT / "cache")
+    return rows
+
+
+def _warm_catalogs() -> None:
+    """Fetch every disaster's flight and acquisition lists once, so the first
+    place search doesn't wait on them."""
+    from .places import disasters_at
+
+    try:
+        disasters_at(0.0, 0.0, None, ROOT / "cache")
+    except Exception:
+        pass
+
+
+threading.Thread(target=_warm_catalogs, daemon=True).start()
 
 
 @app.get("/api/areas/{area}/buildings")

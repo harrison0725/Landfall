@@ -518,43 +518,102 @@ async function toWav16k(blob) {
 }
 
 // ---------------------------------------------------------------- start
+// area names: the place, "Cedar Key, Florida", once the server has looked it up
+const areaLabels = {};
+function areaLabel(name) { return areaLabels[name] || title(name); }
 async function boot() {
   legend();
   // the three lookups don't depend on each other: ask for them together
   const [storms, config, areas] = await Promise.all(["/api/storms", "/api/config", "/api/areas"].map((u) => fetch(u).then((r) => r.json())));
-  const group = (label, rows) => `<optgroup label="${label}">${rows.map((s) => `<option value="${s.key}">${esc(s.name)} (${esc(s.where)}, ${s.landfall.slice(0, 4)})</option>`).join("")}</optgroup>`;
-  const hurricanes = storms.filter((s) => (s.kind || "hurricane") === "hurricane");
-  $("storm").innerHTML =
-    group("Hurricanes, United States: NOAA aerial photos", hurricanes.filter((s) => s.imagery === "noaa")) +
-    group("Hurricanes worldwide: Maxar satellite photos", hurricanes.filter((s) => s.imagery === "maxar")) +
-    [["wildfire", "Wildfires"], ["earthquake", "Earthquakes"], ["flood", "Floods"]]
-      .map(([k, label]) => {
-        const rows = storms.filter((s) => s.kind === k);
-        return rows.length ? group(label, rows) : "";
-      })
-      .join("");
-  state.config = config;
+  const year = (s) => s.landfall.slice(0, 4);
+  const group = (label, rows) => (rows.length ? `<optgroup label="${label}">${rows.map((s) => `<option value="${s.key}">${esc(s.name)} (${esc(s.where)}, ${year(s)})</option>`).join("")}</optgroup>` : "");
+  // the Year menu narrows the Disaster menu to that year's disasters
+  const years = [...new Set(storms.map(year))].sort().reverse();
+  $("year").innerHTML = `<option value="">All years</option>` + years.map((y) => `<option>${y}</option>`).join("");
   const params = new URLSearchParams(location.search);
+  if (years.includes(params.get("year"))) $("year").value = params.get("year");
+  const withYear = (q) => q + ($("year").value ? `&year=${$("year").value}` : "");
+  function stormMenu() {
+    const y = $("year").value;
+    const shown = storms.filter((s) => !y || year(s) === y);
+    const hurricanes = shown.filter((s) => (s.kind || "hurricane") === "hurricane");
+    $("storm").innerHTML =
+      group("Hurricanes, United States: NOAA aerial photos", hurricanes.filter((s) => s.imagery === "noaa")) +
+      group("Hurricanes worldwide: Maxar satellite photos", hurricanes.filter((s) => s.imagery === "maxar")) +
+      [["wildfire", "Wildfires"], ["earthquake", "Earthquakes"], ["flood", "Floods"]].map(([k, label]) => group(label, shown.filter((s) => s.kind === k))).join("");
+  }
+  function showStorm(key) {
+    // keep the Year menu on the disaster's year so the Disaster menu can show it
+    const s = storms.find((x) => x.key === key);
+    if (!s) return;
+    if ($("year").value && $("year").value !== year(s)) $("year").value = year(s);
+    stormMenu();
+    $("storm").value = key;
+  }
+  stormMenu();
+  state.config = config;
   const at = params.get("at");
-  const pick = at ? null : areas.find((a) => a.name === params.get("area")) || areas.find((a) => a.name === "cedar_key" && a.assessed) || null;
+  const fit = params.get("fit");
+  const pick = at || fit ? null : areas.find((a) => a.name === params.get("area")) || areas.find((a) => a.name === "cedar_key" && a.assessed) || null;
   const session = fetch("/api/sessions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ area: pick && pick.assessed ? pick.name : null }) }).then((r) => r.json());
   state.area = pick && pick.assessed ? pick.name : null;
   const done = areas.filter((a) => a.assessed);
-  $("area").innerHTML = `<option value="">Pick one…</option>` + done.map((a) => `<option value="${esc(a.name)}">${esc(title(a.name))}</option>`).join("");
+  // two areas in one town get a number each
+  const seen = {};
+  done.forEach((a) => {
+    const base = a.label || title(a.name);
+    seen[base] = (seen[base] || 0) + 1;
+    areaLabels[a.name] = seen[base] > 1 ? `${base} (${seen[base]})` : base;
+  });
+  $("area").innerHTML = `<option value="">Pick one…</option>` + done.map((a) => `<option value="${esc(a.name)}">${esc(areaLabel(a.name))}</option>`).join("");
   if (pick) $("area").value = pick.name;
-  $("area").addEventListener("change", () => { if ($("area").value) location.search = `?area=${encodeURIComponent($("area").value)}`; });
+  $("area").addEventListener("change", () => { if ($("area").value) location.search = withYear(`?area=${encodeURIComponent($("area").value)}`); });
   // picking a disaster goes there: its finished example area, else where its photos are
-  $("storm").addEventListener("change", () => {
-    const key = $("storm").value;
+  function goToStorm(key) {
     const own = done.filter((a) => a.spec && a.spec.storm === key);
     const example = own.find((a) => !a.name.startsWith("box_")) || own[0];
-    if (example) { location.search = `?area=${encodeURIComponent(example.name)}`; return; }
+    if (example) { location.search = withYear(`?area=${encodeURIComponent(example.name)}`); return; }
     const s = storms.find((x) => x.key === key);
-    if (s && s.view && s.view.length) location.search = `?at=${s.view.join(",")}&storm=${encodeURIComponent(key)}`;
+    if (s && s.view && s.view.length) location.search = withYear(`?at=${s.view.join(",")}&storm=${encodeURIComponent(key)}`);
+  }
+  $("storm").addEventListener("change", () => goToStorm($("storm").value));
+  $("year").addEventListener("change", () => {
+    stormMenu();
+    if ($("year").value && $("storm").value) goToStorm($("storm").value);  // the year's newest disaster
   });
+  // place search: go there, with the disaster that has photos of it
+  $("place-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const q = $("place").value.trim();
+    const list = $("place-results");
+    if (!q) return;
+    list.hidden = false;
+    list.innerHTML = `<li>Searching…</li>`;
+    const r = await fetch(`/api/places?q=${encodeURIComponent(q)}`);
+    // the same town can come back twice (the town and its boundary): keep one
+    const rows = (r.ok ? await r.json() : []).filter((p, i, all) => all.findIndex((o) => (o.short || o.label) === (p.short || p.label)) === i);
+    if (!rows.length) { list.innerHTML = `<li>${r.ok ? "No place by that name." : "Search isn't answering; try again in a moment."}</li>`; return; }
+    const name = (key) => (storms.find((x) => x.key === key) || {}).name;
+    list.innerHTML = rows
+      .map((p, i) => `<li tabindex="0" data-i="${i}">${esc(p.short || p.label)}<small>${p.disasters.length ? esc(p.disasters.map(name).join(", ")) : "no disaster photos here yet"}</small></li>`)
+      .join("");
+    list.querySelectorAll("li").forEach((li) => {
+      const go = () => {
+        const p = rows[+li.dataset.i];
+        // the selected year's disaster if it has one here, else the newest
+        const y = $("year").value;
+        const key = p.disasters.find((k) => !y || year(storms.find((x) => x.key === k)) === y) || p.disasters[0];
+        location.search = withYear(`?fit=${p.bbox.map((v) => v.toFixed(4)).join(",")}&place=${encodeURIComponent(p.short || q)}` + (key ? `&storm=${encodeURIComponent(key)}` : ""));
+      };
+      li.addEventListener("click", go);
+      li.addEventListener("keydown", (ev) => { if (ev.key === "Enter") go(); });
+    });
+    if (rows.length === 1) list.querySelector("li").click();
+  });
+  document.addEventListener("click", (e) => { if (!$("place-form").contains(e.target)) $("place-results").hidden = true; });
   if (pick) {
     state.spec = pick.spec;
-    if (pick.spec) $("storm").value = pick.spec.storm;
+    if (pick.spec) showStorm(pick.spec.storm);
     state.flight = pick.spec && pick.spec.noaa_flight;
     setFlight(state.flight);
     if (!state.flight) setOverlay(pick.name);  // start the photo tiles before the outlines
@@ -562,14 +621,19 @@ async function boot() {
   } else {
     applyLayer();
   }
+  const key = params.get("storm");
   if (at) {
     const [la, lo, z] = at.split(",").map(Number);
     map.setView([la, lo], z || 17);
-    const key = params.get("storm");
-    if (key && storms.some((x) => x.key === key)) {
-      $("storm").value = key;
-      setFlight(null, true);  // NOAA storms: every after-storm flight; Maxar ones keep the street map
-    }
+  }
+  if (fit) {
+    const [w, s, e, n] = fit.split(",").map(Number);
+    map.fitBounds([[s, w], [n, e]], { maxZoom: 16 });
+    $("place").value = params.get("place") || "";
+  }
+  if ((at || fit) && key && storms.some((x) => x.key === key)) {
+    showStorm(key);
+    setFlight(null, true);  // NOAA storms: every after-storm flight; Maxar ones keep the street map
   }
   state.sid = (await session).id;
   const ev = new EventSource(`/api/sessions/${state.sid}/events`);
@@ -577,8 +641,16 @@ async function boot() {
   if (pick && pick.assessed) {
     agentMessage(introFor(pick));
     suggestions(["Which buildings should a field team check first?", "Write the draft damage summary", "How many households may be out of their homes?"]);
+  } else if (fit) {
+    const place = params.get("place") || "this place";
+    const s = storms.find((x) => x.key === key);
+    agentMessage(
+      s
+        ? `Here's ${place}, with photos from after ${/^(Hurricane|Cyclone|Typhoon)/.test(s.name) ? "" : "the "}${s.name} (${year(s)}). Zoom in and draw a box around the buildings you want assessed.`
+        : `Here's ${place}. None of the disasters Landfall covers has photos here yet, so there's nothing to compare. Try another place, or pick a disaster from the menu.`
+    );
   } else {
-    agentMessage("Draw an area on the map after a hurricane, wildfire, earthquake or flood, and I'll draft FEMA damage categories for every building in it.");
+    agentMessage("Search for a place or pick a disaster, then draw an area on the map, and I'll draft FEMA damage categories for every building in it.");
   }
 }
 boot();
@@ -592,6 +664,6 @@ function introFor(pick) {
   const photos = pick.spec && pick.spec.imagery === "maxar" ? "satellite" : "aerial";
   const tally = ["destroyed", "major", "minor", "affected", "none"].map((c) => `${n(c)} ${LABEL[c].toLowerCase()}`).join(", ");
   const check = feats.filter((p) => p.needs_human).length;
-  return `I've drafted damage categories for **${feats.length} buildings in ${title(pick.name)}** after ${storm.split(" (")[0] || "the disaster"}, from before and after ${photos} photos: ${tally}. ${check} need a field check.\n\nAsk me about it, or draw a new area on the map and I'll assess that too.`;
+  return `I've drafted damage categories for **${feats.length} buildings in ${areaLabel(pick.name)}** after ${storm.split(" (")[0] || "the disaster"}, from before and after ${photos} photos: ${tally}. ${check} need a field check.\n\nAsk me about it, or draw a new area on the map and I'll assess that too.`;
 }
 function title(name) { return name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()); }
