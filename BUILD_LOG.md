@@ -63,3 +63,9 @@ Building period: Oct 26 to Nov 4, 2026 (confirmed at the kickoff on Oct 26).
 - The checker now raises flood as its own objection and says it is surveyed, not read off the photos. On a rerun the model conceded on all 18. As a backstop, `assess()` applies the flood floor itself if the model still refuses, and says so in the evidence and the trace.
 - Score with the flood rule: 47/50 against Claude's labels and 48/50 against Harry's (was 37 to 39). The 3 and 2 remaining misses are exactly the buildings where the labelers disagree with each other: light yard debris (b063, b067, b110) and b094/b098.
 - Tried more SAM debris prompts at 4x zoom ("debris", "scattered debris", "branches", "wood debris", "trash"): still nothing on light debris.
+
+### Oct 27: tried Muse Wonder
+
+- Meta Model API also serves `muse-wonder-1.0` (a reasoning model that takes images), `muse-image-1.0` (image generation) and `muse-voice-transcribe-1.0`. Only Muse Wonder could change accuracy, so it got the same 50 eval buildings, prompt and measurements as the agent, in a single pass without the checker.
+- Result: 33/50 against Claude's labels and 32/50 against Harry's, counting the flood rule (the agent with its checker: 47 and 48). Most misses are 12 flooded houses it called Major by assuming the house sits at grade, which the PDA rule can't support without first-floor height. On what the photos show, it was no better than the agent: it caught the light debris at b063 but missed b067 and b110, and added Affected at b057 and Minor at b112, where both labelers saw nothing.
+- It takes about 15 s and 1,600 tokens per building. Not added to the pipeline; Muse Voice Transcribe is a better fit for asking the area agent questions by voice in the app.
