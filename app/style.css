@@ -71,6 +71,9 @@ button { font: inherit; }
 .send:disabled { opacity: 0.5; cursor: wait; }
 .icon { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; display: grid; place-items: center; }
 .icon.rec { background: var(--major); color: #fff; border-color: var(--major); animation: pulse 1.2s infinite; }
+.linkish { border: 0; background: none; padding: 0; color: var(--accent); text-decoration: underline; cursor: pointer; font: inherit; }
+.coderow { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+.coderow input { flex: 1; min-width: 0; font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); }
 .suggest { display: flex; flex-wrap: wrap; gap: 6px; }
 .suggest button { border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 999px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
