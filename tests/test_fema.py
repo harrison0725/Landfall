@@ -51,3 +51,11 @@ def test_verifier_rejects_big_overcall():
 def test_unaligned_goes_to_review():
     v = verify(Category.MINOR, m(tarp=0.1, aligned=False))
     assert not v.ok and "human review" in v.problems[0]
+
+
+def test_flood_objection_is_separate_from_mask_noise():
+    from landfall.fema import flood_floor
+
+    assert flood_floor(m(roof=0.5, flood=3.0)) is Category.AFFECTED
+    v = verify(Category.NONE, m(roof=0.0, flood=3.0))
+    assert not v.ok and "surveyed flood water" in v.problems[0]

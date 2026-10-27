@@ -56,3 +56,10 @@ Building period: Oct 26 to Nov 4, 2026 (confirmed at the kickoff on Oct 26).
 - `plan_inspections` picks severe, unsure and deep-water houses and orders them as a nearest-neighbor walk (Cedar Key: 20 stops, about 1.5 km).
 - First PDA draft: the model flipped the sign of latitudes it copied from the tools. Tools now return a preformatted "lat, lon" string, and the answer's building ids are checked against the area.
 - The PDA draft takes about 20 seconds and 7 to 12 tool calls. Example in `examples/cedar_key_pda_summary.md`.
+
+### Oct 27: the flood floor
+
+- The biggest error left was not debris. 18 houses had 0.5 ft or more of surveyed water around them and were still drafted "none": the checker objected, but its message lumped flood together with noisy roof-loss masks, and the model argued both away as shadows and trees.
+- The checker now raises flood as its own objection and says it is surveyed, not read off the photos. On a rerun the model conceded on all 18. As a backstop, `assess()` applies the flood floor itself if the model still refuses, and says so in the evidence and the trace.
+- Score with the flood rule: 47/50 against Claude's labels and 48/50 against Harry's (was 37 to 39). The 3 and 2 remaining misses are exactly the buildings where the labelers disagree with each other: light yard debris (b063, b067, b110) and b094/b098.
+- Tried more SAM debris prompts at 4x zoom ("debris", "scattered debris", "branches", "wood debris", "trash"): still nothing on light debris.

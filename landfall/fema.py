@@ -92,6 +92,17 @@ def floor_from_measures(m: Measures, t: Thresholds = Thresholds()) -> Category:
     return cat
 
 
+def flood_floor(m: Measures, t: Thresholds = Thresholds()) -> Category:
+    """The category the surveyed flood depth alone requires.
+
+    Unlike roof loss, flood depth is not read off a mask: it comes from
+    surveyed high-water marks, a tide gauge and lidar ground. The model can't
+    see it in the photos either way, so it is a hard floor, not something to
+    argue about.
+    """
+    return floor_from_measures(Measures(0.0, 0.0, 0.0, m.flood_ft, m.aligned, m.first_floor_ft), t)
+
+
 @dataclass
 class Verdict:
     ok: bool
@@ -112,7 +123,15 @@ def verify(call: Category, m: Measures, t: Thresholds = Thresholds()) -> Verdict
             "Pre and post photos did not line up with confidence; roof loss is "
             "unreliable. Mark for human review instead of trusting the numbers."
         )
-    if call < floor:
+    water = flood_floor(m, t)
+    if call < water:
+        problems.append(
+            f"Called {call.label}, but surveyed flood water stood {m.flood_ft:.1f} ft around this "
+            f"building, which makes it at least {water.label} under the PDA rule. This is not a photo "
+            "measurement and can't be wrong because of shadows or trees: water damage doesn't show "
+            "from the air. Keep what you see on the roof in the evidence, and raise the category."
+        )
+    elif call < floor:
         problems.append(
             f"Called {call.label}, but the measurements alone justify at least "
             f"{floor.label} (roof loss {m.roof_loss:.0%}"

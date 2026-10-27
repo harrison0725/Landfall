@@ -23,7 +23,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from .fema import Category, Measures, verify
+from .fema import Category, Measures, flood_floor, verify
 
 OPEN_URL = "https://inference.baseten.co/v1/chat/completions"
 OPEN_MODEL = os.environ.get("BASETEN_MODEL", "meta-models/muse-spark-open")
@@ -231,11 +231,21 @@ def assess(
         answer, ok = _converse(SPARK_URL, os.environ["META_API_KEY"], SPARK_MODEL, second, m, trace)
         decided_by = SPARK_MODEL
 
+    category = answer["category"]
+    evidence = answer["evidence"]
+    water = flood_floor(m)
+    if category < water:
+        # The model won't always concede a fact it can't see. Surveyed water
+        # isn't open to its judgment, so apply the floor here and say so.
+        trace.append(dict(model="flood rule", raised_from=category.name, to=water.name))
+        category = water
+        evidence += f" Raised to {water.label}: surveyed water stood {m.flood_ft:.1f} ft around the building (PDA flood rule)."
+
     return Assessment(
         building_id=building_id,
-        category=answer["category"],
+        category=category,
         confidence=answer["confidence"],
-        evidence=answer["evidence"],
+        evidence=evidence,
         needs_human=answer["needs_human"] or not ok or not m.aligned,
         decided_by=decided_by,
         verified=ok,

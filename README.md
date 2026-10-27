@@ -35,11 +35,11 @@ BASETEN_API_KEY=... python scripts/ask_area.py --area cedar_key "Which flooded h
 BASETEN_API_KEY=... python scripts/ask_area.py --area cedar_key --pda   # draft PDA summary
 ```
 
-Evaluation: 50 Cedar Key buildings labeled by hand from the photos by two labelers working blind (`eval/`). The two labelers agree exactly on 43 of 50 (Cohen's kappa 0.49) and within one category on all 50; they split on yard debris (Affected or none) and on two houses with some walls standing (Destroyed or Major). The agent matches each labeler about as well as they match each other: 38/50 and 37/50 exact, 50/50 within one category, and most disagreements were already sent to human review. See `eval/cedar_key_score.txt` and the caveats in the label files.
+Evaluation: 50 Cedar Key buildings labeled by hand from the photos by two labelers working blind (`eval/`). The two labelers agree exactly on 43 of 50 (Cohen's kappa 0.49) and within one category on all 50; they split on yard debris (Affected or none) and on two houses with some walls standing (Destroyed or Major). Counting surveyed flood water (0.5 ft or more around a house makes it at least Affected under the PDA rule, which aerial labels can't see), the agent matches 47/50 of Claude's labels and 48/50 of Harry's, and 50/50 within one category for both. Every remaining miss is a building the two labelers disagree on: light yard debris (Claude said Affected, Harry and the agent said none) and two houses with some walls standing (Harry said Major, Claude and the agent said Destroyed). See `eval/cedar_key_score.txt` and the caveats in the label files.
 
 Example output: [`examples/cedar_key_pda_summary.md`](examples/cedar_key_pda_summary.md), the draft PDA summary the area agent wrote for Cedar Key.
 
-Known gaps: SAM only finds heavy debris, so light yard debris (Affected) is still missed; flood-only houses are drafted Affected because aerial photos don't show first-floor height.
+Known gaps: SAM only finds heavy debris, so light yard debris is left to the model's eye; flood-only houses are drafted Affected because aerial photos don't show first-floor height.
 
 ## Meta models
 
