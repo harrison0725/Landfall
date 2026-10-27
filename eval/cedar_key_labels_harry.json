@@ -1,0 +1,161 @@
+{
+ "labeler": "Harry (project author), blind: did not see Claude's labels or the agent's calls",
+ "method": "Same 50 buildings and the same pre/post pair images, labeled one at a time on a web page, order shuffled. Aerial view only.",
+ "caveats": "Not a trained assessor.",
+ "labels": {
+  "b000": {
+   "category": "none"
+  },
+  "b003": {
+   "category": "none"
+  },
+  "b004": {
+   "category": "none"
+  },
+  "b009": {
+   "category": "none"
+  },
+  "b010": {
+   "category": "none"
+  },
+  "b011": {
+   "category": "none"
+  },
+  "b012": {
+   "category": "none"
+  },
+  "b015": {
+   "category": "none"
+  },
+  "b017": {
+   "category": "none"
+  },
+  "b020": {
+   "category": "none",
+   "unsure": true,
+   "note": "Tree over"
+  },
+  "b023": {
+   "category": "destroyed"
+  },
+  "b024": {
+   "category": "none"
+  },
+  "b025": {
+   "category": "none"
+  },
+  "b032": {
+   "category": "none"
+  },
+  "b033": {
+   "category": "none"
+  },
+  "b034": {
+   "category": "none"
+  },
+  "b041": {
+   "category": "none"
+  },
+  "b043": {
+   "category": "none"
+  },
+  "b045": {
+   "category": "none"
+  },
+  "b049": {
+   "category": "none"
+  },
+  "b054": {
+   "category": "none"
+  },
+  "b057": {
+   "category": "none"
+  },
+  "b063": {
+   "category": "none"
+  },
+  "b066": {
+   "category": "none"
+  },
+  "b067": {
+   "category": "none"
+  },
+  "b072": {
+   "category": "none"
+  },
+  "b074": {
+   "category": "none"
+  },
+  "b076": {
+   "category": "none"
+  },
+  "b078": {
+   "category": "none"
+  },
+  "b082": {
+   "category": "none"
+  },
+  "b094": {
+   "category": "major"
+  },
+  "b096": {
+   "category": "none"
+  },
+  "b098": {
+   "category": "major"
+  },
+  "b107": {
+   "category": "destroyed"
+  },
+  "b110": {
+   "category": "none"
+  },
+  "b112": {
+   "category": "none"
+  },
+  "b114": {
+   "category": "destroyed"
+  },
+  "b115": {
+   "category": "none"
+  },
+  "b117": {
+   "category": "none"
+  },
+  "b122": {
+   "category": "none"
+  },
+  "b125": {
+   "category": "none"
+  },
+  "b133": {
+   "category": "none"
+  },
+  "b134": {
+   "category": "none"
+  },
+  "b135": {
+   "category": "none",
+   "unsure": true,
+   "note": "roof added"
+  },
+  "b136": {
+   "category": "none"
+  },
+  "b139": {
+   "category": "none"
+  },
+  "b140": {
+   "category": "none"
+  },
+  "b142": {
+   "category": "none"
+  },
+  "b147": {
+   "category": "none"
+  },
+  "b148": {
+   "category": "none"
+  }
+ }
+}

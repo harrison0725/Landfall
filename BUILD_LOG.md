@@ -36,3 +36,9 @@ Building period: Oct 26 to Nov 4, 2026 (confirmed at the kickoff on Oct 26).
 - Score: 37/50 exact, 50/50 within one category, 4 of 5 destroyed called Destroyed (the fifth called Major, with walls still standing), and no false Destroyed. 11 of 13 disagreements were already flagged for human review. The two silent misses are debris in the yard (Affected) that the agent called no damage.
 - Six buildings failed on the first full run because the model ran out of tokens while reasoning. The limit went from 3,000 to 8,000 tokens and the six reran cleanly.
 - 36 tests passing.
+
+### Oct 27: a second labeler
+
+- Harry labeled the same 50 buildings blind on a web page (same photo pairs, shuffled order, no other labels shown). His labels are in `eval/cedar_key_labels_harry.json`.
+- The labelers agree on 43/50 (kappa 0.49, low because almost everything is "none"), and all 50 are within one category. They split on yard debris (5 houses: Claude said Affected, Harry said none) and on b094 and b098 (Claude said Destroyed, Harry said Major).
+- Against Harry's labels the agent gets 38/50 exact (40/50 with the flood rule) and 50/50 within one, and 11 of 12 disagreements were already sent to review. The Affected-or-none line is where people disagree too, so the agent's misses there are within human noise.

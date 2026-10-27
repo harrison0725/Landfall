@@ -1,4 +1,14 @@
-== aerial labels
+== labeler agreement, claude vs harry
+exact: 43/50 (Cohen's kappa 0.49); within one step: 50/50
+  b020: claude affected, harry none
+  b063: claude affected, harry none
+  b067: claude affected, harry none
+  b094: claude destroyed, harry major
+  b096: claude affected, harry none
+  b098: claude destroyed, harry major
+  b110: claude affected, harry none
+
+== claude's aerial labels
 50 labeled buildings (44 the labeler is sure of)
 exact category: 37/50; within one step: 50/50
 exact on sure labels: 32/44
@@ -26,7 +36,7 @@ disagreements:
   b142: label none, agent affected [sent to review]
 11 of 13 disagreements were already sent to human review
 
-== aerial labels + flood rule (water >= 0.5 ft around the house -> at least Affected)
+== claude's aerial labels + flood rule (water >= 0.5 ft around the house -> at least Affected)
 50 labeled buildings (44 the labeler is sure of)
 exact category: 37/50; within one step: 50/50
 exact on sure labels: 33/44
@@ -53,3 +63,55 @@ disagreements:
   b135: label affected (unsure), agent none [sent to review]
   b148: label affected, agent none [sent to review]
 11 of 13 disagreements were already sent to human review
+
+== harry's aerial labels
+50 labeled buildings (48 the labeler is sure of)
+exact category: 38/50; within one step: 50/50
+exact on sure labels: 37/48
+destroyed: 3/3 found, 1 false
+confusion (rows = label, cols = agent):
+              none  affec  minor  major  destr
+       none     34     11      0      0      0
+   affected      0      0      0      0      0
+      minor      0      0      0      0      0
+      major      0      0      0      1      1
+  destroyed      0      0      0      0      3
+disagreements:
+  b010: label none, agent affected [sent to review]
+  b012: label none, agent affected [sent to review]
+  b017: label none, agent affected [sent to review]
+  b020: label none (unsure), agent affected [sent to review]
+  b024: label none, agent affected [sent to review]
+  b076: label none, agent affected [sent to review]
+  b094: label major, agent destroyed
+  b096: label none, agent affected [sent to review]
+  b122: label none, agent affected [sent to review]
+  b136: label none, agent affected [sent to review]
+  b139: label none, agent affected [sent to review]
+  b142: label none, agent affected [sent to review]
+11 of 12 disagreements were already sent to human review
+
+== harry's aerial labels + flood rule (water >= 0.5 ft around the house -> at least Affected)
+50 labeled buildings (48 the labeler is sure of)
+exact category: 40/50; within one step: 50/50
+exact on sure labels: 39/48
+destroyed: 3/3 found, 1 false
+confusion (rows = label, cols = agent):
+              none  affec  minor  major  destr
+       none     25      0      0      0      0
+   affected      9     11      0      0      0
+      minor      0      0      0      0      0
+      major      0      0      0      1      1
+  destroyed      0      0      0      0      3
+disagreements:
+  b000: label affected, agent none [sent to review]
+  b003: label affected, agent none [sent to review]
+  b004: label affected, agent none [sent to review]
+  b009: label affected, agent none [sent to review]
+  b011: label affected, agent none [sent to review]
+  b043: label affected, agent none [sent to review]
+  b078: label affected, agent none [sent to review]
+  b094: label major, agent destroyed
+  b135: label affected (unsure), agent none [sent to review]
+  b148: label affected, agent none [sent to review]
+9 of 10 disagreements were already sent to human review

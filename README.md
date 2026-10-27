@@ -31,9 +31,9 @@ BASETEN_API_KEY=... META_API_KEY=... python scripts/assess_area.py --area cedar_
 python scripts/score_eval.py --area cedar_key      # compare with the hand labels in eval/
 ```
 
-Evaluation: 50 Cedar Key buildings labeled by hand from the photos (`eval/`). The agent matches the label exactly on 37 of 50 and within one category on all 50. 11 of the 13 disagreements were already sent to human review. See `eval/cedar_key_score.txt` and the caveats in `eval/cedar_key_labels.json`.
+Evaluation: 50 Cedar Key buildings labeled by hand from the photos by two labelers working blind (`eval/`). The two labelers agree exactly on 43 of 50 (Cohen's kappa 0.49) and within one category on all 50; they split on yard debris (Affected or none) and on two houses with some walls standing (Destroyed or Major). The agent matches each labeler about as well as they match each other: 37/50 and 38/50 exact, 50/50 within one category, and most disagreements were already sent to human review. See `eval/cedar_key_score.txt` and the caveats in the label files.
 
-Coming next: debris and tarp prompts (both silent misses were debris in the yard), a second labeler, and the area-level agent (plan, answer questions, write the PDA summary).
+Coming next: debris and tarp prompts (both silent misses were debris in the yard), and the area-level agent (plan, answer questions, write the PDA summary).
 
 ## Meta models
 

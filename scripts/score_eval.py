@@ -1,6 +1,10 @@
 """Score the agent's drafts against the hand labels.
 
     python scripts/score_eval.py --area cedar_key
+
+Scores against every labeler's file (eval/<area>_labels.json for Claude,
+eval/<area>_labels_<name>.json for others), and reports how often the
+labelers agree with each other, which is the ceiling the agent can reach.
 """
 
 from __future__ import annotations
@@ -18,11 +22,38 @@ def main() -> None:
     ap.add_argument("--out", type=Path, default=Path("data"))
     ap.add_argument("--labels", type=Path, default=Path("eval"))
     args = ap.parse_args()
-    labels = json.loads((args.labels / f"{args.area}_labels.json").read_text())["labels"]
+    files = sorted(args.labels.glob(f"{args.area}_labels*.json"))
+    sets = {f.stem.removeprefix(f"{args.area}_labels").lstrip("_") or "claude": json.loads(f.read_text())["labels"] for f in files}
     drafts = {a["id"]: a for a in json.loads((args.out / args.area / "assessments.json").read_text())}
     flood_path = args.out / args.area / "flood.json"
     flood = {b["id"]: b["flood_ft"] or 0 for b in json.loads(flood_path.read_text())["buildings"]} if flood_path.exists() else {}
-    report(labels, drafts, "aerial labels")
+    if len(sets) > 1:
+        agreement(sets)
+    for name, labels in sets.items():
+        print()
+        score(name, labels, drafts, flood)
+
+
+def agreement(sets: dict) -> None:
+    names = list(sets)
+    for i, a in enumerate(names):
+        for b in names[i + 1 :]:
+            ids = sorted(set(sets[a]) & set(sets[b]))
+            pairs = [(sets[a][k]["category"], sets[b][k]["category"]) for k in ids]
+            n = len(pairs)
+            po = sum(x == y for x, y in pairs) / n
+            pe = sum(sum(x == c for x, _ in pairs) * sum(y == c for _, y in pairs) for c in ORDER) / n**2
+            kappa = (po - pe) / (1 - pe) if pe < 1 else 1.0
+            near = sum(abs(ORDER.index(x) - ORDER.index(y)) <= 1 for x, y in pairs)
+            print(f"== labeler agreement, {a} vs {b}")
+            print(f"exact: {round(po * n)}/{n} (Cohen's kappa {kappa:.2f}); within one step: {near}/{n}")
+            for k, (x, y) in zip(ids, pairs):
+                if x != y:
+                    print(f"  {k}: {a} {x}, {b} {y}")
+
+
+def score(name: str, labels: dict, drafts: dict, flood: dict) -> None:
+    report(labels, drafts, f"{name}'s aerial labels")
     if flood:
         # The labels see only the roof and yard. Where surveyed water stood
         # 0.5 ft or more around the house, the PDA rule says at least
@@ -34,7 +65,7 @@ def main() -> None:
                 cat = "affected"
             adjusted[bid] = {**lab, "category": cat}
         print()
-        report(adjusted, drafts, "aerial labels + flood rule (water >= 0.5 ft around the house -> at least Affected)")
+        report(adjusted, drafts, f"{name}'s aerial labels + flood rule (water >= 0.5 ft around the house -> at least Affected)")
 
 
 def report(labels: dict, drafts: dict, title: str) -> None:
