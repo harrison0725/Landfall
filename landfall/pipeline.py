@@ -366,11 +366,11 @@ def _sam_all(jobs: list, fetch, workers: int, log: Log) -> set:
     return {j for j, _ in failed}
 
 
-# Small hosts (512 MB) set these: LANDFALL_PROCS=1 decodes masks in this
-# process instead of one process per CPU, LANDFALL_WORKERS caps how many
-# images are in flight to the APIs at once.
+# Small hosts (512 MB) set LANDFALL_PROCS=1 to decode masks in this process
+# instead of one process per CPU. LANDFALL_CONCURRENCY caps how many images
+# are in flight to the APIs at once; each is a few kB, so it stays high.
 PROCS = int(os.environ.get("LANDFALL_PROCS", "0")) or None
-WORKERS = int(os.environ.get("LANDFALL_WORKERS", "0"))
+WORKERS = int(os.environ.get("LANDFALL_CONCURRENCY", "24"))
 
 
 def _w(n: int) -> int:
@@ -687,7 +687,7 @@ def assess(
     log: Log = _quiet,
     only: list[str] | None = None,
     limit: int = 0,
-    workers: int = 12,
+    workers: int = 24,
     escalate: bool = True,
 ) -> list[dict]:
     """Draft a FEMA category for every building with the agent loop.

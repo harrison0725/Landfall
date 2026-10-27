@@ -131,8 +131,17 @@ def _post(url: str, key: str, body: dict) -> dict:
     raise AssertionError("unreachable")
 
 
+# How long the Muse models think before answering. "low" answers in a few
+# seconds instead of ten or more; set LANDFALL_REASONING_EFFORT=default to
+# leave it to the model.
+REASONING_EFFORT = os.environ.get("LANDFALL_REASONING_EFFORT", "low")
+
+
 def _chat(url: str, key: str, model: str, messages: list[dict], max_tokens: int = 8000) -> str:
-    out = _post(url, key, {"model": model, "messages": messages, "max_tokens": max_tokens})
+    body = {"model": model, "messages": messages, "max_tokens": max_tokens}
+    if REASONING_EFFORT != "default":
+        body["reasoning_effort"] = REASONING_EFFORT
+    out = _post(url, key, body)
     return out["choices"][0]["message"].get("content") or ""
 
 
