@@ -31,6 +31,25 @@ from .session import Session, area_geojson
 from .storms import STORMS
 
 ROOT = Path(os.environ.get("LANDFALL_DATA", "data"))
+
+
+def _seed(root: Path, demo: Path) -> None:
+    """Copy the finished demo areas into the data dir if they are missing.
+
+    A persistent disk mounted over the data dir hides what the image put
+    there, so on first start it is empty; later starts find them already."""
+    import shutil
+
+    if not demo.is_dir() or demo.resolve() == root.resolve():
+        return
+    root.mkdir(parents=True, exist_ok=True)
+    for src in demo.iterdir():
+        dst = root / src.name
+        if not dst.exists():
+            (shutil.copytree if src.is_dir() else shutil.copy2)(src, dst)
+
+
+_seed(ROOT, Path(__file__).resolve().parents[1] / "demo")
 # Hosted publicly, new assessments need this code (they spend API credits);
 # unset, anyone running the app can assess anything.
 ACCESS_CODE = os.environ.get("LANDFALL_ACCESS_CODE", "")
