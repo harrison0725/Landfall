@@ -108,7 +108,18 @@ def index() -> FileResponse:
 
 @app.get("/api/config")
 def config() -> dict:
-    return {"access_code_required": bool(ACCESS_CODE), "max_buildings": MAX_BUILDINGS}
+    return {"access_code_required": bool(ACCESS_CODE), "max_buildings": MAX_BUILDINGS, "can_assess": _can_assess()}
+
+
+@functools.lru_cache(maxsize=1)
+def _can_assess() -> bool:
+    """New areas need the GeoTIFF reader; a broken server image fails here first."""
+    try:
+        import rasterio.warp  # noqa: F401
+
+        return True
+    except Exception:
+        return False
 
 
 @app.get("/api/storms")
