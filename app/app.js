@@ -40,6 +40,15 @@ function setFlight(flight) {
     : null;
   applyLayer();
 }
+async function setOverlay(area) {
+  // storms outside NOAA's coverage: show the after-storm mosaic Landfall built
+  const r = await fetch(`/api/areas/${area}/after`);
+  if (!r.ok) return;
+  const o = await r.json();
+  if (after) map.removeLayer(after);
+  after = L.imageOverlay(`${o.url}?t=${Date.now()}`, o.bounds, { attribution: "Maxar Open Data (CC BY-NC 4.0)" });
+  applyLayer();
+}
 function applyLayer() {
   if (state.layer === "after" && after) {
     map.removeLayer(streets);
@@ -255,11 +264,13 @@ function handle(ev) {
       break;
     case "area":
       state.area = ev.name;
+      state.flight = ev.flight;
       setFlight(ev.flight);
       break;
     case "buildings":
       state.area = ev.area;
       loadBuildings(true);
+      if (!state.flight) setOverlay(ev.area);
       break;
     case "message":
       if (ev.area && ev.area !== state.area) { state.area = ev.area; }
@@ -329,7 +340,7 @@ async function openBuilding(id) {
   $("card-body").innerHTML = `
     <h2>${esc(id)} ${cat ? `<span class="pill ${cat}" style="--c:var(--${cat})">${LABEL[cat]}</span>` : ""}${a && a.needs_human ? `<span class="pill" style="--c:var(--review)">Field check</span>` : ""}</h2>
     <img src="/api/areas/${state.area}/pair/${id}.png" alt="Before and after aerial photos of ${esc(id)}">
-    <div class="cap"><span>Before (NAIP)</span><span>After (NOAA, brightened)</span></div>
+    <div class="cap"><span>Before (${esc(a && a.photos ? a.photos.before.split(" (")[0] : "NAIP")})</span><span>After (${esc(a && a.photos ? a.photos.after.split(" (")[0] : "NOAA")})</span></div>
     <p>${a ? esc(a.evidence) : "Not drafted yet."}</p>
     <dl class="kv">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
     ${a ? `<p><a class="packet" href="/api/areas/${state.area}/packet/${id}" target="_blank" rel="noopener">Evidence packet for a claim (printable)</a></p>` : ""}
@@ -341,6 +352,7 @@ function usd(x) {
   return x >= 1e6 ? `$${(x / 1e6).toFixed(1)}M` : `$${Math.round(x / 1e3)}k`;
 }
 function traceRow(t) {
+  if (t.model === "satellite rule") return `<div class="t">Satellite photos: damage calls go to a field check.</div>`;
   if (t.model === "flood rule") return `<div class="t">Flood rule raised ${esc(t.raised_from)} to ${esc(t.to)}.</div>`;
   if (t.error) return `<div class="t">${esc(t.model)}: unreadable answer, asked again.</div>`;
   const a = t.answer || {};
@@ -397,7 +409,8 @@ async function toWav16k(blob) {
 async function boot() {
   legend();
   const storms = await (await fetch("/api/storms")).json();
-  $("storm").innerHTML = storms.map((s) => `<option value="${s.key}">${esc(s.name)}</option>`).join("");
+  const group = (label, rows) => `<optgroup label="${label}">${rows.map((s) => `<option value="${s.key}">${esc(s.name)} (${esc(s.where)}, ${s.landfall.slice(0, 4)})</option>`).join("")}</optgroup>`;
+  $("storm").innerHTML = group("United States: NOAA aerial photos", storms.filter((s) => s.imagery === "noaa")) + group("Worldwide: Maxar satellite photos", storms.filter((s) => s.imagery === "maxar"));
   const areas = await (await fetch("/api/areas")).json();
   const params = new URLSearchParams(location.search);
   const at = params.get("at");
@@ -408,8 +421,10 @@ async function boot() {
   if (pick) {
     state.spec = pick.spec;
     if (pick.spec) $("storm").value = pick.spec.storm;
-    setFlight(pick.spec && pick.spec.noaa_flight);
+    state.flight = pick.spec && pick.spec.noaa_flight;
+    setFlight(state.flight);
     await loadBuildings(true);
+    if (!state.flight) setOverlay(pick.name);
   } else {
     applyLayer();
   }

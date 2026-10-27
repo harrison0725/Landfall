@@ -16,6 +16,8 @@ import html
 import json
 from pathlib import Path
 
+from .fema import INTERNATIONAL
+
 LABEL = {"none": "No visible damage", "affected": "Affected", "minor": "Minor", "major": "Major", "destroyed": "Destroyed"}
 
 
@@ -68,6 +70,7 @@ def render(d: Path, bid: str, pair_png: bytes) -> str:
 
     rows_draft = [
         ("Draft category", LABEL.get(cat, cat)),
+        ("International grade", INTERNATIONAL.get(cat, "unknown") + " (Copernicus EMS scale)"),
         ("Confidence", f"{a['confidence']:.2f}" if a.get("confidence") is not None else "unknown"),
         ("Field check needed", "yes" if a.get("needs_human") else "no"),
         ("Roof or structure missing", f"{round(a['structure_loss'] * 100)}%" if a.get("structure_loss") is not None else "not measured"),
@@ -110,6 +113,8 @@ def render(d: Path, bid: str, pair_png: bytes) -> str:
         return "<table>" + "".join(f"<tr><th>{e(str(k))}</th><td>{e(str(v))}</td></tr>" for k, v in rows) + "</table>"
 
     def trace_row(t):
+        if t.get("model") == "satellite rule":
+            return "<li>Damage seen on satellite photos, which are coarser and taken at an angle: sent to a field check.</li>"
         if t.get("model") == "flood rule":
             return f"<li>Flood rule raised {e(t['raised_from'].lower())} to {e(t['to'].lower())}: surveyed water stood around the building.</li>"
         if t.get("error"):
@@ -142,7 +147,7 @@ tr+tr th,tr+tr td{{border-top:1px solid #eef1f3}} ul{{padding-left:18px;margin:4
 
 <h2>Before and after</h2>
 <img src="{img}" alt="Before and after aerial photos of building {e(bid)}">
-<div class="cap"><span>Before: USDA NAIP, {e(str(photos.get('naip_date', 'unknown date')))}</span><span>After: NOAA emergency response flight {e(str(photos.get('noaa_flight', '')))} (brightened)</span></div>
+<div class="cap"><span>Before: {e(photos.get('pre_source') or f"USDA NAIP, {photos.get('naip_date', 'unknown date')}")}</span><span>After: {e(photos.get('post_source') or f"NOAA emergency response flight {photos.get('noaa_flight', '')}")} (brightened)</span></div>
 
 <h2>What the photos show</h2>
 <p>{e(a.get('evidence', ''))}</p>

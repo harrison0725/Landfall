@@ -56,6 +56,8 @@ def assess_need(draft: dict, flood_ft: float | None, parcel: dict | None) -> dic
     if possibly and not likely:
         reasons.append(f"up to {inside_max:.1f} ft of water inside if the floor is low")
     hh = 0 if draft.get("demolished") else households(parcel)
+    if parcel is None and hh:
+        reasons.append("no property record: counted as one household")
     if hh == 0 and not draft.get("demolished"):
         use = LAND_USE.get(p.get("land_use"), f"land use {p.get('land_use')}")
         reasons.append(f"{use} on the tax roll, not a home (counted as a business or lodging, not households)")

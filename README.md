@@ -21,6 +21,7 @@ Day 1. Working so far:
 - `landfall/pipeline.py`: the stages (prepare, segment, flood, debris, assess) as library functions with progress events; the scripts, the agent and the app all call these.
 - `landfall/session.py` and `landfall/app.py`: the conversation the app runs. The agent gets the pipeline stages as tools, so it runs the assessment itself, then answers questions with the area tools.
 - `landfall/storms.py`: finds the NOAA post-storm flight and tide gauges for any box, from NOAA's own flight catalog.
+- `landfall/maxar.py`: storms outside the US. Before and after satellite photos from Maxar's Open Data program (Hurricane Melissa in Jamaica, Fiona and Maria in Puerto Rico, Typhoon Kalmaegi, Cyclones Chido, Mocha, Ditwah and Emnati), picking the earliest clear pass after landfall and the newest clear pass before it. Building outlines come from Microsoft's worldwide dataset. Surveyed flood depth and tax-roll values are US and Florida data, so outside the US the drafts rest on the photos, flood and repair cost are reported as unknown, and every category also carries the international grade (Copernicus EMS: no visible damage, possibly damaged, damaged, destroyed).
 - `landfall/cost.py` and `landfall/parcels.py`: repair cost ranges. Building values come from the Florida tax roll (median value per square foot of the homes nearby); flood damage follows FEMA's P-784 bands, with the first-floor height estimated from the year built and the FEMA flood zone. Buildings whose repairs could reach half their value are flagged under FEMA's 50% substantial-damage rule. No owner names or addresses are kept.
 - `landfall/priority.py`: who needs help first. Households likely displaced (Major or Destroyed, or 18 inches or more of water inside at the estimated floor height), motels and shops listed separately, and buildings ranked by urgency.
 - `landfall/packet.py`: a printable evidence packet per building for an insurance claim or a FEMA application: the photo pair with dates, what the photos show, flood water with its sources, the property record, the repair range and how the draft was made.
@@ -77,8 +78,9 @@ pytest
 | Data | Source | Rights |
 |---|---|---|
 | Post-storm aerial photos | NOAA NGS emergency response imagery | US government work, public domain |
+| Before and after satellite photos outside the US | Maxar Open Data program | CC BY-NC 4.0 (non-commercial, attribution) |
 | Pre-storm aerial photos | USDA NAIP | US government work, public domain |
-| Building outlines | Microsoft US Building Footprints | ODbL |
+| Building outlines | Microsoft Global ML Building Footprints | ODbL |
 | Roads | OpenStreetMap | ODbL, © OpenStreetMap contributors |
 | High-water marks | USGS Flood Event Viewer | US government work, public domain |
 | Ground elevation | USGS 3DEP | US government work, public domain |

@@ -79,7 +79,7 @@ def index() -> FileResponse:
 
 @app.get("/api/storms")
 def storms() -> list[dict]:
-    return [{"key": s.key, "name": s.name, "landfall": s.landfall} for s in STORMS.values()]
+    return [{"key": s.key, "name": s.name, "landfall": s.landfall, "where": s.where, "imagery": s.provider} for s in STORMS.values()]
 
 
 @app.get("/api/areas")
@@ -115,6 +115,7 @@ def building(area: str, bid: str) -> dict:
     rec = f["parcel"]
     return {
         **drafts[bid],
+        "photos": {"before": f["photos"].get("pre_source") or "NAIP", "after": f["photos"].get("post_source") or "NOAA"},
         "cost": f["cost"],
         "need": f["need"],
         "record": {k: rec.get(k) for k in ("year_built", "flood_zone", "bfe_ft", "basis", "land_use")} if rec else None,
@@ -125,6 +126,37 @@ def building(area: str, bid: str) -> dict:
 def pair(area: str, bid: str) -> Response:
     """Before | after with the outline, the same picture the agent saw."""
     return Response(_pair_png(area, bid), media_type="image/png", headers={"Cache-Control": "max-age=3600"})
+
+
+@app.get("/api/areas/{area}/after")
+def after_overlay(area: str) -> dict:
+    """Where the after-storm mosaic sits on the map, for storms without NOAA
+    tiles (the browser can't read Maxar's GeoTIFFs directly)."""
+    from .geo import pixel_to_lonlat
+
+    d = _area_dir(area)
+    if not (d / "post.png").exists() or not (d / "alignment.json").exists():
+        raise HTTPException(404, "no after-storm mosaic yet")
+    from PIL import Image
+
+    x0, y0 = json.loads((d / "alignment.json").read_text())["summary"]["mosaic_origin"]
+    w, h = Image.open(d / "post.png").size
+    w_lon, n_lat = pixel_to_lonlat(x0, y0, 19)
+    e_lon, s_lat = pixel_to_lonlat(x0 + w, y0 + h, 19)
+    return {"url": f"/api/areas/{area}/after.jpg", "bounds": [[s_lat, w_lon], [n_lat, e_lon]]}
+
+
+@app.get("/api/areas/{area}/after.jpg")
+def after_jpg(area: str) -> Response:
+    from PIL import Image
+
+    d = _area_dir(area)
+    out = d / "post_preview.jpg"
+    if not out.exists() or out.stat().st_mtime < (d / "post.png").stat().st_mtime:
+        im = Image.open(d / "post.png").convert("RGB")
+        im.thumbnail((4096, 4096))
+        im.save(out, quality=85)
+    return FileResponse(out, media_type="image/jpeg")
 
 
 @app.get("/api/areas/{area}/packet/{bid}", response_class=HTMLResponse)

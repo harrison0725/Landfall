@@ -62,6 +62,18 @@ class AreaSpec:
     min_area_m2: float = 40.0
     hwm_radius_km: float = 5.0
     gauges: list[dict] = field(default_factory=list)
+    # Maxar satellite imagery, for storms outside NOAA's coverage: visual
+    # COGs in the order they fill the mosaic, and labels for the record
+    imagery: str = "noaa"
+    post_hrefs: list[str] = field(default_factory=list)
+    pre_hrefs: list[str] = field(default_factory=list)
+    post_label: str = ""
+    pre_label: str = ""
+    pre_date: str = ""
+
+    @property
+    def post_source(self) -> str:
+        return self.post_label or f"NOAA emergency response flight {self.noaa_flight}"
 
     @classmethod
     def for_box(cls, name: str, bbox: tuple[float, float, float, float], storm: str, n_buildings: int = 60) -> AreaSpec:
@@ -70,11 +82,43 @@ class AreaSpec:
 
         s = STORMS[storm]
         center = ((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2)
+        if s.provider == "maxar":
+            return cls._maxar(name, bbox, center, s, n_buildings)
         f = find_flight(storm, bbox)
         if f is None:
             raise LookupError(f"NOAA has no {s.name} imagery over this box")
         gauges = nearest_gauges(*center)
         return cls(name, center, tuple(bbox), storm, f.name, s.landfall, s.stn_event, n_buildings, gauges=gauges)
+
+    @classmethod
+    def _maxar(cls, name, bbox, center, s, n_buildings) -> AreaSpec:
+        from .maxar import passes, pick
+
+        found = passes(s.maxar_event, tuple(bbox), Path("data") / "cache")
+        after, before = pick(found, s.landfall, True), pick(found, s.landfall, False)
+        if not after:
+            raise LookupError(f"Maxar has no clear {s.name} imagery after {s.landfall} over this box")
+        if not before:
+            raise LookupError(
+                f"Maxar has {s.name} imagery after the storm here but none from before it, so there is nothing to compare against. "
+                "Try a nearby box; before-storm coverage is patchy outside the cities."
+            )
+        return cls(
+            name,
+            center,
+            tuple(bbox),
+            s.key,
+            "",
+            s.landfall,
+            "",
+            n_buildings,
+            imagery="maxar",
+            post_hrefs=[h for p in after[:3] for h in p.hrefs],
+            pre_hrefs=[h for p in before[:3] for h in p.hrefs],
+            post_label=after[0].label,
+            pre_label=before[0].label,
+            pre_date=before[0].date,
+        )
 
     def save(self, root: Path) -> None:
         d = root / self.name
@@ -142,7 +186,7 @@ def prepare(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
     (out / "crops").mkdir(parents=True, exist_ok=True)
     spec.save(root)
 
-    feats = ms_buildings(spec.bbox, cache)
+    feats = ms_buildings(spec.bbox, cache, region=None)
     chosen = pick_buildings(feats, spec.center, spec.n_buildings, spec.min_area_m2)
     if not chosen:
         raise LookupError("no building footprints in this box")
@@ -157,13 +201,21 @@ def prepare(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
         max(w.x1 for w in wins.values()) + pad,
         max(w.y1 for w in wins.values()) + pad,
     )
-    post, post_ok = noaa_mosaic(spec.noaa_flight, area, ZOOM, cache)
-    log("imagery", side="post", source=f"NOAA flight {spec.noaa_flight}", px=[area.width, area.height])
-    scene, pre, pre_ok = _naip_fill(area, spec, naip_scenes, naip_mosaic)
-    log("imagery", side="pre", source=f"USDA NAIP {scene.date}", px=[area.width, area.height], covered=round(float(pre_ok.mean()), 3))
-    between = storms_between(scene.date, spec.landfall, spec.storm)
+    if spec.imagery == "maxar":
+        from .maxar import mosaic
+
+        post, post_ok = mosaic(spec.post_hrefs, area, ZOOM)
+        pre, pre_ok = mosaic(spec.pre_hrefs, area, ZOOM)
+        pre_date, pre_source, pre_id = spec.pre_date, spec.pre_label, spec.pre_label
+    else:
+        post, post_ok = noaa_mosaic(spec.noaa_flight, area, ZOOM, cache)
+        scene, pre, pre_ok = _naip_fill(area, spec, naip_scenes, naip_mosaic)
+        pre_date, pre_source, pre_id = scene.date, f"USDA NAIP {scene.date}", scene.id
+    log("imagery", side="post", source=spec.post_source, px=[area.width, area.height], covered=round(float(post_ok.mean()), 3))
+    log("imagery", side="pre", source=pre_source, px=[area.width, area.height], covered=round(float(pre_ok.mean()), 3))
+    between = storms_between(pre_date, spec.landfall, spec.storm)
     if between:
-        log("warning", text=f"{', '.join(between)} hit between the pre-storm photos ({scene.date}) and this storm; damage from it will look like damage from this one.")
+        log("warning", text=f"{', '.join(between)} hit between the pre-storm photos ({pre_date}) and this storm; damage from it will look like damage from this one.")
     Image.fromarray(pre).save(out / "pre.png")
     Image.fromarray(post).save(out / "post.png")
 
@@ -213,8 +265,11 @@ def prepare(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
         zoom=ZOOM,
         m_per_px=round(meters_per_pixel(spec.center[1], ZOOM), 3),
         noaa_flight=spec.noaa_flight,
-        naip_scene=scene.id,
-        naip_date=scene.date,
+        naip_scene=pre_id if spec.imagery != "maxar" else None,
+        naip_date=pre_date if spec.imagery != "maxar" else None,
+        post_source=spec.post_source,
+        pre_source=pre_source,
+        pre_date=pre_date,
         storms_between=between,
         buildings=len(results),
         aligned=sum(r["aligned"] for r in results),
@@ -251,7 +306,12 @@ def _naip_fill(area: Window, spec: AreaSpec, naip_scenes, naip_mosaic):
 def storms_between(pre_date: str, landfall: str, this: str) -> list[str]:
     from .storms import STORMS
 
-    return [f"{s.name} ({s.landfall})" for s in STORMS.values() if s.key != this and pre_date < s.landfall < landfall]
+    places = {p.strip() for p in STORMS[this].where.split(",")} if this in STORMS else set()
+    return [
+        f"{s.name} ({s.landfall})"
+        for s in STORMS.values()
+        if s.key != this and pre_date < s.landfall < landfall and places & {p.strip() for p in s.where.split(",")}
+    ]
 
 
 # ---------------------------------------------------------------- SAM helpers
@@ -403,6 +463,13 @@ def flood(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
     d = root / spec.name
     obs = []
     radius = spec.hwm_radius_km
+    if not spec.stn_event and not spec.gauges:
+        # Surveyed high-water marks (USGS), tide gauges (NOAA) and lidar
+        # ground (3DEP) are US datasets; nothing comparable is public for
+        # most other countries, so depth stays unknown rather than guessed.
+        (d / "flood.json").write_text(json.dumps(dict(surface_ft_navd88=None, observations=[], buildings=[])))
+        log("flood", error="no surveyed high-water marks or tide gauges for this storm (they are US datasets); flood depth unknown, so the drafts rest on the photos alone")
+        return {}
     try:
         obs += high_water_marks(spec.stn_event, spec.center, radius)
         if not obs and not spec.gauges:
@@ -637,6 +704,13 @@ def assess(
             tarp_share=m.tarp_share,
             trace=a.trace,
         )
+        if spec.imagery == "maxar" and rec["category"] in ("minor", "major", "destroyed") and not rec["needs_human"]:
+            # Satellite photos are coarser than NOAA's aerial ones and taken
+            # at an angle, so a roof can look gone when it is hidden by its
+            # own lean or a neighbor. On a satellite pair, damage calls are
+            # leads for a field check, never final.
+            rec["needs_human"] = True
+            rec["trace"] = [*a.trace, {"model": "satellite rule", "note": "damage seen on satellite photos: field check"}]
         log(
             "building",
             id=bid,
@@ -674,14 +748,31 @@ def costs(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
     floods = {}
     if (d / "flood.json").exists():
         floods = {b["id"]: b["flood_ft"] for b in json.loads((d / "flood.json").read_text()).get("buildings", [])}
-    rate = cost.local_rate(spec.bbox if spec.name != "cedar_key" else _drafted_bbox(feats))
+    from .priority import rank
+
+    try:
+        rate = cost.local_rate(spec.bbox if spec.name != "cedar_key" else _drafted_bbox(feats))
+    except (LookupError, OSError) as e:
+        # Building values come from Florida's statewide tax roll; elsewhere
+        # there is no public source to price repairs from, so say so.
+        (d / "costs.json").unlink(missing_ok=True)
+        log("costs", error=f"no repair costs here: building values come from Florida's tax roll ({e})")
+        needs = rank(drafts, floods, {})
+        (d / "needs.json").write_text(json.dumps(needs, indent=1))
+        log(
+            "needs",
+            households_likely_displaced=needs["households_likely_displaced"],
+            households_possibly_displaced=needs["households_possibly_displaced"],
+            note="no property records here, so each building counts as one household",
+            first=[r["id"] for r in needs["buildings"][:8]],
+        )
+        return {}
     log("local_rate", usd_per_sqft=rate["usd_per_sqft"], homes=rate["homes"], roll_year=rate["roll_year"])
     floors = parcels.lookup(d)
     known = [f for f in floors.values() if f.get("floor_high_ft") is not None]
     log("first_floors", estimated=len(known), of=len(floors), low=sum(f["floor_high_ft"] <= 3.0 for f in known))
     out = cost.estimate(drafts, feats, floods, rate, floors)
     (d / "costs.json").write_text(json.dumps(out, indent=1))
-    from .priority import rank
 
     needs = rank(drafts, floods, floors)
     (d / "needs.json").write_text(json.dumps(needs, indent=1))

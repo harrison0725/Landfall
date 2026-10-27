@@ -207,7 +207,7 @@ def quadkey(lon: float, lat: float, zoom: int = 9) -> str:
 
 
 def ms_buildings(
-    bbox: tuple[float, float, float, float], cache_dir: Path, region: str = "UnitedStates"
+    bbox: tuple[float, float, float, float], cache_dir: Path, region: str | None = "UnitedStates"
 ) -> list[dict]:
     """Microsoft footprints whose centroid falls in (west, south, east, north).
 
@@ -220,14 +220,14 @@ def ms_buildings(
     w, s, e, n = bbox
     qk = quadkey((w + e) / 2, (s + n) / 2)
     cache_dir.mkdir(parents=True, exist_ok=True)
-    path = cache_dir / f"ms_{region}_{qk}.geojsonl.gz"
+    path = cache_dir / f"ms_{region or 'any'}_{qk}.geojsonl.gz"
     if not path.exists():
         links, _ = _get(MS_LINKS_URL)
-        rows = [r for r in csv.DictReader(io.StringIO(links.decode())) if r["QuadKey"] == qk and r["Location"] == region]
+        rows = [r for r in csv.DictReader(io.StringIO(links.decode())) if r["QuadKey"] == qk and (region is None or r["Location"] == region)]
         if not rows:
-            raise LookupError(f"no Microsoft footprints for quadkey {qk} in {region}")
-        body, _ = _get(rows[0]["Url"])
-        path.write_bytes(body)
+            raise LookupError(f"no Microsoft footprints for quadkey {qk}" + (f" in {region}" if region else ""))
+        # a quadkey on a border has one file per country; keep them all
+        path.write_bytes(b"".join(_get(r["Url"])[0] for r in rows))
 
     out = []
     with gzip.open(path, "rt") as f:

@@ -1,4 +1,9 @@
-"""Which storm, which post-storm flight, which tide gauges: for any box.
+"""Which storm, which post-storm photos, which tide gauges: for any box.
+
+US storms use NOAA's aerial flights (sharpest, flown within days). Storms
+anywhere else use Maxar's Open Data satellite imagery (maxar.py), which
+also supplies the pre-storm photos there. Landfall dates split an event's
+images into before and after.
 
 NOAA's Emergency Response Imagery site publishes a catalog per storm
 (services/index.json) with every flight's tile URL and bounds. Bounds are a
@@ -25,7 +30,13 @@ class Storm:
     key: str
     name: str
     landfall: str  # YYYY-MM-DD; pre-storm imagery must be older
-    stn_event: str  # USGS STN event name for high-water marks
+    stn_event: str  # USGS STN event name for high-water marks ("" outside the US)
+    maxar_event: str = ""  # Maxar Open Data event id, for storms outside NOAA's coverage
+    where: str = "United States"
+
+    @property
+    def provider(self) -> str:
+        return "maxar" if self.maxar_event else "noaa"
 
 
 STORMS = {
@@ -35,6 +46,16 @@ STORMS = {
         Storm("milton", "Hurricane Milton", "2024-10-09", "2024 Milton"),
         Storm("idalia", "Hurricane Idalia", "2023-08-30", "2023 Idalia"),
         Storm("ian", "Hurricane Ian", "2022-09-28", "2022 Ian"),
+        # Outside the US: Maxar Open Data. Dates are landfall on the place
+        # most of the event's imagery covers.
+        Storm("melissa", "Hurricane Melissa", "2025-10-28", "", "Hurricane-Melissa-Oct-2025", "Jamaica, Cuba, Haiti"),
+        Storm("fiona", "Hurricane Fiona", "2022-09-18", "", "Hurricane-Fiona-9-19-2022", "Puerto Rico, Dominican Republic"),
+        Storm("maria", "Hurricane Maria", "2017-09-20", "", "Hurricane-Maria-PuertoRico-Oct-2017", "Puerto Rico"),
+        Storm("chido", "Cyclone Chido", "2024-12-14", "", "Cyclone-Chido-Dec15", "Mayotte"),
+        Storm("mocha", "Cyclone Mocha", "2023-05-14", "", "BayofBengal-Cyclone-Mocha-May-23", "Myanmar, Bangladesh"),
+        Storm("ditwah", "Cyclone Ditwah", "2025-11-28", "", "Cyclone-Ditwah-Sri-Lanka-Nov-2025", "Sri Lanka"),
+        Storm("kalmaegi", "Typhoon Kalmaegi", "2025-11-04", "", "Typhoon-Kalmaegi-Nov-2025", "Philippines"),
+        Storm("emnati", "Cyclone Emnati", "2022-02-22", "", "cyclone-emnati22", "Madagascar"),
     ]
 }
 

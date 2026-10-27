@@ -91,3 +91,15 @@ Harry asked for features from a list (damage detection, severity, repair cost, i
 - Who needs help first (`priority.py`): Cedar Key has 16 households likely displaced and 32 possibly. The four destroyed buildings on the waterfront are a motel (land use 039), so they count as lodging lost, not households; they are listed separately with eight other businesses.
 - Claim packet (`packet.py`): one printable page per building, opened from the map card.
 - The agent gets `estimate_costs_and_needs` as a pipeline step and `repair_costs` and `urgent_needs` as question tools; the PDA summary gained "Who needs help first" and "Repair cost" sections.
+
+### Oct 27: storms outside the US
+
+Harry asked whether Landfall works across the world, then asked to make it so. NOAA flies only US storms and NAIP covers only the US, so the photos needed a second source.
+
+- Maxar's Open Data program publishes free before-and-after satellite imagery for major disasters worldwide as a static STAC catalog of Cloud-Optimized GeoTIFFs (56 events; licensed CC BY-NC 4.0). `maxar.py` finds the passes over a box (items are tiles in Maxar's own UTM grid, so selection is by each item's bounds from the acquisition's extent list), measures how much of the box each pass really covers from its data footprint, and picks the earliest clear pass after landfall and the newest clear pass before it. Mosaics read only the blocks a window needs through a warped VRT, so a 5 km tile isn't downloaded for a 1 km town.
+- Eight storms outside NOAA's coverage are wired in (Melissa, Fiona, Maria, Chido, Mocha, Ditwah, Kalmaegi, Emnati). Before-storm coverage is patchy: in Jamaica only one pre-storm strip (Oct 2022) overlaps the western side of the island, which includes Montego Bay but not Black River.
+- Building outlines now come from Microsoft's dataset for any country (a border quadkey keeps every country's file).
+- Flood depth and repair cost rest on US and Florida data (USGS marks, NOAA gauges, 3DEP, the Florida tax roll). Outside them the stages say so and stop instead of guessing; households are counted one per building with a note.
+- Every category also carries an international grade, the Copernicus EMS scale (no visible damage, possibly damaged, damaged, destroyed). The crosswalk is Landfall's own.
+- The "storms between the photos" warning now only counts storms that hit the same place.
+- First run abroad, Montego Bay after Hurricane Melissa (60 buildings, 0.49 m WorldView-2 after vs 0.32 m WorldView-3 before): 45 none, 3 affected, 5 minor, 3 major, 4 destroyed, in about 3.5 minutes. Looking at the four Destroyed calls by eye, one looks right, one looks wrong (a building that still stands, seen from another angle) and two can't be told at this resolution. Satellite pairs are coarser and taken at an angle, so on them every Minor, Major or Destroyed draft now goes to a field check ("satellite rule" in the trace). No labeled eval set abroad yet.

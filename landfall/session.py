@@ -25,7 +25,7 @@ SYSTEM = (
     + """
 
 You can also assess a new area. When the user gives you a box, work through these tools in order, reading each result before the next:
-1. locate_imagery: find NOAA post-storm photos, pre-storm photos and tide gauges for the box. If there is no imagery, stop and say so.
+1. locate_imagery: find post-storm photos (NOAA aerial flights in the US, Maxar satellite imagery elsewhere), pre-storm photos and tide gauges for the box. If there is no imagery, stop and say so.
 2. prepare_area: download photos and building outlines, line up every building.
 3. measure_structures: Segment Anything masks; share of each building missing after the storm.
 4. measure_flood: surveyed water surface minus lidar ground at each building.
@@ -40,7 +40,7 @@ PIPELINE_TOOLS = [
         "type": "function",
         "function": {
             "name": "locate_imagery",
-            "description": "Find the post-storm NOAA flight, pre-storm NAIP and nearby tide gauges for the box, and set up the area.",
+            "description": "Find post-storm and pre-storm photos for the box (NOAA flights and USDA NAIP in the US; Maxar satellite imagery for storms elsewhere) and nearby tide gauges, and set up the area.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -100,12 +100,18 @@ class Session:
                 spec = AreaSpec.for_box(self.area or _name(self.box), self.box, args.get("storm", "helene"), n)
                 spec.save(self.root)
                 self.area = spec.name
-                emit("area", name=spec.name, bbox=spec.bbox, flight=spec.noaa_flight)
+                emit("area", name=spec.name, bbox=spec.bbox, flight=spec.noaa_flight or None)
                 return {
                     "area": spec.name,
                     "storm": STORMS[spec.storm].name,
-                    "post_storm_flight": spec.noaa_flight,
+                    "post_storm_photos": spec.post_source,
+                    "pre_storm_photos": spec.pre_label or "USDA NAIP (newest before the storm)",
                     "tide_gauges": [g["name"] for g in spec.gauges],
+                    **(
+                        {"note": "Outside the US: satellite photos from Maxar Open Data; no surveyed flood depth or property values here, so flood and repair cost will be unknown."}
+                        if spec.imagery == "maxar"
+                        else {}
+                    ),
                     "buildings_to_assess": spec.n_buildings,
                 }
             stage = {

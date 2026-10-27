@@ -29,6 +29,20 @@ class Category(IntEnum):
         return "No visible damage" if self is Category.NONE else self.name.title()
 
 
+# Outside the US, responders map damage on the four grades the Copernicus
+# Emergency Management Service uses. This crosswalk is Landfall's, not an
+# official one: Minor and Major both show damage to the structure, so both
+# are "Damaged"; Affected is mostly cosmetic or water around the building,
+# closest to "Possibly damaged".
+INTERNATIONAL = {
+    "none": "No visible damage",
+    "affected": "Possibly damaged",
+    "minor": "Damaged",
+    "major": "Damaged",
+    "destroyed": "Destroyed",
+}
+
+
 @dataclass(frozen=True)
 class Thresholds:
     # Share of the pre-storm roof area missing in the post-storm photo.

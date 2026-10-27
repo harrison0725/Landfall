@@ -21,6 +21,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .agent import OPEN_MODEL, OPEN_URL, SPARK_MODEL, SPARK_URL
+from .fema import INTERNATIONAL
 
 ORDER = ["none", "affected", "minor", "major", "destroyed"]
 MAX_STEPS = 12
@@ -32,7 +33,8 @@ Rules:
 - These are drafts for trained assessors, not official determinations. Say so in anything meant to be shared.
 - Name buildings by id and say why each one matters (category, flood depth, review flag).
 - Aerial photos can't see inside a house. Where water stood around a house but the first-floor height is unknown, the draft says affected; the real category may be higher. Point this out when flood matters to the answer.
-- Copy coordinates exactly as the tools give them ("lat, lon"; latitude is positive, longitude negative here).
+- Copy coordinates exactly as the tools give them ("lat, lon").
+- Outside the US, also give the international grade (Copernicus EMS: no visible damage, possibly damaged, damaged, destroyed) that the tools report, and say flood depth and repair cost are unknown when the tools say so.
 - Be brief and concrete. Lead with the answer."""
 
 
@@ -62,6 +64,7 @@ class Area:
             buildings[bid] = {
                 "id": bid,
                 "category": a.get("category", "error"),
+                "international_grade": INTERNATIONAL.get(a.get("category", ""), None),
                 "confidence": a.get("confidence"),
                 "needs_human": a.get("needs_human", True),
                 "evidence": a.get("evidence", a.get("error", "")),
@@ -91,8 +94,8 @@ class Area:
                 buildings[bid]["urgency"] = n["score"]
                 buildings[bid]["urgency_reasons"] = n["reasons"]
         meta = {
-            "post_storm_photos": f"NOAA emergency response flight {summary.get('noaa_flight')}",
-            "pre_storm_photos": f"USDA NAIP, {summary.get('naip_date')}",
+            "post_storm_photos": summary.get("post_source") or f"NOAA emergency response flight {summary.get('noaa_flight')}",
+            "pre_storm_photos": summary.get("pre_source") or f"USDA NAIP, {summary.get('naip_date')}",
             "water_surface_ft_navd88": flood.get("surface_ft_navd88"),
             "water_observations": flood.get("observations", []),
         }
@@ -112,6 +115,7 @@ class Area:
             "area": self.name,
             "buildings_assessed": len(b),
             "by_category": {c: counts.get(c, 0) for c in ORDER if counts.get(c)},
+            "by_international_grade": dict(Counter(INTERNATIONAL[x["category"]] for x in b if x["category"] in INTERNATIONAL)),
             "sent_to_human_review": sum(x["needs_human"] for x in b),
             "gone_before_the_storm": [x["id"] for x in b if x["demolished_before_storm"]],
             "buildings_with_water_around_them": len(flooded),
