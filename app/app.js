@@ -46,7 +46,11 @@ async function setOverlay(area) {
   if (!r.ok) return;
   const o = await r.json();
   if (after) map.removeLayer(after);
-  after = L.imageOverlay(`${o.url}?t=${Date.now()}`, o.bounds, { attribution: "Maxar Open Data (CC BY-NC 4.0)" });
+  after = o.tiles
+    ? L.tileLayer(o.tiles.url, {
+        maxZoom: 21, maxNativeZoom: o.tiles.max_native_zoom, minNativeZoom: o.tiles.min_zoom, attribution: o.tiles.attribution,
+      })
+    : L.imageOverlay(`${o.url}?t=${Date.now()}`, o.bounds, { attribution: "Maxar Open Data (CC BY-NC 4.0)" });
   applyLayer();
 }
 function applyLayer() {

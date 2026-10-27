@@ -168,6 +168,8 @@ def after_overlay(area: str) -> dict:
     from .geo import pixel_to_lonlat
 
     d = _area_dir(area)
+    if (d / "tiles.json").exists():  # shipped demo areas: map tiles cut from the same imagery
+        return {"tiles": json.loads((d / "tiles.json").read_text())}
     if not (d / "post.png").exists() and not (d / "post_size.json").exists():
         raise HTTPException(404, "no after-storm mosaic yet")
     from PIL import Image
@@ -178,6 +180,18 @@ def after_overlay(area: str) -> dict:
     w_lon, n_lat = pixel_to_lonlat(x0, y0, 19)
     e_lon, s_lat = pixel_to_lonlat(x0 + w, y0 + h, 19)
     return {"url": f"/api/areas/{area}/after.jpg", "bounds": [[s_lat, w_lon], [n_lat, e_lon]]}
+
+
+@app.get("/api/tiles/{name}/{z}/{x}/{y}.jpg")
+def tile(name: str, z: int, x: int, y: int) -> Response:
+    """After-storm satellite tiles made by scripts/maxar_tiles.py; edge tiles are PNGs."""
+    if not name.replace("_", "").isalnum():
+        raise HTTPException(404)
+    base = ROOT / "tiles" / name / str(z) / str(x)
+    for ext, kind in (("jpg", "image/jpeg"), ("png", "image/png")):
+        if (base / f"{y}.{ext}").exists():
+            return FileResponse(base / f"{y}.{ext}", media_type=kind, headers={"Cache-Control": "max-age=86400"})
+    raise HTTPException(404)
 
 
 @app.get("/api/areas/{area}/after.jpg")
