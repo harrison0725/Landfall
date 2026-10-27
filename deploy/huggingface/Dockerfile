@@ -1,7 +1,7 @@
 # Hugging Face Space build: fetches Landfall from GitHub at one commit.
 # The deploy workflow fills in REF with the commit it deploys.
 FROM python:3.12-slim
-RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates libexpat1 && rm -rf /var/lib/apt/lists/*
 RUN useradd -m -u 1000 user
 WORKDIR /app
 ARG REPO=https://github.com/harrison0725/Landfall
