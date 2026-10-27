@@ -33,6 +33,9 @@ class Storm:
     stn_event: str  # USGS STN event name for high-water marks ("" outside the US)
     maxar_event: str = ""  # Maxar Open Data event id, for storms outside NOAA's coverage
     where: str = "United States"
+    kind: str = "hurricane"  # hurricane, wildfire, earthquake or flood: decides what damage looks like
+    catalog: str = ""  # NOAA catalog when it isn't the key (yearly ones like 2025_eri hold many events)
+    until: str = ""  # last flight date for this event in a shared catalog
 
     @property
     def provider(self) -> str:
@@ -56,6 +59,11 @@ STORMS = {
         Storm("ditwah", "Cyclone Ditwah", "2025-11-28", "", "Cyclone-Ditwah-Sri-Lanka-Nov-2025", "Sri Lanka"),
         Storm("kalmaegi", "Typhoon Kalmaegi", "2025-11-04", "", "Typhoon-Kalmaegi-Nov-2025", "Philippines"),
         Storm("emnati", "Cyclone Emnati", "2022-02-22", "", "cyclone-emnati22", "Madagascar"),
+        # Other disasters. NOAA flew the LA fires and the Texas floods into its
+        # 2025 catalog, so a date window picks out each event's flights.
+        Storm("la_fires", "Los Angeles wildfires", "2025-01-07", "", where="Los Angeles, United States", kind="wildfire", catalog="2025_eri", until="2025-01-31"),
+        Storm("texas_floods", "Texas Hill Country floods", "2025-07-04", "2025 July TX Flood", where="Texas, United States", kind="flood", catalog="2025_eri", until="2025-07-31"),
+        Storm("myanmar_quake", "Myanmar earthquake", "2025-03-28", "", "Earthquake-Myanmar-March-2025", "Myanmar", kind="earthquake"),
     ]
 }
 
@@ -65,6 +73,7 @@ class Flight:
     name: str  # e.g. 20240928b-rgb
     tiles: str
     bounds: tuple[float, float, float, float]
+    maxzoom: int = 21
 
     @property
     def date(self) -> str:
@@ -73,10 +82,14 @@ class Flight:
 
 
 def flights(storm: str) -> list[Flight]:
+    s = STORMS.get(storm)
     out = []
-    for e in json.loads(_get(CATALOG.format(storm=storm))[0]):
+    for e in json.loads(_get(CATALOG.format(storm=(s and s.catalog) or storm))[0]):
         url = e["tiles"][0]
-        out.append(Flight(url.rstrip("/").split("/")[-4], url, tuple(e["bounds"])))
+        f = Flight(url.rstrip("/").split("/")[-4], url, tuple(e["bounds"]), int(e.get("maxzoom", 21)))
+        if s and s.until and not (s.landfall <= f.date <= s.until):
+            continue
+        out.append(f)
     return out
 
 
@@ -91,11 +104,13 @@ def covers(f: Flight, lon: float, lat: float, zoom: int = 19) -> bool:
 
 
 def find_flight(storm: str, bbox: tuple[float, float, float, float]) -> Flight | None:
-    """The earliest flight after the storm with real tiles over the box."""
+    """The earliest flight after the storm with real tiles over the box,
+    preferring NOAA's own aerial photos to the satellite scenes it also
+    publishes (those stop at zoom 19 and come through haze and smoke)."""
     lon = (bbox[0] + bbox[2]) / 2
     lat = (bbox[1] + bbox[3]) / 2
     cands = [f for f in flights(storm) if f.bounds[0] <= lon <= f.bounds[2] and f.bounds[1] <= lat <= f.bounds[3]]
-    for f in sorted(cands, key=lambda f: f.name):
+    for f in sorted(cands, key=lambda f: (f.maxzoom < 20, f.name)):
         if covers(f, lon, lat):
             return f
     return None

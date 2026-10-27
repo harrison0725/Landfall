@@ -73,6 +73,7 @@ class Measures:
     flood_ft: float | None  # water depth above ground at the building; None when unknown
     aligned: bool  # did pre/post alignment succeed with confidence
     first_floor_ft: float | None = None  # living floor height above ground; None when unknown
+    kind: str = "hurricane"  # the disaster; an earthquake can flatten a building under a whole roof
 
     @property
     def flood_living_ft(self) -> float | None:
@@ -152,7 +153,7 @@ def verify(call: Category, m: Measures, t: Thresholds = Thresholds()) -> Verdict
             + (f", flood {m.flood_ft:.1f} ft" if m.flood_ft is not None else "")
             + ")."
         )
-    if call - floor > 1:
+    if call - floor > 1 and m.kind != "earthquake":
         problems.append(
             f"Called {call.label}, two or more steps above what the "
             f"measurements show ({floor.label}). Point to the visible damage "

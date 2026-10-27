@@ -1,0 +1,2030 @@
+[
+ {
+  "id": "b028",
+  "category": "destroyed",
+  "confidence": 0.96,
+  "evidence": "Pre-storm intact roof within yellow outline is gone post-storm with footprint covered by grey ash/rubble and collapsed debris, with no roof structure remaining.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.359,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.96,
+     "evidence": "Pre-storm intact roof within yellow outline is gone post-storm with footprint covered by grey ash/rubble and collapsed debris, with no roof structure remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "error": "second opinion failed: 400 Client Error: Bad Request for url: https://api.meta.ai/v1/chat/completions"
+   }
+  ]
+ },
+ {
+  "id": "b043",
+  "category": "destroyed",
+  "confidence": 0.98,
+  "evidence": "Before shows intact red tile roof; after shows entire yellow footprint filled with grey ash, rubble and collapsed debris with no roof structure remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.323,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "After photo shows entire footprint filled with grey ash, rubble and debris with no intact roof structure remaining, compared to intact tile roof before; yard also burned",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Before shows intact red tile roof; after shows entire yellow footprint filled with grey ash, rubble and collapsed debris with no roof structure remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b014",
+  "category": "destroyed",
+  "confidence": 0.99,
+  "evidence": "Before photo shows intact grey roof inside yellow outline; after photo shows no roof or walls, footprint filled with blackened rubble and grey-white ash.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.228,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "No intact roof or walls remain within yellow outline; footprint filled with grey ash/rubble and structural debris, while pre-fire roof is completely missing.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Before photo shows intact grey roof inside yellow outline; after photo shows no roof or walls, footprint filled with blackened rubble and grey-white ash.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b033",
+  "category": "destroyed",
+  "confidence": 0.95,
+  "evidence": "Pre-fire long rectangular roof is completely gone; yellow outline now contains only grey ash, charred rubble and debris with no intact roof or walls.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.017,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.94,
+     "evidence": "Pre-fire long rectangular roof is completely gone within yellow outline, replaced by grey ash, rubble and burned debris with no intact roof structure visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.95,
+     "evidence": "Pre-fire long rectangular roof is completely gone; yellow outline now contains only grey ash, charred rubble and debris with no intact roof or walls.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b006",
+  "category": "destroyed",
+  "confidence": 0.99,
+  "evidence": "Intact white T-shaped roof before is replaced by grey ash, charred rubble and twisted debris across the entire yellow footprint with no roof remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Intact white T-shaped roof before is replaced by grey ash, rubble and twisted debris across the entire yellow footprint with no roof remaining; 100% of structure missing at its mapped location.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Intact white T-shaped roof before is replaced by grey ash, charred rubble and twisted debris across the entire yellow footprint with no roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b009",
+  "category": "destroyed",
+  "confidence": 0.98,
+  "evidence": "Before shows intact dark roof inside yellow outline; after shows entire footprint replaced by grey-white ash and rubble with no roof remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Before shows intact dark roof inside yellow outline; after shows entire footprint covered in grey ash and rubble with no roof remaining, consistent with burned-down structure.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Before shows intact dark roof inside yellow outline; after shows entire footprint replaced by grey-white ash and rubble with no roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b013",
+  "category": "destroyed",
+  "confidence": 0.96,
+  "evidence": "Yellow outline footprint filled with grey ash and blackened rubble with no intact roof remaining, versus intact grey roof in before photo.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.96,
+     "evidence": "Roof completely gone, footprint filled with grey ash/rubble and burned debris with only fragmented remains visible; no intact roof structure remains.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.96,
+     "evidence": "Yellow outline footprint filled with grey ash and blackened rubble with no intact roof remaining, versus intact grey roof in before photo.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b015",
+  "category": "destroyed",
+  "confidence": 0.97,
+  "evidence": "Yellow footprint in after photo contains only grey ash and mottled rubble with no intact roof remaining, consistent with 100% structure not found; surrounding area is also completely burned.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.97,
+     "evidence": "Yellow footprint in after photo shows grey ash and rubble with no intact roof remaining, consistent with 100% structure not found; surrounding area is also burned with debris.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.97,
+     "evidence": "Yellow footprint in after photo contains only grey ash and mottled rubble with no intact roof remaining, consistent with 100% structure not found; surrounding area is also completely burned.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b017",
+  "category": "destroyed",
+  "confidence": 0.99,
+  "evidence": "Intact grey roof in before photo is completely gone; yellow footprint filled with grey ash, rubble and burned debris with no roof remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Entire roof structure absent with grey ash and rubble filling the yellow footprint; no intact roof remains.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Intact grey roof in before photo is completely gone; yellow footprint filled with grey ash, rubble and burned debris with no roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b019",
+  "category": "destroyed",
+  "confidence": 0.98,
+  "evidence": "Before photo shows intact house with solid roof inside yellow outline; after photo shows same footprint filled with grey ash, rubble and collapsed structure with no intact roof remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.97,
+     "evidence": "Yellow outline footprint in after photo is filled with grey ash, rubble and collapsed structure with no intact roof remaining; before photo shows intact house on same footprint.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Before photo shows intact house with solid roof inside yellow outline; after photo shows same footprint filled with grey ash, rubble and collapsed structure with no intact roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b023",
+  "category": "destroyed",
+  "confidence": 0.98,
+  "evidence": "Pre-fire intact dark roof within yellow outline is completely gone; post-fire shows grey ash, rubble and blackened debris filling the footprint with no roof remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Pre-storm intact dark roof within yellow outline is completely gone; post-storm shows grey ash, rubble and burned debris filling the entire footprint with no roof structure remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Pre-fire intact dark roof within yellow outline is completely gone; post-fire shows grey ash, rubble and blackened debris filling the footprint with no roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b030",
+  "category": "destroyed",
+  "confidence": 0.98,
+  "evidence": "Pre-storm intact roof is completely gone in after photo, footprint filled with grey ash, rubble and collapsed debris with no intact roof or walls remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Pre-storm roof completely absent in post-storm (100% not found), footprint filled with grey ash, rubble and collapsed debris with no intact roof or walls remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Pre-storm intact roof is completely gone in after photo, footprint filled with grey ash, rubble and collapsed debris with no intact roof or walls remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b031",
+  "category": "destroyed",
+  "confidence": 0.99,
+  "evidence": "Intact red tile roof in before photo is replaced by grey ash and rubble across the entire yellow footprint with burned vegetation around and no roof remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Red tile roof in before photo replaced by grey ash and rubble across entire yellow footprint with collapsed structure and burned vegetation surrounding; no roof remains.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Intact red tile roof in before photo is replaced by grey ash and rubble across the entire yellow footprint with burned vegetation around and no roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b035",
+  "category": "destroyed",
+  "confidence": 0.98,
+  "evidence": "Pre-fire red-tiled roof is completely absent in the after photo; the yellow footprint contains only grey ash, charred rubble and collapsed debris with no intact roof structure.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Pre-fire red-tiled roof completely absent in post-fire image; footprint contains only grey ash, rubble and collapsed debris with no intact roof structure.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Pre-fire red-tiled roof is completely absent in the after photo; the yellow footprint contains only grey ash, charred rubble and collapsed debris with no intact roof structure.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b036",
+  "category": "destroyed",
+  "confidence": 0.99,
+  "evidence": "Before shows intact brown roof house; after shows entire yellow footprint reduced to grey ash, rubble and charred debris with no roof remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "After image shows entire footprint reduced to grey ash and rubble with no intact roof remaining, while before image showed intact brown roof house.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Before shows intact brown roof house; after shows entire yellow footprint reduced to grey ash, rubble and charred debris with no roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b037",
+  "category": "destroyed",
+  "confidence": 0.99,
+  "evidence": "Before shows intact grey roof within yellow outline; after shows entire footprint filled with grey ash, rubble and collapsed walls with no intact roof remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Post-storm image shows footprint completely filled with grey ash/rubble and no intact roof; entire structure burned down consistent with 100% mask loss.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Before shows intact grey roof within yellow outline; after shows entire footprint filled with grey ash, rubble and collapsed walls with no intact roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b038",
+  "category": "destroyed",
+  "confidence": 0.98,
+  "evidence": "Brown roof with solar panels before replaced by grey ash and rubble across entire yellow footprint with no intact roof remaining after.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Roof completely gone replaced by grey ash and rubble across entire yellow footprint with no intact roof structure visible in after photo compared to intact brown roof before.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Brown roof with solar panels before replaced by grey ash and rubble across entire yellow footprint with no intact roof remaining after.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b039",
+  "category": "destroyed",
+  "confidence": 0.99,
+  "evidence": "Before photo shows intact grey roof house; after photo shows footprint filled with grey ash, rubble and collapsed remnants with no roof or walls standing.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Post-storm image shows complete loss of roof and structure within yellow outline, replaced by grey ash, rubble and exposed foundation remnants with no walls or roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Before photo shows intact grey roof house; after photo shows footprint filled with grey ash, rubble and collapsed remnants with no roof or walls standing.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b040",
+  "category": "destroyed",
+  "confidence": 0.99,
+  "evidence": "Before shows intact red-tiled roof within outline; after shows entire footprint replaced by grey ash, rubble and burned debris with no roof or walls remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Before has intact red-tiled roof within yellow outline; after shows complete loss of roof structure replaced by grey ash, rubble and burned debris over entire footprint with no walls/roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Before shows intact red-tiled roof within outline; after shows entire footprint replaced by grey ash, rubble and burned debris with no roof or walls remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b041",
+  "category": "destroyed",
+  "confidence": 0.99,
+  "evidence": "Before photo shows intact dark roof within yellow outline; after photo shows the entire footprint filled with grey ash, rubble and collapsed remains with no roof covering left.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Before photo shows intact dark roof within yellow outline; after photo shows entire footprint filled with grey ash/rubble and collapsed remains with no roof covering remaining. 100% of structure not found confirms total loss.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Before photo shows intact dark roof within yellow outline; after photo shows the entire footprint filled with grey ash, rubble and collapsed remains with no roof covering left.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b042",
+  "category": "destroyed",
+  "confidence": 0.97,
+  "evidence": "Before photo shows intact grey roof inside yellow outline; after photo shows outline filled with grey-white ash and rubble with no roof structure remaining amid charred surroundings.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.96,
+     "evidence": "Pre-storm intact roof is completely absent post-storm; yellow outline contains only grey ash, rubble and foundation remnants with no roof structure remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.97,
+     "evidence": "Before photo shows intact grey roof inside yellow outline; after photo shows outline filled with grey-white ash and rubble with no roof structure remaining amid charred surroundings.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b044",
+  "category": "destroyed",
+  "confidence": 0.96,
+  "evidence": "Pre-fire reddish roof completely gone within yellow outline; post-fire footprint filled with grey ash and collapsed rubble with no intact roof remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.97,
+     "evidence": "Pre-storm reddish roof completely gone within yellow outline; post-storm footprint filled with grey ash/rubble and collapsed debris, no intact roof remains.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.96,
+     "evidence": "Pre-fire reddish roof completely gone within yellow outline; post-fire footprint filled with grey ash and collapsed rubble with no intact roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b046",
+  "category": "destroyed",
+  "confidence": 0.98,
+  "evidence": "Before shows intact reddish tile roof; after shows the entire yellow footprint filled with grey ash, rubble and collapsed walls with no intact roof remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Roof completely gone and footprint filled with grey ash, rubble and collapsed walls; no intact roof remains in either the main or upper section outlined in yellow.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Before shows intact reddish tile roof; after shows the entire yellow footprint filled with grey ash, rubble and collapsed walls with no intact roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b047",
+  "category": "destroyed",
+  "confidence": 0.99,
+  "evidence": "Before shows intact grey roof; after shows only grey-white ash and rubble filling the yellow footprint with no roof remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "After photo shows only grey-white ash and rubble filling the yellow footprint with no intact roof remaining, compared to intact grey roof before; structure burned down.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "Before shows intact grey roof; after shows only grey-white ash and rubble filling the yellow footprint with no roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b048",
+  "category": "destroyed",
+  "confidence": 0.98,
+  "evidence": "Before shows intact white/tile roof; after shows entire yellow footprint blackened with roof gone and only charred walls, ash and rubble remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "After photo shows complete burn-out within yellow outline \u2014 roof gone, interior reduced to grey ash/rubble and charred debris with no intact roof structure remaining, matching 100% footprint loss.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Before shows intact white/tile roof; after shows entire yellow footprint blackened with roof gone and only charred walls, ash and rubble remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b049",
+  "category": "destroyed",
+  "confidence": 0.98,
+  "evidence": "Before shows intact light-grey roof; after shows blackened footprint with exposed foundation grid and charred debris and no roof remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 1.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Before shows intact light-grey roof with trees; after footprint shows burned-out building with exposed foundation grid, charred debris and no roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Before shows intact light-grey roof; after shows blackened footprint with exposed foundation grid and charred debris and no roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b029",
+  "category": "destroyed",
+  "confidence": 0.97,
+  "evidence": "Before shows intact grey roof; after shows yellow footprint filled with blackened ash, rubble and collapsed remains with no intact roof visible.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.988,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.97,
+     "evidence": "Yellow outline footprint in after image is filled with grey ash/rubble and collapsed remains with no intact roof visible, compared to intact grey roof before.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.97,
+     "evidence": "Before shows intact grey roof; after shows yellow footprint filled with blackened ash, rubble and collapsed remains with no intact roof visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b018",
+  "category": "destroyed",
+  "confidence": 0.98,
+  "evidence": "After photo shows the yellow footprint filled with black char and grey ash/rubble with no intact roof visible, compared to intact roof in before photo.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.969,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.99,
+     "evidence": "After photo shows entire yellow footprint filled with grey ash, rubble and burned debris with no intact roof visible, compared to intact structure before; consistent with 97% structure not found.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "After photo shows the yellow footprint filled with black char and grey ash/rubble with no intact roof visible, compared to intact roof in before photo.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b008",
+  "category": "destroyed",
+  "confidence": 0.88,
+  "evidence": "Pre-fire intact orange roof inside yellow outline is gone post-fire, replaced by blackened ash and rubble covering the footprint with no roof structure remaining.",
+  "needs_human": false,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.601,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.81,
+     "evidence": "Post-image shows roof completely missing within yellow outline with blackened rubble/ash covering footprint, versus intact orange roof pre-fire; 60% structure not found supports total loss.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.88,
+     "evidence": "Pre-fire intact orange roof inside yellow outline is gone post-fire, replaced by blackened ash and rubble covering the footprint with no roof structure remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b004",
+  "category": "destroyed",
+  "confidence": 0.9,
+  "evidence": "Both yellow footprints show total roof loss replaced by white-grey ash/rubble with no intact roof remaining; automated 'not measured' loss with neighbor-based alignment missed it because roof was gone, and SAM missed the ash as debris.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Before photo shows intact dark-roofed L/U-shaped house; after photo shows entire footprint reduced to grey-white ash and rubble with roof and walls gone.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Destroyed, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.97,
+     "evidence": "Despite 'not measured' structure loss and neighbor-based alignment, both yellow footprints in after image are completely filled with white-grey ash/rubble with no intact roof remaining \u2013 total loss, measurement missed due to outline misplacement.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Destroyed, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.96,
+     "evidence": "Before photo shows intact dark roof inside yellow outlines; after photo shows both footprints completely filled with white-grey ash and rubble with no roof structure remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Destroyed, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.9,
+     "evidence": "Both yellow footprints show total roof loss replaced by white-grey ash/rubble with no intact roof remaining; automated 'not measured' loss with neighbor-based alignment missed it because roof was gone, and SAM missed the ash as debris.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Destroyed, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b012",
+  "category": "none",
+  "confidence": 0.88,
+  "evidence": "Roof appears intact within yellow outline with no missing covering or rubble, but automated structure-loss was not measured because pre-storm structure was not found on the outline so alignment is unreliable.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.93,
+     "evidence": "Dark shingled roof intact within yellow outline in both images; after photo shows continuous roof planes, ridges and shadows with no holes, missing covering, or debris/rubble.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.88,
+     "evidence": "Roof appears intact and unchanged within yellow outline in both photos with no missing covering or rubble; automated structure-loss measurement is unavailable/inconsistent due to alignment uncertainty, so visual assessment is used.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.92,
+     "evidence": "Dark pitched roof fills yellow outline in both photos with ridges and edges intact, no missing covering, holes, ash or rubble visible in after photo.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.88,
+     "evidence": "Roof appears intact within yellow outline with no missing covering or rubble, but automated structure-loss was not measured because pre-storm structure was not found on the outline so alignment is unreliable.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b045",
+  "category": "destroyed",
+  "confidence": 0.92,
+  "evidence": "Before shows intact red tile roof while after shows footprint collapsed to grey ash/rubble with roof gone and walls destroyed; automated No visible damage is wrong due to neighbors-based alignment offset and SAM missed the light scattered rubble.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.98,
+     "evidence": "Red tile roof intact before is replaced by grey ash and rubble filling the yellow footprint with collapsed walls and no roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Destroyed, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.92,
+     "evidence": "Footprint shows complete roof collapse to grey ash/rubble with walls gone while before had intact red tile roof; automated No visible damage and no debris are wrong due to neighbors-based alignment offset and missed scattered light rubble.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Destroyed, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.95,
+     "evidence": "Before shows intact red tile roof inside yellow outline; after shows footprint filled with grey ash, rubble and collapsed walls with roof gone.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Destroyed, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.92,
+     "evidence": "Before shows intact red tile roof while after shows footprint collapsed to grey ash/rubble with roof gone and walls destroyed; automated No visible damage is wrong due to neighbors-based alignment offset and SAM missed the light scattered rubble.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Destroyed, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b050",
+  "category": "destroyed",
+  "confidence": 0.85,
+  "evidence": "Before shows light intact roof, after shows footprint filled with blackened rubble/ash with no intact roof; automated 'no damage' is unreliable because alignment is neighbor-placed and pre-storm roof was not found on the blurry before outline and SAM missed debris.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": null,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.92,
+     "evidence": "After photo shows yellow outline footprint completely filled with dark ash/rubble and twisted debris with no intact roof remaining, versus intact light roof in before photo.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Destroyed, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.88,
+     "evidence": "After photo shows footprint filled with blackened rubble/ash and no intact roof versus light intact roof before; automated 'no damage' measurement is unreliable due to neighbor-based alignment and pre-storm roof not found on outline in blurry before image.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Destroyed, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.85,
+     "evidence": "Before photo shows light intact roof inside yellow outline; after photo shows footprint filled with blackened ash/rubble with no intact roof remaining.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Destroyed, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "DESTROYED",
+     "confidence": 0.85,
+     "evidence": "Before shows light intact roof, after shows footprint filled with blackened rubble/ash with no intact roof; automated 'no damage' is unreliable because alignment is neighbor-placed and pre-storm roof was not found on the blurry before outline and SAM missed debris.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Pre and post photos did not line up with confidence; roof loss is unreliable. Mark for human review instead of trusting the numbers.",
+     "Called Destroyed, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b026",
+  "category": "none",
+  "confidence": 0.88,
+  "evidence": "After photo shows intact white roof fully covering yellow outline with no missing decking, holes, or ash; the 18% 'not found' is misregistration from angle/shadow shift at west/south edge, not roof loss.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": false,
+  "structure_loss": 0.183,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.93,
+     "evidence": "Yellow outline encloses an intact white roof in after image with ridges and shadow consistent with before; no missing roof sections, ash or rubble visible.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Minor (roof loss 18%)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.88,
+     "evidence": "After image shows intact white roof fully covering yellow outline with preserved ridges and shadow; 18% 'not found' reflects viewing-angle/shadow misregistration at south edge, not missing roofing or burn damage.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Minor (roof loss 18%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.92,
+     "evidence": "After photo shows intact white rectangular roof fully covering yellow outline with crisp edges; no missing decking, burn holes, collapse, or ash/rubble on footprint.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Minor (roof loss 18%)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.88,
+     "evidence": "After photo shows intact white roof fully covering yellow outline with no missing decking, holes, or ash; the 18% 'not found' is misregistration from angle/shadow shift at west/south edge, not roof loss.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called No visible damage, but the measurements alone justify at least Minor (roof loss 18%)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b010",
+  "category": "none",
+  "confidence": 0.88,
+  "evidence": "Roof outline, ridges and covering remain fully intact within yellow footprint with no holes, missing sections, or collapse; reddish discoloration on upper roof is lighting/angle variation, not burned-through roof",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.129,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.62,
+     "evidence": "Roof footprint and ridges remain intact within outline but upper roof shows two reddish-brown scorched/burned patches not present in before image, consistent with repairable roof covering damage",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.88,
+     "evidence": "Roof outline, ridges and covering remain fully intact within yellow footprint with no holes, missing sections, or collapse; reddish discoloration on upper roof is lighting/angle variation, not burned-through roof",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b032",
+  "category": "none",
+  "confidence": 0.93,
+  "evidence": "Roof outline, ridge and color intact within yellow footprint in after photo; no missing decking, holes, or rubble. Differences are resolution/angle, not structural damage.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.117,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.93,
+     "evidence": "Roof outline, ridge and color intact within yellow footprint in after photo; no missing decking, holes, or rubble. Differences are resolution/angle, not structural damage.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b027",
+  "category": "none",
+  "confidence": 0.96,
+  "evidence": "Roof is fully intact and matches pre-fire footprint with no missing patches, holes, or rubble; gray tone consistent in both images.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.046,
+  "flood_ft": null,
+  "debris_share": 0.036,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.96,
+     "evidence": "Roof is fully intact and matches pre-fire footprint with no missing patches, holes, or rubble; gray tone consistent in both images.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b034",
+  "category": "none",
+  "confidence": 0.97,
+  "evidence": "Roof structure and covering fully intact and unchanged between before and after photos within yellow outline; no holes, burn patches, collapse, or debris.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.019,
+  "flood_ft": null,
+  "debris_share": 0.013,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.97,
+     "evidence": "Roof structure and covering fully intact and unchanged between before and after photos within yellow outline; no holes, burn patches, collapse, or debris.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b025",
+  "category": "none",
+  "confidence": 0.99,
+  "evidence": "Roof structure, tiling, ridges and footprint unchanged from before to after; no missing roofing, holes, or rubble within yellow outline.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.016,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.99,
+     "evidence": "Roof structure, tiling, ridges and footprint unchanged from before to after; no missing roofing, holes, or rubble within yellow outline.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b011",
+  "category": "none",
+  "confidence": 0.98,
+  "evidence": "Roof covering intact with ridges and hips visible within yellow outline in both images; no missing decking, holes, or rubble. 1% non-overlap is camera/outline variance.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.007,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.98,
+     "evidence": "Roof covering intact with ridges and hips visible within yellow outline in both images; no missing decking, holes, or rubble. 1% non-overlap is camera/outline variance.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b002",
+  "category": "none",
+  "confidence": 0.98,
+  "evidence": "Red tile roof and footprint appear fully intact in after photo with no missing sections, holes, or debris; color and shadow differences are due to camera/lighting change.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.003,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.98,
+     "evidence": "Red tile roof and footprint appear fully intact in after photo with no missing sections, holes, or debris; color and shadow differences are due to camera/lighting change.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b007",
+  "category": "none",
+  "confidence": 0.97,
+  "evidence": "Roof appears intact with no missing covering, collapse, or debris; after image shows preserved ridges, skylights, and footprint matching before.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.001,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.97,
+     "evidence": "Roof appears intact with no missing covering, collapse, or debris; after image shows preserved ridges, skylights, and footprint matching before.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b020",
+  "category": "none",
+  "confidence": 0.96,
+  "evidence": "Roof outline, ridges, and shingles intact and unchanged between before and after; footprint fully occupied with no holes, collapse, or ash/rubble. Vegetation around house unchanged.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.001,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.96,
+     "evidence": "Roof outline, ridges, and shingles intact and unchanged between before and after; footprint fully occupied with no holes, collapse, or ash/rubble. Vegetation around house unchanged.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b000",
+  "category": "none",
+  "confidence": 0.94,
+  "evidence": "Structure footprint intact in after photo with dark and light roof sections continuous and no missing decking, holes, or ash/debris; appearance difference is resolution/lighting, not damage.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.94,
+     "evidence": "Structure footprint intact in after photo with dark and light roof sections continuous and no missing decking, holes, or ash/debris; appearance difference is resolution/lighting, not damage.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b001",
+  "category": "none",
+  "confidence": 0.98,
+  "evidence": "Roof structure intact in both before and after photos with same footprint and color; solar panels visible on after image and no missing roof covering or burn damage within yellow outline.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.98,
+     "evidence": "Roof structure intact in both before and after photos with same footprint and color; solar panels visible on after image and no missing roof covering or burn damage within yellow outline.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b003",
+  "category": "none",
+  "confidence": 0.98,
+  "evidence": "Red tile roof fully intact within yellow outline in both before and after images with no missing covering, holes, or ash/rubble; no visible fire damage.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.98,
+     "evidence": "Red tile roof fully intact within yellow outline in both before and after images with no missing covering, holes, or ash/rubble; no visible fire damage.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b005",
+  "category": "none",
+  "confidence": 0.96,
+  "evidence": "Yellow outline building shows intact green and white roof in both before and after images with no missing roof covering, holes, collapse, or ash/rubble; trees and surroundings unchanged except image sharpness.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.96,
+     "evidence": "Yellow outline building shows intact green and white roof in both before and after images with no missing roof covering, holes, collapse, or ash/rubble; trees and surroundings unchanged except image sharpness.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b016",
+  "category": "none",
+  "confidence": 0.88,
+  "evidence": "Roof is fully intact within yellow outline with no missing covering, burn-through, collapse or debris; the pale rectangle on lower roof shows intact structure/shadow with no damage, consistent with 0% missing measurement",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.62,
+     "evidence": "Roof remains fully within yellow outline with no collapse or burn-through, but a large white rectangular patch/tarp on the lower roof that was not present before indicates localized repairable roof damage",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Minor, two or more steps above what the measurements show (No visible damage). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.88,
+     "evidence": "Roof is fully intact within yellow outline with no missing covering, burn-through, collapse or debris; the pale rectangle on lower roof shows intact structure/shadow with no damage, consistent with 0% missing measurement",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b021",
+  "category": "none",
+  "confidence": 0.98,
+  "evidence": "Roof intact and unchanged within yellow outline in after photo; ridgelines, shadows and pool deck all preserved with no missing covering or holes.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.98,
+     "evidence": "Roof intact and unchanged within yellow outline in after photo; ridgelines, shadows and pool deck all preserved with no missing covering or holes.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b022",
+  "category": "none",
+  "confidence": 0.94,
+  "evidence": "Roof structure, ridges and outline intact within yellow footprint in both images; after image shows shadowing on west face but no missing covering, holes, collapse, or debris.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.94,
+     "evidence": "Roof structure, ridges and outline intact within yellow footprint in both images; after image shows shadowing on west face but no missing covering, holes, collapse, or debris.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b024",
+  "category": "none",
+  "confidence": 0.97,
+  "evidence": "Roof appears intact and unchanged between before and after photos within yellow footprint; no missing covering, holes, or debris visible, alignment matched.",
+  "needs_human": false,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.0,
+  "flood_ft": null,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.97,
+     "evidence": "Roof appears intact and unchanged between before and after photos within yellow footprint; no missing covering, holes, or debris visible, alignment matched.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ }
+]

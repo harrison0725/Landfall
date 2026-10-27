@@ -98,6 +98,20 @@ def water_surface(levels: list[WaterLevel]) -> float:
     return vals[n // 2] if n % 2 else (vals[n // 2 - 1] + vals[n // 2]) / 2
 
 
+def local_surface(levels: list[WaterLevel], lon: float, lat: float, max_km: float = 1.0, n: int = 3) -> float | None:
+    """The water surface at one point of a river flood: the nearest marks
+    within max_km, weighted by inverse distance. None when no mark is that
+    close, since a river's level a few km away says little about here."""
+    near = sorted((_km(w.lon, w.lat, lon, lat), w.elev_ft) for w in levels)
+    near = [x for x in near if x[0] <= max_km][:n]
+    if not near:
+        return None
+    if near[0][0] < 0.01:
+        return near[0][1]
+    wts = [1 / d for d, _ in near]
+    return sum(w * e for w, (_, e) in zip(wts, near)) / sum(wts)
+
+
 def depth_above_ground(surface_ft: float, ground: float | None) -> float | None:
     if ground is None:
         return None

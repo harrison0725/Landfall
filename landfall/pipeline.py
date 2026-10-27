@@ -91,8 +91,10 @@ class AreaSpec:
         f = find_flight(storm, bbox)
         if f is None:
             raise LookupError(f"NOAA has no {s.name} imagery over this box")
-        gauges = nearest_gauges(*center)
-        return cls(name, center, tuple(bbox), storm, f.name, s.landfall, s.stn_event, n_buildings, gauges=gauges)
+        # tide gauges measure storm surge; a river flood is read from the marks alone
+        gauges = nearest_gauges(*center) if s.kind == "hurricane" else []
+        radius = 2.0 if s.kind == "flood" else 5.0
+        return cls(name, center, tuple(bbox), storm, f.name, s.landfall, s.stn_event, n_buildings, hwm_radius_km=radius, gauges=gauges)
 
     @classmethod
     def _maxar(cls, name, bbox, center, s, n_buildings, cache) -> AreaSpec:
@@ -310,11 +312,17 @@ def _naip_fill(area: Window, spec: AreaSpec, naip_scenes, naip_mosaic):
 def storms_between(pre_date: str, landfall: str, this: str) -> list[str]:
     from .storms import STORMS
 
-    places = {p.strip() for p in STORMS[this].where.split(",")} if this in STORMS else set()
+    def places(key: str) -> set[str]:
+        # "United States" alone means the hurricane coast; a named place
+        # (Los Angeles, Texas) is far from it, so they never overlap
+        p = {x.strip() for x in STORMS[key].where.split(",")} - {"United States"}
+        return p or {"US hurricane coast"}
+
+    here = places(this) if this in STORMS else set()
     return [
         f"{s.name} ({s.landfall})"
         for s in STORMS.values()
-        if s.key != this and pre_date < s.landfall < landfall and places & {p.strip() for p in s.where.split(",")}
+        if s.key != this and pre_date < s.landfall < landfall and here & places(s.key)
     ]
 
 
@@ -534,9 +542,14 @@ def segment(spec: AreaSpec, root: Path, log: Log = _quiet, workers: int = 24, pr
 def flood(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
     """Water depth above ground at each building: the surveyed water surface
     (USGS high-water marks and NOAA tide gauge peaks) minus 3DEP ground."""
-    from .flood import depth_above_ground, gauge_peak, ground_ft, high_water_marks, water_surface
+    from .flood import depth_above_ground, gauge_peak, ground_ft, high_water_marks, local_surface, water_surface
+    from .storms import STORMS
 
     d = root / spec.name
+    # A river falls along its course, often tens of feet across one town, so
+    # each building takes the water surface from the marks nearest to it.
+    # Storm surge over a small town is close to flat: one surface for all.
+    river = spec.storm in STORMS and STORMS[spec.storm].kind == "flood"
     obs = []
     radius = spec.hwm_radius_km
     if not spec.stn_event and not spec.gauges:
@@ -595,8 +608,12 @@ def flood(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
     buildings = []
     for f in feats:
         g = store[key(f)]
-        dep = depth_above_ground(surface, g)
-        buildings.append(dict(id=f["properties"]["id"], ground_ft=None if g is None else round(g, 2), flood_ft=None if dep is None else round(dep, 2)))
+        here = local_surface(obs, *f["properties"]["centroid"]) if river else surface
+        dep = None if here is None else depth_above_ground(here, g)
+        row = dict(id=f["properties"]["id"], ground_ft=None if g is None else round(g, 2), flood_ft=None if dep is None else round(dep, 2))
+        if river:
+            row["surface_ft"] = None if here is None else round(here, 2)
+        buildings.append(row)
     result = dict(surface_ft_navd88=round(surface, 2), radius_km=radius, observations=[o.__dict__ for o in obs], buildings=buildings)
     (d / "flood.json").write_text(json.dumps(result, indent=1))
     deps = sorted(b["flood_ft"] for b in buildings if b["flood_ft"] is not None)
@@ -720,7 +737,10 @@ def assess(
     from .agent import assess as assess_one
     from .fema import Measures
 
+    from .storms import STORMS
+
     d = root / spec.name
+    kind = STORMS[spec.storm].kind if spec.storm in STORMS else "hurricane"
     al, feats = _load(d)
     zoom = al["summary"]["zoom"]
     windows = {r["id"]: Window(*r["window"]) for r in al["buildings"]}
@@ -757,12 +777,13 @@ def assess(
             debris_share=yard.get("debris_share", 0.0),
             flood_ft=floods.get(bid),
             aligned=loss is not None,
+            kind=kind,
         )
         pre = np.asarray(Image.open(d / "crops" / f"{bid}_pre.png").convert("RGB"))
         post = np.asarray(Image.open(d / "crops" / f"{bid}_post.png").convert("RGB"))
         outline = _outline(feats, bid, windows[bid], zoom)
         try:
-            a = assess_one(bid, pre, post, outline, m, {**r, **yard, "status": status[bid]}, escalate=escalate)
+            a = assess_one(bid, pre, post, outline, m, {**r, **yard, "status": status[bid]}, escalate=escalate, kind=kind)
         except Exception as e:  # keep going; one bad building should not stop the area
             log("building_failed", id=bid, error=str(e)[:200])
             return dict(id=bid, error=str(e))

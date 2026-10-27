@@ -43,8 +43,9 @@ def _seed(root: Path, demo: Path) -> None:
     if not demo.is_dir() or demo.resolve() == root.resolve():
         return
     root.mkdir(parents=True, exist_ok=True)
-    for src in demo.iterdir():
-        dst = root / src.name
+    # tiles/ holds one folder per tile layer; a layer added later still needs copying
+    for src in [*demo.iterdir(), *((demo / "tiles").iterdir() if (demo / "tiles").is_dir() else [])]:
+        dst = root / src.relative_to(demo)
         if not dst.exists():
             (shutil.copytree if src.is_dir() else shutil.copy2)(src, dst)
 
@@ -199,7 +200,7 @@ def _missing_for_assessing() -> list[str]:
 
 @app.get("/api/storms")
 def storms() -> list[dict]:
-    return [{"key": s.key, "name": s.name, "landfall": s.landfall, "where": s.where, "imagery": s.provider} for s in STORMS.values()]
+    return [{"key": s.key, "name": s.name, "landfall": s.landfall, "where": s.where, "imagery": s.provider, "kind": s.kind} for s in STORMS.values()]
 
 
 @app.get("/api/storms/{key}/flights")

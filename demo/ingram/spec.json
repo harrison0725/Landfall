@@ -1,0 +1,27 @@
+{
+ "name": "ingram",
+ "center": [
+  -99.24126148223877,
+  30.072325080824932
+ ],
+ "bbox": [
+  -99.24306148223877,
+  30.07083108082493,
+  -99.23946148223877,
+  30.073819080824933
+ ],
+ "storm": "texas_floods",
+ "noaa_flight": "20250711b-rgb",
+ "landfall": "2025-07-04",
+ "stn_event": "2025 July TX Flood",
+ "n_buildings": 60,
+ "min_area_m2": 40.0,
+ "hwm_radius_km": 2.0,
+ "gauges": [],
+ "imagery": "noaa",
+ "post_hrefs": [],
+ "pre_hrefs": [],
+ "post_label": "",
+ "pre_label": "",
+ "pre_date": ""
+}

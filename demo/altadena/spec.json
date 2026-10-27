@@ -1,0 +1,27 @@
+{
+ "name": "altadena",
+ "center": [
+  -118.12412023544312,
+  34.1917304683275
+ ],
+ "bbox": [
+  -118.12572023544311,
+  34.1904024683275,
+  -118.12252023544312,
+  34.1930584683275
+ ],
+ "storm": "la_fires",
+ "noaa_flight": "20250128a-rgb",
+ "landfall": "2025-01-07",
+ "stn_event": "",
+ "n_buildings": 60,
+ "min_area_m2": 40.0,
+ "hwm_radius_km": 5.0,
+ "gauges": [],
+ "imagery": "noaa",
+ "post_hrefs": [],
+ "pre_hrefs": [],
+ "post_label": "",
+ "pre_label": "",
+ "pre_date": ""
+}
