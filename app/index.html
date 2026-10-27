@@ -40,6 +40,15 @@
   <main class="map-wrap">
     <div id="map"></div>
     <div class="map-tools">
+      <form class="field place" id="place-form" role="search">
+        <span>Place</span>
+        <input id="place" type="search" placeholder="City, state or country" autocomplete="off" aria-label="Search for a place">
+        <ul id="place-results" hidden></ul>
+      </form>
+      <label class="field">
+        <span>Year</span>
+        <select id="year"></select>
+      </label>
       <label class="field">
         <span>Area</span>
         <select id="area"></select>
