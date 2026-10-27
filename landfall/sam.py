@@ -23,7 +23,7 @@ import numpy as np
 
 API_URL = "https://api.meta.ai/v1/responses"
 MODEL = "sam-3.1"
-MISS_RETRIES = 15
+MISS_RETRIES = 20
 
 
 @dataclass(frozen=True)
@@ -71,7 +71,7 @@ def request(img: np.ndarray, prompt: str, scale: int = 4, api_key: str | None = 
         # 404 model_not_found; asking again a moment later usually works.
         if r.status_code == 404 and "model_not_found" in r.text and misses < MISS_RETRIES:
             misses += 1
-            time.sleep(0.5 + random.random())
+            time.sleep(1 + 2 * random.random())
             continue
         if r.status_code == 429 or r.status_code >= 500:
             attempt += 1

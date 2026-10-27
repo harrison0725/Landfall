@@ -101,8 +101,8 @@ def render(d: Path, bid: str, pair_png: bytes) -> str:
         ("Confidence", f"{a['confidence']:.2f}" if a.get("confidence") is not None else "unknown"),
         ("Field check needed", "yes" if a.get("needs_human") else "no"),
         ("Roof or structure missing", f"{round(a['structure_loss'] * 100)}%" if a.get("structure_loss") is not None else "not measured"),
-        ("Blue tarp on roof", f"{round(a['tarp_share'] * 100)}%" if a.get("tarp_share") else "none found"),
-        ("Debris in the yard", f"{round(a['debris_share'] * 100)}%" if a.get("debris_share") else "none found"),
+        ("Blue tarp on roof", f"{round(a['tarp_share'] * 100)}%" if a.get("tarp_share") else ("not measured" if "tarp_share" in a and a["tarp_share"] is None else "none found")),
+        ("Debris in the yard", f"{round(a['debris_share'] * 100)}%" if a.get("debris_share") else ("not measured" if "debris_share" in a and a["debris_share"] is None else "none found")),
     ]
     if a.get("demolished"):
         rows_draft.append(("Note", "No building stood here during the storm (demolished before it)"))

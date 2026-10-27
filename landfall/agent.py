@@ -90,7 +90,7 @@ def pair_image(pre: np.ndarray, post: np.ndarray, outline: list[tuple[float, flo
 def describe(m: Measures, extra: dict) -> str:
     lines = []
     if extra.get("structure_loss") is None:
-        lines.append("Structure loss: not measured (the pre-storm roof was not found on the outline).")
+        lines.append(f"Structure loss: not measured ({extra.get('note') or 'the pre-storm roof was not found on the outline'}). Judge from the photos.")
     else:
         lines.append(f"Share of the pre-storm structure not found in the post-storm photo: {m.roof_loss:.0%}.")
     lines.append(f"Alignment: {extra.get('status', 'unknown')} (matched = its own roof was found; neighbors = placed from nearby houses because its roof was not found where expected).")
