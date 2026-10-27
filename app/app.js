@@ -27,6 +27,10 @@ L.control.zoom({ position: "bottomright" }).addTo(map);
 const streets = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 21, maxNativeZoom: 19, attribution: "© OpenStreetMap contributors",
 });
+// fills the map around the after-storm photos, which cover only the flight or the drafted area
+const world = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+  maxZoom: 21, maxNativeZoom: 18, zIndex: 0, attribution: "Around the storm photos: Esri World Imagery (before the storm)",
+});
 let after = null;
 const outlines = L.geoJSON(null, { style: styleFor, onEachFeature: bindFeature }).addTo(map);
 let boxLayer = null;
@@ -35,7 +39,7 @@ function setFlight(flight) {
   if (after) map.removeLayer(after);
   after = flight
     ? L.tileLayer(`https://stormscdn.ngs.noaa.gov/${flight}/{z}/{x}/{y}`, {
-        maxZoom: 21, maxNativeZoom: 20, attribution: `NOAA Emergency Response Imagery (${flight})`,
+        maxZoom: 21, maxNativeZoom: 20, zIndex: 1, attribution: `NOAA Emergency Response Imagery (${flight})`,
       })
     : null;
   applyLayer();
@@ -48,19 +52,19 @@ async function setOverlay(area) {
   if (after) map.removeLayer(after);
   after = o.tiles
     ? L.tileLayer(o.tiles.url, {
-        maxZoom: 21, maxNativeZoom: o.tiles.max_native_zoom, minNativeZoom: o.tiles.min_zoom, attribution: o.tiles.attribution,
+        maxZoom: 21, maxNativeZoom: o.tiles.max_native_zoom, minNativeZoom: o.tiles.min_zoom, zIndex: 1, attribution: o.tiles.attribution,
       })
     : L.imageOverlay(`${o.url}?t=${Date.now()}`, o.bounds, { attribution: "Maxar Open Data (CC BY-NC 4.0)" });
   applyLayer();
 }
 function applyLayer() {
   if (state.layer === "after" && after) {
-    // satellite mosaics cover only the drafted area: keep the street map around them
-    if (after instanceof L.ImageOverlay) streets.addTo(map);
-    else map.removeLayer(streets);
+    map.removeLayer(streets);
+    world.addTo(map);
     after.addTo(map);
   } else {
     if (after) map.removeLayer(after);
+    map.removeLayer(world);
     streets.addTo(map);
   }
   outlines.bringToFront();
