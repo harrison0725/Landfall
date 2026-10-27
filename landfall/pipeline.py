@@ -19,6 +19,7 @@ import collections
 import json
 import math
 import os
+import time
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from dataclasses import asdict, dataclass, field
 from datetime import date, timedelta
@@ -336,6 +337,35 @@ def _sam_line(cache: Path, img: np.ndarray, prompt: str, scale: int) -> None:
         cache.write_text(sam.request(img, prompt, scale))
 
 
+def _sam_all(jobs: list, fetch, workers: int, log: Log) -> set:
+    """Run every SAM job; return the ones that still failed.
+
+    Meta's API sometimes stops answering for SAM for a minute or two, so
+    failures get a second, slower pass, and whatever still fails is left out
+    rather than stopping the whole area. Raises only when nothing came back.
+    """
+
+    def safe(job):
+        try:
+            fetch(job)
+            return None
+        except Exception as e:  # noqa: BLE001 - any API failure is handled the same way
+            return job, f"{type(e).__name__}: {e}"[:200]
+
+    with ThreadPoolExecutor(_w(workers)) as pool:
+        failed = [f for f in pool.map(safe, jobs) if f]
+    if failed:
+        log("sam_retry", failed=len(failed), of=len(jobs), error=failed[0][1])
+        time.sleep(10)
+        with ThreadPoolExecutor(2) as pool:
+            failed = [f for f in pool.map(safe, [j for j, _ in failed]) if f]
+    if failed and len(failed) == len(jobs):
+        raise RuntimeError(f"Segment Anything did not answer for any image: {failed[0][1]}")
+    if failed:
+        log("warning", text=f"Segment Anything did not answer for {len(failed)} of {len(jobs)} images; those buildings are judged from the photos alone.")
+    return {j for j, _ in failed}
+
+
 # Small hosts (512 MB) set these: LANDFALL_PROCS=1 decodes masks in this
 # process instead of one process per CPU, LANDFALL_WORKERS caps how many
 # images are in flight to the APIs at once.
@@ -434,20 +464,22 @@ def segment(spec: AreaSpec, root: Path, log: Log = _quiet, workers: int = 24, pr
         return d / "sam" / f"{bid}_{name}_{p.replace(' ', '_')}_s.txt"
 
     def fetch(job):
-        img = stretch(image(job[0], job[1]))
-        _sam_line(txt(job), img, job[2], SAM_SCALE)
-        return img.shape[:2]
+        _sam_line(txt(job), stretch(image(job[0], job[1])), job[2], SAM_SCALE)
 
     jobs = [(r["id"], side, p) for r in al["buildings"] for side in ("pre", "post") for p in prompts]
     log("sam", calls=len(jobs), prompts=prompts)
-    with ThreadPoolExecutor(_w(workers)) as pool:
-        shapes = list(pool.map(fetch, jobs))
-    masks = _decode_all(_masks, [txt(j) for j in jobs], shapes)
-    dets = dict(zip(jobs, masks))
+    missing = _sam_all(jobs, fetch, workers, log)
+    done = [j for j in jobs if j not in missing]
+    masks = _decode_all(_masks, [txt(j) for j in done], [image(j[0], j[1]).shape[:2] for j in done])
+    dets = dict(zip(done, masks))
+    unanswered = {j[0] for j in missing}
 
     out = []
     for r in al["buildings"]:
         bid = r["id"]
+        if bid in unanswered:
+            out.append(dict(id=bid, status=r["status"], pre_cover=None, structure_loss=None, note="Segment Anything did not answer for this building"))
+            continue
         w = Window(*r["window"])
         pts = _outline(feats, bid, w, zoom)
         fp = polygon_mask(pts, (w.height, w.width), dilate_px=2)
@@ -596,20 +628,23 @@ def debris(spec: AreaSpec, root: Path, log: Log = _quiet, workers: int = 24) -> 
         return d / "sam" / f"{bid}_{side}yard_{p.replace(' ', '_')}.txt"
 
     def fetch(job):
-        img = image(job[0], job[1])
-        _sam_line(txt(job), img, job[2], YARD_SCALE)
-        return img.shape[:2]
+        _sam_line(txt(job), image(job[0], job[1]), job[2], YARD_SCALE)
 
     jobs = [(r["id"], "post", p) for r in al["buildings"] for p in DEBRIS_PROMPTS + TARP_PROMPTS]
     jobs += [(r["id"], "pre", p) for r in al["buildings"] for p in DEBRIS_PROMPTS]
     log("sam", calls=len(jobs), prompts=DEBRIS_PROMPTS + TARP_PROMPTS)
-    with ThreadPoolExecutor(_w(workers)) as pool:
-        shapes = list(pool.map(fetch, jobs))
-    unions = dict(zip(jobs, _decode_all(_union, [txt(j) for j in jobs], shapes, [YARD_SCALE] * len(jobs))))
+    missing = _sam_all(jobs, fetch, workers, log)
+    done = [j for j in jobs if j not in missing]
+    shapes = [image(j[0], j[1]).shape[:2] for j in done]
+    unions = dict(zip(done, _decode_all(_union, [txt(j) for j in done], shapes, [YARD_SCALE] * len(done))))
+    unanswered = {j[0] for j in missing}
 
     out = []
     for r in al["buildings"]:
         bid = r["id"]
+        if bid in unanswered:
+            out.append(dict(id=bid, yard_note="Segment Anything did not answer for this building"))
+            continue
         w = Window(*r["window"])
         pts = [(x + YARD_PAD, y + YARD_PAD) for x, y in _outline(feats, bid, w, zoom)]
         shape = (w.height + 2 * YARD_PAD, w.width + 2 * YARD_PAD)
@@ -723,8 +758,8 @@ def assess(
             demolished=a.demolished,
             structure_loss=loss,
             flood_ft=floods.get(bid),
-            debris_share=m.debris_share,
-            tarp_share=m.tarp_share,
+            debris_share=None if "yard_note" in yard else m.debris_share,
+            tarp_share=None if "yard_note" in yard else m.tarp_share,
             trace=a.trace,
         )
         if spec.imagery == "maxar" and rec["category"] in ("minor", "major", "destroyed") and not rec["needs_human"]:
