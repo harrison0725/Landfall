@@ -397,9 +397,9 @@ async function openBuilding(id) {
   $("card-body").innerHTML = `
     <h2>${esc(id)} ${cat ? `<span class="pill ${cat}" style="--c:var(--${cat})">${LABEL[cat]}</span>` : ""}${a && a.needs_human ? `<span class="pill" style="--c:var(--review)">Field check</span>` : ""}</h2>
     <img src="/api/areas/${state.area}/pair/${id}.png" alt="Before and after photos of ${esc(id)}">
-    <div class="cap"><span>Before: ${esc(a && a.photos ? shortSource(a.photos.before) : "NAIP")}</span><span>After: ${esc(a && a.photos ? shortSource(a.photos.after) : "NOAA")}</span></div>
-    <p>${a ? esc(a.evidence) : "Not drafted yet."}</p>
-    <dl class="kv">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
+    <div class="cap"><span>Before${a && a.photos ? ": " + esc(shortSource(a.photos.before)) : " the storm"}</span><span>After${a && a.photos ? ": " + esc(shortSource(a.photos.after)) : " the storm"}</span></div>
+    <p>${a ? esc(a.evidence) : "Not drafted yet. The assessment of this area is still running, or it stopped before it reached this building; the chat shows which step it is on."}</p>
+    ${a ? `<dl class="kv">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>` : ""}
     ${a ? `<p><a class="packet" href="/api/areas/${state.area}/packet/${id}" target="_blank" rel="noopener">Evidence packet for a claim (printable)</a></p>` : ""}
     ${trace.length ? `<div class="trace"><b>How the call was made</b>${trace.map(traceRow).join("")}</div>` : ""}`;
   $("card").hidden = false;
