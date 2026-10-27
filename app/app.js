@@ -4,7 +4,7 @@
 const CATS = ["none", "affected", "minor", "major", "destroyed"];
 const LABEL = { none: "No visible damage", affected: "Affected", minor: "Minor", major: "Major", destroyed: "Destroyed" };
 const STEP = {
-  locate_imagery: "Finding storm imagery",
+  locate_imagery: "Finding before and after imagery",
   prepare_area: "Downloading photos and lining up buildings",
   measure_structures: "Segment Anything: what's left of each building",
   measure_flood: "Flood depth from surveyed high-water marks",
@@ -78,7 +78,7 @@ function setFlight(flight) {
     const flights = fs.filter((f) => f.name !== flight).concat([{ name: flight }]);
     after = new NoaaStack({
       flights, maxZoom: 21, maxNativeZoom: 20, zIndex: 1,
-      attribution: `NOAA Emergency Response Imagery (${flight}; other flights after the storm around it)`,
+      attribution: `NOAA Emergency Response Imagery (${flight}; other flights after it, around it)`,
     });
     applyLayer();
   });
@@ -196,7 +196,7 @@ mapEl.addEventListener("pointerup", (e) => {
   $("context").innerHTML = `Box drawn: ${km2 < 0.1 ? Math.round(km2 * 1e6).toLocaleString() + " m²" : km2.toFixed(2) + " km²"}${
     cap ? `. I'll assess up to ${cap} buildings in it, nearest the middle first` : ""}. <button type="button" class="linkish" id="clear-box">Clear box</button>`;
   $("clear-box").addEventListener("click", () => { clearBox(); $("context").textContent = ""; });
-  if (!$("input").value.trim()) $("input").value = "Assess the hurricane damage in this area.";
+  if (!$("input").value.trim()) $("input").value = "Assess the damage in this area.";
   $("input").focus();
 });
 function clearBox() {
@@ -433,12 +433,12 @@ async function openBuilding(id) {
     ["Households", need ? (need.households ? `${need.households}${need.likely_displaced ? ", likely displaced" : need.possibly_displaced ? ", possibly displaced" : ""}` : "none (not a home)") : "–"],
     ["Repair cost", cost ? (cost.cost_high_usd ? `${usd(cost.cost_low_usd)}–${usd(cost.cost_high_usd)} of ${usd(cost.value_usd)}` : `none seen (value ${usd(cost.value_usd)})`) : "–"],
     ["50% rule", !us ? "US rule, not used here" : cost ? (cost.substantial_damage_likely ? "likely substantially damaged" : cost.substantial_damage_possible ? "possibly substantially damaged" : "below 50%") : "–"],
-    ...(a && a.demolished ? [["Note", "gone before the storm (demolished)"]] : []),
+    ...(a && a.demolished ? [["Note", "gone before the disaster (demolished)"]] : []),
   ];
   $("card-body").innerHTML = `
     <h2>${esc(id)} ${cat ? `<span class="pill ${cat}" style="--c:var(--${cat})">${LABEL[cat]}</span>` : ""}${a && a.needs_human ? `<span class="pill" style="--c:var(--review)">Field check</span>` : ""}</h2>
     <img src="/api/areas/${state.area}/pair/${id}.jpg" alt="Before and after photos of ${esc(id)}">
-    <div class="cap"><span>Before${a && a.photos ? ": " + esc(shortSource(a.photos.before)) : " the storm"}</span><span>After${a && a.photos ? ": " + esc(shortSource(a.photos.after)) : " the storm"}</span></div>
+    <div class="cap"><span>Before${a && a.photos ? ": " + esc(shortSource(a.photos.before)) : ""}</span><span>After${a && a.photos ? ": " + esc(shortSource(a.photos.after)) : ""}</span></div>
     <p>${a ? esc(a.evidence) : gone ? "This area is no longer on the server. The server restarted after it was drawn, and drawn areas are lost when that happens. Draw the box again to redo it." : "Not drafted yet. The assessment of this area is still running, or it stopped before it reached this building; the chat shows which step it is on."}</p>
     ${a ? `<dl class="kv">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>` : ""}
     ${a ? `<p><a class="packet" href="/api/areas/${state.area}/packet/${id}" target="_blank" rel="noopener">Evidence packet for a claim (printable)</a></p>` : ""}
@@ -523,7 +523,16 @@ async function boot() {
   // the three lookups don't depend on each other: ask for them together
   const [storms, config, areas] = await Promise.all(["/api/storms", "/api/config", "/api/areas"].map((u) => fetch(u).then((r) => r.json())));
   const group = (label, rows) => `<optgroup label="${label}">${rows.map((s) => `<option value="${s.key}">${esc(s.name)} (${esc(s.where)}, ${s.landfall.slice(0, 4)})</option>`).join("")}</optgroup>`;
-  $("storm").innerHTML = group("United States: NOAA aerial photos", storms.filter((s) => s.imagery === "noaa")) + group("Worldwide: Maxar satellite photos", storms.filter((s) => s.imagery === "maxar"));
+  const hurricanes = storms.filter((s) => (s.kind || "hurricane") === "hurricane");
+  $("storm").innerHTML =
+    group("Hurricanes, United States: NOAA aerial photos", hurricanes.filter((s) => s.imagery === "noaa")) +
+    group("Hurricanes worldwide: Maxar satellite photos", hurricanes.filter((s) => s.imagery === "maxar")) +
+    [["wildfire", "Wildfires"], ["earthquake", "Earthquakes"], ["flood", "Floods"]]
+      .map(([k, label]) => {
+        const rows = storms.filter((s) => s.kind === k);
+        return rows.length ? group(label, rows) : "";
+      })
+      .join("");
   state.config = config;
   const params = new URLSearchParams(location.search);
   const at = params.get("at");
@@ -552,7 +561,7 @@ async function boot() {
     agentMessage(introFor(pick));
     suggestions(["Which buildings should a field team check first?", "Write the draft damage summary", "How many households may be out of their homes?"]);
   } else {
-    agentMessage("Draw an area on the map after a hurricane, and I'll draft FEMA damage categories for every building in it.");
+    agentMessage("Draw an area on the map after a hurricane, wildfire, earthquake or flood, and I'll draft FEMA damage categories for every building in it.");
   }
 }
 boot();
@@ -560,10 +569,12 @@ function introFor(pick) {
   // one format for every area: what was drafted, from which photos, and the tally
   const feats = Object.values(state.features).map((l) => l.feature.properties);
   const n = (c) => feats.filter((p) => p.category === c).length;
-  const storm = ($("storm").selectedOptions[0] || {}).text || "";
+  const opt = $("storm").selectedOptions[0];
+  // "after Hurricane Helene", but "after the Myanmar earthquake"
+  const storm = opt ? (/^(Hurricane|Cyclone|Typhoon)/.test(opt.text) ? "" : "the ") + opt.text : "";
   const photos = pick.spec && pick.spec.imagery === "maxar" ? "satellite" : "aerial";
   const tally = ["destroyed", "major", "minor", "affected", "none"].map((c) => `${n(c)} ${LABEL[c].toLowerCase()}`).join(", ");
   const check = feats.filter((p) => p.needs_human).length;
-  return `I've drafted damage categories for **${feats.length} buildings in ${title(pick.name)}** after ${storm.split(" (")[0] || "the storm"}, from before and after ${photos} photos: ${tally}. ${check} need a field check.\n\nAsk me about it, or draw a new area on the map and I'll assess that too.`;
+  return `I've drafted damage categories for **${feats.length} buildings in ${title(pick.name)}** after ${storm.split(" (")[0] || "the disaster"}, from before and after ${photos} photos: ${tally}. ${check} need a field check.\n\nAsk me about it, or draw a new area on the map and I'll assess that too.`;
 }
 function title(name) { return name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()); }

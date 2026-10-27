@@ -1,0 +1,421 @@
+{
+ "surface_ft_navd88": 1691.16,
+ "radius_km": 2.0,
+ "observations": [
+  {
+   "source": "USGS HWM 48498",
+   "lon": -99.25347,
+   "lat": 30.07204,
+   "elev_ft": 1703.5,
+   "note": "Debris line on north side of HWY 39 at Ingram HS"
+  },
+  {
+   "source": "USGS HWM 49196",
+   "lon": -99.228481,
+   "lat": 30.067396,
+   "elev_ft": 1684.447,
+   "note": ""
+  },
+  {
+   "source": "USGS HWM 48942",
+   "lon": -99.2266667,
+   "lat": 30.069694,
+   "elev_ft": 1683.836,
+   "note": "flagging on misquite tree past fence line behind 114 Riverpark dr,up the bluff inside the HTR hill country campgrounds approx 600ft u/s from entrance point."
+  },
+  {
+   "source": "USGS HWM 48943",
+   "lon": -99.22203,
+   "lat": 30.06847,
+   "elev_ft": 1677.798,
+   "note": "flagging on tree approx 15 ft from road on rowland ln. D/S from river run campsites"
+  },
+  {
+   "source": "USGS HWM 48941",
+   "lon": -99.2312,
+   "lat": 30.07115,
+   "elev_ft": 1686.855,
+   "note": "flagging on tree near frisbee golf poles # 4 is just d/s from flagging. , flag near stake that reads \"par 3\". Psuspect on HTR hill counrty campground."
+  },
+  {
+   "source": "USGS HWM 48749",
+   "lon": -99.2226222,
+   "lat": 30.065822,
+   "elev_ft": 1677.738,
+   "note": "Stake with flagging surrounding"
+  },
+  {
+   "source": "USGS HWM 48750",
+   "lon": -99.225175,
+   "lat": 30.066694,
+   "elev_ft": 1680.108,
+   "note": "Stake in ground with surrounding flags"
+  },
+  {
+   "source": "USGS HWM 49212",
+   "lon": -99.22506114,
+   "lat": 30.06923935,
+   "elev_ft": 1683.82,
+   "note": "HWM was 1.55ft above equipment; location estimated from property owner"
+  },
+  {
+   "source": "USGS HWM 49439",
+   "lon": -99.2547516,
+   "lat": 30.069693,
+   "elev_ft": 1707.022,
+   "note": "CADE LOOP RD GUADALUPE RIVER"
+  },
+  {
+   "source": "USGS HWM 49444",
+   "lon": -99.2427874,
+   "lat": 30.069716,
+   "elev_ft": 1691.488,
+   "note": "INGRAM LAKE DAM"
+  },
+  {
+   "source": "USGS HWM 49442",
+   "lon": -99.2540885,
+   "lat": 30.071719,
+   "elev_ft": 1706.929,
+   "note": "CADE LOOP RD GUADALUPE RIVER"
+  },
+  {
+   "source": "USGS HWM 49440",
+   "lon": -99.2541802,
+   "lat": 30.0698,
+   "elev_ft": 1706.64,
+   "note": "CADE LOOP RD GUADALUPE RIVER"
+  },
+  {
+   "source": "USGS HWM 49448",
+   "lon": -99.243751,
+   "lat": 30.071511,
+   "elev_ft": 1691.161,
+   "note": "INDIAN CREEK RD/GUADALUPE RIVER"
+  },
+  {
+   "source": "USGS HWM 49447",
+   "lon": -99.242981,
+   "lat": 30.071686,
+   "elev_ft": 1691.354,
+   "note": "INDIAN CREEK RD/GUADALUPE RIVER"
+  },
+  {
+   "source": "USGS HWM 49445",
+   "lon": -99.2433711,
+   "lat": 30.06984,
+   "elev_ft": 1691.713,
+   "note": "INGRAM LAKE DAM"
+  },
+  {
+   "source": "USGS HWM 49441",
+   "lon": -99.2546068,
+   "lat": 30.071474,
+   "elev_ft": 1707.543,
+   "note": "CADE LOOP RD GUADALUPE RIVER"
+  },
+  {
+   "source": "USGS HWM 48497",
+   "lon": -99.25484,
+   "lat": 30.06956,
+   "elev_ft": 1706.5,
+   "note": "Debris line on hill side (south side of river)"
+  },
+  {
+   "source": "USGS HWM 48578",
+   "lon": -99.229028,
+   "lat": 30.067389,
+   "elev_ft": 1684.8,
+   "note": "Debris line on south river bank"
+  },
+  {
+   "source": "USGS HWM 48581",
+   "lon": -99.221379,
+   "lat": 30.068498,
+   "elev_ft": 1677.8,
+   "note": "Debris line on north band of river downstream from RV camp"
+  },
+  {
+   "source": "USGS HWM 48576",
+   "lon": -99.243933,
+   "lat": 30.072763,
+   "elev_ft": 1692.9,
+   "note": "Debris line along Kitty Rd north side of river"
+  },
+  {
+   "source": "USGS HWM 48577",
+   "lon": -99.243131,
+   "lat": 30.068697,
+   "elev_ft": 1693.7,
+   "note": "Debris line south side of river along Beaver Ave"
+  },
+  {
+   "source": "USGS HWM 48579",
+   "lon": -99.234439,
+   "lat": 30.072044,
+   "elev_ft": 1688.1,
+   "note": "Debris line on north side of river behind Wells Fargo"
+  },
+  {
+   "source": "USGS HWM 48580",
+   "lon": -99.225091,
+   "lat": 30.069243,
+   "elev_ft": 1682.9,
+   "note": "Debris line on north side of river at camp office"
+  },
+  {
+   "source": "USGS HWM 48624",
+   "lon": -99.246484,
+   "lat": 30.073533,
+   "elev_ft": 1695.2,
+   "note": "Debris line on north side of HWY 27 at Johnson Creek...no homes flooded on Ingram Loop"
+  },
+  {
+   "source": "USGS HWM 48625",
+   "lon": -99.24817,
+   "lat": 30.073775,
+   "elev_ft": 1694.7,
+   "note": "Debris on concrete paving west side of Johnson Creek north of HWY 27"
+  },
+  {
+   "source": "USGS HWM 48738",
+   "lon": -99.242575,
+   "lat": 30.069811,
+   "elev_ft": 1695.764,
+   "note": "Disc in tree with flags around"
+  },
+  {
+   "source": "USGS HWM 48739",
+   "lon": -99.2415944,
+   "lat": 30.069764,
+   "elev_ft": 1692.516,
+   "note": "Disc in tree with flags around"
+  },
+  {
+   "source": "USGS HWM 48740",
+   "lon": -99.2405,
+   "lat": 30.069697,
+   "elev_ft": 1689.937,
+   "note": "Disc in tree"
+  },
+  {
+   "source": "USGS HWM 48741",
+   "lon": -99.2386472,
+   "lat": 30.06945,
+   "elev_ft": 1689.838,
+   "note": "Disc nailed to tree with flags around"
+  },
+  {
+   "source": "USGS HWM 48742",
+   "lon": -99.2370528,
+   "lat": 30.068992,
+   "elev_ft": 1689.455,
+   "note": "Disc in tree with flags around"
+  },
+  {
+   "source": "USGS HWM 48743",
+   "lon": -99.2349028,
+   "lat": 30.068736,
+   "elev_ft": 1688.075,
+   "note": "Disc in tree with flags around"
+  },
+  {
+   "source": "USGS HWM 48746",
+   "lon": -99.2298222,
+   "lat": 30.067614,
+   "elev_ft": 1685.014,
+   "note": "Disc and flag in tree, 366 beaver rd"
+  },
+  {
+   "source": "USGS HWM 48939",
+   "lon": -99.2408333,
+   "lat": 30.071667,
+   "elev_ft": 1691.78,
+   "note": "flagging on tree facing open field, across street from \"copper catus\" business"
+  },
+  {
+   "source": "USGS HWM 48938",
+   "lon": -99.2425278,
+   "lat": 30.072306,
+   "elev_ft": 1692.475,
+   "note": "flagging on large tree just inside entrance road to houses on old ingram rd. Across street from \"perfect surroundings\" business."
+  },
+  {
+   "source": "USGS HWM 48940",
+   "lon": -99.2382222,
+   "lat": 30.072556,
+   "elev_ft": 1690.543,
+   "note": "Tagging in large live oak tree at the back of TJ Moore yard #2 directly d/s from Ingram volunteer FD. Got approval to mark by worker who spoke with yard manager."
+  }
+ ],
+ "buildings": [
+  {
+   "id": "b000",
+   "ground_ft": 1683.6,
+   "flood_ft": 8.35,
+   "surface_ft": 1691.95
+  },
+  {
+   "id": "b001",
+   "ground_ft": 1702.46,
+   "flood_ft": 0.0,
+   "surface_ft": 1691.96
+  },
+  {
+   "id": "b002",
+   "ground_ft": 1700.73,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.0
+  },
+  {
+   "id": "b003",
+   "ground_ft": 1684.48,
+   "flood_ft": 7.4,
+   "surface_ft": 1691.88
+  },
+  {
+   "id": "b004",
+   "ground_ft": 1698.37,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.3
+  },
+  {
+   "id": "b005",
+   "ground_ft": 1693.85,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.31
+  },
+  {
+   "id": "b006",
+   "ground_ft": 1699.43,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.31
+  },
+  {
+   "id": "b007",
+   "ground_ft": 1708.39,
+   "flood_ft": 0.0,
+   "surface_ft": 1691.93
+  },
+  {
+   "id": "b008",
+   "ground_ft": 1686.36,
+   "flood_ft": 5.65,
+   "surface_ft": 1692.01
+  },
+  {
+   "id": "b009",
+   "ground_ft": 1705.41,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.3
+  },
+  {
+   "id": "b010",
+   "ground_ft": 1709.55,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.38
+  },
+  {
+   "id": "b011",
+   "ground_ft": 1702.35,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.31
+  },
+  {
+   "id": "b012",
+   "ground_ft": 1687.11,
+   "flood_ft": 5.17,
+   "surface_ft": 1692.28
+  },
+  {
+   "id": "b013",
+   "ground_ft": 1704.65,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.31
+  },
+  {
+   "id": "b014",
+   "ground_ft": 1711.04,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.37
+  },
+  {
+   "id": "b015",
+   "ground_ft": 1700.68,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.32
+  },
+  {
+   "id": "b016",
+   "ground_ft": 1690.82,
+   "flood_ft": 1.48,
+   "surface_ft": 1692.3
+  },
+  {
+   "id": "b017",
+   "ground_ft": 1704.19,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.33
+  },
+  {
+   "id": "b018",
+   "ground_ft": 1711.51,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.38
+  },
+  {
+   "id": "b019",
+   "ground_ft": 1688.63,
+   "flood_ft": 3.18,
+   "surface_ft": 1691.82
+  },
+  {
+   "id": "b020",
+   "ground_ft": 1711.46,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.3
+  },
+  {
+   "id": "b021",
+   "ground_ft": 1684.9,
+   "flood_ft": 6.71,
+   "surface_ft": 1691.61
+  },
+  {
+   "id": "b022",
+   "ground_ft": 1692.66,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.34
+  },
+  {
+   "id": "b023",
+   "ground_ft": 1708.92,
+   "flood_ft": 0.0,
+   "surface_ft": 1691.61
+  },
+  {
+   "id": "b024",
+   "ground_ft": 1702.9,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.35
+  },
+  {
+   "id": "b025",
+   "ground_ft": 1708.74,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.32
+  },
+  {
+   "id": "b026",
+   "ground_ft": 1705.46,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.35
+  },
+  {
+   "id": "b027",
+   "ground_ft": 1707.09,
+   "flood_ft": 0.0,
+   "surface_ft": 1692.35
+  }
+ ]
+}

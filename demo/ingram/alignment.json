@@ -1,0 +1,612 @@
+{
+ "summary": {
+  "mosaic_origin": [
+   30108256,
+   55342946
+  ],
+  "area": "ingram",
+  "zoom": 19,
+  "m_per_px": 0.258,
+  "noaa_flight": "20250711b-rgb",
+  "naip_scene": "tx_m_3009963_nw_14_060_20220606",
+  "naip_date": "2022-06-06",
+  "post_source": "NOAA emergency response flight 20250711b-rgb",
+  "pre_source": "USDA NAIP 2022-06-06",
+  "pre_date": "2022-06-06",
+  "storms_between": [],
+  "buildings": 28,
+  "aligned": 10,
+  "placed_from_neighbors": 18,
+  "unaligned": 0
+ },
+ "buildings": [
+  {
+   "id": "b000",
+   "window": [
+    30108691,
+    55343903,
+    30108808,
+    55344017
+   ],
+   "area_m2": 92.3,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.285,
+   "margin": 0.04,
+   "own_dx": 4,
+   "own_dy": 0,
+   "neighbor_dx": 0.0,
+   "neighbor_dy": 6.0
+  },
+  {
+   "id": "b001",
+   "window": [
+    30108867,
+    55343334,
+    30109021,
+    55343439
+   ],
+   "area_m2": 238.5,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.348,
+   "margin": 0.02,
+   "own_dx": 1,
+   "own_dy": 11,
+   "neighbor_dx": 0.0,
+   "neighbor_dy": 6.0
+  },
+  {
+   "id": "b002",
+   "window": [
+    30108712,
+    55343383,
+    30108841,
+    55343520
+   ],
+   "area_m2": 250.6,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 7,
+   "status": "matched",
+   "aligned": true,
+   "score": 0.314,
+   "margin": 0.025,
+   "own_dx": 0,
+   "own_dy": 7,
+   "neighbor_dx": 0.0,
+   "neighbor_dy": 6.0
+  },
+  {
+   "id": "b003",
+   "window": [
+    30108585,
+    55343883,
+    30108688,
+    55343988
+   ],
+   "area_m2": 67.4,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.249,
+   "margin": 0.049,
+   "own_dx": 5,
+   "own_dy": 4,
+   "neighbor_dx": 0.0,
+   "neighbor_dy": 6.0
+  },
+  {
+   "id": "b004",
+   "window": [
+    30108609,
+    55343439,
+    30108699,
+    55343534
+   ],
+   "area_m2": 55.1,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.203,
+   "margin": 0.0,
+   "own_dx": -27,
+   "own_dy": -14,
+   "neighbor_dx": 0.0,
+   "neighbor_dy": 6.0
+  },
+  {
+   "id": "b005",
+   "window": [
+    30108523,
+    55343492,
+    30108649,
+    55343617
+   ],
+   "area_m2": 170.1,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 7,
+   "status": "matched",
+   "aligned": true,
+   "score": 0.366,
+   "margin": 0.122,
+   "own_dx": 0,
+   "own_dy": 7,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b006",
+   "window": [
+    30108545,
+    55343441,
+    30108648,
+    55343526
+   ],
+   "area_m2": 51.6,
+   "coverage": 1.0,
+   "dx": -1,
+   "dy": 13,
+   "status": "matched",
+   "aligned": true,
+   "score": 0.369,
+   "margin": 0.146,
+   "own_dx": -1,
+   "own_dy": 13,
+   "neighbor_dx": 0.0,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b007",
+   "window": [
+    30108978,
+    55343179,
+    30109112,
+    55343279
+   ],
+   "area_m2": 162.3,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.249,
+   "margin": 0.021,
+   "own_dx": -6,
+   "own_dy": 9,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b008",
+   "window": [
+    30108466,
+    55343769,
+    30108571,
+    55343930
+   ],
+   "area_m2": 169.5,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.156,
+   "margin": 0.001,
+   "own_dx": -1,
+   "own_dy": 28,
+   "neighbor_dx": 0.0,
+   "neighbor_dy": 6.0
+  },
+  {
+   "id": "b009",
+   "window": [
+    30108618,
+    55343298,
+    30108748,
+    55343417
+   ],
+   "area_m2": 154.5,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.144,
+   "margin": 0.022,
+   "own_dx": -12,
+   "own_dy": 22,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b010",
+   "window": [
+    30108874,
+    55343176,
+    30108993,
+    55343280
+   ],
+   "area_m2": 123.5,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.173,
+   "margin": 0.005,
+   "own_dx": 1,
+   "own_dy": 4,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b011",
+   "window": [
+    30108563,
+    55343366,
+    30108659,
+    55343478
+   ],
+   "area_m2": 105.5,
+   "coverage": 1.0,
+   "dx": -1,
+   "dy": 5,
+   "status": "matched",
+   "aligned": true,
+   "score": 0.608,
+   "margin": 0.053,
+   "own_dx": -1,
+   "own_dy": 5,
+   "neighbor_dx": 0.0,
+   "neighbor_dy": 6.0
+  },
+  {
+   "id": "b012",
+   "window": [
+    30108438,
+    55343737,
+    30108533,
+    55343838
+   ],
+   "area_m2": 40.4,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.288,
+   "margin": 0.022,
+   "own_dx": -28,
+   "own_dy": 17,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b013",
+   "window": [
+    30108593,
+    55343327,
+    30108679,
+    55343418
+   ],
+   "area_m2": 40.8,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.419,
+   "margin": 0.056,
+   "own_dx": 3,
+   "own_dy": -25,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 6.0
+  },
+  {
+   "id": "b014",
+   "window": [
+    30108926,
+    55343142,
+    30109022,
+    55343227
+   ],
+   "area_m2": 46.1,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.338,
+   "margin": 0.022,
+   "own_dx": 19,
+   "own_dy": 3,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b015",
+   "window": [
+    30108475,
+    55343436,
+    30108581,
+    55343535
+   ],
+   "area_m2": 102.6,
+   "coverage": 1.0,
+   "dx": -2,
+   "dy": 4,
+   "status": "matched",
+   "aligned": true,
+   "score": 0.279,
+   "margin": 0.04,
+   "own_dx": -2,
+   "own_dy": 4,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b016",
+   "window": [
+    30108374,
+    55343604,
+    30108467,
+    55343716
+   ],
+   "area_m2": 94.0,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.248,
+   "margin": 0.04,
+   "own_dx": -28,
+   "own_dy": -22,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b017",
+   "window": [
+    30108482,
+    55343319,
+    30108592,
+    55343424
+   ],
+   "area_m2": 130.8,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "matched",
+   "aligned": true,
+   "score": 0.556,
+   "margin": 0.067,
+   "own_dx": 0,
+   "own_dy": 6,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b018",
+   "window": [
+    30108896,
+    55343052,
+    30109025,
+    55343205
+   ],
+   "area_m2": 245.9,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.123,
+   "margin": 0.011,
+   "own_dx": -1,
+   "own_dy": 4,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b019",
+   "window": [
+    30108348,
+    55343751,
+    30108447,
+    55343883
+   ],
+   "area_m2": 157.8,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.309,
+   "margin": 0.017,
+   "own_dx": 3,
+   "own_dy": 17,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b020",
+   "window": [
+    30108679,
+    55343118,
+    30108860,
+    55343226
+   ],
+   "area_m2": 306.5,
+   "coverage": 1.0,
+   "dx": 1,
+   "dy": 7,
+   "status": "matched",
+   "aligned": true,
+   "score": 0.449,
+   "margin": 0.095,
+   "own_dx": 1,
+   "own_dy": 7,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b021",
+   "window": [
+    30108356,
+    55343849,
+    30108465,
+    55344020
+   ],
+   "area_m2": 299.9,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.302,
+   "margin": 0.018,
+   "own_dx": -4,
+   "own_dy": -4,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b022",
+   "window": [
+    30108363,
+    55343431,
+    30108486,
+    55343642
+   ],
+   "area_m2": 474.8,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "matched",
+   "aligned": true,
+   "score": 0.333,
+   "margin": 0.096,
+   "own_dx": 0,
+   "own_dy": 6,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b023",
+   "window": [
+    30109222,
+    55343038,
+    30109413,
+    55343211
+   ],
+   "area_m2": 552.0,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.357,
+   "margin": 0.048,
+   "own_dx": 4,
+   "own_dy": 8,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b024",
+   "window": [
+    30108411,
+    55343309,
+    30108523,
+    55343408
+   ],
+   "area_m2": 90.7,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.268,
+   "margin": 0.048,
+   "own_dx": -18,
+   "own_dy": -27,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b025",
+   "window": [
+    30108543,
+    55343169,
+    30108654,
+    55343260
+   ],
+   "area_m2": 81.8,
+   "coverage": 1.0,
+   "dx": -2,
+   "dy": 4,
+   "status": "matched",
+   "aligned": true,
+   "score": 0.448,
+   "margin": 0.147,
+   "own_dx": -2,
+   "own_dy": 4,
+   "neighbor_dx": 0.0,
+   "neighbor_dy": 6.0
+  },
+  {
+   "id": "b026",
+   "window": [
+    30108404,
+    55343171,
+    30108532,
+    55343260
+   ],
+   "area_m2": 105.0,
+   "coverage": 1.0,
+   "dx": 0,
+   "dy": 6,
+   "status": "neighbors",
+   "aligned": false,
+   "score": 0.191,
+   "margin": 0.004,
+   "own_dx": 1,
+   "own_dy": 14,
+   "neighbor_dx": -0.5,
+   "neighbor_dy": 5.5
+  },
+  {
+   "id": "b027",
+   "window": [
+    30108384,
+    55343068,
+    30108528,
+    55343184
+   ],
+   "area_m2": 183.7,
+   "coverage": 1.0,
+   "dx": -2,
+   "dy": 5,
+   "status": "matched",
+   "aligned": true,
+   "score": 0.255,
+   "margin": 0.084,
+   "own_dx": -2,
+   "own_dy": 5,
+   "neighbor_dx": 0.0,
+   "neighbor_dy": 6.0
+  }
+ ]
+}
