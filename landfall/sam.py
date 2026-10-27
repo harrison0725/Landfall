@@ -21,9 +21,12 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from . import http
+
 API_URL = "https://api.meta.ai/v1/responses"
 MODEL = "sam-3.1"
 MISS_RETRIES = 40
+TIMEOUT_S = 15
 
 
 @dataclass(frozen=True)
@@ -41,11 +44,11 @@ def _png_data_url(img: np.ndarray, scale: int) -> str:
     if scale != 1:
         im = im.resize((im.width * scale, im.height * scale), Image.LANCZOS)
     buf = io.BytesIO()
-    im.save(buf, "PNG")
+    im.save(buf, "PNG", compress_level=1)  # lossless either way; level 6 costs ~10x the CPU
     return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
 
 
-def request(img: np.ndarray, prompt: str, scale: int = 4, api_key: str | None = None, retries: int = 3) -> str:
+def request(img: np.ndarray, prompt: str, scale: int = 4, api_key: str | None = None, retries: int = 4) -> str:
     """Send one concept prompt; return the raw output_text line."""
     import requests
 
@@ -66,7 +69,16 @@ def request(img: np.ndarray, prompt: str, scale: int = 4, api_key: str | None = 
     }
     attempt = misses = 0
     while True:
-        r = requests.post(API_URL, headers={"Authorization": f"Bearer {key}"}, json=body, timeout=120)
+        try:
+            # A normal answer takes 1-3 s. Now and then a request hangs, and
+            # one hung image used to hold up the whole area for minutes, so
+            # give up on it quickly and ask again.
+            r = http.post(API_URL, headers={"Authorization": f"Bearer {key}"}, json=body, timeout=(5, TIMEOUT_S))
+        except (requests.Timeout, requests.ConnectionError):
+            attempt += 1
+            if attempt < retries:
+                continue
+            raise
         # The API sometimes routes a request to a server without SAM and answers
         # 404 model_not_found; asking again a moment later usually works.
         if r.status_code == 404 and "model_not_found" in r.text and misses < MISS_RETRIES:

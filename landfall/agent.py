@@ -23,6 +23,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+from . import http
 from .fema import Category, Measures, flood_floor, verify
 
 OPEN_URL = "https://inference.baseten.co/v1/chat/completions"
@@ -119,10 +120,8 @@ def describe(m: Measures, extra: dict) -> str:
 
 def _post(url: str, key: str, body: dict) -> dict:
     """POST a chat completion, retrying rate limits and server errors."""
-    import requests
-
     for attempt in range(4):
-        r = requests.post(url, headers={"Authorization": f"Bearer {key}"}, json=body, timeout=180)
+        r = http.post(url, headers={"Authorization": f"Bearer {key}"}, json=body, timeout=180)
         if (r.status_code == 429 or r.status_code >= 500) and attempt < 3:
             time.sleep(2 ** (attempt + 1))
             continue
