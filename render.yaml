@@ -9,6 +9,12 @@ services:
     plan: standard
     dockerfilePath: ./Dockerfile
     healthCheckPath: /api/config
+    # Drawn areas live in /app/data; without a disk a restart or deploy
+    # wipes them. The app copies the demo areas onto it on first start.
+    disk:
+      name: landfall-data
+      mountPath: /app/data
+      sizeGB: 1
     envVars:
       - key: META_API_KEY
         sync: false

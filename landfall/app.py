@@ -49,7 +49,10 @@ def _seed(root: Path, demo: Path) -> None:
             (shutil.copytree if src.is_dir() else shutil.copy2)(src, dst)
 
 
-_seed(ROOT, Path(__file__).resolve().parents[1] / "demo")
+try:
+    _seed(ROOT, Path(__file__).resolve().parents[1] / "demo")
+except OSError as e:  # serve what is there rather than not start
+    print(f"could not copy the demo areas into {ROOT}: {e}", flush=True)
 # Hosted publicly, new assessments need this code (they spend API credits);
 # unset, anyone running the app can assess anything.
 ACCESS_CODE = os.environ.get("LANDFALL_ACCESS_CODE", "")
@@ -155,7 +158,7 @@ def _host() -> dict:
         mem = None if raw == "max" else int(raw) // 2**20
     except (OSError, ValueError):
         pass
-    return {"cpus": cpus, "memory_mb": mem, "fast_masks": bool(sam._decoder())}
+    return {"cpus": cpus, "memory_mb": mem, "fast_masks": bool(sam._decoder()), "data_on_disk": os.path.ismount(ROOT)}
 
 
 _meta_checked: list = [0.0, None]

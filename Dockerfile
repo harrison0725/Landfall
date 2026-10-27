@@ -3,12 +3,13 @@
 FROM python:3.12-slim
 # libexpat1: the XML parser GDAL (rasterio) and Python's xml need; the slim image no longer ships it
 RUN apt-get update && apt-get install -y --no-install-recommends libexpat1 gcc libc6-dev && rm -rf /var/lib/apt/lists/*
-RUN useradd -m -u 1000 user
 WORKDIR /app
-COPY --chown=user . .
+COPY . .
 RUN pip install --no-cache-dir -e ".[app,data,sam]" \
-    && gcc -O2 -shared -fPIC -o landfall/native/maskdec.so landfall/native/maskdec.c && cp -r demo data && chown -R user data
-USER user
+    && gcc -O2 -shared -fPIC -o landfall/native/maskdec.so landfall/native/maskdec.c && cp -r demo data
+# Runs as root: Render mounts its persistent disk at /app/data owned by
+# root, and the app must write drawn areas there. (The Hugging Face image
+# in deploy/ runs as uid 1000, as Spaces require.)
 # MALLOC_ARENA_MAX: glibc gives each thread its own heap; with ~50 API
 # threads in flight that doubled peak memory past Render's 512 MB.
 ENV MALLOC_ARENA_MAX=2
