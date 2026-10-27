@@ -375,6 +375,9 @@ async function openBuilding(id) {
   const p = layer ? layer.feature.properties : { id };
   const r = await fetch(`/api/areas/${state.area}/buildings/${id}`);
   const a = r.ok ? await r.json() : null;
+  // A drawn area lives on the server's disk, which the free host wipes when
+  // it restarts (an update, a long idle, running out of memory).
+  const gone = !r.ok && !(await fetch("/api/areas").then((x) => x.json()).catch(() => [])).some((x) => x.name === state.area);
   const cat = a ? a.category : p.category;
   const trace = (a && a.trace) || [];
   // every area gets the same rows in the same order; what we can't know there says so
@@ -398,7 +401,7 @@ async function openBuilding(id) {
     <h2>${esc(id)} ${cat ? `<span class="pill ${cat}" style="--c:var(--${cat})">${LABEL[cat]}</span>` : ""}${a && a.needs_human ? `<span class="pill" style="--c:var(--review)">Field check</span>` : ""}</h2>
     <img src="/api/areas/${state.area}/pair/${id}.png" alt="Before and after photos of ${esc(id)}">
     <div class="cap"><span>Before${a && a.photos ? ": " + esc(shortSource(a.photos.before)) : " the storm"}</span><span>After${a && a.photos ? ": " + esc(shortSource(a.photos.after)) : " the storm"}</span></div>
-    <p>${a ? esc(a.evidence) : "Not drafted yet. The assessment of this area is still running, or it stopped before it reached this building; the chat shows which step it is on."}</p>
+    <p>${a ? esc(a.evidence) : gone ? "This area is no longer on the server. The server restarted after it was drawn, and drawn areas are lost when that happens. Draw the box again to redo it." : "Not drafted yet. The assessment of this area is still running, or it stopped before it reached this building; the chat shows which step it is on."}</p>
     ${a ? `<dl class="kv">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>` : ""}
     ${a ? `<p><a class="packet" href="/api/areas/${state.area}/packet/${id}" target="_blank" rel="noopener">Evidence packet for a claim (printable)</a></p>` : ""}
     ${trace.length ? `<div class="trace"><b>How the call was made</b>${trace.map(traceRow).join("")}</div>` : ""}`;

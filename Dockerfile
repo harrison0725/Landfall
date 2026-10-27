@@ -9,6 +9,9 @@ COPY --chown=user . .
 RUN pip install --no-cache-dir -e ".[app,data,sam]" \
     && gcc -O2 -shared -fPIC -o landfall/native/maskdec.so landfall/native/maskdec.c && cp -r demo data && chown -R user data
 USER user
+# MALLOC_ARENA_MAX: glibc gives each thread its own heap; with ~50 API
+# threads in flight that doubled peak memory past Render's 512 MB.
+ENV MALLOC_ARENA_MAX=2
 ENV LANDFALL_DATA=/app/data PYTHONUNBUFFERED=1
 EXPOSE 7860
 CMD uvicorn landfall.app:app --host 0.0.0.0 --port ${PORT:-7860}
