@@ -60,6 +60,7 @@ class Area:
                 "needs_human": a.get("needs_human", True),
                 "evidence": a.get("evidence", a.get("error", "")),
                 "decided_by": a.get("decided_by"),
+                "demolished_before_storm": a.get("demolished", False),
                 "structure_loss": a.get("structure_loss"),
                 "flood_ft": a.get("flood_ft"),
                 "ground_ft": ground.get(bid),
@@ -89,6 +90,7 @@ class Area:
             "buildings_assessed": len(b),
             "by_category": {c: counts.get(c, 0) for c in ORDER if counts.get(c)},
             "sent_to_human_review": sum(x["needs_human"] for x in b),
+            "gone_before_the_storm": [x["id"] for x in b if x["demolished_before_storm"]],
             "buildings_with_water_around_them": len(flooded),
             "deepest_water_ft": max((x["flood_ft"] for x in flooded), default=0),
             "sources": self.meta,
@@ -299,31 +301,63 @@ class Answer:
     model: str
 
 
-def ask(area: Area, question: str, use_spark: bool = False, max_tokens: int = 8000) -> Answer:
-    """Run the tool loop until the model answers in words."""
+def model_for(use_spark: bool) -> tuple[str, str | None, str]:
+    if use_spark:
+        return SPARK_URL, os.environ.get("META_API_KEY"), SPARK_MODEL
+    return OPEN_URL, os.environ.get("BASETEN_API_KEY"), OPEN_MODEL
+
+
+def run_tools(
+    messages: list[dict],
+    tools: list[dict],
+    call,
+    use_spark: bool = False,
+    max_steps: int = MAX_STEPS,
+    max_tokens: int = 8000,
+    on_event=None,
+) -> Answer:
+    """The tool loop: let the model call tools until it answers in words.
+
+    `messages` is extended in place, so a caller can keep the conversation
+    going. `call(name, args)` runs a tool; `on_event(kind, **fields)` hears
+    each step as it happens.
+    """
     from .agent import _post
 
-    url, key, model = (SPARK_URL, os.environ.get("META_API_KEY"), SPARK_MODEL) if use_spark else (OPEN_URL, os.environ.get("BASETEN_API_KEY"), OPEN_MODEL)
-    messages: list[dict] = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": question}]
+    url, key, model = model_for(use_spark)
+    emit = on_event or (lambda kind, **f: None)
     steps: list[dict] = []
-    for _ in range(MAX_STEPS):
-        msg = _post(url, key, {"model": model, "messages": messages, "tools": TOOLS, "max_tokens": max_tokens})["choices"][0]["message"]
+    for _ in range(max_steps):
+        msg = _post(url, key, {"model": model, "messages": messages, "tools": tools, "max_tokens": max_tokens})["choices"][0]["message"]
         calls = msg.get("tool_calls") or []
-        messages.append({"role": "assistant", "content": msg.get("content") or "", **({"tool_calls": calls} if calls else {})})
+        text = msg.get("content") or ""
+        messages.append({"role": "assistant", "content": text, **({"tool_calls": calls} if calls else {})})
         if not calls:
-            return Answer(msg.get("content") or "", steps, model)
+            return Answer(text, steps, model)
+        if text.strip():
+            emit("thought", text=text.strip())
         for c in calls:
             name = c["function"]["name"]
             try:
                 args = json.loads(c["function"].get("arguments") or "{}")
             except json.JSONDecodeError:
                 args = {}
-            result = area.call(name, args if isinstance(args, dict) else {})
+            args = args if isinstance(args, dict) else {}
+            emit("tool", name=name, args=args)
+            result = call(name, args)
+            emit("tool_result", name=name, result=result)
             steps.append({"tool": name, "args": args})
-            messages.append({"role": "tool", "tool_call_id": c["id"], "content": json.dumps(result)})
+            messages.append({"role": "tool", "tool_call_id": c["id"], "content": json.dumps(result, default=str)})
     messages.append({"role": "user", "content": "Answer now with what you have; no more tools."})
     msg = _post(url, key, {"model": model, "messages": messages, "max_tokens": max_tokens})["choices"][0]["message"]
+    messages.append({"role": "assistant", "content": msg.get("content") or ""})
     return Answer(msg.get("content") or "", steps, model)
+
+
+def ask(area: Area, question: str, use_spark: bool = False, max_tokens: int = 8000) -> Answer:
+    """One question about an assessed area."""
+    messages: list[dict] = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": question}]
+    return run_tools(messages, TOOLS, area.call, use_spark=use_spark, max_tokens=max_tokens)
 
 
 PDA_REQUEST = """Write the draft Preliminary Damage Assessment summary for this area, for the county emergency manager to forward to the state. Use markdown with these sections:

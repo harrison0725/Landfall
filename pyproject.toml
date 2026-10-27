@@ -9,6 +9,7 @@ dependencies = ["numpy>=1.26", "opencv-python-headless>=4.9", "requests>=2.31"]
 [project.optional-dependencies]
 data = ["pillow>=10", "rasterio>=1.3", "shapely>=2", "pystac-client>=0.7", "planetary-computer>=1.0"]
 sam = ["meta-sam-parser>=0.1", "pillow>=10"]
+app = ["fastapi>=0.110", "uvicorn>=0.29"]
 dev = ["pytest>=8"]
 
 

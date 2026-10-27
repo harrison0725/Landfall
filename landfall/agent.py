@@ -45,10 +45,10 @@ Categories (FEMA PDA Guide, Individual Assistance), as seen from the air:
 
 Flooding: the PDA Guide judges water depth in the living space. 18 inches or more is major, less is minor; water only under a raised house (pilings) is affected. Many houses here are raised. If water stood high around a house and you can't tell whether it is raised, say so and set needs_human to true.
 
-Be careful: trees and long shadows can hide a roof without damaging it, a house can lean differently in the two photos, and the pre-storm photo is from Feb 2023, so a lot that was empty then may have a new house now.
+Be careful: trees and long shadows can hide a roof without damaging it, a house can lean differently in the two photos, and the pre-storm photo is from Feb 2023, so a lot that was empty then may have a new house now, and a building may have been torn down on purpose since. The post-storm photo was taken a few days after the storm, so if the old footprint is now covered by weeds or grass, new pavement, parking stripes, fencing or a construction site, and there is no wreckage, the building was cleared months before the storm: that is demolition, not storm damage. Set demolished_before_storm to true, call it none, say so in the evidence, and set needs_human to true. A storm leaves wreckage, scattered debris or a bare slab with debris around it.
 
 Answer with JSON only, no other text:
-{"category": "none|affected|minor|major|destroyed", "confidence": 0.0-1.0, "evidence": "one or two sentences naming what you see in the photos", "needs_human": true|false}"""
+{"category": "none|affected|minor|major|destroyed", "confidence": 0.0-1.0, "evidence": "one or two sentences naming what you see in the photos", "needs_human": true|false, "demolished_before_storm": true|false}"""
 
 
 @dataclass
@@ -61,6 +61,7 @@ class Assessment:
     decided_by: str  # model id that made the final call
     verified: bool
     trace: list[dict] = field(default_factory=list)
+    demolished: bool = False  # the building was gone before the storm
 
 
 def pair_image(pre: np.ndarray, post: np.ndarray, outline: list[tuple[float, float]], scale: int = 3) -> str:
@@ -151,6 +152,7 @@ def parse_answer(text: str) -> dict:
         confidence=float(a.get("confidence", 0.0)),
         evidence=str(a.get("evidence", "")).strip(),
         needs_human=bool(a.get("needs_human", False)),
+        demolished=bool(a.get("demolished_before_storm", False)),
     )
 
 
@@ -168,6 +170,11 @@ def _converse(url: str, key: str, model: str, messages: list[dict], m: Measures,
                 {"role": "user", "content": "Answer with the JSON object only."},
             ]
             continue
+        if answer["demolished"]:
+            # No building stood here during the storm, so the measurement
+            # floors don't apply. An assessor confirms it on the ground.
+            trace.append(dict(model=model, round=round_, answer={**answer, "category": answer["category"].name}, verifier=[]))
+            return answer, False
         v = verify(answer["category"], m)
         trace.append(dict(model=model, round=round_, answer={**answer, "category": answer["category"].name}, verifier=v.problems))
         if v.ok:
@@ -211,7 +218,9 @@ def assess(
     answer, ok = _converse(OPEN_URL, os.environ["BASETEN_API_KEY"], OPEN_MODEL, messages, m, trace)
     decided_by = OPEN_MODEL
 
-    if escalate and (answer["confidence"] < ESCALATE_BELOW or not ok):
+    # Destroyed is the call with the most at stake (and the one demolition
+    # since the pre-storm photo imitates), so it always gets a second look.
+    if escalate and (answer["confidence"] < ESCALATE_BELOW or not ok or answer["category"] is Category.DESTROYED):
         second = [
             {"role": "system", "content": SYSTEM},
             {
@@ -228,13 +237,19 @@ def assess(
                 ],
             },
         ]
-        answer, ok = _converse(SPARK_URL, os.environ["META_API_KEY"], SPARK_MODEL, second, m, trace)
-        decided_by = SPARK_MODEL
+        try:
+            answer, ok = _converse(SPARK_URL, os.environ["META_API_KEY"], SPARK_MODEL, second, m, trace)
+            decided_by = SPARK_MODEL
+        except Exception as e:  # the second opinion is optional; keep the first
+            trace.append(dict(model=SPARK_MODEL, error=f"second opinion failed: {e}"[:300]))
+            ok = False
 
     category = answer["category"]
     evidence = answer["evidence"]
     water = flood_floor(m)
-    if category < water:
+    if answer["demolished"]:
+        category = Category.NONE
+    elif category < water:
         # The model won't always concede a fact it can't see. Surveyed water
         # isn't open to its judgment, so apply the floor here and say so.
         trace.append(dict(model="flood rule", raised_from=category.name, to=water.name))
@@ -246,8 +261,9 @@ def assess(
         category=category,
         confidence=answer["confidence"],
         evidence=evidence,
-        needs_human=answer["needs_human"] or not ok or not m.aligned,
+        needs_human=answer["needs_human"] or not ok or not m.aligned or answer["demolished"],
         decided_by=decided_by,
         verified=ok,
         trace=trace,
+        demolished=answer["demolished"],
     )

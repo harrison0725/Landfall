@@ -64,6 +64,15 @@ def window_bounds_3857(window: Window, zoom: int) -> tuple[float, float, float, 
     return left, bottom, right, top
 
 
+def pixel_bbox_lonlat(window: Window, zoom: int) -> tuple[float, float, float, float]:
+    """(west, south, east, north) of a pixel window."""
+    from .geo import pixel_to_lonlat
+
+    w, n = pixel_to_lonlat(window.x0, window.y0, zoom)
+    e, s = pixel_to_lonlat(window.x1, window.y1, zoom)
+    return (w, s, e, n)
+
+
 def bbox_window(bbox: tuple[float, float, float, float], zoom: int) -> Window:
     """Pixel window covering a (west, south, east, north) lon/lat box."""
     w, s, e, n = bbox
@@ -131,16 +140,22 @@ class NaipScene:
     href: str
 
 
-def naip_scenes(lon: float, lat: float, before: str) -> list[NaipScene]:
-    """NAIP scenes covering a point, newest first, captured before a date
-    (YYYY-MM-DD). Hrefs are signed and expire after about an hour."""
+def naip_scenes(lon: float, lat: float, before: str, bbox: tuple[float, float, float, float] | None = None) -> list[NaipScene]:
+    """NAIP scenes covering a point (or touching a bbox), newest first,
+    captured before a date (YYYY-MM-DD). Hrefs are signed and expire after
+    about an hour."""
     import planetary_computer as pc
     import pystac_client
 
+    if bbox:
+        w, s, e, n = bbox
+        geom = {"type": "Polygon", "coordinates": [[[w, s], [e, s], [e, n], [w, n], [w, s]]]}
+    else:
+        geom = {"type": "Point", "coordinates": [lon, lat]}
     cat = pystac_client.Client.open(PC_STAC_URL, modifier=pc.sign_inplace)
     items = cat.search(
         collections=["naip"],
-        intersects={"type": "Point", "coordinates": [lon, lat]},
+        intersects=geom,
         datetime=f"2000-01-01/{before}",
     ).items()
     scenes = [

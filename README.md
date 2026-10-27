@@ -18,7 +18,19 @@ Day 1. Working so far:
 - `landfall/agent.py`: Muse Spark Open looks at each before/after pair with the measurements and proposes a FEMA category; the verifier checks it and the model revises; unsure calls go to Muse Spark for a second opinion. Every step is kept in a trace.
 - `landfall/flood.py`: storm water surface from USGS high-water marks and NOAA tide gauges, ground from USGS 3DEP lidar, depth above ground per building.
 - `landfall/fema.py`: FEMA category definitions and the deterministic verifier the agent's calls are checked against.
+- `landfall/pipeline.py`: the stages (prepare, segment, flood, debris, assess) as library functions with progress events; the scripts, the agent and the app all call these.
+- `landfall/session.py` and `landfall/app.py`: the conversation the app runs. The agent gets the pipeline stages as tools, so it runs the assessment itself, then answers questions with the area tools.
+- `landfall/storms.py`: finds the NOAA post-storm flight and tide gauges for any box, from NOAA's own flight catalog.
 - `landfall/area.py`: the area agent. Muse Spark Open calls tools over the building drafts (overview, find buildings, open one building, plan a field route, PDA totals) to answer questions and draft the PDA summary. Every number it reports comes from a tool result, and building ids in its answer are checked against the area.
+
+## Run the app
+
+```
+pip install -e ".[app,data,sam]"
+BASETEN_API_KEY=... META_API_KEY=... uvicorn landfall.app:app --port 8000
+```
+
+Open http://localhost:8000. Cedar Key opens already assessed: ask about it by typing or with the mic (Muse Voice Transcribe), or click a building to see the photo pair and how its call was made. To assess somewhere new, pick the storm, click **Draw an area**, drag a box over a town and send. The agent finds the NOAA flight, the pre-storm photos and the tide gauges for that box, then runs each stage as a tool and reports as it goes; buildings color in on the map as their drafts arrive. A box of about 30 to 60 buildings takes 3 to 6 minutes. `?at=lat,lon,zoom` opens the map somewhere else.
 
 Reproduce the Cedar Key data (about a minute, plus about 2 minutes of SAM calls):
 

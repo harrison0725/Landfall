@@ -69,3 +69,15 @@ Building period: Oct 26 to Nov 4, 2026 (confirmed at the kickoff on Oct 26).
 - Meta Model API also serves `muse-wonder-1.0` (a reasoning model that takes images), `muse-image-1.0` (image generation) and `muse-voice-transcribe-1.0`. Only Muse Wonder could change accuracy, so it got the same 50 eval buildings, prompt and measurements as the agent, in a single pass without the checker.
 - Result: 33/50 against Claude's labels and 32/50 against Harry's, counting the flood rule (the agent with its checker: 47 and 48). Most misses are 12 flooded houses it called Major by assuming the house sits at grade, which the PDA rule can't support without first-floor height. On what the photos show, it was no better than the agent: it caught the light debris at b063 but missed b067 and b110, and added Affected at b057 and Minor at b112, where both labelers saw nothing.
 - It takes about 15 s and 1,600 tokens per building. Not added to the pipeline; Muse Voice Transcribe is a better fit for asking the area agent questions by voice in the app.
+
+### Oct 27: the app
+
+- The scripts' work moved into `landfall/pipeline.py` as stages that report progress. Rerunning Cedar Key through it reproduced damage.json, debris.json and flood.json exactly.
+- `landfall/storms.py` reads NOAA's per-storm flight catalog (storms.ngs.noaa.gov/storms/<storm>/services/index.json) and probes a tile to find the earliest flight over a box; tide gauges come from the CO-OPS station list.
+- The agent now runs the pipeline itself: the stages are tools (locate_imagery, prepare_area, measure_structures, measure_flood, look_for_debris, draft_categories) next to the question tools. The web app (FastAPI, Leaflet) streams every tool call, stage summary and building draft as it happens. Voice questions go through Muse Voice Transcribe (POST /v1/asr/transcribe, 16 kHz WAV).
+- First unseen town, Treasure Island (Helene, NOAA flight 20240930b): 28 buildings in about 5.5 minutes, start to finish. Sped up by running more SAM and model calls at once.
+- What the unseen town taught us:
+  - Two "destroyed" buildings had been torn down between the Feb 2023 photo and the storm (one lot is now weeds and fencing, the other is paved parking). The model can now say `demolished_before_storm`; those buildings get "none", skip the measurement floors, and go to review. Every Destroyed call now gets a second opinion from Muse Spark, which caught both.
+  - A town often spans two NAIP scenes; the pre-storm mosaic now fills scene edges from the neighboring scene.
+  - The prepare step warns when another storm hit between the pre-storm photos and this one (Idalia, for anything with 2023 photos), and the flood step widens its search for high-water marks when none are close, saying the depths are rougher.
+- Cedar Key eval unchanged after all this: 47/50 and 48/50, Destroyed 5/5 against Claude's labels.

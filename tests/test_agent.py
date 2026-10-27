@@ -25,3 +25,9 @@ def test_describe_mentions_debris_and_tarp_only_when_found():
     assert "debris piles over 12%" in seen and "30% of the roof as a blue tarp" in seen
     clean = describe(Measures(0.0, 0.0, 0.0, None, True), {"structure_loss": 0.0, "debris_share": 0.0})
     assert "found no debris" in clean and "tarp" not in clean
+
+
+def test_parse_answer_reads_demolished():
+    a = parse_answer('{"category": "none", "confidence": 0.8, "evidence": "paved lot", "needs_human": true, "demolished_before_storm": true}')
+    assert a["demolished"] is True
+    assert parse_answer('{"category": "none", "confidence": 0.8}')["demolished"] is False
