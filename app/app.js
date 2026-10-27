@@ -126,32 +126,46 @@ $("draw").addEventListener("click", () => setDrawing(!state.drawing));
 function setDrawing(on) {
   state.drawing = on;
   $("draw").classList.toggle("on", on);
-  $("draw").textContent = on ? "Drag on the map…" : "Draw an area";
+  $("draw").textContent = on ? (matchMedia("(pointer: coarse)").matches ? "Drag a finger on the map…" : "Drag on the map…") : "Draw an area";
   map.dragging[on ? "disable" : "enable"]();
+  map.touchZoom[on ? "disable" : "enable"]();
   map.getContainer().style.cursor = on ? "crosshair" : "";
+  map.getContainer().style.touchAction = on ? "none" : "";  // a finger draws instead of scrolling the page
 }
-map.on("mousedown", (e) => {
-  if (!state.drawing) return;
-  start = e.latlng;
-  if (boxLayer) map.removeLayer(boxLayer);
-  boxLayer = L.rectangle([start, start], { color: css("--accent"), weight: 2, fillOpacity: 0.08 }).addTo(map);
+// pointer events, so a mouse, a finger and a pen all draw the same way
+const mapEl = map.getContainer();
+mapEl.addEventListener("pointerdown", (e) => {
+  if (!state.drawing || e.target.closest(".leaflet-control, .map-tools, .legend, .card")) return;
+  e.preventDefault();
+  mapEl.setPointerCapture(e.pointerId);
+  start = map.mouseEventToLatLng(e);
+  clearBox();
+  boxLayer = L.rectangle([start, start], { color: css("--accent"), weight: 2, fillOpacity: 0.08, interactive: false }).addTo(map);
 });
-map.on("mousemove", (e) => {
-  if (state.drawing && start) boxLayer.setBounds([start, e.latlng]);
+mapEl.addEventListener("pointermove", (e) => {
+  if (state.drawing && start) boxLayer.setBounds([start, map.mouseEventToLatLng(e)]);
 });
-map.on("mouseup", (e) => {
+mapEl.addEventListener("pointerup", (e) => {
   if (!state.drawing || !start) return;
-  const b = L.latLngBounds(start, e.latlng);
+  const b = L.latLngBounds(start, map.mouseEventToLatLng(e));
   start = null;
   setDrawing(false);
   const w = b.getWest(), s = b.getSouth(), ea = b.getEast(), n = b.getNorth();
   const km2 = ((ea - w) * 111.32 * Math.cos(((s + n) / 2) * Math.PI / 180)) * ((n - s) * 110.57);
-  if (km2 < 0.005) { map.removeLayer(boxLayer); return; }
+  if (km2 < 0.002) { clearBox(); $("context").textContent = "That box was too small. Drag across a few houses."; return; }
   state.box = [w, s, ea, n];
-  $("context").textContent = `Box drawn: ${km2.toFixed(2)} km². Send to assess it.`;
+  const cap = Math.min(60, state.config.max_buildings || 60);  // the agent's default, capped by this server
+  $("context").innerHTML = `Box drawn: ${km2 < 0.1 ? Math.round(km2 * 1e6).toLocaleString() + " m²" : km2.toFixed(2) + " km²"}${
+    cap ? `. I'll assess up to ${cap} buildings in it, nearest the middle first` : ""}. <button type="button" class="linkish" id="clear-box">Clear box</button>`;
+  $("clear-box").addEventListener("click", () => { clearBox(); $("context").textContent = ""; });
   if (!$("input").value.trim()) $("input").value = "Assess the hurricane damage in this area.";
   $("input").focus();
 });
+function clearBox() {
+  if (boxLayer) map.removeLayer(boxLayer);
+  boxLayer = null;
+  state.box = null;
+}
 
 // ---------------------------------------------------------------- conversation
 function scroll() { const l = $("log"); l.scrollTop = l.scrollHeight; }
@@ -315,9 +329,9 @@ async function send(e) {
   setBusy(true);
   let code = null;
   if (state.box && state.config.access_code_required) {
-    code = stored("landfall-code") || window.prompt("Assessing a new area spends API credits, so this public copy needs an access code. Enter it, or cancel and ask about the finished areas.");
+    code = stored("landfall-code") || (await askCode());
     if (!code) {
-      add(div("msg error", "Assessing a new area needs the access code. Pick a finished area from the Area menu and ask about it."));
+      add(div("msg error", "No problem. Without the code I can't assess a new area here, but you can pick a finished area from the Area menu and ask me about it."));
       setBusy(false);
       return;
     }
@@ -325,12 +339,25 @@ async function send(e) {
   const body = { text, box: state.box, storm: state.box ? $("storm").value : null, access_code: code };
   if (state.box) { outlines.clearLayers(); state.features = {}; }
   state.box = null;
+  $("context").textContent = "";
   const r = await fetch(`/api/sessions/${state.sid}/turn`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
   if (!r.ok) {
     if (r.status === 403) store("landfall-code", null);
     add(div("msg error", esc((await r.json()).detail || r.statusText)));
     setBusy(false);
   } else if (code) store("landfall-code", code);
+}
+function askCode() {
+  // asked in the chat, not a browser pop-up; resolves with the code, or null if they skip it
+  return new Promise((resolve) => {
+    const box = add(div("msg agent codeask", `<p>Assessing a new area runs the AI models, which costs money, so this public copy needs an access code.</p>
+      <form class="coderow"><input type="password" autocomplete="off" placeholder="Access code" aria-label="Access code"><button class="send" type="submit">Assess</button><button class="linkish" type="button">Skip</button></form>`));
+    const form = box.querySelector("form");
+    const done = (v) => { form.remove(); resolve(v); };
+    form.addEventListener("submit", (e) => { e.preventDefault(); const v = form.querySelector("input").value.trim(); if (v) done(v); });
+    form.querySelector(".linkish").addEventListener("click", () => done(null));
+    form.querySelector("input").focus();
+  });
 }
 function stored(k) { try { return localStorage.getItem(k); } catch { return null; } }
 function store(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch { /* private window */ } }
