@@ -15,6 +15,7 @@ import asyncio
 import base64
 import io
 import os
+import random
 import time
 from dataclasses import dataclass
 
@@ -22,6 +23,7 @@ import numpy as np
 
 API_URL = "https://api.meta.ai/v1/responses"
 MODEL = "sam-3.1"
+MISS_RETRIES = 15
 
 
 @dataclass(frozen=True)
@@ -62,16 +64,23 @@ def request(img: np.ndarray, prompt: str, scale: int = 4, api_key: str | None = 
         ],
         "metadata": {"include_confidence": "true", "mask_encoding": "one_bit"},
     }
-    for attempt in range(retries):
+    attempt = misses = 0
+    while True:
         r = requests.post(API_URL, headers={"Authorization": f"Bearer {key}"}, json=body, timeout=120)
+        # The API sometimes routes a request to a server without SAM and answers
+        # 404 model_not_found; asking again a moment later usually works.
+        if r.status_code == 404 and "model_not_found" in r.text and misses < MISS_RETRIES:
+            misses += 1
+            time.sleep(0.5 + random.random())
+            continue
         if r.status_code == 429 or r.status_code >= 500:
-            if attempt < retries - 1:
-                time.sleep(2 ** (attempt + 1))
+            attempt += 1
+            if attempt < retries:
+                time.sleep(2 ** attempt)
                 continue
         r.raise_for_status()
         out = r.json().get("output", [])
         return "".join(c.get("text", "") for o in out for c in o.get("content", []) if c.get("type") == "output_text")
-    raise AssertionError("unreachable")
 
 
 def parse(text: str, shape: tuple[int, int], scale: int = 4) -> list[Detection]:
