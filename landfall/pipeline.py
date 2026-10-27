@@ -509,7 +509,7 @@ def segment(spec: AreaSpec, root: Path, log: Log = _quiet, workers: int = 24, pr
         for m in post_masks:
             post_ctx |= m
         cover = coverage([pre], fp)
-        kept, sdx, sdy = best_overlap(pre, post_ctx, POST_PAD)
+        kept, sdx, sdy = best_overlap(pre, post_ctx, POST_PAD, tolerance=2)
         rec = dict(id=bid, status=r["status"], pre_cover=round(cover, 3))
         if cover < 0.3:
             rec.update(structure_loss=None, note="pre-storm structure not found on the outline")
