@@ -12,6 +12,9 @@ RUN git init -q . && git fetch -q --depth 1 "$REPO" "$REF" && git checkout -q FE
 USER user
 # Public copy: new assessments need LANDFALL_ACCESS_CODE (a Space secret),
 # boxes are capped at 60 buildings and each visitor gets 30 questions an hour.
+# MALLOC_ARENA_MAX: glibc gives each thread its own heap; with ~50 API
+# threads in flight that doubled peak memory past Render's 512 MB.
+ENV MALLOC_ARENA_MAX=2
 ENV LANDFALL_DATA=/app/data LANDFALL_MAX_BUILDINGS=60 LANDFALL_TURNS_PER_HOUR=30 PYTHONUNBUFFERED=1
 EXPOSE 7860
 CMD uvicorn landfall.app:app --host 0.0.0.0 --port ${PORT:-7860}
