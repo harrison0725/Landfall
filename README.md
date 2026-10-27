@@ -18,6 +18,7 @@ Day 1. Working so far:
 - `landfall/agent.py`: Muse Spark Open looks at each before/after pair with the measurements and proposes a FEMA category; the verifier checks it and the model revises; unsure calls go to Muse Spark for a second opinion. Every step is kept in a trace.
 - `landfall/flood.py`: storm water surface from USGS high-water marks and NOAA tide gauges, ground from USGS 3DEP lidar, depth above ground per building.
 - `landfall/fema.py`: FEMA category definitions and the deterministic verifier the agent's calls are checked against.
+- `landfall/area.py`: the area agent. Muse Spark Open calls tools over the building drafts (overview, find buildings, open one building, plan a field route, PDA totals) to answer questions and draft the PDA summary. Every number it reports comes from a tool result, and building ids in its answer are checked against the area.
 
 Reproduce the Cedar Key data (about a minute, plus about 2 minutes of SAM calls):
 
@@ -27,13 +28,18 @@ python scripts/prepare_area.py --area cedar_key     # imagery, outlines, alignme
 python scripts/review_sheet.py --area cedar_key     # contact sheets to check alignment by eye
 META_API_KEY=... python scripts/segment_area.py --area cedar_key   # SAM 3.1 masks and structure loss
 python scripts/flood_area.py --area cedar_key      # flood depth: high-water marks + tide gauge minus lidar ground
+META_API_KEY=... python scripts/debris_area.py --area cedar_key    # SAM debris piles in the yard, blue tarps on the roof
 BASETEN_API_KEY=... META_API_KEY=... python scripts/assess_area.py --area cedar_key   # agent drafts a category per building
 python scripts/score_eval.py --area cedar_key      # compare with the hand labels in eval/
+BASETEN_API_KEY=... python scripts/ask_area.py --area cedar_key "Which flooded houses might be Major?"
+BASETEN_API_KEY=... python scripts/ask_area.py --area cedar_key --pda   # draft PDA summary
 ```
 
-Evaluation: 50 Cedar Key buildings labeled by hand from the photos by two labelers working blind (`eval/`). The two labelers agree exactly on 43 of 50 (Cohen's kappa 0.49) and within one category on all 50; they split on yard debris (Affected or none) and on two houses with some walls standing (Destroyed or Major). The agent matches each labeler about as well as they match each other: 37/50 and 38/50 exact, 50/50 within one category, and most disagreements were already sent to human review. See `eval/cedar_key_score.txt` and the caveats in the label files.
+Evaluation: 50 Cedar Key buildings labeled by hand from the photos by two labelers working blind (`eval/`). The two labelers agree exactly on 43 of 50 (Cohen's kappa 0.49) and within one category on all 50; they split on yard debris (Affected or none) and on two houses with some walls standing (Destroyed or Major). The agent matches each labeler about as well as they match each other: 38/50 and 37/50 exact, 50/50 within one category, and most disagreements were already sent to human review. See `eval/cedar_key_score.txt` and the caveats in the label files.
 
-Coming next: debris and tarp prompts (both silent misses were debris in the yard), and the area-level agent (plan, answer questions, write the PDA summary).
+Example output: [`examples/cedar_key_pda_summary.md`](examples/cedar_key_pda_summary.md), the draft PDA summary the area agent wrote for Cedar Key.
+
+Known gaps: SAM only finds heavy debris, so light yard debris (Affected) is still missed; flood-only houses are drafted Affected because aerial photos don't show first-floor height.
 
 ## Meta models
 

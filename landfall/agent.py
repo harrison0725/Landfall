@@ -116,22 +116,23 @@ def describe(m: Measures, extra: dict) -> str:
     return "\n".join(lines)
 
 
-def _chat(url: str, key: str, model: str, messages: list[dict], max_tokens: int = 8000) -> str:
+def _post(url: str, key: str, body: dict) -> dict:
+    """POST a chat completion, retrying rate limits and server errors."""
     import requests
 
     for attempt in range(4):
-        r = requests.post(
-            url,
-            headers={"Authorization": f"Bearer {key}"},
-            json={"model": model, "messages": messages, "max_tokens": max_tokens},
-            timeout=180,
-        )
+        r = requests.post(url, headers={"Authorization": f"Bearer {key}"}, json=body, timeout=180)
         if (r.status_code == 429 or r.status_code >= 500) and attempt < 3:
             time.sleep(2 ** (attempt + 1))
             continue
         r.raise_for_status()
-        return r.json()["choices"][0]["message"].get("content") or ""
+        return r.json()
     raise AssertionError("unreachable")
+
+
+def _chat(url: str, key: str, model: str, messages: list[dict], max_tokens: int = 8000) -> str:
+    out = _post(url, key, {"model": model, "messages": messages, "max_tokens": max_tokens})
+    return out["choices"][0]["message"].get("content") or ""
 
 
 def parse_answer(text: str) -> dict:
