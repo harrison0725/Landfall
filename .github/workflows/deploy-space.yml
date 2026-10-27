@@ -1,0 +1,30 @@
+# Deploys main to the Hugging Face Space named in the HF_SPACE repository
+# variable (e.g. "harrison0725/landfall"), using the HF_TOKEN secret (a
+# Hugging Face write token). The Space only holds a Dockerfile that fetches
+# this commit, so no images go through the Space's git.
+name: Deploy to Hugging Face
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ vars.HF_SPACE != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Push the Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE: ${{ vars.HF_SPACE }}
+        run: |
+          set -euo pipefail
+          tmp=$(mktemp -d)
+          cp deploy/huggingface/README.md "$tmp/"
+          sed "s/^ARG REF=main$/ARG REF=${GITHUB_SHA}/" deploy/huggingface/Dockerfile > "$tmp/Dockerfile"
+          cd "$tmp"
+          git init -q -b main
+          git config user.name "landfall-deploy"
+          git config user.email "deploy@users.noreply.github.com"
+          git add . && git commit -qm "Deploy ${GITHUB_SHA}"
+          git push -f "https://user:${HF_TOKEN}@huggingface.co/spaces/${HF_SPACE}" main

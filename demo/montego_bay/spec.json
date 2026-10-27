@@ -1,0 +1,37 @@
+{
+ "name": "montego_bay",
+ "center": [
+  -77.917,
+  18.4685
+ ],
+ "bbox": [
+  -77.9205,
+  18.4655,
+  -77.9135,
+  18.4715
+ ],
+ "storm": "melissa",
+ "noaa_flight": "",
+ "landfall": "2025-10-28",
+ "stn_event": "",
+ "n_buildings": 60,
+ "min_area_m2": 40.0,
+ "hwm_radius_km": 5.0,
+ "gauges": [],
+ "imagery": "maxar",
+ "post_hrefs": [
+  "https://maxar-opendata.s3.amazonaws.com/events/Hurricane-Melissa-Oct-2025/ard/18/033113200230/2025-10-31/103001011D843000-visual.tif",
+  "https://maxar-opendata.s3.amazonaws.com/events/Hurricane-Melissa-Oct-2025/ard/18/033113200232/2025-10-31/103001011D843000-visual.tif",
+  "https://maxar-opendata.s3.amazonaws.com/events/Hurricane-Melissa-Oct-2025/ard/18/033113200230/2025-11-02/10400100B15E1900-visual.tif",
+  "https://maxar-opendata.s3.amazonaws.com/events/Hurricane-Melissa-Oct-2025/ard/18/033113200232/2025-11-02/10400100B15E1900-visual.tif",
+  "https://maxar-opendata.s3.amazonaws.com/events/Hurricane-Melissa-Oct-2025/ard/18/033113200230/2025-11-02/10400100B133F100-visual.tif",
+  "https://maxar-opendata.s3.amazonaws.com/events/Hurricane-Melissa-Oct-2025/ard/18/033113200232/2025-11-02/10400100B133F100-visual.tif"
+ ],
+ "pre_hrefs": [
+  "https://maxar-opendata.s3.amazonaws.com/events/Hurricane-Melissa-Oct-2025/ard/18/033113200230/2022-10-13/104001007D5F5100-visual.tif",
+  "https://maxar-opendata.s3.amazonaws.com/events/Hurricane-Melissa-Oct-2025/ard/18/033113200232/2022-10-13/104001007D5F5100-visual.tif"
+ ],
+ "post_label": "Maxar WV02 2025-10-31 (103001011D843000, 0.49 m)",
+ "pre_label": "Maxar WV03 2022-10-13 (104001007D5F5100, 0.32 m)",
+ "pre_date": "2022-10-13"
+}

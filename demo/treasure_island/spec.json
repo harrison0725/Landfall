@@ -1,0 +1,28 @@
+{
+ "name": "treasure_island",
+ "center": [
+  -82.768625,
+  27.769997
+ ],
+ "bbox": [
+  -82.770503,
+  27.768573,
+  -82.766747,
+  27.771421
+ ],
+ "storm": "helene",
+ "noaa_flight": "20240930b-rgb",
+ "landfall": "2024-09-26",
+ "stn_event": "2024 Helene",
+ "n_buildings": 60,
+ "min_area_m2": 40.0,
+ "hwm_radius_km": 5.0,
+ "gauges": [
+  {
+   "station": "8726520",
+   "name": "St. Petersburg",
+   "lon": -82.6269,
+   "lat": 27.7606
+  }
+ ]
+}

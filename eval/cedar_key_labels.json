@@ -1,0 +1,174 @@
+{
+ "labeler": "Claude (by eye, before labels were compared with the agent)",
+ "method": "Pre/post aerial pair with the outline, post-storm brightened. Aerial view only: roof and surroundings. Flood inside the house cannot be seen, so these labels are a floor for flood-damaged houses.",
+ "caveats": "Not a trained assessor. The labeler had seen some of these buildings while debugging alignment. A second labeler is still needed.",
+ "sample": "45 random buildings (seed 20261026) plus the 5 destroyed houses found during development",
+ "labels": {
+  "b000": {
+   "category": "none"
+  },
+  "b003": {
+   "category": "none"
+  },
+  "b004": {
+   "category": "none"
+  },
+  "b009": {
+   "category": "none"
+  },
+  "b010": {
+   "category": "none"
+  },
+  "b011": {
+   "category": "none",
+   "unsure": true,
+   "note": "tree canopy over half the roof post-storm; can't see what is under it"
+  },
+  "b012": {
+   "category": "none"
+  },
+  "b015": {
+   "category": "none"
+  },
+  "b017": {
+   "category": "none"
+  },
+  "b020": {
+   "category": "affected",
+   "unsure": true,
+   "note": "tree debris over the roof; roof edge looks disturbed"
+  },
+  "b023": {
+   "category": "destroyed"
+  },
+  "b024": {
+   "category": "none"
+  },
+  "b025": {
+   "category": "none"
+  },
+  "b032": {
+   "category": "none"
+  },
+  "b033": {
+   "category": "none"
+  },
+  "b034": {
+   "category": "none"
+  },
+  "b041": {
+   "category": "none"
+  },
+  "b043": {
+   "category": "none"
+  },
+  "b045": {
+   "category": "none"
+  },
+  "b049": {
+   "category": "none"
+  },
+  "b054": {
+   "category": "none"
+  },
+  "b057": {
+   "category": "none"
+  },
+  "b063": {
+   "category": "affected",
+   "note": "debris in the yard"
+  },
+  "b066": {
+   "category": "none"
+  },
+  "b067": {
+   "category": "affected",
+   "note": "wrack/debris covering the lot"
+  },
+  "b072": {
+   "category": "none"
+  },
+  "b074": {
+   "category": "none"
+  },
+  "b076": {
+   "category": "none"
+  },
+  "b078": {
+   "category": "none"
+  },
+  "b082": {
+   "category": "none"
+  },
+  "b094": {
+   "category": "destroyed"
+  },
+  "b096": {
+   "category": "affected",
+   "note": "debris around the house, next to destroyed lots"
+  },
+  "b098": {
+   "category": "destroyed"
+  },
+  "b107": {
+   "category": "destroyed"
+  },
+  "b110": {
+   "category": "affected",
+   "note": "debris line along the south side"
+  },
+  "b112": {
+   "category": "none"
+  },
+  "b114": {
+   "category": "destroyed"
+  },
+  "b115": {
+   "category": "none"
+  },
+  "b117": {
+   "category": "none"
+  },
+  "b122": {
+   "category": "none"
+  },
+  "b125": {
+   "category": "none"
+  },
+  "b133": {
+   "category": "none",
+   "unsure": true,
+   "note": "roof color changed (re-roofed?), no damage visible"
+  },
+  "b134": {
+   "category": "none",
+   "unsure": true,
+   "note": "brown roof in 2023, new white roof in 2024: re-roofed or rebuilt between flights"
+  },
+  "b135": {
+   "category": "none",
+   "unsure": true,
+   "note": "outline sits on the gap between two buildings"
+  },
+  "b136": {
+   "category": "none"
+  },
+  "b139": {
+   "category": "none",
+   "unsure": true,
+   "note": "items on roof post-storm; no clear damage"
+  },
+  "b140": {
+   "category": "none"
+  },
+  "b142": {
+   "category": "none"
+  },
+  "b147": {
+   "category": "none"
+  },
+  "b148": {
+   "category": "none"
+  }
+ }
+}

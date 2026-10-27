@@ -1,0 +1,771 @@
+{
+ "surface_ft_navd88": 10.9,
+ "observations": [
+  {
+   "source": "USGS HWM 46592",
+   "lon": -83.029776,
+   "lat": 29.13589,
+   "elev_ft": 10.96,
+   "note": "Well defined Seed line/ waterline inside women's bathroom on wall"
+  },
+  {
+   "source": "NOAA gauge 8727520",
+   "lon": -83.0317,
+   "lat": 29.135,
+   "elev_ft": 10.843,
+   "note": "peak at 2024-09-27 04:42 UTC"
+  }
+ ],
+ "buildings": [
+  {
+   "id": "b000",
+   "ground_ft": 4.56,
+   "flood_ft": 6.34
+  },
+  {
+   "id": "b001",
+   "ground_ft": 3.85,
+   "flood_ft": 7.05
+  },
+  {
+   "id": "b002",
+   "ground_ft": 5.61,
+   "flood_ft": 5.29
+  },
+  {
+   "id": "b003",
+   "ground_ft": 6.33,
+   "flood_ft": 4.57
+  },
+  {
+   "id": "b004",
+   "ground_ft": 4.26,
+   "flood_ft": 6.64
+  },
+  {
+   "id": "b005",
+   "ground_ft": 4.11,
+   "flood_ft": 6.79
+  },
+  {
+   "id": "b006",
+   "ground_ft": 9.54,
+   "flood_ft": 1.36
+  },
+  {
+   "id": "b007",
+   "ground_ft": 5.1,
+   "flood_ft": 5.8
+  },
+  {
+   "id": "b008",
+   "ground_ft": 6.25,
+   "flood_ft": 4.65
+  },
+  {
+   "id": "b009",
+   "ground_ft": 7.85,
+   "flood_ft": 3.05
+  },
+  {
+   "id": "b010",
+   "ground_ft": 5.4,
+   "flood_ft": 5.5
+  },
+  {
+   "id": "b011",
+   "ground_ft": 5.34,
+   "flood_ft": 5.56
+  },
+  {
+   "id": "b012",
+   "ground_ft": 9.18,
+   "flood_ft": 1.73
+  },
+  {
+   "id": "b013",
+   "ground_ft": 6.56,
+   "flood_ft": 4.35
+  },
+  {
+   "id": "b014",
+   "ground_ft": 9.51,
+   "flood_ft": 1.39
+  },
+  {
+   "id": "b015",
+   "ground_ft": 15.53,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b016",
+   "ground_ft": 12.9,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b017",
+   "ground_ft": 6.69,
+   "flood_ft": 4.21
+  },
+  {
+   "id": "b018",
+   "ground_ft": 19.08,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b019",
+   "ground_ft": 8.12,
+   "flood_ft": 2.78
+  },
+  {
+   "id": "b020",
+   "ground_ft": 8.28,
+   "flood_ft": 2.62
+  },
+  {
+   "id": "b021",
+   "ground_ft": 9.26,
+   "flood_ft": 1.64
+  },
+  {
+   "id": "b022",
+   "ground_ft": 17.74,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b023",
+   "ground_ft": 7.34,
+   "flood_ft": 3.56
+  },
+  {
+   "id": "b024",
+   "ground_ft": 9.72,
+   "flood_ft": 1.18
+  },
+  {
+   "id": "b025",
+   "ground_ft": 12.59,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b026",
+   "ground_ft": 14.65,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b027",
+   "ground_ft": 11.71,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b028",
+   "ground_ft": 12.32,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b029",
+   "ground_ft": 11.68,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b030",
+   "ground_ft": 10.31,
+   "flood_ft": 0.59
+  },
+  {
+   "id": "b031",
+   "ground_ft": 14.3,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b032",
+   "ground_ft": 16.47,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b033",
+   "ground_ft": 16.0,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b034",
+   "ground_ft": 21.55,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b035",
+   "ground_ft": 15.33,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b036",
+   "ground_ft": 12.81,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b037",
+   "ground_ft": 11.87,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b038",
+   "ground_ft": 12.22,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b039",
+   "ground_ft": 19.14,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b040",
+   "ground_ft": 8.21,
+   "flood_ft": 2.69
+  },
+  {
+   "id": "b041",
+   "ground_ft": 18.15,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b042",
+   "ground_ft": 18.47,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b043",
+   "ground_ft": 10.4,
+   "flood_ft": 0.5
+  },
+  {
+   "id": "b044",
+   "ground_ft": 12.25,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b045",
+   "ground_ft": 15.92,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b046",
+   "ground_ft": 12.2,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b047",
+   "ground_ft": 17.88,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b048",
+   "ground_ft": 10.05,
+   "flood_ft": 0.85
+  },
+  {
+   "id": "b049",
+   "ground_ft": 12.7,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b050",
+   "ground_ft": 13.99,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b051",
+   "ground_ft": 5.44,
+   "flood_ft": 5.46
+  },
+  {
+   "id": "b052",
+   "ground_ft": 11.73,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b053",
+   "ground_ft": 21.93,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b054",
+   "ground_ft": 20.45,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b055",
+   "ground_ft": 8.18,
+   "flood_ft": 2.73
+  },
+  {
+   "id": "b056",
+   "ground_ft": 24.95,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b057",
+   "ground_ft": 18.72,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b058",
+   "ground_ft": 12.37,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b059",
+   "ground_ft": 14.75,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b060",
+   "ground_ft": 19.19,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b061",
+   "ground_ft": 18.2,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b062",
+   "ground_ft": 24.69,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b063",
+   "ground_ft": 10.86,
+   "flood_ft": 0.04
+  },
+  {
+   "id": "b064",
+   "ground_ft": 4.32,
+   "flood_ft": 6.58
+  },
+  {
+   "id": "b065",
+   "ground_ft": 6.6,
+   "flood_ft": 4.3
+  },
+  {
+   "id": "b066",
+   "ground_ft": 18.43,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b067",
+   "ground_ft": 23.13,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b068",
+   "ground_ft": 9.6,
+   "flood_ft": 1.3
+  },
+  {
+   "id": "b069",
+   "ground_ft": 11.14,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b070",
+   "ground_ft": 24.53,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b071",
+   "ground_ft": 19.15,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b072",
+   "ground_ft": 18.93,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b073",
+   "ground_ft": 4.25,
+   "flood_ft": 6.65
+  },
+  {
+   "id": "b074",
+   "ground_ft": 12.32,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b075",
+   "ground_ft": 10.76,
+   "flood_ft": 0.15
+  },
+  {
+   "id": "b076",
+   "ground_ft": 4.9,
+   "flood_ft": 6.0
+  },
+  {
+   "id": "b077",
+   "ground_ft": 14.39,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b078",
+   "ground_ft": 6.45,
+   "flood_ft": 4.45
+  },
+  {
+   "id": "b079",
+   "ground_ft": 15.69,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b080",
+   "ground_ft": 17.98,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b081",
+   "ground_ft": 7.56,
+   "flood_ft": 3.34
+  },
+  {
+   "id": "b082",
+   "ground_ft": 18.21,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b083",
+   "ground_ft": 8.65,
+   "flood_ft": 2.25
+  },
+  {
+   "id": "b084",
+   "ground_ft": 20.29,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b085",
+   "ground_ft": 12.59,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b086",
+   "ground_ft": 5.48,
+   "flood_ft": 5.42
+  },
+  {
+   "id": "b087",
+   "ground_ft": 0.3,
+   "flood_ft": 10.61
+  },
+  {
+   "id": "b088",
+   "ground_ft": 17.3,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b089",
+   "ground_ft": 21.54,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b090",
+   "ground_ft": 10.67,
+   "flood_ft": 0.23
+  },
+  {
+   "id": "b091",
+   "ground_ft": 25.24,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b092",
+   "ground_ft": 10.8,
+   "flood_ft": 0.11
+  },
+  {
+   "id": "b093",
+   "ground_ft": 5.79,
+   "flood_ft": 5.12
+  },
+  {
+   "id": "b094",
+   "ground_ft": 5.64,
+   "flood_ft": 5.26
+  },
+  {
+   "id": "b095",
+   "ground_ft": 7.2,
+   "flood_ft": 3.7
+  },
+  {
+   "id": "b096",
+   "ground_ft": 6.16,
+   "flood_ft": 4.74
+  },
+  {
+   "id": "b097",
+   "ground_ft": 22.59,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b098",
+   "ground_ft": 4.63,
+   "flood_ft": 6.27
+  },
+  {
+   "id": "b099",
+   "ground_ft": 11.19,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b100",
+   "ground_ft": 13.86,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b101",
+   "ground_ft": 10.84,
+   "flood_ft": 0.07
+  },
+  {
+   "id": "b102",
+   "ground_ft": 9.62,
+   "flood_ft": 1.28
+  },
+  {
+   "id": "b103",
+   "ground_ft": 4.47,
+   "flood_ft": 6.43
+  },
+  {
+   "id": "b104",
+   "ground_ft": 18.84,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b105",
+   "ground_ft": 3.27,
+   "flood_ft": 7.63
+  },
+  {
+   "id": "b106",
+   "ground_ft": 4.35,
+   "flood_ft": 6.55
+  },
+  {
+   "id": "b107",
+   "ground_ft": 3.85,
+   "flood_ft": 7.05
+  },
+  {
+   "id": "b108",
+   "ground_ft": 12.41,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b109",
+   "ground_ft": 20.77,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b110",
+   "ground_ft": 17.8,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b111",
+   "ground_ft": 16.01,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b112",
+   "ground_ft": 18.86,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b113",
+   "ground_ft": 23.2,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b114",
+   "ground_ft": 3.22,
+   "flood_ft": 7.68
+  },
+  {
+   "id": "b115",
+   "ground_ft": 19.98,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b116",
+   "ground_ft": 21.27,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b117",
+   "ground_ft": 22.37,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b118",
+   "ground_ft": 6.13,
+   "flood_ft": 4.78
+  },
+  {
+   "id": "b119",
+   "ground_ft": 17.68,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b120",
+   "ground_ft": 18.5,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b121",
+   "ground_ft": 14.44,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b122",
+   "ground_ft": 5.38,
+   "flood_ft": 5.52
+  },
+  {
+   "id": "b123",
+   "ground_ft": 4.25,
+   "flood_ft": 6.65
+  },
+  {
+   "id": "b124",
+   "ground_ft": 17.89,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b125",
+   "ground_ft": 23.67,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b126",
+   "ground_ft": 4.84,
+   "flood_ft": 6.06
+  },
+  {
+   "id": "b127",
+   "ground_ft": 14.73,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b128",
+   "ground_ft": 0.4,
+   "flood_ft": 10.5
+  },
+  {
+   "id": "b129",
+   "ground_ft": 10.1,
+   "flood_ft": 0.81
+  },
+  {
+   "id": "b130",
+   "ground_ft": 18.19,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b131",
+   "ground_ft": 5.51,
+   "flood_ft": 5.39
+  },
+  {
+   "id": "b132",
+   "ground_ft": 16.83,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b133",
+   "ground_ft": 23.34,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b134",
+   "ground_ft": 25.85,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b135",
+   "ground_ft": 5.06,
+   "flood_ft": 5.84
+  },
+  {
+   "id": "b136",
+   "ground_ft": 9.94,
+   "flood_ft": 0.96
+  },
+  {
+   "id": "b137",
+   "ground_ft": 5.19,
+   "flood_ft": 5.71
+  },
+  {
+   "id": "b138",
+   "ground_ft": 6.19,
+   "flood_ft": 4.71
+  },
+  {
+   "id": "b139",
+   "ground_ft": 1.44,
+   "flood_ft": 9.46
+  },
+  {
+   "id": "b140",
+   "ground_ft": 14.89,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b141",
+   "ground_ft": 5.27,
+   "flood_ft": 5.63
+  },
+  {
+   "id": "b142",
+   "ground_ft": 9.29,
+   "flood_ft": 1.61
+  },
+  {
+   "id": "b143",
+   "ground_ft": 15.41,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b144",
+   "ground_ft": 24.43,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b145",
+   "ground_ft": -0.66,
+   "flood_ft": 11.56
+  },
+  {
+   "id": "b146",
+   "ground_ft": 5.15,
+   "flood_ft": 5.75
+  },
+  {
+   "id": "b147",
+   "ground_ft": 16.4,
+   "flood_ft": 0.0
+  },
+  {
+   "id": "b148",
+   "ground_ft": 5.21,
+   "flood_ft": 5.69
+  },
+  {
+   "id": "b149",
+   "ground_ft": 23.06,
+   "flood_ft": 0.0
+  }
+ ]
+}

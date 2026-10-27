@@ -1,0 +1,1106 @@
+[
+ {
+  "id": "b018",
+  "category": "none",
+  "confidence": 0.85,
+  "evidence": "Pre-storm gray-roof building in yellow outline is entirely absent post-storm where the outline now covers clean light pavement with faint parking stripes and no wreckage or debris, indicating clearance months before the storm.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": true,
+  "structure_loss": 1.0,
+  "flood_ft": 2.56,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.88,
+     "evidence": "Pre-storm building (gray roof in yellow outline) is entirely absent post-storm; the footprint is now light paved lot with faint parking stripes and no wreckage or scattered debris, indicating clearance months before the storm, not storm debris/slab.",
+     "needs_human": true,
+     "demolished": true
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.85,
+     "evidence": "Pre-storm gray-roof building in yellow outline is entirely absent post-storm where the outline now covers clean light pavement with faint parking stripes and no wreckage or debris, indicating clearance months before the storm.",
+     "needs_human": true,
+     "demolished": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b008",
+  "category": "none",
+  "confidence": 0.75,
+  "evidence": "The large white-roof building inside the yellow outline pre-storm is now a bare dirt lot with weed/grass regrowth and perimeter fencing and no wreckage or debris, with only the western grey roof and a small eastern outbuilding remaining, indicating clearing months before the storm; ~1.6 ft of standing water was surveyed but first-floor elevation cannot be determined from these aerials.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "demolished": true,
+  "structure_loss": 0.767,
+  "flood_ft": 1.61,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.68,
+     "evidence": "The large white-roof mall inside the yellow outline pre-storm is now bare earth with scattered weed/grass regrowth and perimeter fencing and no wreckage or debris pile, with only a small outbuilding and the western grey roof remaining, indicating clearing/demolition months before the storm rather than storm wreckage; ~1.6 ft of standing water was surveyed but first-floor elevation cannot be determined from these aerials.",
+     "needs_human": true,
+     "demolished": true
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.75,
+     "evidence": "The large white-roof building inside the yellow outline pre-storm is now a bare dirt lot with weed/grass regrowth and perimeter fencing and no wreckage or debris, with only the western grey roof and a small eastern outbuilding remaining, indicating clearing months before the storm; ~1.6 ft of standing water was surveyed but first-floor elevation cannot be determined from these aerials.",
+     "needs_human": true,
+     "demolished": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b003",
+  "category": "affected",
+  "confidence": 0.65,
+  "evidence": "Both white flat-roof sections are fully intact inside the yellow outline in the post-storm view with no missing roof, so the 19% 'not found' is wrong from neighbors alignment misplacement and only scattered debris north of the outline is visible. The 1.9 ft is water height above ground, not depth in living space, and first-floor height/raised status cannot be told from overhead.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": false,
+  "structure_loss": 0.192,
+  "flood_ft": 1.93,
+  "debris_share": 0.012,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.62,
+     "evidence": "Both white flat roof sections remain fully visible within yellow outline in post-storm view with no apparent roof loss; dark debris pile sits just north of outline indicating only cosmetic/adjacent debris. Storm water at 1.9 ft above ground would be major if it entered living space (>18 in), but floor height/whether building is raised cannot be determined from these overhead photos alone.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Affected, but the measurements alone justify at least Minor (roof loss 19%, flood 1.9 ft)."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.64,
+     "evidence": "Post-storm photo shows both white flat-roof sections fully intact inside the yellow outline with no missing roof, so the 19% 'not found' is an artifact of the neighbors alignment (roof not found where expected, outline placed from nearby houses) not real loss, and only scattered debris just north of the outline is visible. The 1.9 ft flood number is height above ground, not depth in living space, and first-floor height/raised status cannot be told from overhead.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Affected, but the measurements alone justify at least Minor (roof loss 19%, flood 1.9 ft)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.65,
+     "evidence": "Both white flat-roof sections look intact inside the yellow outline with no missing roof, with only scattered debris just north of the outline. First-floor height/raised status cannot be told from overhead to judge the 1.9 ft water above ground.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Affected, but the measurements alone justify at least Minor (roof loss 19%, flood 1.9 ft)."
+    ]
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.65,
+     "evidence": "Both white flat-roof sections are fully intact inside the yellow outline in the post-storm view with no missing roof, so the 19% 'not found' is wrong from neighbors alignment misplacement and only scattered debris north of the outline is visible. The 1.9 ft is water height above ground, not depth in living space, and first-floor height/raised status cannot be told from overhead.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Affected, but the measurements alone justify at least Minor (roof loss 19%, flood 1.9 ft)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b020",
+  "category": "major",
+  "confidence": 0.71,
+  "evidence": "Aerials show roofs and footprint intact with no large missing sections, collapse or debris piles, but surveyed high-water mark was ~2.3 ft above ground around this slab-on-grade motel/pool complex with no pilings visible, so >18 in likely entered ground-floor living space; exact interior depth depends on first-floor elevation not visible in photos.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.176,
+  "flood_ft": 2.26,
+  "debris_share": 0.011,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.71,
+     "evidence": "Aerials show roofs and footprint intact with no large missing sections, collapse or debris piles, but surveyed high-water mark was ~2.3 ft above ground around this slab-on-grade motel/pool complex with no pilings visible, so >18 in likely entered ground-floor living space; exact interior depth depends on first-floor elevation not visible in photos.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b014",
+  "category": "affected",
+  "confidence": 0.7,
+  "evidence": "Post-storm roof is fully intact and aligned inside yellow outline with no missing covering, collapse or displacement - 13% not-found is alignment/offset error not damage, with only scattered debris north of house. 1.8 ft exterior high-water cannot be judged as >18 in. in living space from aerial alone as first-floor height/pilings not visible.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.133,
+  "flood_ft": 1.78,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.58,
+     "evidence": "Roof appears intact and fully present in post-storm photo despite 13% mask not-found due to neighbors-offset alignment, with debris scattered around but no visible structural loss; 1.8 ft standing water would be >18 in. in living space for a slab home but aerials do not show first-floor height/pilings to confirm interior depth.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.7,
+     "evidence": "Post-storm roof is fully intact and aligned inside yellow outline with no missing covering, collapse or displacement - 13% not-found is alignment/offset error not damage, with only scattered debris north of house. 1.8 ft exterior high-water cannot be judged as >18 in. in living space from aerial alone as first-floor height/pilings not visible.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b013",
+  "category": "affected",
+  "confidence": 0.82,
+  "evidence": "Pre/post aerial shows intact L-shaped roof within yellow outline with no large roof loss or collapse, consistent with 11% not-found and matched alignment; only scattered debris in west lot and southeast corner is visible. 2.0 ft of water above ground was surveyed but interior depth cannot be determined from these aerial photos without first-floor height, so major flooding cannot be confirmed from the air.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.106,
+  "flood_ft": 2.01,
+  "debris_share": 0.0,
+  "tarp_share": 0.003,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.68,
+     "evidence": "Aerial shows roof/structure largely present (only 11% not found, alignment matched, no heavy debris pile) with no large roof loss, but building is slab-on-grade commercial with surveyed 2.0 ft of water above ground, indicating ~24 in interior flooding which exceeds the 18-in major threshold.",
+     "needs_human": false
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.82,
+     "evidence": "Pre/post aerial shows intact L-shaped roof within yellow outline with no large roof loss or collapse, consistent with 11% not-found and matched alignment; only scattered debris in west lot and southeast corner is visible. 2.0 ft of water above ground was surveyed but interior depth cannot be determined from these aerial photos without first-floor height, so major flooding cannot be confirmed from the air.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b001",
+  "category": "affected",
+  "confidence": 0.65,
+  "evidence": "Yellow-outlined white and gray roofs remain largely in place with no large missing sections, collapse, or tarp, but debris piles and staining are visible around the buildings and parking lots. Storm water stood 2.4 ft above ground but first-floor height is not visible from above so depth in living space is unknown.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "structure_loss": 0.096,
+  "flood_ft": 2.41,
+  "debris_share": 0.027,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.62,
+     "evidence": "Yellow-outlined roofs appear largely intact with no large missing sections, collapse, or tarp and matched alignment despite 10% footprint mismatch; scattered debris and discoloration around building and parking lots indicate cosmetic/minor damage only, while 2.4 ft water above ground cannot be converted to depth in living space without first-floor elevation visible in these photos.",
+     "needs_human": true
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.65,
+     "evidence": "Yellow-outlined white and gray roofs remain largely in place with no large missing sections, collapse, or tarp, but debris piles and staining are visible around the buildings and parking lots. Storm water stood 2.4 ft above ground but first-floor height is not visible from above so depth in living space is unknown.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b025",
+  "category": "affected",
+  "confidence": 0.78,
+  "evidence": "Post-storm roof is intact and matches pre-storm outline; the 8% not-found is edge shadow/alignment, not a collapsed or missing section - no large roof loss, wall collapse, or debris pile visible from above. 2.6 ft of water stood at ground level but first-floor elevation/raised status cannot be determined from these aerial photos.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.083,
+  "flood_ft": 2.57,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.56,
+     "evidence": "Flat white roof appears intact with no large missing sections or collapse in post-storm image; about 2.6 ft of water stood at ground level but top-down photos do not show first-floor height, so interior depth and whether building is raised cannot be determined.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.78,
+     "evidence": "Post-storm roof is intact and matches pre-storm outline; the 8% not-found is edge shadow/alignment, not a collapsed or missing section - no large roof loss, wall collapse, or debris pile visible from above. 2.6 ft of water stood at ground level but first-floor elevation/raised status cannot be determined from these aerial photos.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b021",
+  "category": "affected",
+  "confidence": 0.62,
+  "evidence": "Roof remains fully intact white with no missing covering or tarp in post-storm view. About 1.4 ft of water stood around the building but photos do not show first-floor height or whether it is raised, so whether water entered living space is unknown.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "structure_loss": 0.074,
+  "flood_ft": 1.38,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.59,
+     "evidence": "Roof appears fully intact with no missing covering in post-storm view, 7% not-found is edge alignment/shadow; surveyed water 1.4 ft above ground stood around the building but first-floor elevation and whether water entered living space cannot be determined from overhead photos alone.",
+     "needs_human": true
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.62,
+     "evidence": "Roof remains fully intact white with no missing covering or tarp in post-storm view. About 1.4 ft of water stood around the building but photos do not show first-floor height or whether it is raised, so whether water entered living space is unknown.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b019",
+  "category": "affected",
+  "confidence": 0.6,
+  "evidence": "Roof is intact with no missing covering, tarp or collapse, with disturbed ground around perimeter suggesting cosmetic impact. Cannot tell from aerial whether house is raised so 2.6 ft exterior water cannot be converted to living-space depth.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "structure_loss": 0.062,
+  "flood_ft": 2.57,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.56,
+     "evidence": "Yellow-outlined roof is fully intact in post-storm view with no missing covering, tarps, or collapse (6% not-found likely alignment offset); light debris/disturbed ground around perimeter is visible but no structural roof damage, and 2.6 ft exterior water depth cannot be tied to 18-inch living-space rule without known first-floor/piling height.",
+     "needs_human": true
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.6,
+     "evidence": "Roof is intact with no missing covering, tarp or collapse, with disturbed ground around perimeter suggesting cosmetic impact. Cannot tell from aerial whether house is raised so 2.6 ft exterior water cannot be converted to living-space depth.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b005",
+  "category": "affected",
+  "confidence": 0.7,
+  "evidence": "Post-storm flat roof is fully present and intact within yellow outline with no missing sections, wall collapse or shift; neighbors alignment is misplaced while the roof is clearly visible, consistent with only 4% not-found. Storm water stood ~2.9 ft above ground but first-floor height/clearance cannot be determined from the overhead aerials to judge living-space flooding.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.04,
+  "flood_ft": 2.86,
+  "debris_share": 0.089,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.58,
+     "evidence": "Roof appears intact with no structural loss - 4% not-found within neighbor-alignment uncertainty and only dark discoloration on flat roof - but surveyed storm water stood ~2.9 ft above ground which would be >18 in in living space if slab-on-grade; first-floor height/elevation whether raised on pilings cannot be determined from these aerial views.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.7,
+     "evidence": "Post-storm flat roof is fully present and intact within yellow outline with no missing sections, wall collapse or shift; neighbors alignment is misplaced while the roof is clearly visible, consistent with only 4% not-found. Storm water stood ~2.9 ft above ground but first-floor height/clearance cannot be determined from the overhead aerials to judge living-space flooding.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b000",
+  "category": "minor",
+  "confidence": 0.72,
+  "evidence": "Roofs remain in place except a narrow strip of white membrane missing on the north edge of the east section exposing reddish underlayment and scattered debris piles south and north of the building; no large roof loss or wall collapse visible. 2.8 ft of water above ground was reported but first-floor elevation is not visible from the air so interior depth cannot be determined from photos alone.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "demolished": false,
+  "structure_loss": 0.035,
+  "flood_ft": 2.84,
+  "debris_share": 0.031,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.74,
+     "evidence": "Yellow outline matched pre/post; metal and white roofs are still in place except a small strip of white membrane missing on the north edge of the east section (red underlayment showing) and debris piles along the south side and street to the north; surveyed 2.8 ft of water above ground at this slab-on-grade commercial building indicates >18 in in the interior.",
+     "needs_human": false,
+     "demolished": false
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.72,
+     "evidence": "Roofs remain in place except a narrow strip of white membrane missing on the north edge of the east section exposing reddish underlayment and scattered debris piles south and north of the building; no large roof loss or wall collapse visible. 2.8 ft of water above ground was reported but first-floor elevation is not visible from the air so interior depth cannot be determined from photos alone.",
+     "needs_human": true,
+     "demolished": false
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b027",
+  "category": "affected",
+  "confidence": 0.88,
+  "evidence": "Roof and footprint appear intact with no visible damage from the air, but surveyed flood water stood 2.5 ft above ground at building, which is at least 'affected' under PDA as water in/under living space is not visible aerially; first-floor elevation unknown.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.031,
+  "flood_ft": 2.52,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.88,
+     "evidence": "Roof and structure appear intact and matched in post-storm photo with only 3% not found and no debris piles visible. About 2.5 ft of storm water stood above ground but first-floor height/elevation cannot be determined from these aerials to judge depth in living space.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called No visible damage, but surveyed flood water stood 2.5 ft around this building, which makes it at least Affected under the PDA rule. This is not a photo measurement and can't be wrong because of shadows or trees: water damage doesn't show from the air. Keep what you see on the roof in the evidence, and raise the category."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.88,
+     "evidence": "Roof and footprint appear intact with no visible damage from the air, but surveyed flood water stood 2.5 ft above ground at building, which is at least 'affected' under PDA as water in/under living space is not visible aerially; first-floor elevation unknown.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b026",
+  "category": "minor",
+  "confidence": 0.6,
+  "evidence": "Flat white roofs and south brown roof remain intact with no missing sections; pool is dark/murky and sand covers ground around the building. Surveyed water ~1.4 ft above ground would be minor flooding if living space is at grade, but overhead photos do not show first-floor height or whether structure is raised.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "structure_loss": 0.031,
+  "flood_ft": 1.41,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.56,
+     "evidence": "Flat white roofs and south brown roof section are intact post-storm (3% not found, alignment matched) with no debris piles; pool is murky and sand is visible around south and NE sides. Surveyed water ~1.4 ft (~16.8 in) above ground would be minor flooding if living space is at grade, but overhead photos do not show first-floor height or whether the structure is raised on pilings.",
+     "needs_human": true
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "MINOR",
+     "confidence": 0.6,
+     "evidence": "Flat white roofs and south brown roof remain intact with no missing sections; pool is dark/murky and sand covers ground around the building. Surveyed water ~1.4 ft above ground would be minor flooding if living space is at grade, but overhead photos do not show first-floor height or whether structure is raised.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b023",
+  "category": "affected",
+  "confidence": 0.7,
+  "evidence": "Long flat roof within yellow outline is intact with no missing sections, collapse, or shift. Pool is dark with sediment and patio umbrellas/furnishings are gone with ground disturbance, but no structural damage visible; 1.7 ft of standing water was surveyed but first-floor elevation cannot be told from aerial.",
+  "needs_human": true,
+  "decided_by": "muse-spark-1.3",
+  "verified": true,
+  "structure_loss": 0.023,
+  "flood_ft": 1.68,
+  "debris_share": 0.003,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.68,
+     "evidence": "Long flat roof appears intact with only 2% not found and alignment matched, no large missing sections, walls collapsed or shift; pool is filled with dark sediment and surroundings show disturbance but no structural loss. ~1.7 ft standing water exceeds 18-in major threshold if it entered living space, but first-floor elevation/raisings cannot be determined from aerial.",
+     "needs_human": true
+    },
+    "verifier": []
+   },
+   {
+    "model": "muse-spark-1.3",
+    "round": 0,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.7,
+     "evidence": "Long flat roof within yellow outline is intact with no missing sections, collapse, or shift. Pool is dark with sediment and patio umbrellas/furnishings are gone with ground disturbance, but no structural damage visible; 1.7 ft of standing water was surveyed but first-floor elevation cannot be told from aerial.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b012",
+  "category": "affected",
+  "confidence": 0.88,
+  "evidence": "Roof/canopy inside yellow outline is intact with no visible missing covering or collapse, but surveyed flooding ~3.3 ft above ground stood around the building; water depth in living/interior space cannot be determined from aerial photos as first-floor elevation is unknown.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.022,
+  "flood_ft": 3.31,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.9,
+     "evidence": "Roof/canopy inside yellow outline is intact and unchanged pre- to post-storm with no missing covering or structural collapse; dark patch north of building is standing water/staining, not roof damage.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called No visible damage, but surveyed flood water stood 3.3 ft around this building, which makes it at least Affected under the PDA rule. This is not a photo measurement and can't be wrong because of shadows or trees: water damage doesn't show from the air. Keep what you see on the roof in the evidence, and raise the category."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.88,
+     "evidence": "Roof/canopy inside yellow outline is intact with no visible missing covering or collapse, but surveyed flooding ~3.3 ft above ground stood around the building; water depth in living/interior space cannot be determined from aerial photos as first-floor elevation is unknown.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b009",
+  "category": "affected",
+  "confidence": 0.89,
+  "evidence": "Flat white roof is fully intact and matched within yellow outline in both images with no missing sections, wall collapse, or debris piles; 2% not-found is consistent with intact roof and 2.3 ft water above ground left no visible structural damage from the air, and first-floor height cannot be determined from aerial photos to confirm water in living space",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.02,
+  "flood_ft": 2.32,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.62,
+     "evidence": "White flat roof is intact in post-storm photo with only 2% not found, matched alignment and no debris piles visible, but surveyed 2.3 ft water above ground would be >18 in. in living space if slab-on-grade; first-floor height/whether raised on pilings cannot be determined from these aerial photos",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.89,
+     "evidence": "Flat white roof is fully intact and matched within yellow outline in both images with no missing sections, wall collapse, or debris piles; 2% not-found is consistent with intact roof and 2.3 ft water above ground left no visible structural damage from the air, and first-floor height cannot be determined from aerial photos to confirm water in living space",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b022",
+  "category": "affected",
+  "confidence": 0.75,
+  "evidence": "Post-storm photo shows teal roof intact in yellow outline with no missing roof sections, wall collapse, or debris - 2% not-found is accurate, not hidden by trees/shadows. 2.0 ft water above ground was recorded but first-floor height not visible from air so water depth in living space cannot be determined from roof alone.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.015,
+  "flood_ft": 1.99,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.6,
+     "evidence": "Roof looks intact in post-storm photo (2% not found, no debris piles) so no structural loss is visible from air, but surveyed high-water mark was ~2.0 ft above ground; whether water entered living space >=18in (major) vs minor vs only under house (affected) depends on first-floor height which cannot be told from these aerial photos.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.75,
+     "evidence": "Post-storm photo shows teal roof intact in yellow outline with no missing roof sections, wall collapse, or debris - 2% not-found is accurate, not hidden by trees/shadows. 2.0 ft water above ground was recorded but first-floor height not visible from air so water depth in living space cannot be determined from roof alone.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b011",
+  "category": "affected",
+  "confidence": 0.82,
+  "evidence": "Roof inside yellow outline is intact and correctly aligned in post-storm view, confirming 1% not-found/matched measurement with no visible roof/wall loss or debris; 2.9 ft external high-water mark cannot be confirmed as living-space depth from aerial alone so no visible evidence justifies Major.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.013,
+  "flood_ft": 2.88,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.6,
+     "evidence": "Roof inside yellow outline is intact in post-storm view (1% not found, alignment matched) with no visible structural loss or debris; 2.9 ft external high-water mark would be >18 in in living space if slab-on-grade but first-floor height cannot be determined from aerial photos alone.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.82,
+     "evidence": "Roof inside yellow outline is intact and correctly aligned in post-storm view, confirming 1% not-found/matched measurement with no visible roof/wall loss or debris; 2.9 ft external high-water mark cannot be confirmed as living-space depth from aerial alone so no visible evidence justifies Major.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b017",
+  "category": "affected",
+  "confidence": 0.84,
+  "evidence": "Post-storm roof is fully intact and matched in place (1% not found is consistent with photos) with no missing covering, collapse, or shift; only scattered debris/material along east side and in parking lot visible, no structural damage. 2.6 ft standing water around building cannot be judged for interior depth from aerial alone.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.013,
+  "flood_ft": 2.58,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.56,
+     "evidence": "Roof is fully intact with no missing sections in post-storm view (1% not-found, matched alignment) and no collapse, but surveyed high water 2.6 ft above ground would be >=18 in. in living space if first floor is at grade as typical for this slab commercial building; floor elevation not visible in aerial.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.84,
+     "evidence": "Post-storm roof is fully intact and matched in place (1% not found is consistent with photos) with no missing covering, collapse, or shift; only scattered debris/material along east side and in parking lot visible, no structural damage. 2.6 ft standing water around building cannot be judged for interior depth from aerial alone.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b007",
+  "category": "affected",
+  "confidence": 0.92,
+  "evidence": "Roof inside yellow outline appears intact with only 1% not found and no missing/collapsed sections, but surveyed storm water stood ~1.9 ft above ground around building; first-floor height not determinable from aerial so extent in living space is unknown, at least Affected per PDA.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.011,
+  "flood_ft": 1.9,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.88,
+     "evidence": "Post-storm roof inside yellow outline is intact and matched to pre-storm with only 1% not found; no large roof sections missing, no collapse/shift, and no debris piles visible, only dark soiling/discoloration.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called No visible damage, but surveyed flood water stood 1.9 ft around this building, which makes it at least Affected under the PDA rule. This is not a photo measurement and can't be wrong because of shadows or trees: water damage doesn't show from the air. Keep what you see on the roof in the evidence, and raise the category."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.92,
+     "evidence": "Roof inside yellow outline appears intact with only 1% not found and no missing/collapsed sections, but surveyed storm water stood ~1.9 ft above ground around building; first-floor height not determinable from aerial so extent in living space is unknown, at least Affected per PDA.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b004",
+  "category": "affected",
+  "confidence": 0.8,
+  "evidence": "Post-storm roof/ walls appear intact with no missing sections or collapse (1% not found, matched); only light scattered debris on west side, and 2.3 ft external high-water mark cannot confirm interior depth without first-floor elevation visible from above",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.006,
+  "flood_ft": 2.3,
+  "debris_share": 0.017,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.6,
+     "evidence": "Roof/walls appear intact in post-storm aerial (1% not found, matched alignment) with no visible structural loss; surveyed ~2.3 ft water above ground suggests interior flooding >18 in if slab-on-grade but first-floor elevation cannot be determined from aerial photos",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.8,
+     "evidence": "Post-storm roof/ walls appear intact with no missing sections or collapse (1% not found, matched); only light scattered debris on west side, and 2.3 ft external high-water mark cannot confirm interior depth without first-floor elevation visible from above",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b024",
+  "category": "affected",
+  "confidence": 0.72,
+  "evidence": "Yellow-outlined flat roof is intact and aligned in both photos with ~1% not found and no debris piles visible from above; no missing roof/walls or structural damage visible, only discolored pool/ground consistent with water exposure, and 1.9 ft ground-water depth cannot be converted to living-space depth without first-floor elevation.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.006,
+  "flood_ft": 1.95,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.58,
+     "evidence": "Roof intact within yellow outline with only ~1% not found/matched and no debris piles, no visible wind damage; ~1.9 ft exterior high-water exceeds 18-in major threshold if it entered the living space, but first-floor elevation/raised status not visible from overhead aerial.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.72,
+     "evidence": "Yellow-outlined flat roof is intact and aligned in both photos with ~1% not found and no debris piles visible from above; no missing roof/walls or structural damage visible, only discolored pool/ground consistent with water exposure, and 1.9 ft ground-water depth cannot be converted to living-space depth without first-floor elevation.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b006",
+  "category": "affected",
+  "confidence": 0.84,
+  "evidence": "Post-storm photo shows yellow-outlined roof fully intact with no missing covering or debris, consistent with 1% not-found and matched alignment; ~1.9 ft ground-level flooding was modeled but interior water depth/first-floor elevation cannot be determined from this aerial top-down view so visible damage alone does not support major.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.006,
+  "flood_ft": 1.94,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.62,
+     "evidence": "Roof inside yellow outline appears intact and fully present in post-storm view with ~1% not-found and no debris piles \u2014 no visible wind damage; ~1.9 ft water stood at ground and building appears slab-on-grade with no visible pilings, which would put >18 in in the interior if floor is at grade, but first-floor elevation is not verifiable from this aerial top-down view",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.84,
+     "evidence": "Post-storm photo shows yellow-outlined roof fully intact with no missing covering or debris, consistent with 1% not-found and matched alignment; ~1.9 ft ground-level flooding was modeled but interior water depth/first-floor elevation cannot be determined from this aerial top-down view so visible damage alone does not support major.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b015",
+  "category": "affected",
+  "confidence": 0.71,
+  "evidence": "Yellow outline still contains flat white roof with walls intact; only scattered dark mottling/debris on roof, no large roof section gone, wall collapse, shift or debris pile, consistent with 1% not found. ~1.7 ft water stood at ground level but whether it entered occupied space cannot be told from top-down view without first-floor height.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.006,
+  "flood_ft": 1.67,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.6,
+     "evidence": "Roof/footprint remain in place with only scattered dark patches/debris on flat roof visible from above (1% not found, no debris pile detected) - alone affected/minor. However surveyed ~1.7 ft water above ground exceeds 18-in major threshold for living space if building is slab-on-grade as it appears; first-floor height/raised status cannot be verified from these top-down photos.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.71,
+     "evidence": "Yellow outline still contains flat white roof with walls intact; only scattered dark mottling/debris on roof, no large roof section gone, wall collapse, shift or debris pile, consistent with 1% not found. ~1.7 ft water stood at ground level but whether it entered occupied space cannot be told from top-down view without first-floor height.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b016",
+  "category": "affected",
+  "confidence": 0.9,
+  "evidence": "Flat Roof appears intact with no missing sections or structural damage in post-storm aerial, but surveyed high-water mark shows ~1.1 ft of water above ground around building; first-floor elevation/raised status not determinable from aerial so at least Affected per PDA flood rule.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.002,
+  "flood_ft": 1.06,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "NONE",
+     "confidence": 0.88,
+     "evidence": "Flat roof appears fully intact with no missing sections, tarps, or structural deformation visible in post-storm image. ~1.1 ft of storm water above ground was measured but first-floor elevation/raised status cannot be determined from aerial to assess interior flooding.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called No visible damage, but surveyed flood water stood 1.1 ft around this building, which makes it at least Affected under the PDA rule. This is not a photo measurement and can't be wrong because of shadows or trees: water damage doesn't show from the air. Keep what you see on the roof in the evidence, and raise the category."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.9,
+     "evidence": "Flat Roof appears intact with no missing sections or structural damage in post-storm aerial, but surveyed high-water mark shows ~1.1 ft of water above ground around building; first-floor elevation/raised status not determinable from aerial so at least Affected per PDA flood rule.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b010",
+  "category": "affected",
+  "confidence": 0.88,
+  "evidence": "Overhead photos show white flat roof fully intact with 0% structure loss and alignment matched, no missing roof sections, collapse, tarp or debris. 2.5 ft of standing water was surveyed at the ground, but first-floor elevation/raised status cannot be determined from these overhead photos so interior water depth in living space cannot be confirmed from aerial alone.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.001,
+  "flood_ft": 2.46,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.6,
+     "evidence": "Aerial comparison shows flat white roof fully intact with 0% structure loss and no visible roof damage or debris. Surveyed 2.5 ft standing water exceeds 18-inch major threshold if first floor at grade, but floor elevation/raised status cannot be determined from these overhead photos alone.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.88,
+     "evidence": "Overhead photos show white flat roof fully intact with 0% structure loss and alignment matched, no missing roof sections, collapse, tarp or debris. 2.5 ft of standing water was surveyed at the ground, but first-floor elevation/raised status cannot be determined from these overhead photos so interior water depth in living space cannot be confirmed from aerial alone.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ },
+ {
+  "id": "b002",
+  "category": "affected",
+  "confidence": 0.72,
+  "evidence": "Roof is fully intact with 0% missing, yellow outline aligns in both photos and no debris or structural damage visible from above; 1.8 ft water above ground cannot be confirmed as interior depth from aerial alone and no visible flooding damage justifies major.",
+  "needs_human": true,
+  "decided_by": "meta-models/muse-spark-open",
+  "verified": true,
+  "structure_loss": 0.001,
+  "flood_ft": 1.83,
+  "debris_share": 0.0,
+  "tarp_share": 0.0,
+  "trace": [
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 0,
+    "answer": {
+     "category": "MAJOR",
+     "confidence": 0.6,
+     "evidence": "Aerial shows flat commercial roof intact with no missing sections and same footprint before/after with no debris visible. Flood survey shows ~1.8 ft (21.6 in) water above ground which is \u226518-in major threshold if first floor is at grade, but first-floor elevation/raise cannot be determined from overhead photos alone.",
+     "needs_human": true
+    },
+    "verifier": [
+     "Called Major, two or more steps above what the measurements show (Affected). Point to the visible damage that justifies it, or lower the call."
+    ]
+   },
+   {
+    "model": "meta-models/muse-spark-open",
+    "round": 1,
+    "answer": {
+     "category": "AFFECTED",
+     "confidence": 0.72,
+     "evidence": "Roof is fully intact with 0% missing, yellow outline aligns in both photos and no debris or structural damage visible from above; 1.8 ft water above ground cannot be confirmed as interior depth from aerial alone and no visible flooding damage justifies major.",
+     "needs_human": true
+    },
+    "verifier": []
+   }
+  ]
+ }
+]
