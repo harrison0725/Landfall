@@ -17,7 +17,7 @@ services:
       - key: LANDFALL_ACCESS_CODE
         sync: false
       - key: LANDFALL_MAX_BUILDINGS
-        value: "30"
+        value: "60"
       - key: LANDFALL_TURNS_PER_HOUR
         value: "30"
       - key: LANDFALL_PROCS
