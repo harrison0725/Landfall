@@ -231,6 +231,23 @@ def building(area: str, bid: str) -> dict:
     }
 
 
+@app.get("/api/areas/{area}/pair/{bid}.jpg")
+def pair_jpg(area: str, bid: str) -> Response:
+    """The card's photo pair: a JPEG a tenth the size of the PNG, drawn once
+    and kept beside the area, so a click shows it at once."""
+    d = _area_dir(area)
+    path = d / "cards" / f"{bid}.jpg"
+    if not path.exists():
+        from PIL import Image
+
+        im = Image.open(io.BytesIO(_pair_png(area, bid))).convert("RGB")
+        path.parent.mkdir(exist_ok=True)
+        tmp = path.with_suffix(".tmp")
+        im.save(tmp, "JPEG", quality=85)
+        tmp.replace(path)
+    return FileResponse(path, media_type="image/jpeg", headers={"Cache-Control": "max-age=86400"})
+
+
 @app.get("/api/areas/{area}/pair/{bid}.png")
 def pair(area: str, bid: str) -> Response:
     """Before | after with the outline, the same picture the agent saw."""

@@ -91,6 +91,8 @@ function styleFor(f) {
 function bindFeature(f, layer) {
   state.features[f.properties.id] = layer;
   layer.on("click", () => openBuilding(f.properties.id));
+  // fetch the card's photos while the pointer is on the building, before the click
+  layer.on("mouseover", () => { if (state.area) new Image().src = `/api/areas/${state.area}/pair/${f.properties.id}.jpg`; });
   layer.bindTooltip(() => {
     const p = f.properties;
     return `<b>${p.id}</b> ${p.category ? LABEL[p.category] : "not drafted yet"}${p.needs_human ? " · review" : ""}`;
@@ -399,7 +401,7 @@ async function openBuilding(id) {
   ];
   $("card-body").innerHTML = `
     <h2>${esc(id)} ${cat ? `<span class="pill ${cat}" style="--c:var(--${cat})">${LABEL[cat]}</span>` : ""}${a && a.needs_human ? `<span class="pill" style="--c:var(--review)">Field check</span>` : ""}</h2>
-    <img src="/api/areas/${state.area}/pair/${id}.png" alt="Before and after photos of ${esc(id)}">
+    <img src="/api/areas/${state.area}/pair/${id}.jpg" alt="Before and after photos of ${esc(id)}">
     <div class="cap"><span>Before${a && a.photos ? ": " + esc(shortSource(a.photos.before)) : " the storm"}</span><span>After${a && a.photos ? ": " + esc(shortSource(a.photos.after)) : " the storm"}</span></div>
     <p>${a ? esc(a.evidence) : gone ? "This area is no longer on the server. The server restarted after it was drawn, and drawn areas are lost when that happens. Draw the box again to redo it." : "Not drafted yet. The assessment of this area is still running, or it stopped before it reached this building; the chat shows which step it is on."}</p>
     ${a ? `<dl class="kv">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>` : ""}
@@ -482,17 +484,16 @@ async function toWav16k(blob) {
 // ---------------------------------------------------------------- start
 async function boot() {
   legend();
-  const storms = await (await fetch("/api/storms")).json();
+  // the three lookups don't depend on each other: ask for them together
+  const [storms, config, areas] = await Promise.all(["/api/storms", "/api/config", "/api/areas"].map((u) => fetch(u).then((r) => r.json())));
   const group = (label, rows) => `<optgroup label="${label}">${rows.map((s) => `<option value="${s.key}">${esc(s.name)} (${esc(s.where)}, ${s.landfall.slice(0, 4)})</option>`).join("")}</optgroup>`;
   $("storm").innerHTML = group("United States: NOAA aerial photos", storms.filter((s) => s.imagery === "noaa")) + group("Worldwide: Maxar satellite photos", storms.filter((s) => s.imagery === "maxar"));
-  state.config = await (await fetch("/api/config")).json();
-  const areas = await (await fetch("/api/areas")).json();
+  state.config = config;
   const params = new URLSearchParams(location.search);
   const at = params.get("at");
   const pick = at ? null : areas.find((a) => a.name === params.get("area")) || areas.find((a) => a.name === "cedar_key" && a.assessed) || null;
-  const s = await (await fetch("/api/sessions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ area: pick && pick.assessed ? pick.name : null }) })).json();
-  state.sid = s.id;
-  state.area = s.area;
+  const session = fetch("/api/sessions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ area: pick && pick.assessed ? pick.name : null }) }).then((r) => r.json());
+  state.area = pick && pick.assessed ? pick.name : null;
   const done = areas.filter((a) => a.assessed);
   $("area").innerHTML = `<option value="">Pick one…</option>` + done.map((a) => `<option value="${esc(a.name)}">${esc(title(a.name))}</option>`).join("");
   if (pick) $("area").value = pick.name;
@@ -502,12 +503,13 @@ async function boot() {
     if (pick.spec) $("storm").value = pick.spec.storm;
     state.flight = pick.spec && pick.spec.noaa_flight;
     setFlight(state.flight);
+    if (!state.flight) setOverlay(pick.name);  // start the photo tiles before the outlines
     await loadBuildings(true);
-    if (!state.flight) setOverlay(pick.name);
   } else {
     applyLayer();
   }
   if (at) { const [la, lo, z] = at.split(",").map(Number); map.setView([la, lo], z || 17); }
+  state.sid = (await session).id;
   const ev = new EventSource(`/api/sessions/${state.sid}/events`);
   ev.onmessage = (m) => handle(JSON.parse(m.data));
   if (pick && pick.assessed) {
