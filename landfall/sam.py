@@ -25,7 +25,7 @@ from . import http
 
 API_URL = "https://api.meta.ai/v1/responses"
 MODEL = "sam-3.1"
-MISS_RETRIES = 40
+MISS_RETRIES = 12
 TIMEOUT_S = 15
 
 

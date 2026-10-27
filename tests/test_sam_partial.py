@@ -17,11 +17,17 @@ def test_unanswered_images_are_left_out(monkeypatch):
     assert "warning" in logs
 
 
-def test_all_unanswered_raises(monkeypatch):
+def test_outage_stops_calling(monkeypatch):
     monkeypatch.setattr(pipeline.time, "sleep", lambda s: None)
+    calls = []
 
     def fetch(job):
+        calls.append(job)
         raise RuntimeError("404 model_not_found")
 
-    with pytest.raises(RuntimeError, match="did not answer"):
-        pipeline._sam_all([("b1", "pre", "roof")], fetch, 4, lambda kind, **kw: None)
+    jobs = [(f"b{i}", "pre", "roof") for i in range(200)]
+    texts = []
+    missing = pipeline._sam_all(jobs, fetch, 1, lambda kind, **kw: texts.append(kw.get("text", "")))
+    assert missing == set(jobs)
+    assert len(calls) == pipeline.OUTAGE_SAMPLE
+    assert any("not answering" in t for t in texts)

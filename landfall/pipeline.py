@@ -337,31 +337,50 @@ def _sam_line(cache: Path, img: np.ndarray, prompt: str, scale: int) -> None:
         cache.write_text(sam.request(img, prompt, scale))
 
 
-def _sam_all(jobs: list, fetch, workers: int, log: Log) -> set:
-    """Run every SAM job; return the ones that still failed.
+# Stop calling SAM once more than this share of the first calls failed.
+OUTAGE_SAMPLE = 24
+OUTAGE_SHARE = 0.6
 
-    Meta's API sometimes stops answering for SAM for a minute or two, so
-    failures get a second, slower pass, and whatever still fails is left out
-    rather than stopping the whole area. Raises only when nothing came back.
+
+def _sam_all(jobs: list, fetch, workers: int, log: Log) -> set:
+    """Run every SAM job; return the ones that failed.
+
+    Meta's API sometimes stops answering for SAM, from a minute to much
+    longer. A few failures get a second pass. When most calls fail, stop
+    asking: the buildings left are judged from the photos alone, which
+    beats making the user wait many minutes for an outage to end.
     """
+    import threading
+
+    lock = threading.Lock()
+    seen = {"done": 0, "failed": 0}
+    tripped = threading.Event()
 
     def safe(job):
+        if tripped.is_set():
+            return job, "skipped: Segment Anything is not answering"
         try:
             fetch(job)
-            return None
+            err = None
         except Exception as e:  # noqa: BLE001 - any API failure is handled the same way
-            return job, f"{type(e).__name__}: {e}"[:200]
+            err = f"{type(e).__name__}: {e}"[:200]
+        with lock:
+            seen["done"] += 1
+            seen["failed"] += err is not None
+            if seen["done"] >= OUTAGE_SAMPLE and seen["failed"] > OUTAGE_SHARE * seen["done"]:
+                tripped.set()
+        return (job, err) if err else None
 
     with ThreadPoolExecutor(_w(workers)) as pool:
         failed = [f for f in pool.map(safe, jobs) if f]
-    if failed:
+    if failed and not tripped.is_set() and len(failed) <= 0.2 * len(jobs):
         log("sam_retry", failed=len(failed), of=len(jobs), error=failed[0][1])
         time.sleep(2)
-        with ThreadPoolExecutor(2) as pool:
+        with ThreadPoolExecutor(_w(workers)) as pool:
             failed = [f for f in pool.map(safe, [j for j, _ in failed]) if f]
-    if failed and len(failed) == len(jobs):
-        raise RuntimeError(f"Segment Anything did not answer for any image: {failed[0][1]}")
-    if failed:
+    if tripped.is_set():
+        log("warning", text="Segment Anything (Meta's API) is mostly not answering right now, so the buildings it missed are judged from the photos alone.")
+    elif failed:
         log("warning", text=f"Segment Anything did not answer for {len(failed)} of {len(jobs)} images; those buildings are judged from the photos alone.")
     return {j for j, _ in failed}
 
@@ -672,8 +691,8 @@ def debris(spec: AreaSpec, root: Path, log: Log = _quiet, workers: int = 24) -> 
     (d / "debris.json").write_text(json.dumps(out, indent=1))
     log(
         "debris",
-        debris=[x["id"] for x in out if x["debris_share"] >= 0.05],
-        tarps=[x["id"] for x in out if x["tarp_share"] >= 0.05],
+        debris=[x["id"] for x in out if x.get("debris_share", 0) >= 0.05],
+        tarps=[x["id"] for x in out if x.get("tarp_share", 0) >= 0.05],
     )
     return out
 
