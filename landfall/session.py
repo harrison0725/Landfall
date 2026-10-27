@@ -11,6 +11,7 @@ which the web app streams to the browser.
 from __future__ import annotations
 
 import json
+import traceback
 import re
 import threading
 from pathlib import Path
@@ -159,6 +160,8 @@ class Session:
                 return {"error": "no drafts yet for this area; run the assessment first"}
             return Area.load(self.root, self.area).call(name, args)
         except Exception as e:  # report to the model; it can explain or retry
+            traceback.print_exc()  # and to the server log, since the model is told not to quote it
+            emit("progress", stage=name, event="error", message=f"{type(e).__name__}: {e}"[:200])
             return {"error": f"{type(e).__name__}: {e}"[:400]}
 
     # ---- turns ---------------------------------------------------------

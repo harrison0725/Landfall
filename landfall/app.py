@@ -108,18 +108,25 @@ def index() -> FileResponse:
 
 @app.get("/api/config")
 def config() -> dict:
-    return {"access_code_required": bool(ACCESS_CODE), "max_buildings": MAX_BUILDINGS, "can_assess": _can_assess()}
+    missing = _missing_for_assessing()
+    return {"access_code_required": bool(ACCESS_CODE), "max_buildings": MAX_BUILDINGS, "can_assess": not missing, "missing": missing}
 
 
 @functools.lru_cache(maxsize=1)
-def _can_assess() -> bool:
-    """New areas need the GeoTIFF reader; a broken server image fails here first."""
-    try:
-        import rasterio.warp  # noqa: F401
+def _missing_for_libraries() -> tuple[str, ...]:
+    out = []
+    for mod in ("rasterio.warp", "shapely", "meta_sam_parser"):
+        try:
+            __import__(mod)
+        except Exception as e:
+            out.append(f"{mod} ({type(e).__name__})")
+    return tuple(out)
 
-        return True
-    except Exception:
-        return False
+
+def _missing_for_assessing() -> list[str]:
+    """What a new assessment would fail on: libraries and API keys (names only, never values)."""
+    keys = [k for k in ("META_API_KEY", "BASETEN_API_KEY") if not os.environ.get(k)]
+    return [*_missing_for_libraries(), *keys]
 
 
 @app.get("/api/storms")
