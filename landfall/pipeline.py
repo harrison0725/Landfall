@@ -257,7 +257,7 @@ def _no_before(spec: AreaSpec, d: Path) -> bool:
     return spec.imagery == "photos" and not (d / "upload_before.jpg").exists() and not (d / "archive_before.json").exists()
 
 
-def _archive_mosaic(spec: AreaSpec, win: Window, cache: Path) -> tuple[str, np.ndarray, np.ndarray, str]:
+def _archive_mosaic(spec: AreaSpec, win: Window, cache: Path, zoom: int = ZOOM) -> tuple[str, np.ndarray, np.ndarray, str]:
     """The archive's newest photo from before the disaster over a window: for
     a catalog disaster NAIP in the US and Maxar elsewhere, as a drawn box
     uses; for a new one, and wherever those have nothing, Esri's Wayback
@@ -270,13 +270,13 @@ def _archive_mosaic(spec: AreaSpec, win: Window, cache: Path) -> tuple[str, np.n
         # yesterday: Esri's archive is worldwide and updated every few weeks,
         # though in places its newest photo is older than NAIP's
         try:
-            esri = _wayback_mosaic(spec, win, cache)
+            esri = _wayback_mosaic(spec, win, cache, zoom)
         except (LookupError, OSError):
             esri = None  # in the US, NAIP may still have it
         if esri is not None and esri[3][:4] >= str(int(spec.landfall[:4]) - 1):
             return esri
         try:
-            naip = _catalog_archive(None, spec, win, cache)
+            naip = _catalog_archive(None, spec, win, cache, zoom)
         except (LookupError, OSError):
             naip = None
         newest = max((x for x in (esri, naip) if x is not None), key=lambda x: x[3], default=None)
@@ -284,35 +284,35 @@ def _archive_mosaic(spec: AreaSpec, win: Window, cache: Path) -> tuple[str, np.n
             raise LookupError("no archive photo of this spot from before the disaster")
         return newest
     try:
-        return _catalog_archive(s, spec, win, cache)
+        return _catalog_archive(s, spec, win, cache, zoom)
     except (LookupError, OSError):
-        return _wayback_mosaic(spec, win, cache)
+        return _wayback_mosaic(spec, win, cache, zoom)
 
 
-def _wayback_mosaic(spec: AreaSpec, win: Window, cache: Path) -> tuple[str, np.ndarray, np.ndarray, str]:
+def _wayback_mosaic(spec: AreaSpec, win: Window, cache: Path, zoom: int = ZOOM) -> tuple[str, np.ndarray, np.ndarray, str]:
     from .geo import pixel_to_lonlat
     from .wayback import before, mosaic
 
-    lon, lat = pixel_to_lonlat((win.x0 + win.x1) / 2, (win.y0 + win.y1) / 2, ZOOM)
+    lon, lat = pixel_to_lonlat((win.x0 + win.x1) / 2, (win.y0 + win.y1) / 2, zoom)
     photo = before(lon, lat, spec.landfall, cache)
     if photo is None:
         raise LookupError("Esri's archive has no photo of this spot from before the disaster")
-    img, ok = mosaic(photo, win, ZOOM, cache)
+    img, ok = mosaic(photo, win, zoom, cache)
     return photo.label, img, ok, photo.captured
 
 
-def _catalog_archive(s, spec: AreaSpec, win: Window, cache: Path) -> tuple[str, np.ndarray, np.ndarray, str]:
+def _catalog_archive(s, spec: AreaSpec, win: Window, cache: Path, zoom: int = ZOOM) -> tuple[str, np.ndarray, np.ndarray, str]:
     from .sources import naip_mosaic, naip_scenes, pixel_bbox_lonlat
 
     if s is not None and s.provider == "maxar":
         from .maxar import mosaic, passes, pick
 
-        before = pick(passes(s.maxar_event, pixel_bbox_lonlat(win, ZOOM), cache), s.landfall, False)
+        before = pick(passes(s.maxar_event, pixel_bbox_lonlat(win, zoom), cache), s.landfall, False)
         if not before:
             raise LookupError("Maxar has no photo of this spot from before the disaster")
-        img, ok = mosaic([h for p in before[:3] for h in p.hrefs], win, ZOOM)
+        img, ok = mosaic([h for p in before[:3] for h in p.hrefs], win, zoom)
         return before[0].label, img, ok, before[0].date
-    scene, img, ok = _naip_fill(win, spec, naip_scenes, naip_mosaic)
+    scene, img, ok = _naip_fill(win, spec, naip_scenes, naip_mosaic, zoom)
     return f"USDA NAIP {scene.date}", img, ok, scene.date
 
 
@@ -358,6 +358,82 @@ def _archive_before(spec: AreaSpec, out: Path, log: Log) -> bool | None:
     return True
 
 
+SEARCH_ZOOM = 17  # about 1 m a pixel: a whole town in one archive photo
+SEARCH_MAX_M = 5000  # the most of a town searched, around its centre
+
+
+def is_town(bbox: tuple[float, float, float, float]) -> bool:
+    """A box the size of a town rather than a few streets: the photo's spot
+    is to be found in it, not assumed to fill it."""
+    from .geo import lonlat_to_pixel
+
+    x0, y0 = lonlat_to_pixel(bbox[0], bbox[3], ZOOM)
+    x1, y1 = lonlat_to_pixel(bbox[2], bbox[1], ZOOM)
+    return max(x1 - x0, y1 - y0) * meters_per_pixel((bbox[1] + bbox[3]) / 2, ZOOM) > 700
+
+
+def find_upload(spec: AreaSpec, d: Path, cache: Path, log: Log = _quiet) -> str:
+    """Find where the uploaded after photo was taken in the town `spec.bbox`
+    covers and narrow `spec.bbox` to it. The newest archive photo of the
+    whole town (nearest in time to the upload) gives a few likely spots;
+    each is then checked on sharp photos as a drawn box would be, and the
+    first that holds up is where it was taken. Returns a note on it; raises
+    LookupError when the archive has no photo there or the photo isn't in it."""
+    from PIL import Image
+
+    from .geo import lonlat_to_pixel, pixel_to_lonlat
+    from .photos import search
+
+    mpp = meters_per_pixel(spec.center[1], SEARCH_ZOOM)
+    x0, y0 = lonlat_to_pixel(spec.bbox[0], spec.bbox[3], SEARCH_ZOOM)
+    x1, y1 = lonlat_to_pixel(spec.bbox[2], spec.bbox[1], SEARCH_ZOOM)
+    cx, cy, half = (x0 + x1) / 2, (y0 + y1) / 2, SEARCH_MAX_M / 2 / mpp
+    town = Window(int(max(x0, cx - half)), int(max(y0, cy - half)), int(min(x1, cx + half)), int(min(y1, cy + half)))
+    log("photos", note=f"searching {town.width * mpp / 1000:.1f} × {town.height * mpp / 1000:.1f} km of archive photo for where the photo was taken")
+    label, arch, ok = _newest_photo(spec, town, cache)
+    if ok.mean() < 0.3:
+        raise LookupError("the archive barely covers this place")
+    after = np.asarray(Image.open(d / "upload_after.jpg").convert("RGB"))
+    town_box = spec.bbox
+    for spot in search(after, arch, mpp):
+        w_lon, n_lat = pixel_to_lonlat(town.x0 + spot["x"], town.y0 + spot["y"], SEARCH_ZOOM)
+        e_lon, s_lat = pixel_to_lonlat(town.x0 + spot["x"] + spot["w"], town.y0 + spot["y"] + spot["h"], SEARCH_ZOOM)
+        spec.bbox = (w_lon, s_lat, e_lon, n_lat)
+        spec.center = ((w_lon + e_lon) / 2, (s_lat + n_lat) / 2)
+        if _archive_before(spec, d, _quiet):  # the sharp check; it also lines the box up exactly
+            note = f"found where the photo was taken in the {label} photo of the town: about {spot['w'] * mpp:.0f} m across"
+            log("photos", note=note)
+            return note
+    spec.bbox = town_box
+    spec.center = ((town_box[0] + town_box[2]) / 2, (town_box[1] + town_box[3]) / 2)
+    raise LookupError(
+        f"couldn't find where the photo was taken anywhere in the {label} photo of this place "
+        "(it may be turned at an angle, or show a spot the disaster changed beyond recognition); "
+        "ask the user to drag a box over the spot on the map and press Send"
+    )
+
+
+def _newest_photo(spec: AreaSpec, win: Window, cache: Path) -> tuple[str, np.ndarray, np.ndarray]:
+    """The newest archive photo over a window, for finding a recent photo's
+    spot: Esri's latest, else the archive's before photo."""
+    from .geo import pixel_to_lonlat
+    from .wayback import Photo, captured, mosaic, releases
+
+    try:
+        rel = releases(cache)[0]
+        lon, lat = pixel_to_lonlat((win.x0 + win.x1) / 2, (win.y0 + win.y1) / 2, SEARCH_ZOOM)
+        got = captured(rel, lon, lat)
+        if got:
+            photo = Photo(rel, *got)
+            img, ok = mosaic(photo, win, SEARCH_ZOOM, cache)
+            if ok.mean() >= 0.3:
+                return photo.label, img, ok
+    except OSError:
+        pass
+    label, img, ok, _ = _archive_mosaic(spec, win, cache, SEARCH_ZOOM)
+    return label, img, ok
+
+
 def cloud_hidden(post: np.ndarray) -> bool:
     """True when the after crop is cloud: nearly all bright, colourless and
     flat. Real ground, even white roofs and concrete, has edges (a mean
@@ -387,7 +463,15 @@ def prepare(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
         from .photos import box_window, find_buildings, lay
 
         archive = None
-        if not (out / "upload_before.jpg").exists():
+        if is_town(spec.bbox):
+            # only the town was given: find the spot in it (raises if it can't)
+            find_upload(spec, out, cache, log)
+            spec.save(root)
+            if (out / "upload_before.jpg").exists():
+                (out / "archive_before.json").unlink(missing_ok=True)  # their own before photo is the before side
+            else:
+                archive = True
+        if archive is None and not (out / "upload_before.jpg").exists():
             archive = _archive_before(spec, out, log)  # may move the box onto where the photo really is
         b = box_window(spec.bbox, ZOOM)
         area = Window(b.x0 - pad, b.y0 - pad, b.x1 + pad, b.y1 + pad)
@@ -524,20 +608,20 @@ def prepare(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
     return summary
 
 
-def _naip_fill(area: Window, spec: AreaSpec, naip_scenes, naip_mosaic):
+def _naip_fill(area: Window, spec: AreaSpec, naip_scenes, naip_mosaic, zoom: int = ZOOM):
     """Pre-storm mosaic from the newest NAIP year, filling scene edges from
     neighboring scenes of that year (one scene is a quarter quad, so a town
     often spans two), then from older years where still empty."""
     from .sources import pixel_bbox_lonlat
 
-    scenes = naip_scenes(*spec.center, before=spec.landfall, bbox=pixel_bbox_lonlat(area, ZOOM))
+    scenes = naip_scenes(*spec.center, before=spec.landfall, bbox=pixel_bbox_lonlat(area, zoom))
     if not scenes:
         raise LookupError("no NAIP pre-storm imagery here")
     newest = scenes[0]
     pre = np.zeros((area.height, area.width, 3), np.uint8)
     ok = np.zeros((area.height, area.width), bool)
     for sc in scenes:
-        img, valid = naip_mosaic(sc, area, ZOOM)
+        img, valid = naip_mosaic(sc, area, zoom)
         fill = valid & ~ok
         pre[fill] = img[fill]
         ok |= valid
