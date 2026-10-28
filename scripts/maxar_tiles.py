@@ -109,6 +109,8 @@ def main() -> None:
         if a.all
         else f"Maxar Open Data (CC BY-NC 4.0), {best[0].date}",
     }
+    # the disaster's own layer: the map shows it when the disaster is picked
+    (root / "layer.json").write_text(json.dumps({**meta, "storm": a.storm}))
     for area in a.areas:
         f = Path(a.out) / area / "tiles.json"
         layers = json.loads(f.read_text()) if f.exists() else []

@@ -92,10 +92,20 @@ async function setOverlay(area) {
   if (after) map.removeLayer(after);
   // shipped areas: map tiles, a wide after-storm layer under a sharp one; drawn areas: their own mosaic
   after = o.tiles
-    ? L.layerGroup([].concat(o.tiles).map((t, i) => L.tileLayer(t.url, {
-        maxZoom: 21, maxNativeZoom: t.max_native_zoom, minNativeZoom: t.min_zoom, zIndex: i + 1, bounds: t.bounds, attribution: t.attribution,
-      })))
+    ? tileGroup(o.tiles)
     : L.imageOverlay(`${o.url}?t=${Date.now()}`, o.bounds, { attribution: "Maxar Open Data (CC BY-NC 4.0)" });
+  applyLayer();
+}
+function tileGroup(tiles) {
+  return L.layerGroup([].concat(tiles).map((t, i) => L.tileLayer(t.url, {
+    maxZoom: 21, maxNativeZoom: t.max_native_zoom, minNativeZoom: t.min_zoom, zIndex: i + 1, bounds: t.bounds, attribution: t.attribution,
+  })));
+}
+function setStormTiles(storm) {
+  // satellite disasters: the after photos cut for the spot the disaster opens on
+  flightToken++;
+  if (after) map.removeLayer(after);
+  after = storm && storm.tiles && storm.tiles.length ? tileGroup(storm.tiles) : null;
   applyLayer();
 }
 function applyLayer() {
@@ -663,7 +673,9 @@ async function boot() {
   }
   if ((at || fit) && key && storms.some((x) => x.key === key)) {
     showStorm(key);
-    setFlight(null, true);  // NOAA storms: every after-storm flight; Maxar ones keep the street map
+    const s = storms.find((x) => x.key === key);
+    if (s.imagery === "noaa") setFlight(null, true);  // every after-storm flight
+    else setStormTiles(s);  // the after photos cut for this disaster
   }
   state.sid = (await session).id;
   const ev = new EventSource(`/api/sessions/${state.sid}/events`);
