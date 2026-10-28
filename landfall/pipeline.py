@@ -258,13 +258,52 @@ def _no_before(spec: AreaSpec, d: Path) -> bool:
 
 
 def _archive_mosaic(spec: AreaSpec, win: Window, cache: Path) -> tuple[str, np.ndarray, np.ndarray, str]:
-    """The archive's newest photo from before the disaster over a window: NAIP
-    in the US, Maxar elsewhere, as a drawn box uses. Returns its label, the
-    mosaic, where it has data, and its date."""
-    from .sources import naip_mosaic, naip_scenes, pixel_bbox_lonlat
+    """The archive's newest photo from before the disaster over a window: for
+    a catalog disaster NAIP in the US and Maxar elsewhere, as a drawn box
+    uses; for a new one, and wherever those have nothing, Esri's Wayback
+    archive. Returns its label, the mosaic, where it has data, and its date."""
     from .storms import STORMS
 
     s = STORMS.get(spec.storm)
+    if s is None:
+        # a disaster the catalog doesn't have, anywhere and as recent as
+        # yesterday: Esri's archive is worldwide and updated every few weeks,
+        # though in places its newest photo is older than NAIP's
+        try:
+            esri = _wayback_mosaic(spec, win, cache)
+        except (LookupError, OSError):
+            esri = None  # in the US, NAIP may still have it
+        if esri is not None and esri[3][:4] >= str(int(spec.landfall[:4]) - 1):
+            return esri
+        try:
+            naip = _catalog_archive(None, spec, win, cache)
+        except (LookupError, OSError):
+            naip = None
+        newest = max((x for x in (esri, naip) if x is not None), key=lambda x: x[3], default=None)
+        if newest is None:
+            raise LookupError("no archive photo of this spot from before the disaster")
+        return newest
+    try:
+        return _catalog_archive(s, spec, win, cache)
+    except (LookupError, OSError):
+        return _wayback_mosaic(spec, win, cache)
+
+
+def _wayback_mosaic(spec: AreaSpec, win: Window, cache: Path) -> tuple[str, np.ndarray, np.ndarray, str]:
+    from .geo import pixel_to_lonlat
+    from .wayback import before, mosaic
+
+    lon, lat = pixel_to_lonlat((win.x0 + win.x1) / 2, (win.y0 + win.y1) / 2, ZOOM)
+    photo = before(lon, lat, spec.landfall, cache)
+    if photo is None:
+        raise LookupError("Esri's archive has no photo of this spot from before the disaster")
+    img, ok = mosaic(photo, win, ZOOM, cache)
+    return photo.label, img, ok, photo.captured
+
+
+def _catalog_archive(s, spec: AreaSpec, win: Window, cache: Path) -> tuple[str, np.ndarray, np.ndarray, str]:
+    from .sources import naip_mosaic, naip_scenes, pixel_bbox_lonlat
+
     if s is not None and s.provider == "maxar":
         from .maxar import mosaic, passes, pick
 
