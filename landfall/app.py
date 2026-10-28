@@ -292,6 +292,12 @@ def places(q: str) -> list[dict]:
         return []
     try:
         rows = search(q)[:5]
+        # a full address the map doesn't know exactly (a unit number, a new
+        # street): drop its first part until something matches, down to the town
+        parts = [p.strip() for p in q.split(",") if p.strip()]
+        while not rows and len(parts) > 1:
+            parts = parts[1:]
+            rows = search(", ".join(parts))[:5]
     except Exception:
         raise HTTPException(502, "place search is not answering; try again in a moment")
     for r in rows:

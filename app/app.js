@@ -283,7 +283,7 @@ $("upload-form").addEventListener("submit", async (e) => {
   try {
     const a = await put(after, "side=after");
     if (before) await put(before, `side=before&id=${a.id}`);
-    state.upload = { id: a.id, url: URL.createObjectURL(after), before: !!before, event };
+    state.upload = { id: a.id, url: URL.createObjectURL(after), before: !!before, event, gps: a.gps };
   } catch (err) {
     status.textContent = `Couldn't upload: ${err.message}`;
     return;
@@ -302,8 +302,16 @@ $("upload-form").addEventListener("submit", async (e) => {
     fetch(`/api/wayback?${at}`).then((r) => (r.ok ? r.json() : null)).then((w) => { if (w && state.upload) setBeforeTiles(w); }).catch(() => {});
   }
   const what = known ? `${known.name} (${yr})` : event.name || `the ${yr} ${kind}`;
-  // the agent finds where in the town it was taken, then assesses it: nothing to draw
-  state.box = place.bbox;
+  // the agent finds where in the town it was taken, then assesses it: nothing to draw.
+  // The photo's own GPS or a street address narrow the search to the blocks around it.
+  const near = (lat, lon, km) => {
+    const dy = km / 2 / 111.32, dx = dy / Math.cos((lat * Math.PI) / 180);
+    return [lon - dx, lat - dy, lon + dx, lat + dy];
+  };
+  const spanKm = (b) => Math.max((b[2] - b[0]) * 111.32 * Math.cos((place.lat * Math.PI) / 180), (b[3] - b[1]) * 111.32);
+  const gps = state.upload.gps;
+  state.box = gps ? near(gps[0], gps[1], 1.2) : place.address || spanKm(place.bbox) < 2 ? near(place.lat, place.lon, 2) : place.bbox;
+  if (gps || place.address) map.fitBounds([[state.box[1], state.box[0]], [state.box[3], state.box[2]]]);
   state.findUpload = true;
   $("input").value = `Find where my ${before ? "photos were" : "photo was"} taken in ${place.short || place.label} and assess the buildings in ${before ? "them" : "it"}`;
   send();

@@ -13,7 +13,9 @@ under Esri's terms of use.
 
 from __future__ import annotations
 
+import functools
 import json
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
@@ -64,6 +66,7 @@ def releases(cache: Path) -> list[Release]:
     return sorted(rows, key=lambda r: r.date, reverse=True)
 
 
+@functools.lru_cache(maxsize=4096)
 def captured(rel: Release, lon: float, lat: float, zoom: int = 19) -> tuple[str, str] | None:
     """When and by whom the photo at a point was taken in a release; None
     where the release has no photo there."""
@@ -85,22 +88,51 @@ def captured(rel: Release, lon: float, lat: float, zoom: int = 19) -> tuple[str,
 
 def before(lon: float, lat: float, date: str, cache: Path, zoom: int = 19) -> Photo | None:
     """The newest Wayback photo of a point taken before a date (YYYY-MM-DD).
+    Asked several times in one assessment (finding the spot, then laying it
+    out), so answers are kept per spot of about 1 km: photos are dated in
+    blocks far bigger than that."""
+    return _before(round(lon, 2), round(lat, 2), date, cache, zoom)
 
-    A newer release only ever holds the same photo or a newer one, so the
-    photo date climbs with the release date and a binary search finds the
-    last release whose photo predates the disaster in a handful of lookups."""
-    rels = releases(cache)[::-1]  # oldest first
-    lo, hi, best = 0, len(rels) - 1, None
-    while lo <= hi:
-        mid = (lo + hi) // 2
-        got = captured(rels[mid], lon, lat, zoom)
-        if got and got[0] < date:
-            best, lo = Photo(rels[mid], *got), mid + 1
-        elif got is None and rels[mid].date < date:
-            lo = mid + 1  # no photo this far back: a later release may have one
-        else:
-            hi = mid - 1
-    return best
+
+@functools.lru_cache(maxsize=512)
+def _before(lon: float, lat: float, date: str, cache: Path, zoom: int = 19) -> Photo | None:
+    """Releases, oldest first, fall in three runs: no photo here yet (-1),
+    a photo from before the disaster (0), and a photo from after it, or none
+    in a release after it (+1). The answer is the last 0. The start of the
+    +1 run is found by binary search, about 8 lookups of a second each."""
+    rels = releases(cache)[::-1]
+    store = cache / "wayback" / "dates.json"  # photo dates already asked, kept across runs
+    try:
+        known = json.loads(store.read_text())
+    except (OSError, ValueError):
+        known = {}
+
+    def dated(rel: Release) -> tuple[str, str] | None:
+        k = f"{rel.num}/{lon}/{lat}/{zoom}"
+        if k not in known:
+            known[k] = captured(rel, lon, lat, zoom)
+        return tuple(known[k]) if known[k] else None
+
+    def key(i: int) -> int:
+        got = dated(rels[i])
+        if got is None:
+            return -1 if rels[i].date < date else 1
+        return 0 if got[0] < date else 1
+
+    if key(len(rels) - 1) == 0:  # a disaster newer than Esri's latest photo here: one lookup
+        lo = len(rels)
+    else:
+        lo, hi = 0, len(rels) - 1  # the first +1 is in [lo, hi]
+        while lo < hi:  # one at a time: Esri answers slower, not sooner, when asked several at once
+            mid = (lo + hi) // 2
+            lo, hi = (mid + 1, hi) if key(mid) < 1 else (lo, mid)
+    store.parent.mkdir(parents=True, exist_ok=True)
+    tmp = store.with_suffix(f".{threading.get_ident()}.tmp")  # two assessments at once mustn't half-write it
+    tmp.write_text(json.dumps(known))
+    tmp.replace(store)
+    if lo == 0 or key(lo - 1) != 0:
+        return None
+    return Photo(rels[lo - 1], *dated(rels[lo - 1]))
 
 
 def mosaic(photo: Photo, window: Window, zoom: int, cache: Path, workers: int = 8) -> tuple[np.ndarray, np.ndarray]:
