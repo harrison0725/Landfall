@@ -95,7 +95,7 @@ async function setOverlay(area) {
   // shipped areas: map tiles, a wide after-storm layer under a sharp one; drawn areas: their own mosaic
   after = o.tiles
     ? tileGroup(o.tiles)
-    : L.imageOverlay(`${o.url}?t=${Date.now()}`, o.bounds, { attribution: "Maxar Open Data (CC BY-NC 4.0)" });
+    : L.imageOverlay(`${o.url}?t=${Date.now()}`, o.bounds, { attribution: o.attribution || "Maxar Open Data (CC BY-NC 4.0)" });
   applyLayer();
 }
 function tileGroup(tiles) {
@@ -302,9 +302,11 @@ $("upload-form").addEventListener("submit", async (e) => {
     fetch(`/api/wayback?${at}`).then((r) => (r.ok ? r.json() : null)).then((w) => { if (w && state.upload) setBeforeTiles(w); }).catch(() => {});
   }
   const what = known ? `${known.name} (${yr})` : event.name || `the ${yr} ${kind}`;
-  add(div("msg agent", `<p>Got your ${before ? "before and after photos" : "after photo"} of ${esc(place.short || place.label)} after ${esc(what)}. Zoom in and drag a box over where ${before ? "they were" : "it was"} taken, then press Send. ${
-    before ? "" : `Without a before photo I'll look for your photo in the archive's photo of that spot from before ${day || known ? "the disaster" : yr} and compare against that. If I can't find it there, I'll judge each building from your photo alone and send every one for a field check.`}</p>`));
-  setDrawing(true);
+  // the agent finds where in the town it was taken, then assesses it: nothing to draw
+  state.box = place.bbox;
+  state.findUpload = true;
+  $("input").value = `Find where my ${before ? "photos were" : "photo was"} taken in ${place.short || place.label} and assess the buildings in ${before ? "them" : "it"}`;
+  send();
 });
 
 // ---------------------------------------------------------------- conversation
@@ -436,6 +438,12 @@ function handle(ev) {
       break;
     case "buildings":
       state.area = ev.area;
+      if (state.upload) {
+        // found and laid out: the photos are used; if not found they stay, to drag a box over the spot
+        state.upload = null;
+        $("upload").textContent = "Upload photos";
+        $("upload").classList.remove("on");
+      }
       loadBuildings(true);
       if (!state.flight) setOverlay(ev.area);
       break;
@@ -464,7 +472,7 @@ async function send(e) {
   if (!text || state.busy) return;
   const msg = div("msg user");
   msg.textContent = text;
-  if (state.box) msg.insertAdjacentHTML("beforeend", `<span class="boxnote">+ the box on the map</span>`);
+  if (state.box) msg.insertAdjacentHTML("beforeend", `<span class="boxnote">${state.findUpload ? "+ your photo" : "+ the box on the map"}</span>`);
   add(msg);
   $("input").value = "";
   $("context").textContent = "";
@@ -480,13 +488,14 @@ async function send(e) {
   }
   const body = { text, box: state.box, storm: state.box ? $("storm").value : null, access_code: code, upload: state.box && state.upload ? state.upload.id : null, event: state.box && state.upload ? state.upload.event : null };
   if (state.box) { outlines.clearLayers(); state.features = {}; }
-  if (state.box && state.upload) {
+  if (state.box && state.upload && !state.findUpload) {
     // the photos are used once; the map shows the area's own copy when it's ready
     state.upload = null;
     $("upload").textContent = "Upload photos";
     $("upload").classList.remove("on");
   }
   state.box = null;
+  state.findUpload = false;
   $("context").textContent = "";
   const r = await fetch(`/api/sessions/${state.sid}/turn`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
   if (!r.ok) {

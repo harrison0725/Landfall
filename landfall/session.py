@@ -19,7 +19,7 @@ from pathlib import Path
 
 from .area import ORDER, TOOLS as AREA_TOOLS, Area, run_tools
 from .area import SYSTEM as AREA_SYSTEM
-from .pipeline import STAGES, AreaSpec, event_name, spec_for
+from .pipeline import STAGES, AreaSpec, event_name, is_town, spec_for
 from .storms import STORMS
 
 SYSTEM = (
@@ -136,6 +136,12 @@ class Session:
                         "buildings": "from the map's outlines if the after photo is found in the archive photo, otherwise found in the photo by Segment Anything "
                         "(prepare_area reports which)",
                         "buildings_to_assess": spec.n_buildings,
+                        **(
+                            {"where": "the box is the whole town the user named, not the photo's spot: prepare_area first finds where in the town "
+                             "the photo was taken; if it can't, tell the user that and ask them to drag a box over the spot on the map and press Send"}
+                            if is_town(self.box)
+                            else {}
+                        ),
                     }
                 spec = AreaSpec.for_box(self.area or _name(self.box), self.box, args.get("storm", "helene"), n, cache=self.root / "cache")
                 spec.save(self.root)

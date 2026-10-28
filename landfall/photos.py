@@ -114,7 +114,8 @@ def locate(after: np.ndarray, archive: np.ndarray, box: tuple[int, int], k: floa
             T = _edges(cv2.resize(img, (w, h), interpolation=cv2.INTER_AREA), k)
             r = cv2.matchTemplate(A, T, cv2.TM_CCOEFF_NORMED)
             _, score, _, (x, y) = cv2.minMaxLoc(r)
-            tries.append(dict(score=float(score), rot=rot, x=int(x / k), y=int(y / k), w=w, h=h))
+            z = (score - float(r.mean())) / (float(r.std()) + 1e-6)
+            tries.append(dict(score=float(score), z=z, rot=rot, x=int(x / k), y=int(y / k), w=w, h=h))
     if not tries:
         return None
     tries.sort(key=lambda t: -t["score"])
@@ -124,6 +125,68 @@ def locate(after: np.ndarray, archive: np.ndarray, box: tuple[int, int], k: floa
     if best["score"] < min_score or (far and best["score"] < 1.5 * far[0]["score"]):
         return None
     return best
+
+
+def _directions(img: np.ndarray, k: float, blur: float = 1.0) -> list[np.ndarray]:
+    """Which way the edges run at scale k, weighted by how clear they are.
+    Directions (doubled, so a dark-to-light edge matches a light-to-dark
+    one) survive a different camera, season and storm far better than edge
+    strength: across a whole town they tell the right spot from look-alikes."""
+    import cv2
+
+    g = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    g = cv2.resize(g, None, fx=k, fy=k, interpolation=cv2.INTER_AREA).astype(np.float32)
+    g = cv2.GaussianBlur(g, (0, 0), 0.8)
+    gx, gy = cv2.Sobel(g, cv2.CV_32F, 1, 0), cv2.Sobel(g, cv2.CV_32F, 0, 1)
+    m2 = gx * gx + gy * gy + 1e-6
+    m = np.sqrt(m2)
+    w = m / (m + np.percentile(m, 70))  # saturates: contrast doesn't matter
+    return [cv2.GaussianBlur(w * (gx * gx - gy * gy) / m2, (0, 0), blur), cv2.GaussianBlur(w * 2 * gx * gy / m2, (0, 0), blur)]
+
+
+def search(after: np.ndarray, archive: np.ndarray, m_per_px: float, min_m: float = 60.0, max_m: float = 1500.0, min_z: float = 5.0, n: int = 3) -> list[dict]:
+    """Where the after photo was taken, anywhere in an archive photo of a
+    whole town, when nobody has said where or how much ground it shows.
+
+    Tries the photo turned by quarter turns (photos from the air are
+    usually north-up or a quarter turn off) at ground widths from `min_m`
+    to `max_m`, 3% apart, matching edge directions on a coarse archive photo
+    (`m_per_px` metres a pixel). Returns up to `n` likely spots, best first,
+    each with its turn and placement in archive pixels; `locate` on sharp
+    photos then says which, if any, is really it."""
+    import cv2
+
+    feats: dict[float, list[np.ndarray]] = {}
+    tries = []
+    for rot in range(4):
+        img = np.ascontiguousarray(np.rot90(after, rot))
+        aspect = img.shape[0] / img.shape[1]
+        for metres in np.geomspace(min_m, max_m, int(np.log(max_m / min_m) / np.log(1.03)) + 1):
+            w = int(metres / m_per_px)
+            h = int(w * aspect)
+            k = min(0.5, max(0.125, 2 ** round(np.log2(90 / w)))) if w else 0.5  # templates about 90 px across
+            if w * k < 24 or w >= archive.shape[1] - 2 or h >= archive.shape[0] - 2:
+                continue
+            if k not in feats:
+                feats[k] = _directions(archive, k)
+            T = _directions(cv2.resize(img, (w, h), interpolation=cv2.INTER_AREA), k)
+            r = sum(cv2.matchTemplate(a, t, cv2.TM_CCOEFF_NORMED) for a, t in zip(feats[k], T)) / 2
+            _, score, _, (x, y) = cv2.minMaxLoc(r)
+            z = (score - float(r.mean())) / (float(r.std()) + 1e-6)
+            tries.append(dict(score=float(score), z=z, rot=rot, x=int(x / k), y=int(y / k), w=w, h=h))
+    # a small template matches something somewhere by chance; rank each try
+    # by how far its peak stands above that size's own spread of scores
+    tries.sort(key=lambda t: -t["z"])
+    found: list[dict] = []
+    for t in tries:
+        if t["z"] < min_z:
+            break
+        cx, cy = t["x"] + t["w"] / 2, t["y"] + t["h"] / 2
+        if all(math.hypot(f["x"] + f["w"] / 2 - cx, f["y"] + f["h"] / 2 - cy) > 0.5 * max(f["w"], t["w"]) for f in found):
+            found.append(t)
+            if len(found) == n:
+                break
+    return found
 
 
 def box_window(bbox: tuple[float, float, float, float], zoom: int) -> Window:

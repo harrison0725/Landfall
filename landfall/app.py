@@ -395,9 +395,24 @@ def after_overlay(area: str) -> dict:
     x0, y0 = json.loads((d / "alignment.json").read_text())["summary"]["mosaic_origin"]
     # shipped demo areas keep only a preview, with the full mosaic's size beside it
     w, h = json.loads((d / "post_size.json").read_text()) if not (d / "post.png").exists() else Image.open(d / "post.png").size
-    w_lon, n_lat = pixel_to_lonlat(x0, y0, 19)
-    e_lon, s_lat = pixel_to_lonlat(x0 + w, y0 + h, 19)
-    return {"url": f"/api/areas/{area}/after.jpg", "bounds": [[s_lat, w_lon], [n_lat, e_lon]]}
+    l, t, r, b = _photo_extent(d) or (0, 0, w, h)  # an uploaded photo: just the photo, not the black around it
+    w_lon, n_lat = pixel_to_lonlat(x0 + l, y0 + t, 19)
+    e_lon, s_lat = pixel_to_lonlat(x0 + r, y0 + b, 19)
+    photos = json.loads((d / "spec.json").read_text()).get("imagery") == "photos" if (d / "spec.json").exists() else False
+    return {
+        "url": f"/api/areas/{area}/after.jpg",
+        "bounds": [[s_lat, w_lon], [n_lat, e_lon]],
+        "attribution": "Uploaded after photo" if photos else "Maxar Open Data (CC BY-NC 4.0)",
+    }
+
+
+def _photo_extent(d: Path) -> tuple[int, int, int, int] | None:
+    """For an uploaded photo's area, the part of the after mosaic the photo covers."""
+    if not (d / "spec.json").exists() or json.loads((d / "spec.json").read_text()).get("imagery") != "photos" or not (d / "post.png").exists():
+        return None
+    from PIL import Image
+
+    return Image.open(d / "post.png").convert("L").point(lambda v: 255 if v > 0 else 0).getbbox()
 
 
 @app.get("/api/tiles/{name}/{z}/{x}/{y}.jpg")
@@ -440,6 +455,8 @@ def after_jpg(area: str) -> Response:
     out = d / "post_preview.jpg"
     if (d / "post.png").exists() and (not out.exists() or out.stat().st_mtime < (d / "post.png").stat().st_mtime):
         im = Image.open(d / "post.png").convert("RGB")
+        if box := _photo_extent(d):
+            im = im.crop(box)
         im.thumbnail((4096, 4096))
         im.save(out, quality=85)
     return FileResponse(out, media_type="image/jpeg")
