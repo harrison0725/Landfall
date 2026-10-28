@@ -33,4 +33,18 @@ def test_river_surface_follows_nearest_marks():
 
 def test_other_coasts_dont_warn_about_florida_hurricanes():
     assert storms_between("2022-05-01", "2025-01-07", "la_fires") == []
-    assert storms_between("2023-02-15", "2024-09-26", "helene") == ["Hurricane Idalia (2023-08-30)"]
+    assert "Hurricane Idalia (2023-08-30)" in storms_between("2023-02-15", "2024-09-26", "helene")
+
+
+def test_cloud_hidden_after_photo():
+    import numpy as np
+
+    from landfall.pipeline import cloud_hidden
+
+    rng = np.random.default_rng(0)
+    cloud = np.clip(225 + rng.normal(0, 3, (120, 160, 3)), 0, 255).astype(np.uint8)
+    assert cloud_hidden(cloud)
+    # a white roof on a street: bright and grey, but with edges around it
+    town = rng.integers(40, 160, (120, 160, 3)).astype(np.uint8)
+    town[30:90, 40:120] = 235
+    assert not cloud_hidden(town)

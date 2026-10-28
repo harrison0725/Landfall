@@ -180,6 +180,17 @@ def pick_buildings(feats: list[dict], center, n: int, min_area: float) -> list[d
     return chosen
 
 
+def cloud_hidden(post: np.ndarray) -> bool:
+    """True when the after crop is cloud: nearly all bright, colourless and
+    flat. Real ground, even white roofs and concrete, has edges (a mean
+    step between neighbouring pixels of 5 or more against under 1 in cloud)."""
+    px = post.astype(np.float32)
+    hi, lo = px.max(2), px.min(2)
+    white = (hi > 185) & ((hi - lo) < 0.15 * np.maximum(hi, 1))
+    flat = np.abs(np.diff(px.mean(2), axis=1)).mean() < 3
+    return bool(white.mean() >= 0.85 and flat)
+
+
 def prepare(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
     """Footprints, pre/post mosaics, per-building alignment and crops."""
     from PIL import Image
@@ -578,7 +589,7 @@ def flood(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
                     g["station"], g["lon"], g["lat"], (t0 - timedelta(days=1)).strftime("%Y%m%d"), (t0 + timedelta(days=3)).strftime("%Y%m%d")
                 )
             )
-        except LookupError as e:
+        except (LookupError, OSError) as e:  # a gauge the storm knocked out answers 400
             log("flood_source", station=g["station"], error=str(e))
     if not obs:
         (d / "flood.json").write_text(json.dumps(dict(surface_ft_navd88=None, observations=[], buildings=[])))
@@ -782,6 +793,27 @@ def assess(
         pre = np.asarray(Image.open(d / "crops" / f"{bid}_pre.png").convert("RGB"))
         post = np.asarray(Image.open(d / "crops" / f"{bid}_post.png").convert("RGB"))
         outline = _outline(feats, bid, windows[bid], zoom)
+        if cloud_hidden(post):
+            # Nothing to judge, and the model will still read white cloud
+            # as a cleared lot. Hand it to an assessor without asking.
+            note = "Cloud covers this building in the after photo, so it can't be judged from the air. Check it on the ground or with a later photo."
+            log("building", id=bid, category="none", confidence=0.0, needs_human=True, decided_by="cloud check", revisions=0, evidence=note)
+            return dict(
+                id=bid,
+                category="none",
+                confidence=0.0,
+                evidence=note,
+                needs_human=True,
+                decided_by="cloud check",
+                verified=False,
+                demolished=False,
+                clouded=True,
+                structure_loss=loss,
+                flood_ft=floods.get(bid),
+                debris_share=None,
+                tarp_share=None,
+                trace=[{"model": "cloud check", "note": "after photo is cloud"}],
+            )
         try:
             a = assess_one(bid, pre, post, outline, m, {**r, **yard, "status": status[bid]}, escalate=escalate, kind=kind)
         except Exception as e:  # keep going; one bad building should not stop the area
