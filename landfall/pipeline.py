@@ -72,6 +72,10 @@ class AreaSpec:
     post_label: str = ""
     pre_label: str = ""
     pre_date: str = ""
+    # a disaster not in the catalog, described by the user who uploaded its
+    # photos: what kind it was and what they call it (the date is landfall)
+    kind: str = ""
+    event_name: str = ""
 
     @property
     def post_source(self) -> str:
@@ -97,14 +101,38 @@ class AreaSpec:
         return cls(name, center, tuple(bbox), storm, f.name, s.landfall, s.stn_event, n_buildings, hwm_radius_km=radius, gauges=gauges)
 
     @classmethod
-    def for_photos(cls, name: str, bbox: tuple[float, float, float, float], storm: str, n_buildings: int = 60) -> AreaSpec:
+    def for_photos(cls, name: str, bbox: tuple[float, float, float, float], storm: str, n_buildings: int = 60, event: dict | None = None) -> AreaSpec:
         """An area from photos the user uploaded, laid over the box they drew.
         The disaster still sets the kind of damage and, in the US, where the
-        surveyed flood marks come from."""
+        surveyed flood marks come from. `event` ({kind, date, name}) is a
+        disaster the catalog doesn't have, such as one that just happened."""
         from .storms import STORMS, nearest_gauges
 
-        s = STORMS[storm]
         center = ((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2)
+        if event:
+            kind = event["kind"]
+            try:  # NOAA's tide gauges post water levels as they happen, so a new storm surge is measured too
+                gauges = nearest_gauges(*center) if kind == "hurricane" else []
+            except OSError:
+                gauges = []
+            return cls(
+                name,
+                center,
+                tuple(bbox),
+                "",
+                "",
+                event["date"],
+                "",
+                n_buildings,
+                min_area_m2=25.0,
+                hwm_radius_km=2.0 if kind == "flood" else 5.0,
+                gauges=gauges,
+                imagery="photos",
+                post_label="Uploaded after photo",
+                kind=kind,
+                event_name=event.get("name") or f"the {kind} of {event['date']}",
+            )
+        s = STORMS[storm]
         us = s.provider == "noaa"
         gauges = nearest_gauges(*center) if us and s.kind == "hurricane" else []
         return cls(
@@ -210,6 +238,20 @@ def pick_buildings(feats: list[dict], center, n: int, min_area: float) -> list[d
 NO_BEFORE = "no before photo was uploaded, so the left image is blank grey; judge from the after photo alone and keep confidence modest"
 
 
+def event_kind(spec: AreaSpec) -> str:
+    """Hurricane, wildfire, earthquake or flood: from the catalog, or as the
+    user described a disaster the catalog doesn't have."""
+    from .storms import STORMS
+
+    return STORMS[spec.storm].kind if spec.storm in STORMS else (spec.kind or "hurricane")
+
+
+def event_name(spec: AreaSpec) -> str:
+    from .storms import STORMS
+
+    return STORMS[spec.storm].name if spec.storm in STORMS else (spec.event_name or "the disaster")
+
+
 def _no_before(spec: AreaSpec, d: Path) -> bool:
     return spec.imagery == "photos" and not (d / "upload_before.jpg").exists() and not (d / "archive_before.json").exists()
 
@@ -221,8 +263,8 @@ def _archive_mosaic(spec: AreaSpec, win: Window, cache: Path) -> tuple[str, np.n
     from .sources import naip_mosaic, naip_scenes, pixel_bbox_lonlat
     from .storms import STORMS
 
-    s = STORMS[spec.storm]
-    if s.provider == "maxar":
+    s = STORMS.get(spec.storm)
+    if s is not None and s.provider == "maxar":
         from .maxar import mosaic, passes, pick
 
         before = pick(passes(s.maxar_event, pixel_bbox_lonlat(win, ZOOM), cache), s.landfall, False)
@@ -715,7 +757,7 @@ def flood(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
     # A river falls along its course, often tens of feet across one town, so
     # each building takes the water surface from the marks nearest to it.
     # Storm surge over a small town is close to flat: one surface for all.
-    river = spec.storm in STORMS and STORMS[spec.storm].kind == "flood"
+    river = event_kind(spec) == "flood"
     obs = []
     radius = spec.hwm_radius_km
     if not spec.stn_event and not spec.gauges:
@@ -906,7 +948,7 @@ def assess(
     from .storms import STORMS
 
     d = root / spec.name
-    kind = STORMS[spec.storm].kind if spec.storm in STORMS else "hurricane"
+    kind = event_kind(spec)
     al, feats = _load(d)
     zoom = al["summary"]["zoom"]
     windows = {r["id"]: Window(*r["window"]) for r in al["buildings"]}

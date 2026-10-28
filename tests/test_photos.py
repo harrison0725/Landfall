@@ -71,3 +71,20 @@ def test_locate_gives_up_on_another_place():
     from landfall.photos import locate
 
     assert locate(_scene(4, (400, 600)), _scene(5, (900, 1200)), (600, 400)) is None
+
+
+def test_a_new_disaster_described_by_the_uploader():
+    import pytest
+    from fastapi import HTTPException
+
+    from landfall.app import _event
+    from landfall.pipeline import AreaSpec, event_kind, event_name
+
+    ev = _event({"kind": "flood", "date": "2026-10-20", "name": "  Big   river flood "})
+    assert ev == {"kind": "flood", "date": "2026-10-20", "name": "Big river flood"}
+    with pytest.raises(HTTPException):
+        _event({"kind": "volcano", "date": "2026-10-20"})
+    with pytest.raises(HTTPException):
+        _event({"kind": "flood", "date": "2999-01-01"})
+    spec = AreaSpec.for_photos("upload_x", (10.0, 45.0, 10.01, 45.01), "", 20, event={**ev, "name": ""})
+    assert (spec.storm, spec.landfall, event_kind(spec), event_name(spec)) == ("", "2026-10-20", "flood", "the flood of 2026-10-20")

@@ -94,6 +94,7 @@ class Turn(BaseModel):
     storm: str | None = None
     access_code: str | None = None
     upload: str | None = None  # id from /api/uploads: photos to assess instead of NOAA or Maxar
+    event: dict | None = None  # with an upload, a disaster not in the catalog: {kind, date, name}
 
 
 RECENT: dict[str, list[float]] = {}
@@ -481,6 +482,7 @@ def turn(sid: str, body: Turn, request: Request) -> dict:
     if body.box and not allowed:
         raise HTTPException(403, "Assessing a new area needs the access code. You can still ask about the finished areas.")
     _rate_limit(request)
+    event = _event(body.event) if body.upload and body.event else None
     live.session.may_run_pipeline = allowed
     live.session.max_buildings = MAX_BUILDINGS
     live.busy = True
@@ -489,7 +491,7 @@ def turn(sid: str, body: Turn, request: Request) -> dict:
     def work() -> None:
         try:
             box = tuple(body.box) if body.box else None
-            text = live.session.turn(body.text, box=box, storm=body.storm, upload=body.upload if box else None)
+            text = live.session.turn(body.text, box=box, storm=body.storm, upload=body.upload if box else None, event=event)
             live.emit("message", text=text, area=live.session.area)
         except Exception as e:
             live.emit("error", text=f"{type(e).__name__}: {e}"[:500])
@@ -519,6 +521,23 @@ async def upload(request: Request, side: str = "after", id: str | None = None) -
         return save_upload(ROOT, id if side == "before" else uuid.uuid4().hex[:12], side, raw)
     except Exception as e:  # not an image PIL can read
         raise HTTPException(400, f"that file isn't an image I can read ({type(e).__name__})") from e
+
+
+def _event(raw: dict) -> dict:
+    """A disaster the catalog doesn't have, as the uploader described it."""
+    from datetime import date
+
+    kind = str(raw.get("kind", ""))
+    if kind not in ("hurricane", "flood", "wildfire", "earthquake"):
+        raise HTTPException(400, "the disaster's kind is hurricane, flood, wildfire or earthquake")
+    try:
+        when = date.fromisoformat(str(raw.get("date", "")))
+    except ValueError:
+        raise HTTPException(400, "give the date the disaster happened") from None
+    if when > date.today():
+        raise HTTPException(400, "the date the disaster happened can't be in the future")
+    name = " ".join(str(raw.get("name") or "").split())[:80]
+    return {"kind": kind, "date": when.isoformat(), "name": name}
 
 
 @app.get("/api/sessions/{sid}/events")

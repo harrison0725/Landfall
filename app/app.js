@@ -235,12 +235,21 @@ $("upload").addEventListener("click", () => {
   $("upload-form").hidden = !$("upload-form").hidden;
 });
 $("upload-cancel").addEventListener("click", () => { $("upload-form").hidden = true; });
+// photos of a disaster the menu doesn't have yet: say what it was and when
+$("upload-event").addEventListener("change", () => {
+  $("upload-new").hidden = !$("upload-event").value;
+  if (!$("upload-date").value) $("upload-date").value = new Date().toISOString().slice(0, 10);
+  $("upload-date").max = new Date().toISOString().slice(0, 10);
+});
 $("upload-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const after = $("upload-after").files[0];
   const before = $("upload-before").files[0];
   const status = $("upload-status");
   if (!after) { status.textContent = "Pick an after photo first."; return; }
+  const kind = $("upload-event").value;
+  if (kind && !$("upload-date").value) { status.textContent = "Say when it happened."; return; }
+  const event = kind ? { kind, date: $("upload-date").value, name: $("upload-name").value.trim() } : null;
   status.textContent = "Uploading…";
   const put = (file, q) => fetch(`/api/uploads?${q}`, { method: "POST", body: file }).then(async (r) => {
     if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
@@ -249,7 +258,7 @@ $("upload-form").addEventListener("submit", async (e) => {
   try {
     const a = await put(after, "side=after");
     if (before) await put(before, `side=before&id=${a.id}`);
-    state.upload = { id: a.id, url: URL.createObjectURL(after), before: !!before };
+    state.upload = { id: a.id, url: URL.createObjectURL(after), before: !!before, event };
   } catch (err) {
     status.textContent = `Couldn't upload: ${err.message}`;
     return;
@@ -258,7 +267,7 @@ $("upload-form").addEventListener("submit", async (e) => {
   $("upload-form").hidden = true;
   $("upload").textContent = before ? "Photos ready" : "Photo ready";
   $("upload").classList.add("on");
-  add(div("msg agent", `<p>Got your ${before ? "before and after photos" : "after photo"}. Now drag a box on the map over where ${before ? "they were" : "it was"} taken, pick the disaster, and press Send. ${
+  add(div("msg agent", `<p>Got your ${before ? "before and after photos" : "after photo"}. Now drag a box on the map over where ${before ? "they were" : "it was"} taken${event ? "" : ", check the Disaster menu shows the right disaster,"} and press Send. ${
     before ? "" : "Without a before photo I'll look for your photo in the archive's photo of that spot from before the disaster and compare against that. If I can't find it there, I'll judge each building from your photo alone and send every one for a field check."}</p>`));
   setDrawing(true);
 });
@@ -434,7 +443,7 @@ async function send(e) {
       return;
     }
   }
-  const body = { text, box: state.box, storm: state.box ? $("storm").value : null, access_code: code, upload: state.box && state.upload ? state.upload.id : null };
+  const body = { text, box: state.box, storm: state.box ? $("storm").value : null, access_code: code, upload: state.box && state.upload ? state.upload.id : null, event: state.box && state.upload ? state.upload.event : null };
   if (state.box) { outlines.clearLayers(); state.features = {}; }
   if (state.box && state.upload) {
     // the photos are used once; the map shows the area's own copy when it's ready
@@ -757,9 +766,12 @@ function introFor(pick) {
   const feats = Object.values(state.features).map((l) => l.feature.properties);
   const n = (c) => feats.filter((p) => p.category === c).length;
   const opt = $("storm").selectedOptions[0];
+  // a disaster the uploader described isn't on the menu: use their name for it
+  const named = pick.spec && !pick.spec.storm && pick.spec.event_name;
+  const text = named || (opt ? opt.text : "");
   // "after Hurricane Helene", but "after the Myanmar earthquake"
-  const storm = opt ? (/^(Hurricane|Cyclone|Typhoon)/.test(opt.text) ? "" : "the ") + opt.text : "";
-  const photos = pick.spec && pick.spec.imagery === "maxar" ? "satellite" : "aerial";
+  const storm = text ? (/^(Hurricane|Cyclone|Typhoon|the )/.test(text) ? "" : "the ") + text : "";
+  const photos = pick.spec && pick.spec.imagery === "maxar" ? "satellite" : pick.spec && pick.spec.imagery === "photos" ? "uploaded" : "aerial";
   const tally = ["destroyed", "major", "minor", "affected", "none"].map((c) => `${n(c)} ${LABEL[c].toLowerCase()}`).join(", ");
   const check = feats.filter((p) => p.needs_human).length;
   return `I've drafted damage categories for **${feats.length} buildings in ${areaLabel(pick.name)}** after ${storm.split(" (")[0] || "the disaster"}, from before and after ${photos} photos: ${tally}. ${check} need a field check.\n\nAsk me about it, or draw a new area on the map and I'll assess that too.`;
