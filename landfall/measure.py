@@ -50,6 +50,52 @@ def structure_mask(masks: list[np.ndarray], footprint: np.ndarray, min_inside: f
     return out
 
 
+def canopy_mask(rgb: np.ndarray, min_texture: float = 6.0) -> np.ndarray:
+    """Living tree canopy: green and leafy. Green alone would take in a green
+    metal roof, so canopy must also be rough (leaves and their shadows vary
+    from pixel to pixel; a roof sheet is smooth)."""
+    import cv2
+
+    px = rgb.astype(np.float32)
+    r, g, b = px[..., 0], px[..., 1], px[..., 2]
+    green = (g > r + 4) & (g > b + 4) & (px.max(2) < 200)
+    gray = px.mean(2)
+    mean = cv2.blur(gray, (5, 5))
+    rough = np.sqrt(np.maximum(cv2.blur(gray * gray, (5, 5)) - mean * mean, 0)) >= min_texture
+    m = (green & rough).astype(np.uint8)
+    # fill the gaps between leaves, drop lone green specks
+    k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+    return cv2.morphologyEx(cv2.morphologyEx(m, cv2.MORPH_CLOSE, k), cv2.MORPH_OPEN, k).astype(bool)
+
+
+def under_trees(pre: np.ndarray, post_ctx: np.ndarray, canopy_ctx: np.ndarray, dx: int, dy: int, pad: int, tolerance: int = 0) -> tuple[float, float]:
+    """Split the pre-storm structure at the chosen shift into what reappears,
+    what is hidden under tree canopy, and what is gone.
+
+    Returns (structure loss counting only the part trees don't hide, share of
+    the structure hidden by trees). A tree grown over a roof since the
+    before photo hides it without removing it, so canopy over a missing
+    patch is not counted as loss."""
+    import cv2
+
+    n = int(pre.sum())
+    if n == 0:
+        return 0.0, 0.0
+    h, w = pre.shape
+    y, x = dy + pad, dx + pad
+    post = post_ctx.astype(np.uint8)
+    if tolerance:
+        k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * tolerance + 1, 2 * tolerance + 1))
+        post = cv2.dilate(post, k)
+    seen = post[y : y + h, x : x + w].astype(bool) & pre
+    trees = canopy_ctx[y : y + h, x : x + w] & pre & ~seen
+    hidden = int(trees.sum())
+    visible = n - hidden
+    if visible == 0:
+        return 0.0, 1.0
+    return float(1 - seen.sum() / visible), hidden / n
+
+
 def best_overlap(pre: np.ndarray, post_ctx: np.ndarray, pad: int, tolerance: int = 0) -> tuple[float, int, int]:
     """How much of the pre-storm structure mask reappears in the post-storm
     masks, allowing the post-storm house to sit up to `pad` px away.
