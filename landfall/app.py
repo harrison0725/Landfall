@@ -406,7 +406,8 @@ def after_overlay(area: str) -> dict:
     e_lon, s_lat = pixel_to_lonlat(x0 + r, y0 + b, 19)
     photos = json.loads((d / "spec.json").read_text()).get("imagery") == "photos" if (d / "spec.json").exists() else False
     out = {
-        "url": f"/api/areas/{area}/after.jpg",
+        # a photo turned to north-up has blank corners: a see-through image there
+        "url": f"/api/areas/{area}/after.{'webp' if (d / 'upload_after_ok.png').exists() else 'jpg'}",
         "bounds": [[s_lat, w_lon], [n_lat, e_lon]],
         "attribution": "Uploaded after photo" if photos else "Maxar Open Data (CC BY-NC 4.0)",
     }
@@ -464,6 +465,26 @@ def _shared_tiles(d: Path) -> list[dict]:
                 out.setdefault(t["url"], t)
     # wide, coarse layers first so sharper ones draw on top
     return sorted(out.values(), key=lambda t: t["max_native_zoom"])
+
+
+@app.get("/api/areas/{area}/after.webp")
+def after_webp(area: str) -> Response:
+    """An uploaded photo turned to north-up, see-through where it has no picture."""
+    from PIL import Image
+
+    d = _area_dir(area)
+    out = d / "post_preview.webp"
+    if not (d / "post.png").exists():
+        raise HTTPException(404, "no after photo yet")
+    if not out.exists() or out.stat().st_mtime < (d / "post.png").stat().st_mtime:
+        im = Image.open(d / "post.png").convert("RGB")
+        alpha = im.convert("L").point(lambda v: 255 if v > 0 else 0)
+        im.putalpha(alpha)
+        if box := _photo_extent(d):
+            im = im.crop(box)
+        im.thumbnail((4096, 4096))
+        im.save(out, quality=85)
+    return FileResponse(out, media_type="image/webp")
 
 
 @app.get("/api/areas/{area}/after.jpg")

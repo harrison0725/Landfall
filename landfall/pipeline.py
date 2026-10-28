@@ -284,9 +284,18 @@ def _archive_mosaic(spec: AreaSpec, win: Window, cache: Path, zoom: int = ZOOM) 
             raise LookupError("no archive photo of this spot from before the disaster")
         return newest
     try:
-        return _catalog_archive(s, spec, win, cache, zoom)
+        got = _catalog_archive(s, spec, win, cache, zoom)
     except (LookupError, OSError):
         return _wayback_mosaic(spec, win, cache, zoom)
+    if years_before(got[3], spec.landfall) >= OLD_BEFORE_YEARS:
+        # an old photo: Esri's archive may have a newer one from before it
+        try:
+            esri = _wayback_mosaic(spec, win, cache, zoom)
+            if esri[3] > got[3] and esri[2].mean() >= 0.9 * got[2].mean():
+                return esri
+        except (LookupError, OSError):
+            pass
+    return got
 
 
 def _wayback_mosaic(spec: AreaSpec, win: Window, cache: Path, zoom: int = ZOOM) -> tuple[str, np.ndarray, np.ndarray, str]:
@@ -316,7 +325,7 @@ def _catalog_archive(s, spec: AreaSpec, win: Window, cache: Path, zoom: int = ZO
     return f"USDA NAIP {scene.date}", img, ok, scene.date
 
 
-def _archive_before(spec: AreaSpec, out: Path, log: Log) -> bool | None:
+def _archive_before(spec: AreaSpec, out: Path, log: Log, slants: bool = True) -> bool | None:
     """No before photo uploaded: find the after photo in the archive's before
     photo around the user's box, move the box (and the photo's turn) to
     where it really is, and record that the archive is the before side.
@@ -324,7 +333,7 @@ def _archive_before(spec: AreaSpec, out: Path, log: Log) -> bool | None:
     from PIL import Image
 
     from .geo import pixel_to_lonlat
-    from .photos import box_window, locate
+    from .photos import box_window, locate, slant_tries, turn
 
     b = box_window(spec.bbox, ZOOM)
     m = int(0.35 * max(b.width, b.height))
@@ -338,12 +347,25 @@ def _archive_before(spec: AreaSpec, out: Path, log: Log) -> bool | None:
         log("photos", note="the archive barely covers this spot; judging from the after photo alone")
         return None
     after = np.asarray(Image.open(out / "upload_after.jpg").convert("RGB"))
-    hit = locate(after, arch, (b.width, b.height))
+    shown = out / "upload_after_ok.png"  # already turned to north-up: where it has picture
+    ok_after = np.asarray(Image.open(shown)) > 0 if shown.exists() else None
+    hit = locate(after, arch, (b.width, b.height), ok=ok_after, near=not slants)
+    slant = 0
+    if hit is None and ok_after is None and slants:
+        # taken at a slant: turn it to line its streets up with the archive's
+        for d in slant_tries(after, arch)[1:]:
+            turned, ok_t = turn(after, d)
+            hit = locate(turned, arch, _turned_box(b, after, turned), ok=ok_t)
+            if hit is not None:
+                slant, after, ok_after = d, turned, ok_t
+                break
     if hit is None:
         log("photos", note="couldn't find the photo in the archive photo of this spot; judging from the after photo alone")
         return None
-    if hit["rot"]:
+    if hit["rot"] or slant:
         Image.fromarray(np.ascontiguousarray(np.rot90(after, hit["rot"]))).save(out / "upload_after.jpg", quality=92)
+    if ok_after is not None:
+        Image.fromarray(np.ascontiguousarray(np.rot90(ok_after, hit["rot"])).astype(np.uint8) * 255).save(shown)
     x0, y0 = wide.x0 + hit["x"], wide.y0 + hit["y"]
     w_lon, n_lat = pixel_to_lonlat(x0, y0, ZOOM)
     e_lon, s_lat = pixel_to_lonlat(x0 + hit["w"], y0 + hit["h"], ZOOM)
@@ -351,11 +373,19 @@ def _archive_before(spec: AreaSpec, out: Path, log: Log) -> bool | None:
     spec.bbox = (w_lon, s_lat, e_lon, n_lat)
     spec.center = ((w_lon + e_lon) / 2, (s_lat + n_lat) / 2)
     spec.save(out.parent)
-    (out / "archive_before.json").write_text(json.dumps({"label": label, "date": when, "score": round(hit["score"], 3), "moved_m": moved, "turned": hit["rot"] * 90}))
+    (out / "archive_before.json").write_text(json.dumps({"label": label, "date": when, "score": round(hit["score"], 3), "moved_m": moved, "turned": (hit["rot"] * 90 + slant) % 360}))
+    turned = (hit["rot"] * 90 + slant) % 360
     log("photos", note=f"found the photo in the archive's {label} photo"
         + (f", {moved} m from the box" if moved >= 5 else "")
-        + (f", turned {hit['rot'] * 90}°" if hit["rot"] else ""))
+        + (f", turned {turned}° to north-up" if turned else ""))
     return True
+
+
+def _turned_box(b: Window, photo: np.ndarray, turned: np.ndarray) -> tuple[int, int]:
+    """The user's box grown as the photo's canvas grows when it's turned:
+    the photo still fills the same ground."""
+    k = math.sqrt(turned.shape[0] * turned.shape[1] / (photo.shape[0] * photo.shape[1]))
+    return int(b.width * k), int(b.height * k)
 
 
 SEARCH_ZOOM = 17  # about 1 m a pixel: a whole town in one archive photo
@@ -382,7 +412,7 @@ def find_upload(spec: AreaSpec, d: Path, cache: Path, log: Log = _quiet) -> str:
     from PIL import Image
 
     from .geo import lonlat_to_pixel, pixel_to_lonlat
-    from .photos import search
+    from .photos import search, slant_tries, turn
 
     mpp = meters_per_pixel(spec.center[1], SEARCH_ZOOM)
     x0, y0 = lonlat_to_pixel(spec.bbox[0], spec.bbox[3], SEARCH_ZOOM)
@@ -393,22 +423,59 @@ def find_upload(spec: AreaSpec, d: Path, cache: Path, log: Log = _quiet) -> str:
     label, arch, ok = _newest_photo(spec, town, cache)
     if ok.mean() < 0.3:
         raise LookupError("the archive barely covers this place")
+    raw = (d / "upload_after.jpg").read_bytes()
     after = np.asarray(Image.open(d / "upload_after.jpg").convert("RGB"))
     town_box = spec.bbox
-    for spot in search(after, arch, mpp):
-        w_lon, n_lat = pixel_to_lonlat(town.x0 + spot["x"], town.y0 + spot["y"], SEARCH_ZOOM)
-        e_lon, s_lat = pixel_to_lonlat(town.x0 + spot["x"] + spot["w"], town.y0 + spot["y"] + spot["h"], SEARCH_ZOOM)
-        spec.bbox = (w_lon, s_lat, e_lon, n_lat)
-        spec.center = ((w_lon + e_lon) / 2, (s_lat + n_lat) / 2)
-        if _archive_before(spec, d, _quiet):  # the sharp check; it also lines the box up exactly
-            note = f"found where the photo was taken in the {label} photo of the town: about {spot['w'] * mpp:.0f} m across"
-            log("photos", note=note)
-            return note
+    # north-up first, as most photos from the air are (or a quarter turn
+    # off); then turned to line its streets up with each of the town's
+    # grids, a quick pass over every slant picking the spots worth checking
+    rounds = [lambda: search(after, arch, mpp, slants=[0])]
+    slanted = slant_tries(after, arch)[1:]
+    if slanted:
+        def quick() -> list[dict]:
+            log("photos", note=f"not found north-up; trying the photo turned to {len(slanted)} angles that line its streets up with the town's")
+            # each guess is good to a few degrees: try either side of it too
+            spots = sorted((t for a in slanted for off in (-3, 0, 3) for t in search(after, arch, mpp, step=1.11, slants=[(a + off) % 90])), key=lambda t: -t["z"])
+            # the same spot often comes up at neighbouring turns: check the
+            # likeliest few spots, each at its best few turns
+            places: list[list[dict]] = []
+            for t in spots:
+                cx, cy = t["x"] + t["w"] / 2, t["y"] + t["h"] / 2
+                for p in places:
+                    if math.hypot(p[0]["x"] + p[0]["w"] / 2 - cx, p[0]["y"] + p[0]["h"] / 2 - cy) <= 0.5 * max(p[0]["w"], t["w"]):
+                        p.append(t)
+                        break
+                else:
+                    places.append([t])
+            return [t for p in places[:4] for t in p[:3]]
+        rounds.append(quick)
+    for spots in rounds:
+        for spot in spots():
+            slant = spot["slant"]
+            w_lon, n_lat = pixel_to_lonlat(town.x0 + spot["x"], town.y0 + spot["y"], SEARCH_ZOOM)
+            e_lon, s_lat = pixel_to_lonlat(town.x0 + spot["x"] + spot["w"], town.y0 + spot["y"] + spot["h"], SEARCH_ZOOM)
+            spec.bbox = (w_lon, s_lat, e_lon, n_lat)
+            spec.center = ((w_lon + e_lon) / 2, (s_lat + n_lat) / 2)
+            if slant:  # the sharp check works on the photo turned the same way
+                img, ok = turn(after, slant)
+                Image.fromarray(img).save(d / "upload_after.jpg", quality=92)
+                Image.fromarray(ok.astype(np.uint8) * 255).save(d / "upload_after_ok.png")
+            if _archive_before(spec, d, _quiet, slants=False):  # the sharp check; it also lines the box up exactly
+                if slant:
+                    rec = json.loads((d / "archive_before.json").read_text())
+                    rec["turned"] = (rec["turned"] + slant) % 360
+                    (d / "archive_before.json").write_text(json.dumps(rec))
+                note = f"found where the photo was taken in the {label} photo of the town: about {spot['w'] * mpp:.0f} m across"
+                log("photos", note=note)
+                return note
+            if slant:
+                (d / "upload_after.jpg").write_bytes(raw)
+                (d / "upload_after_ok.png").unlink(missing_ok=True)
     spec.bbox = town_box
     spec.center = ((town_box[0] + town_box[2]) / 2, (town_box[1] + town_box[3]) / 2)
     raise LookupError(
         f"couldn't find where the photo was taken anywhere in the {label} photo of this place "
-        "(it may be turned at an angle, or show a spot the disaster changed beyond recognition); "
+        "(it may show a spot the disaster changed beyond recognition, or ground with no streets or buildings to match); "
         "ask the user to drag a box over the spot on the map and press Send"
     )
 
@@ -494,9 +561,16 @@ def prepare(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
         # a house the photo's edge cuts off can't be judged, and its alignment
         # search would run off the photo: keep those well inside
         edge = TEMPLATE_PAD + MAX_SHIFT
+        shown = None
+        if (out / "upload_after_ok.png").exists():  # a turned photo: its blank corners count as edge too
+            import cv2
+
+            shown = cv2.erode(post_ok.astype(np.uint8), np.ones((2 * edge + 1, 2 * edge + 1), np.uint8)) > 0
 
         def inside(f) -> bool:
             px = np.array([lonlat_to_pixel(lon, lat, ZOOM) for lon, lat in f["geometry"]["coordinates"][0]])
+            if shown is not None and not all(shown[int(y) - area.y0, int(x) - area.x0] for x, y in px if 0 <= int(y) - area.y0 < shown.shape[0] and 0 <= int(x) - area.x0 < shown.shape[1]):
+                return False
             return px[:, 0].min() >= b.x0 + edge and px[:, 1].min() >= b.y0 + edge and px[:, 0].max() <= b.x1 - edge and px[:, 1].max() <= b.y1 - edge
 
         feats = [f for f in feats if inside(f)]
@@ -538,6 +612,10 @@ def prepare(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
     between = storms_between(pre_date, spec.landfall, spec.storm) if pre_date else []
     if between:
         log("warning", text=f"{', '.join(between)} hit between the pre-storm photos ({pre_date}) and this storm; damage from it will look like damage from this one.")
+    gap = years_before(pre_date, spec.landfall)
+    if gap >= OLD_BEFORE_YEARS:
+        log("warning", text=f"The newest photo from before the disaster here is from {pre_date[:7]}, about {gap:.0f} years earlier. "
+            "Houses built or torn down since then will show as changes; the agent checks for signs of the disaster itself and flags the rest for a field check.")
     Image.fromarray(pre).save(out / "pre.png")
     Image.fromarray(post).save(out / "post.png")
 
@@ -628,6 +706,19 @@ def _naip_fill(area: Window, spec: AreaSpec, naip_scenes, naip_mosaic, zoom: int
         if ok.all():
             break
     return newest, pre, ok
+
+
+OLD_BEFORE_YEARS = 2  # a before photo this much older than the disaster is flagged
+
+
+def years_before(pre_date: str, landfall: str) -> float:
+    """How many years the before photo is older than the disaster; 0 when unknown."""
+    import datetime as dt
+
+    try:
+        return max(0.0, (dt.date.fromisoformat(landfall[:10]) - dt.date.fromisoformat(pre_date[:10])).days / 365.25)
+    except ValueError:
+        return 0.0
 
 
 def storms_between(pre_date: str, landfall: str, this: str) -> list[str]:
@@ -1092,6 +1183,7 @@ def assess(
         )
 
     no_before = _no_before(spec, d)
+    gap = years_before(al["summary"].get("pre_date") or "", spec.landfall)
     order = sorted(damage, key=worst)
     if only:
         keep = set(only)
@@ -1137,7 +1229,7 @@ def assess(
                 trace=[{"model": "cloud check", "note": "after photo is cloud"}],
             )
         try:
-            a = assess_one(bid, pre, post, outline, m, {**r, **yard, "status": status[bid], "uploaded": spec.imagery == "photos", "archive_before": (d / "archive_before.json").exists()}, escalate=escalate, kind=kind)
+            a = assess_one(bid, pre, post, outline, m, {**r, **yard, "status": status[bid], "uploaded": spec.imagery == "photos", "archive_before": (d / "archive_before.json").exists(), "before_years": gap}, escalate=escalate, kind=kind)
         except Exception as e:  # keep going; one bad building should not stop the area
             log("building_failed", id=bid, error=str(e)[:200])
             return dict(id=bid, error=str(e))

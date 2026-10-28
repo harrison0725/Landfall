@@ -185,6 +185,12 @@ def describe(m: Measures, extra: dict) -> str:
             "satellite photo of the same spot, taken months or years earlier with a different camera, light and angle. Differences in colour, "
             "shadows and sharpness between the two are not damage."
         )
+    if (extra.get("before_years") or 0) >= 2:
+        lines.append(
+            f"The pre-storm photo is about {extra['before_years']:.0f} years older than the disaster. A house, addition, pool or shed that is new "
+            "since then, or a building torn down on purpose, is not damage. Call damage only where the disaster shows: wreckage, debris, "
+            "a tarp, ash, mud or a broken roof. When a change could be ordinary building work, call it none and set needs_human to true."
+        )
     lines.append(f"Alignment: {extra.get('status', 'unknown')} (matched = its own roof was found; neighbors = placed from nearby houses because its roof was not found where expected).")
     if extra.get("debris_share") is not None:
         if m.debris_share >= 0.05:
