@@ -200,7 +200,11 @@ function setDrawing(on) {
   map.touchZoom[on ? "disable" : "enable"]();
   map.getContainer().style.cursor = on ? "crosshair" : "";
   map.getContainer().style.touchAction = on ? "none" : "";  // a finger draws instead of scrolling the page
+  if (on) $("context").textContent = "Drag a box over the buildings you want assessed (up to about 60). Click the button again or press Esc to cancel.";
 }
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && state.drawing) { start = null; clearBox(); setDrawing(false); $("context").textContent = ""; }
+});
 // pointer events, so a mouse, a finger and a pen all draw the same way
 const mapEl = map.getContainer();
 mapEl.addEventListener("pointerdown", (e) => {
@@ -731,14 +735,25 @@ async function boot() {
   const session = fetch("/api/sessions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ area: pick && pick.assessed ? pick.name : null }) }).then((r) => r.json());
   state.area = pick && pick.assessed ? pick.name : null;
   const done = areas.filter((a) => a.assessed);
-  // two areas in one town get a number each
+  // the shipped examples keep their plain names; areas people drew or
+  // uploaded say so, numbered when one town has several
+  const mine = (a) => /^(box|upload)_/.test(a.name);
   const seen = {};
   done.forEach((a) => {
     const base = a.label || title(a.name);
-    seen[base] = (seen[base] || 0) + 1;
-    areaLabels[a.name] = seen[base] > 1 ? `${base} (${seen[base]})` : base;
+    if (!mine(a)) {
+      areaLabels[a.name] = done.some((b) => b !== a && !mine(b) && (b.label || title(b.name)) === base) ? title(a.name) : base;
+      return;
+    }
+    const kind = a.name.startsWith("upload_") ? "uploaded photos" : "drawn area";
+    const k = `${base}|${kind}`;
+    seen[k] = (seen[k] || 0) + 1;
+    areaLabels[a.name] = `${base}, ${kind}${seen[k] > 1 ? ` ${seen[k]}` : ""}`;
   });
-  $("area").innerHTML = `<option value="">Pick one…</option>` + done.map((a) => `<option value="${esc(a.name)}">${esc(areaLabel(a.name))}</option>`).join("");
+  const opts = (rows) => rows.map((a) => `<option value="${esc(a.name)}">${esc(areaLabel(a.name))}</option>`).join("");
+  const ours = done.filter(mine);
+  $("area").innerHTML = `<option value="">Pick one…</option><optgroup label="Examples">${opts(done.filter((a) => !mine(a)))}</optgroup>`
+    + (ours.length ? `<optgroup label="Added by people">${opts(ours)}</optgroup>` : "");
   if (pick) $("area").value = pick.name;
   $("area").addEventListener("change", () => { if ($("area").value) location.search = withYear(`?area=${encodeURIComponent($("area").value)}`); });
   // picking a disaster goes there: its finished example area, else where its photos are
