@@ -19,7 +19,8 @@ const STEP = {
 
 const $ = (id) => document.getElementById(id);
 const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-const state = { config: {}, sid: null, area: null, box: null, upload: null, busy: false, drawing: false, layer: "after", features: {}, steps: [], spec: null };
+const state = { config: {}, sid: null, area: null, box: null, upload: null, busy: false, drawing: false, layer: "after", features: {}, steps: [], spec: null, event: null };
+const EVENT = "__upload";  // the Disaster menu's entry for a disaster only the uploaded photos know
 
 // ---------------------------------------------------------------- map
 const map = L.map("map", { zoomControl: false }).setView([29.1375, -83.0355], 16);
@@ -302,6 +303,7 @@ $("upload-form").addEventListener("submit", async (e) => {
   $("place").value = place.short || place.label;
   if (known && state.toStorm) state.toStorm(known.key);
   else {
+    state.menus.showEvent(event.name || `${yr} ${kind}`, yr);
     // no disaster photos here: show the spot as it was before, to find where the photo was taken
     const at = `lon=${place.lon}&lat=${place.lat}&date=${day || yr + "-01-01"}`;
     fetch(`/api/wayback?${at}`).then((r) => (r.ok ? r.json() : null)).then((w) => { if (w && state.upload) setBeforeTiles(w); }).catch(() => {});
@@ -451,6 +453,12 @@ function handle(ev) {
       break;
     case "buildings":
       state.area = ev.area;
+      // the new area joins the Area menu, picked, named after the place searched
+      if (ev.area && ![...$("area").options].some((o) => o.value === ev.area)) {
+        areaLabels[ev.area] = areaLabels[ev.area] || ($("place").value.trim() || areaLabel(ev.area));
+        $("area").insertAdjacentHTML("beforeend", `<option value="${esc(ev.area)}">${esc(areaLabels[ev.area])}</option>`);
+      }
+      if (ev.area) $("area").value = ev.area;
       if (state.upload) {
         // found and laid out: the photos are used; if not found they stay, to drag a box over the spot
         state.upload = null;
@@ -483,6 +491,10 @@ async function send(e) {
   if (e) e.preventDefault();
   const text = $("input").value.trim();
   if (!text || state.busy) return;
+  if (state.box && !state.upload && (!$("storm").value || $("storm").value === EVENT)) {
+    add(div("msg error", "Which disaster is this? Search for it or pick it from the Disaster menu, then press Send again."));
+    return;
+  }
   const msg = div("msg user");
   msg.textContent = text;
   if (state.box) msg.insertAdjacentHTML("beforeend", `<span class="boxnote">${state.findUpload ? "+ your photo" : "+ the box on the map"}</span>`);
@@ -499,7 +511,8 @@ async function send(e) {
       return;
     }
   }
-  const body = { text, box: state.box, storm: state.box ? $("storm").value : null, access_code: code, upload: state.box && state.upload ? state.upload.id : null, event: state.box && state.upload ? state.upload.event : null };
+  const storm = $("storm").value === EVENT ? null : $("storm").value || null;
+  const body = { text, box: state.box, storm: state.box ? storm : null, access_code: code, upload: state.box && state.upload ? state.upload.id : null, event: state.box && state.upload ? state.upload.event : null };
   if (state.box) { outlines.clearLayers(); state.features = {}; }
   if (state.box && state.upload && !state.findUpload) {
     // the photos are used once; the map shows the area's own copy when it's ready
@@ -652,7 +665,7 @@ async function toWav16k(blob) {
 // ---------------------------------------------------------------- start
 // area names: the place, "Cedar Key, Florida", once the server has looked it up
 const areaLabels = {};
-function areaLabel(name) { return areaLabels[name] || title(name); }
+function areaLabel(name) { return areaLabels[name] || (/^upload_/.test(name) ? "Your uploaded photos" : title(name)); }
 async function boot() {
   legend();
   // the three lookups don't depend on each other: ask for them together
@@ -669,19 +682,39 @@ async function boot() {
     const y = $("year").value;
     const shown = storms.filter((s) => !y || year(s) === y);
     const hurricanes = shown.filter((s) => (s.kind || "hurricane") === "hurricane");
+    // nothing picked yet, or a disaster Landfall has no photos of: say so rather than show another one
+    const ev = state.event;
     $("storm").innerHTML =
+      `<option value="">Search or pick a disaster…</option>` +
+      (ev && (!y || ev.year === y) ? `<option value="${EVENT}">${esc(ev.name)} (your photos, ${ev.year})</option>` : "") +
       group("Hurricanes, United States: NOAA aerial photos", hurricanes.filter((s) => s.imagery === "noaa")) +
       group("Hurricanes worldwide: Maxar satellite photos", hurricanes.filter((s) => s.imagery === "maxar")) +
       [["wildfire", "Wildfires"], ["earthquake", "Earthquakes"], ["flood", "Floods"]].map(([k, label]) => group(label, shown.filter((s) => s.kind === k))).join("");
   }
   function showStorm(key) {
-    // keep the Year menu on the disaster's year so the Disaster menu can show it
+    // the Year menu follows the disaster on the map, so every menu says the same thing
     const s = storms.find((x) => x.key === key);
-    if (!s) return;
-    if ($("year").value && $("year").value !== year(s)) $("year").value = year(s);
+    if (!s) return showUnknown();
+    state.event = null;
+    $("year").value = year(s);
     stormMenu();
     $("storm").value = key;
   }
+  function showEvent(name, y) {
+    // a disaster the uploader described: on the menu for as long as it's on the map
+    state.event = { name: name.charAt(0).toUpperCase() + name.slice(1), year: y };
+    if (![...$("year").options].some((o) => o.value === y)) $("year").insertAdjacentHTML("beforeend", `<option>${esc(y)}</option>`);
+    $("year").value = y;
+    stormMenu();
+    $("storm").value = EVENT;
+  }
+  function showUnknown() {
+    state.event = null;
+    $("year").value = "";
+    stormMenu();
+    $("storm").value = "";
+  }
+  state.menus = { showStorm, showEvent, showUnknown };
   stormMenu();
   // the upload form ties photos to a disaster on the menu when one matches
   state.storms = storms;
@@ -729,10 +762,11 @@ async function boot() {
     const s = storms.find((x) => x.key === key);
     if (s && s.view && s.view.length) location.search = withYear(`?at=${s.view.join(",")}&storm=${encodeURIComponent(key)}`);
   }
-  $("storm").addEventListener("change", () => goToStorm($("storm").value));
+  $("storm").addEventListener("change", () => { if ($("storm").value && $("storm").value !== EVENT) goToStorm($("storm").value); });
   $("year").addEventListener("change", () => {
     stormMenu();
-    if ($("year").value && $("storm").value) goToStorm($("storm").value);  // the year's newest disaster
+    const first = $("storm").querySelector(`option:not([value=""]):not([value="${EVENT}"])`);
+    if ($("year").value && first) goToStorm(first.value);  // the year's newest disaster
   });
   // place search: go there, with the disaster that has photos of it
   $("place-form").addEventListener("submit", async (e) => {
@@ -783,7 +817,8 @@ async function boot() {
   document.addEventListener("click", (e) => { if (!$("place-form").contains(e.target)) $("place-results").hidden = true; });
   if (pick) {
     state.spec = pick.spec;
-    if (pick.spec) showStorm(pick.spec.storm);
+    if (pick.spec && !pick.spec.storm && pick.spec.event_name) showEvent(pick.spec.event_name, pick.spec.landfall.slice(0, 4));
+    else if (pick.spec) showStorm(pick.spec.storm);
     state.flight = pick.spec && pick.spec.noaa_flight;
     setFlight(state.flight);
     if (!state.flight) setOverlay(pick.name);  // start the photo tiles before the outlines
@@ -806,7 +841,7 @@ async function boot() {
     const s = storms.find((x) => x.key === key);
     if (s.imagery === "noaa") setFlight(null, true);  // every after-storm flight
     else setStormTiles(s);  // the after photos cut for this disaster
-  }
+  } else if (at || fit) showUnknown();  // a place no disaster here has photos of
   state.sid = (await session).id;
   const ev = new EventSource(`/api/sessions/${state.sid}/events`);
   ev.onmessage = (m) => handle(JSON.parse(m.data));
