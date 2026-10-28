@@ -95,7 +95,12 @@ async function setOverlay(area) {
   // shipped areas: map tiles, a wide after-storm layer under a sharp one; drawn areas: their own mosaic
   after = o.tiles
     ? tileGroup(o.tiles)
-    : L.imageOverlay(`${o.url}?t=${Date.now()}`, o.bounds, { attribution: o.attribution || "Maxar Open Data (CC BY-NC 4.0)" });
+    : L.imageOverlay(`${o.url}?t=${Date.now()}`, o.bounds, { attribution: o.attribution || "Maxar Open Data (CC BY-NC 4.0)", zIndex: 2 });
+  if (o.around) {
+    // an uploaded photo: the archive's satellite photo of the place around it, not a street map
+    after = L.layerGroup([L.tileLayer(o.around.tiles, { maxZoom: 21, maxNativeZoom: 19, zIndex: 1, attribution: o.around.attribution }), after]);
+    layerLabel(`After · before around (${o.around.captured.slice(0, 7)})`);
+  }
   applyLayer();
 }
 function tileGroup(tiles) {
