@@ -40,6 +40,22 @@ def clean(raw: bytes) -> bytes:
     return buf.getvalue()
 
 
+def gps(raw: bytes) -> tuple[float, float] | None:
+    """Where a photo says it was taken (lat, lon), from its EXIF GPS block, as
+    drone and phone cameras write; read before `clean` drops it."""
+    from PIL import Image
+
+    try:
+        g = Image.open(io.BytesIO(raw)).getexif().get_ifd(0x8825)
+        if not g or 2 not in g or 4 not in g:
+            return None
+        deg = lambda v: float(v[0]) + float(v[1]) / 60 + float(v[2]) / 3600  # noqa: E731
+        lat, lon = deg(g[2]) * (-1 if g.get(1) == "S" else 1), deg(g[4]) * (-1 if g.get(3) == "W" else 1)
+    except Exception:
+        return None
+    return (round(lat, 5), round(lon, 5)) if (lat, lon) != (0.0, 0.0) and abs(lat) <= 90 and abs(lon) <= 180 else None
+
+
 def register(before: np.ndarray, after: np.ndarray, min_inliers: int = 25) -> tuple[np.ndarray, np.ndarray] | None:
     """The before photo warped onto the after photo's pixels, and where it has
     data; None when the two can't be matched (different places, or too little
@@ -144,7 +160,7 @@ def _directions(img: np.ndarray, k: float, blur: float = 1.0) -> list[np.ndarray
     return [cv2.GaussianBlur(w * (gx * gx - gy * gy) / m2, (0, 0), blur), cv2.GaussianBlur(w * 2 * gx * gy / m2, (0, 0), blur)]
 
 
-def search(after: np.ndarray, archive: np.ndarray, m_per_px: float, min_m: float = 60.0, max_m: float = 1500.0, min_z: float = 5.0, n: int = 3) -> list[dict]:
+def search(after: np.ndarray, archive: np.ndarray, m_per_px: float, min_m: float = 60.0, max_m: float = 1000.0, step: float = 1.04, min_z: float = 5.0, n: int = 3) -> list[dict]:
     """Where the after photo was taken, anywhere in an archive photo of a
     whole town, when nobody has said where or how much ground it shows.
 
@@ -161,7 +177,7 @@ def search(after: np.ndarray, archive: np.ndarray, m_per_px: float, min_m: float
     for rot in range(4):
         img = np.ascontiguousarray(np.rot90(after, rot))
         aspect = img.shape[0] / img.shape[1]
-        for metres in np.geomspace(min_m, max_m, int(np.log(max_m / min_m) / np.log(1.03)) + 1):
+        for metres in np.geomspace(min_m, max_m, int(np.log(max_m / min_m) / np.log(step)) + 1):
             w = int(metres / m_per_px)
             h = int(w * aspect)
             k = min(0.5, max(0.125, 2 ** round(np.log2(90 / w)))) if w else 0.5  # templates about 90 px across
@@ -325,7 +341,9 @@ def save_upload(root: Path, uid: str, side: str, raw: bytes) -> dict:
     from PIL import Image
 
     w, h = Image.open(io.BytesIO(data)).size
-    return {"id": uid, "side": side, "width": w, "height": h}
+    # where the camera says it was: only to search near it, never kept in the photo
+    at = gps(raw) if side == "after" else None
+    return {"id": uid, "side": side, "width": w, "height": h, **({"gps": list(at)} if at else {})}
 
 
 def attach(root: Path, uid: str, area_dir: Path) -> dict:

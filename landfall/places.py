@@ -49,10 +49,15 @@ def search(q: str) -> list[dict]:
     out = []
     for r in rows:
         s, n, w, e = (float(x) for x in r["boundingbox"])
+        addr = r.get("address", {})
+        # a street address: "12 2nd Street, Cedar Key, Florida", not just the town
+        street = " ".join(p for p in (addr.get("house_number"), addr.get("road")) if p)
+        town = _short(addr, r.get("name", ""))
         out.append(
             dict(
                 label=r.get("display_name", ""),
-                short=_short(r.get("address", {}), r.get("name", "")),
+                short=f"{street}, {town}" if street and addr.get("house_number") else town,
+                address=bool(addr.get("house_number") or r.get("addresstype") in ("building", "house", "place")),
                 lat=float(r["lat"]),
                 lon=float(r["lon"]),
                 bbox=[w, s, e, n],

@@ -68,7 +68,7 @@
       <p>Photos of the land from above, like a drone or plane shot. I'll find the buildings in them and assess each one.</p>
       <label>After the disaster <input type="file" id="upload-after" accept="image/*" required></label>
       <label>Before it (optional) <input type="file" id="upload-before" accept="image/*"></label>
-      <label>Where they were taken <input type="text" id="upload-place" maxlength="120" placeholder="Cedar Key, Florida" required></label>
+      <label>Where they were taken <input type="text" id="upload-place" maxlength="160" placeholder="12 2nd St, Cedar Key, FL or just the town" required></label>
       <div class="row">
         <label>What happened
           <select id="upload-kind">
@@ -84,7 +84,7 @@
         <label>The day, if you know it <input type="date" id="upload-date"></label>
         <label>Its name (optional) <input type="text" id="upload-name" maxlength="80" placeholder="Hurricane Ana"></label>
       </div>
-      <p class="hint">The place and year are how I find a photo of the spot from before, if you don't have one.</p>
+      <p class="hint">A street address is quickest; with just the town I search all of it. The place and year are also how I find a photo of the spot from before, if you don't have one.</p>
       <div class="row"><button type="submit" class="send">Next: place them on the map</button><button type="button" class="linkish" id="upload-cancel">Cancel</button></div>
       <p class="status" id="upload-status" aria-live="polite"></p>
     </form>
