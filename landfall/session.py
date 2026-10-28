@@ -119,7 +119,7 @@ class Session:
                 if self.upload:
                     from .photos import attach
 
-                    name = self.area or _name(self.box, "upload")
+                    name = self.area or f"{_name(self.box, 'upload')}_{self.upload[:6]}"  # each upload its own area: another one here mustn't reuse its masks
                     spec = AreaSpec.for_photos(name, self.box, args.get("storm", "helene"), n, event=self.event)
                     meta = attach(self.root, self.upload, self.root / name)
                     spec.save(self.root)

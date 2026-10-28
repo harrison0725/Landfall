@@ -66,6 +66,7 @@ function stormFlights(storm) {
 }
 let flightToken = 0;
 function setFlight(flight, anyFlight = false) {
+  layerLabel("After");
   if (after) map.removeLayer(after);
   after = null;
   applyLayer();
@@ -90,6 +91,7 @@ async function setOverlay(area) {
   if (!r.ok) return;
   const o = await r.json();
   if (after) map.removeLayer(after);
+  layerLabel("After");
   // shipped areas: map tiles, a wide after-storm layer under a sharp one; drawn areas: their own mosaic
   after = o.tiles
     ? tileGroup(o.tiles)
@@ -104,9 +106,22 @@ function tileGroup(tiles) {
 function setStormTiles(storm) {
   // satellite disasters: the after photos cut for the spot the disaster opens on
   flightToken++;
+  layerLabel("After");
   if (after) map.removeLayer(after);
   after = storm && storm.tiles && storm.tiles.length ? tileGroup(storm.tiles) : null;
   applyLayer();
+}
+function setBeforeTiles(w) {
+  // an uploaded photo of a disaster Landfall has no photos of: to find the
+  // spot, the archive's newest photo of it from before, clearly labelled so
+  flightToken++;
+  if (after) map.removeLayer(after);
+  after = L.tileLayer(w.tiles, { maxZoom: 21, maxNativeZoom: 19, zIndex: 1, attribution: w.attribution });
+  layerLabel(`Before (${w.captured.slice(0, 7)})`);
+  applyLayer();
+}
+function layerLabel(text) {
+  document.querySelector('.seg button[data-layer="after"]').textContent = text;
 }
 function applyLayer() {
   // the street map stays underneath: past the last after-storm photo it shows, never older photos
@@ -281,6 +296,11 @@ $("upload-form").addEventListener("submit", async (e) => {
   map.fitBounds([[s, w], [n, ea]], { maxZoom: 17 });
   $("place").value = place.short || place.label;
   if (known && state.toStorm) state.toStorm(known.key);
+  else {
+    // no disaster photos here: show the spot as it was before, to find where the photo was taken
+    const at = `lon=${place.lon}&lat=${place.lat}&date=${day || yr + "-01-01"}`;
+    fetch(`/api/wayback?${at}`).then((r) => (r.ok ? r.json() : null)).then((w) => { if (w && state.upload) setBeforeTiles(w); }).catch(() => {});
+  }
   const what = known ? `${known.name} (${yr})` : event.name || `the ${yr} ${kind}`;
   add(div("msg agent", `<p>Got your ${before ? "before and after photos" : "after photo"} of ${esc(place.short || place.label)} after ${esc(what)}. Zoom in and drag a box over where ${before ? "they were" : "it was"} taken, then press Send. ${
     before ? "" : `Without a before photo I'll look for your photo in the archive's photo of that spot from before ${day || known ? "the disaster" : yr} and compare against that. If I can't find it there, I'll judge each building from your photo alone and send every one for a field check.`}</p>`));

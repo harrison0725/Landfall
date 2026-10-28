@@ -299,6 +299,22 @@ def places(q: str) -> list[dict]:
     return rows
 
 
+@app.get("/api/wayback")
+def wayback(lon: float, lat: float, date: str) -> dict:
+    """The newest worldwide archive photo of a spot from before a date, as
+    map tiles: what an uploader places their photo on when Landfall has no
+    disaster there."""
+    from .wayback import ATTRIBUTION, before
+
+    try:
+        photo = before(lon, lat, date[:10], ROOT / "cache")
+    except (OSError, ValueError):
+        raise HTTPException(502, "the photo archive is not answering; try again in a moment") from None
+    if photo is None:
+        raise HTTPException(404, "no archive photo of this spot from before that date")
+    return {"tiles": photo.tiles, "captured": photo.captured, "source": photo.source, "attribution": f"{ATTRIBUTION}; photo {photo.captured}"}
+
+
 def _warm_catalogs() -> None:
     """Fetch every disaster's flight and acquisition lists once, so the first
     place search doesn't wait on them."""
