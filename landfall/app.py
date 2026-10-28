@@ -530,14 +530,18 @@ def _event(raw: dict) -> dict:
     kind = str(raw.get("kind", ""))
     if kind not in ("hurricane", "flood", "wildfire", "earthquake"):
         raise HTTPException(400, "the disaster's kind is hurricane, flood, wildfire or earthquake")
+    # the day if the uploader knows it, else just the year: then the before
+    # photo has to be from before that year began
+    given = str(raw.get("date", "")).strip()
+    exact = len(given) != 4
     try:
-        when = date.fromisoformat(str(raw.get("date", "")))
+        when = date.fromisoformat(given) if exact else date(int(given), 1, 1)
     except ValueError:
-        raise HTTPException(400, "give the date the disaster happened") from None
+        raise HTTPException(400, "give the year the disaster happened, or its date") from None
     if when > date.today():
         raise HTTPException(400, "the date the disaster happened can't be in the future")
     name = " ".join(str(raw.get("name") or "").split())[:80]
-    return {"kind": kind, "date": when.isoformat(), "name": name}
+    return {"kind": kind, "date": when.isoformat(), "exact": exact, "name": name}
 
 
 @app.get("/api/sessions/{sid}/events")

@@ -102,9 +102,11 @@ button { font: inherit; }
 .upload-panel p { margin: 0; }
 .upload-panel label { display: grid; gap: 4px; font-weight: 500; }
 .upload-panel input[type=file] { font: inherit; font-weight: 400; max-width: 100%; }
-.upload-panel select, .upload-panel input[type=date], .upload-panel input[type=text] { font: inherit; font-weight: 400; padding: 5px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg, #fff); color: var(--ink); }
+.upload-panel select, .upload-panel input[type=date], .upload-panel input[type=text], .upload-panel input[type=number] { font: inherit; font-weight: 400; padding: 5px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg, #fff); color: var(--ink); }
 .upload-panel .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .upload-panel .status { color: var(--muted); min-height: 1em; }
+.upload-panel .hint { color: var(--muted); font-size: 0.9em; }
+.upload-panel input[type=number] { width: 6em; }
 .seg { display: flex; overflow: hidden; }
 .seg button { border: 0; background: transparent; color: var(--muted); padding: 7px 10px; cursor: pointer; font-size: 0.85rem; }
 .seg button.on { background: var(--soft); color: var(--ink); font-weight: 500; }

@@ -127,7 +127,7 @@ class Session:
                     emit("area", name=spec.name, bbox=spec.bbox, flight=None)
                     return {
                         "area": spec.name,
-                        "storm": event_name(spec) + ("" if spec.storm else f" ({spec.kind}, {spec.landfall}; not in the catalog, described by the user)"),
+                        "storm": event_name(spec) + ("" if spec.storm else f" ({spec.kind}, {_when(self.event)}; not in the catalog, described by the user)"),
                         "post_storm_photos": "the after photo the user uploaded, laid over the box",
                         "pre_storm_photos": "the before photo the user uploaded"
                         if meta["before"]
@@ -238,7 +238,7 @@ class Session:
                     f"{text}\n\n[The user drew a box on the map: west {w}, south {s}, east {e}, north {n}"
                     + (f"; storm: {storm}" if storm else "")
                     + (
-                        f"; the disaster: {self.event.get('name') or 'unnamed'}, a {self.event['kind']} on {self.event['date']}, which is not in the catalog "
+                        f"; the disaster: {self.event.get('name') or 'unnamed'}, a {self.event['kind']}, {_when(self.event)}, which is not in the catalog "
                         "(pass any storm to locate_imagery; the uploaded photos and this description are used)"
                         if self.event
                         else ""
@@ -314,3 +314,10 @@ def area_geojson(root: Path, area: str) -> dict:
             }
         )
     return {"type": "FeatureCollection", "features": out}
+
+
+def _when(event: dict | None) -> str:
+    """When an uploaded disaster happened, as the uploader gave it: a day, or only a year."""
+    if not event:
+        return "date unknown"
+    return f"on {event['date']}" if event.get("exact", True) else f"sometime in {event['date'][:4]}"
