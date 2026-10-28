@@ -259,7 +259,7 @@ $("upload-form").addEventListener("submit", async (e) => {
   $("upload").textContent = before ? "Photos ready" : "Photo ready";
   $("upload").classList.add("on");
   add(div("msg agent", `<p>Got your ${before ? "before and after photos" : "after photo"}. Now drag a box on the map over where ${before ? "they were" : "it was"} taken, pick the disaster, and press Send. ${
-    before ? "" : "Without a before photo I'll judge each building from the after photo alone, and send every one for a field check."}</p>`));
+    before ? "" : "Without a before photo I'll look for your photo in the archive's photo of that spot from before the disaster and compare against that. If I can't find it there, I'll judge each building from your photo alone and send every one for a field check."}</p>`));
   setDrawing(true);
 });
 

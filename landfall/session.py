@@ -130,7 +130,8 @@ class Session:
                         "post_storm_photos": "the after photo the user uploaded, laid over the box",
                         "pre_storm_photos": "the before photo the user uploaded"
                         if meta["before"]
-                        else "none uploaded: buildings are judged from the after photo alone, and every one goes to a field check",
+                        else "none uploaded: the archive's photo of this spot from before the disaster is used if the after photo can be found in it "
+                        "(prepare_area reports whether it was); if not, buildings are judged from the after photo alone and every one goes to a field check",
                         "buildings": "found in the photo by Segment Anything, not from a map",
                         "buildings_to_assess": spec.n_buildings,
                     }
@@ -232,7 +233,8 @@ class Session:
                     + "."
                     + (
                         " They uploaded their own photos taken over this box; locate_imagery uses those instead of NOAA or Maxar. "
-                        "Say in the report that the buildings were found in their photo and placed on the map by the box they drew, so positions are approximate.]"
+                        "In the report, say how the photos were placed and where the before side came from, as prepare_area reports it "
+                        "(found in the archive photo, or laid over their box, in which case map positions are approximate).]"
                         if upload
                         else "]"
                     )

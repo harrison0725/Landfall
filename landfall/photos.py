@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import io
 import json
+import math
 from pathlib import Path
 
 import numpy as np
@@ -76,6 +77,55 @@ def register(before: np.ndarray, after: np.ndarray, min_inliers: int = 25) -> tu
     return warped, ok
 
 
+def _edges(img: np.ndarray, k: float) -> np.ndarray:
+    """Edge strength at scale k, evened out: roof and road edges survive a
+    change of camera, season and exposure better than colours do."""
+    import cv2
+
+    g = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    g = cv2.resize(g, None, fx=k, fy=k, interpolation=cv2.INTER_AREA)
+    g = cv2.createCLAHE(3.0, (8, 8)).apply(g)
+    mag = cv2.magnitude(cv2.Sobel(g, cv2.CV_32F, 1, 0), cv2.Sobel(g, cv2.CV_32F, 0, 1))
+    return mag / (mag.mean() + 1e-6)
+
+
+def locate(after: np.ndarray, archive: np.ndarray, box: tuple[int, int], k: float = 0.25, min_score: float = 0.12) -> dict | None:
+    """Where the after photo sits in a wider archive photo of the place.
+
+    The user's box gives a rough place and size (`box`, its width and height
+    in archive pixels); this tries the photo turned by quarter turns and at
+    0.8x to 1.25x that size (by area, so a turned photo keeps its size), and takes the placement whose edges best match
+    the archive's. Returns the turn (quarter turns counter-clockwise), the
+    top-left corner and size in archive pixels, and the match score; None
+    when no placement stands out, as with a different place or a scene the
+    disaster changed beyond recognition."""
+    import cv2
+
+    A = _edges(archive, k)
+    tries = []
+    for rot in range(4):
+        img = np.ascontiguousarray(np.rot90(after, rot))
+        aspect = img.shape[0] / img.shape[1]
+        for scale in np.linspace(0.8, 1.25, 19):
+            w = int(math.sqrt(box[0] * box[1] / aspect) * scale)
+            h = int(w * aspect)
+            if w * k >= A.shape[1] - 2 or h * k >= A.shape[0] - 2:
+                continue
+            T = _edges(cv2.resize(img, (w, h), interpolation=cv2.INTER_AREA), k)
+            r = cv2.matchTemplate(A, T, cv2.TM_CCOEFF_NORMED)
+            _, score, _, (x, y) = cv2.minMaxLoc(r)
+            tries.append(dict(score=float(score), rot=rot, x=int(x / k), y=int(y / k), w=w, h=h))
+    if not tries:
+        return None
+    tries.sort(key=lambda t: -t["score"])
+    best = tries[0]
+    # the runner-up somewhere else entirely: a real match stands well above it
+    far = [t for t in tries if t["rot"] != best["rot"] or abs(t["x"] - best["x"]) + abs(t["y"] - best["y"]) > 0.2 * best["w"]]
+    if best["score"] < min_score or (far and best["score"] < 1.5 * far[0]["score"]):
+        return None
+    return best
+
+
 def box_window(bbox: tuple[float, float, float, float], zoom: int) -> Window:
     w, s, e, n = bbox
     x0, y0 = lonlat_to_pixel(w, n, zoom)
@@ -83,9 +133,11 @@ def box_window(bbox: tuple[float, float, float, float], zoom: int) -> Window:
     return Window(int(round(x0)), int(round(y0)), int(round(x1)), int(round(y1)))
 
 
-def lay(d: Path, bbox, zoom: int, area: Window) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, str]:
+def lay(d: Path, bbox, zoom: int, area: Window, archive: tuple[np.ndarray, np.ndarray] | None = None) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, str]:
     """Post and pre mosaics over `area` from the uploaded photos, with where
-    each has data, and a note on how the before photo was matched."""
+    each has data, and a note on how the before photo was matched. With no
+    uploaded before photo, `archive` (an archive photo over `area` and where
+    it has data) is the before side."""
     from PIL import Image
 
     box = box_window(bbox, zoom)
@@ -116,6 +168,9 @@ def lay(d: Path, bbox, zoom: int, area: Window) -> tuple[np.ndarray, np.ndarray,
         return out, valid
 
     post, post_ok = place(after, None)
+    if pre_full is None and archive is not None:
+        pre, pre_ok = archive
+        return post, post_ok, pre, pre_ok & post_ok, "before photo from the archive, lined up with the after photo"
     if pre_full is None:
         # Nothing to compare against: a flat grey stands in, and every
         # building is judged from the after photo alone.
