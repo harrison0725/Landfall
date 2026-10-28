@@ -405,11 +405,24 @@ def after_overlay(area: str) -> dict:
     w_lon, n_lat = pixel_to_lonlat(x0 + l, y0 + t, 19)
     e_lon, s_lat = pixel_to_lonlat(x0 + r, y0 + b, 19)
     photos = json.loads((d / "spec.json").read_text()).get("imagery") == "photos" if (d / "spec.json").exists() else False
-    return {
+    out = {
         "url": f"/api/areas/{area}/after.jpg",
         "bounds": [[s_lat, w_lon], [n_lat, e_lon]],
         "attribution": "Uploaded after photo" if photos else "Maxar Open Data (CC BY-NC 4.0)",
     }
+    if photos:
+        # around the uploaded photo: the archive's photo of the place, so it sits in a
+        # satellite view rather than a street map (labelled as from before)
+        from .wayback import ATTRIBUTION, before
+
+        spec = json.loads((d / "spec.json").read_text())
+        try:
+            p = before(spec["center"][0], spec["center"][1], spec["landfall"], ROOT / "cache")
+        except (OSError, ValueError):
+            p = None
+        if p:
+            out["around"] = {"tiles": p.tiles, "captured": p.captured, "attribution": f"around it: {ATTRIBUTION}, photo {p.captured} (before)"}
+    return out
 
 
 def _photo_extent(d: Path) -> tuple[int, int, int, int] | None:
