@@ -30,7 +30,8 @@ def test_pick_before_takes_newest_and_drops_cloudy():
 
 def test_storms_between_only_counts_storms_in_the_same_place():
     assert storms_between("2022-10-13", "2025-10-28", "melissa") == []
-    assert storms_between("2017-08-29", "2022-09-18", "fiona") == ["Hurricane Maria (2017-09-20)"]
+    # the Turkey earthquake falls in this window but somewhere else
+    assert storms_between("2022-01-01", "2025-03-28", "myanmar_quake") == []
     assert "Hurricane Idalia (2023-08-30)" in storms_between("2023-02-15", "2024-09-26", "helene")
 
 

@@ -1,0 +1,1 @@
+{"url": "/api/tiles/turkey_quake_after/{z}/{x}/{y}.jpg", "min_zoom": 12, "max_native_zoom": 18, "bounds": [[36.199, 36.154], [36.211, 36.166]], "attribution": "Maxar Open Data (CC BY-NC 4.0), 2023-02-08", "storm": "turkey_quake"}

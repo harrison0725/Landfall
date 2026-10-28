@@ -200,7 +200,24 @@ def _missing_for_assessing() -> list[str]:
 
 @app.get("/api/storms")
 def storms() -> list[dict]:
-    return [{"key": s.key, "name": s.name, "landfall": s.landfall, "where": s.where, "imagery": s.provider, "kind": s.kind, "view": list(s.view)} for s in STORMS.values()]
+    return [
+        {"key": s.key, "name": s.name, "landfall": s.landfall, "where": s.where, "imagery": s.provider, "kind": s.kind, "view": list(s.view), "tiles": _storm_tiles().get(s.key, [])}
+        for s in STORMS.values()
+    ]
+
+
+@functools.lru_cache(maxsize=1)
+def _storm_tiles() -> dict[str, list[dict]]:
+    """After-disaster tile layers shipped for satellite disasters (made by
+    scripts/maxar_tiles.py), so the map shows photos as soon as one is
+    picked. Read from the shipped copy, which a persistent disk can't hide;
+    the tiles themselves are served from the data dir."""
+    out: dict[str, list[dict]] = {}
+    for f in sorted((Path(__file__).resolve().parents[1] / "demo" / "tiles").glob("*/layer.json")):
+        t = json.loads(f.read_text())
+        out.setdefault(t.pop("storm"), []).append(t)
+    # wide, coarse layers first so sharper ones draw on top
+    return {k: sorted(v, key=lambda t: t["max_native_zoom"]) for k, v in out.items()}
 
 
 @app.get("/api/storms/{key}/flights")
