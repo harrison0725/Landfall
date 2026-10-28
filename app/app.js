@@ -569,6 +569,19 @@ async function boot() {
   if (pick) $("area").value = pick.name;
   $("area").addEventListener("change", () => { if ($("area").value) location.search = withYear(`?area=${encodeURIComponent($("area").value)}`); });
   // picking a disaster goes there: its finished example area, else where its photos are
+  const KIND_WORDS = {
+    hurricane: "hurricane cyclone typhoon storm tropical wind",
+    wildfire: "wildfire fire fires burn burned",
+    earthquake: "earthquake quake quakes seismic",
+    flood: "flood floods flooding flash river rain",
+  };
+  function matchDisasters(q) {
+    const words = q.toLowerCase().split(/[\s,]+/).filter(Boolean);
+    const text = (s) => `${s.name} ${s.where} ${year(s)} ${KIND_WORDS[s.kind || "hurricane"] || ""}`.toLowerCase();
+    // every word must appear; "floods" also finds "flood"
+    const has = (t, w) => t.includes(w) || (w.length > 4 && w.endsWith("s") && t.includes(w.slice(0, -1)));
+    return storms.filter((s) => words.every((w) => has(text(s), w))).sort((a, b) => b.landfall.localeCompare(a.landfall));
+  }
   function goToStorm(key) {
     const own = done.filter((a) => a.spec && a.spec.storm === key);
     const example = own.find((a) => !a.name.startsWith("box_")) || own[0];
@@ -588,27 +601,44 @@ async function boot() {
     const list = $("place-results");
     if (!q) return;
     list.hidden = false;
-    list.innerHTML = `<li>Searching…</li>`;
-    const r = await fetch(`/api/places?q=${encodeURIComponent(q)}`);
-    // the same town can come back twice (the town and its boundary): keep one
-    const rows = (r.ok ? await r.json() : []).filter((p, i, all) => all.findIndex((o) => (o.short || o.label) === (p.short || p.label)) === i);
-    if (!rows.length) { list.innerHTML = `<li>${r.ok ? "No place by that name." : "Search isn't answering; try again in a moment."}</li>`; return; }
+    // disasters by name, kind, place or year ("Helene", "earthquake", "Spain flood", "2024"),
+    // shown at once; places follow when the place search answers
+    const hits = matchDisasters(q);
     const name = (key) => (storms.find((x) => x.key === key) || {}).name;
-    list.innerHTML = rows
-      .map((p, i) => `<li tabindex="0" data-i="${i}">${esc(p.short || p.label)}<small>${p.disasters.length ? esc(p.disasters.map(name).join(", ")) : "no disaster photos here yet"}</small></li>`)
-      .join("");
-    list.querySelectorAll("li").forEach((li) => {
-      const go = () => {
-        const p = rows[+li.dataset.i];
-        // the selected year's disaster if it has one here, else the newest
-        const y = $("year").value;
-        const key = p.disasters.find((k) => !y || year(storms.find((x) => x.key === k)) === y) || p.disasters[0];
-        location.search = withYear(`?fit=${p.bbox.map((v) => v.toFixed(4)).join(",")}&place=${encodeURIComponent(p.short || q)}` + (key ? `&storm=${encodeURIComponent(key)}` : ""));
-      };
-      li.addEventListener("click", go);
-      li.addEventListener("keydown", (ev) => { if (ev.key === "Enter") go(); });
-    });
-    if (rows.length === 1) list.querySelector("li").click();
+    const render = (rows, tail) => {
+      list.innerHTML =
+        hits.map((s) => `<li tabindex="0" data-storm="${esc(s.key)}">${esc(s.name)}<small>Disaster · ${esc(s.where)}, ${year(s)}</small></li>`).join("") +
+        rows
+          .map((p, i) => `<li tabindex="0" data-i="${i}">${esc(p.short || p.label)}<small>${p.disasters.length ? esc(p.disasters.map(name).join(", ")) : "no disaster photos here yet"}</small></li>`)
+          .join("") +
+        (tail ? `<li class="note">${tail}</li>` : "");
+      list.querySelectorAll("li[tabindex]").forEach((li) => {
+        const go = () => {
+          if (li.dataset.storm) {
+            $("year").value = "";  // the disaster's own year is set when the map opens
+            goToStorm(li.dataset.storm);
+            return;
+          }
+          const p = rows[+li.dataset.i];
+          // the selected year's disaster if it has one here, else the newest
+          const y = $("year").value;
+          const key = p.disasters.find((k) => !y || year(storms.find((x) => x.key === k)) === y) || p.disasters[0];
+          location.search = withYear(`?fit=${p.bbox.map((v) => v.toFixed(4)).join(",")}&place=${encodeURIComponent(p.short || q)}` + (key ? `&storm=${encodeURIComponent(key)}` : ""));
+        };
+        li.addEventListener("click", go);
+        li.addEventListener("keydown", (ev) => { if (ev.key === "Enter") go(); });
+      });
+    };
+    render([], "Searching places…");
+    const r = await fetch(`/api/places?q=${encodeURIComponent(q)}`).catch(() => ({ ok: false }));
+    if ($("place").value.trim() !== q) return;  // a newer search took over
+    // the same town can come back twice (the town and its boundary): keep one
+    let rows = (r.ok ? await r.json() : []).filter((p, i, all) => all.findIndex((o) => (o.short || o.label) === (p.short || p.label)) === i);
+    // "earthquake" also names places somewhere; with disasters found, keep only places that have photos
+    if (hits.length) rows = rows.filter((p) => p.disasters.length);
+    if (!rows.length && !hits.length) { render([], r.ok ? "No place or disaster by that name." : "Search isn't answering; try again in a moment."); return; }
+    render(rows, !r.ok && hits.length ? "Place search isn't answering right now." : "");
+    if (rows.length + hits.length === 1) list.querySelector("li[tabindex]").click();
   });
   document.addEventListener("click", (e) => { if (!$("place-form").contains(e.target)) $("place-results").hidden = true; });
   if (pick) {

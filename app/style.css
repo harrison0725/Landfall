@@ -91,6 +91,9 @@ button { font: inherit; }
 #place-results li { padding: 6px 10px; cursor: pointer; color: var(--ink); }
 #place-results li:hover, #place-results li:focus { background: var(--line); outline: 0; }
 #place-results li small { display: block; color: var(--muted); }
+#place-results li.note { cursor: default; color: var(--muted); }
+#place-results li.note:hover { background: none; }
+#place-results { max-height: 60vh; overflow-y: auto; }
 @media (min-width: 861px) { #area { min-width: 10.5em; } }
 .tool { padding: 7px 12px; cursor: pointer; color: var(--ink); font-weight: 500; }
 .tool.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
