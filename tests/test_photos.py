@@ -81,7 +81,12 @@ def test_a_new_disaster_described_by_the_uploader():
     from landfall.pipeline import AreaSpec, event_kind, event_name
 
     ev = _event({"kind": "flood", "date": "2026-10-20", "name": "  Big   river flood "})
-    assert ev == {"kind": "flood", "date": "2026-10-20", "name": "Big river flood"}
+    assert ev == {"kind": "flood", "date": "2026-10-20", "exact": True, "name": "Big river flood"}
+    # only the year known: the before photo must predate the year
+    yr = _event({"kind": "hurricane", "date": "2025"})
+    assert (yr["date"], yr["exact"]) == ("2025-01-01", False)
+    spec = AreaSpec.for_photos("upload_y", (10.0, 45.0, 10.01, 45.01), "", 20, event=yr)
+    assert (spec.landfall, spec.gauges, event_name(spec)) == ("2025-01-01", [], "the 2025 hurricane")
     with pytest.raises(HTTPException):
         _event({"kind": "volcano", "date": "2026-10-20"})
     with pytest.raises(HTTPException):

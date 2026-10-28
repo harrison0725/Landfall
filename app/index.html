@@ -68,19 +68,23 @@
       <p>Photos of the land from above, like a drone or plane shot. I'll find the buildings in them and assess each one.</p>
       <label>After the disaster <input type="file" id="upload-after" accept="image/*" required></label>
       <label>Before it (optional) <input type="file" id="upload-before" accept="image/*"></label>
-      <label>Which disaster
-        <select id="upload-event">
-          <option value="">The one picked in the Disaster menu</option>
-          <option value="hurricane">A new hurricane or storm</option>
-          <option value="flood">A new flood</option>
-          <option value="wildfire">A new wildfire</option>
-          <option value="earthquake">A new earthquake</option>
-        </select>
-      </label>
-      <div class="row" id="upload-new" hidden>
-        <label>When it happened <input type="date" id="upload-date"></label>
+      <label>Where they were taken <input type="text" id="upload-place" maxlength="120" placeholder="Cedar Key, Florida" required></label>
+      <div class="row">
+        <label>What happened
+          <select id="upload-kind">
+            <option value="hurricane">Hurricane or storm</option>
+            <option value="flood">Flood</option>
+            <option value="wildfire">Wildfire</option>
+            <option value="earthquake">Earthquake</option>
+          </select>
+        </label>
+        <label>Year <input type="number" id="upload-year" min="1990" step="1" required></label>
+      </div>
+      <div class="row">
+        <label>The day, if you know it <input type="date" id="upload-date"></label>
         <label>Its name (optional) <input type="text" id="upload-name" maxlength="80" placeholder="Hurricane Ana"></label>
       </div>
+      <p class="hint">The place and year are how I find a photo of the spot from before, if you don't have one.</p>
       <div class="row"><button type="submit" class="send">Next: place them on the map</button><button type="button" class="linkish" id="upload-cancel">Cancel</button></div>
       <p class="status" id="upload-status" aria-live="polite"></p>
     </form>

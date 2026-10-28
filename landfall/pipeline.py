@@ -111,8 +111,9 @@ class AreaSpec:
         center = ((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2)
         if event:
             kind = event["kind"]
-            try:  # NOAA's tide gauges post water levels as they happen, so a new storm surge is measured too
-                gauges = nearest_gauges(*center) if kind == "hurricane" else []
+            exact = event.get("exact", True)
+            try:  # NOAA's tide gauges post water levels as they happen, so a new storm surge is measured too (given its day)
+                gauges = nearest_gauges(*center) if kind == "hurricane" and exact else []
             except OSError:
                 gauges = []
             return cls(
@@ -130,7 +131,7 @@ class AreaSpec:
                 imagery="photos",
                 post_label="Uploaded after photo",
                 kind=kind,
-                event_name=event.get("name") or f"the {kind} of {event['date']}",
+                event_name=event.get("name") or (f"the {kind} of {event['date']}" if exact else f"the {event['date'][:4]} {kind}"),
             )
         s = STORMS[storm]
         us = s.provider == "noaa"

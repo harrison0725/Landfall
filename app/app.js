@@ -235,21 +235,31 @@ $("upload").addEventListener("click", () => {
   $("upload-form").hidden = !$("upload-form").hidden;
 });
 $("upload-cancel").addEventListener("click", () => { $("upload-form").hidden = true; });
-// photos of a disaster the menu doesn't have yet: say what it was and when
-$("upload-event").addEventListener("change", () => {
-  $("upload-new").hidden = !$("upload-event").value;
-  if (!$("upload-date").value) $("upload-date").value = new Date().toISOString().slice(0, 10);
-  $("upload-date").max = new Date().toISOString().slice(0, 10);
-});
+// where and when: the map goes there, and the place and year pick the photo of
+// the spot from before (and the disaster, when it's one Landfall has)
+$("upload-year").max = new Date().getFullYear();
+$("upload-date").max = new Date().toISOString().slice(0, 10);
+$("upload-date").addEventListener("change", () => { if ($("upload-date").value) $("upload-year").value = $("upload-date").value.slice(0, 4); });
 $("upload-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const after = $("upload-after").files[0];
   const before = $("upload-before").files[0];
   const status = $("upload-status");
   if (!after) { status.textContent = "Pick an after photo first."; return; }
-  const kind = $("upload-event").value;
-  if (kind && !$("upload-date").value) { status.textContent = "Say when it happened."; return; }
-  const event = kind ? { kind, date: $("upload-date").value, name: $("upload-name").value.trim() } : null;
+  const where = $("upload-place").value.trim();
+  const yr = $("upload-year").value;
+  const day = $("upload-date").value;
+  const kind = $("upload-kind").value;
+  if (!where) { status.textContent = "Say where the photos were taken."; return; }
+  if (!/^\d{4}$/.test(yr) || +yr > new Date().getFullYear()) { status.textContent = "Give the year it happened."; return; }
+  if (day && day.slice(0, 4) !== yr) { status.textContent = "The day and the year don't match."; return; }
+  status.textContent = `Finding ${where}…`;
+  const r = await fetch(`/api/places?q=${encodeURIComponent(where)}`).catch(() => ({ ok: false }));
+  const place = r.ok ? (await r.json())[0] : null;
+  if (!place) { status.textContent = r.ok ? `Couldn't find ${where}. Try adding the state or country.` : "Place search isn't answering; try again in a moment."; return; }
+  // a disaster Landfall already has here that year: use it (its photos, dates and flood marks)
+  const known = (state.storms || []).find((s) => place.disasters.includes(s.key) && s.landfall.startsWith(yr) && (s.kind || "hurricane") === kind && (!day || Math.abs(new Date(day) - new Date(s.landfall)) < 21 * 864e5));
+  const event = known ? null : { kind, date: day || yr, name: $("upload-name").value.trim() };
   status.textContent = "Uploading…";
   const put = (file, q) => fetch(`/api/uploads?${q}`, { method: "POST", body: file }).then(async (r) => {
     if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
@@ -267,8 +277,13 @@ $("upload-form").addEventListener("submit", async (e) => {
   $("upload-form").hidden = true;
   $("upload").textContent = before ? "Photos ready" : "Photo ready";
   $("upload").classList.add("on");
-  add(div("msg agent", `<p>Got your ${before ? "before and after photos" : "after photo"}. Now drag a box on the map over where ${before ? "they were" : "it was"} taken${event ? "" : ", check the Disaster menu shows the right disaster,"} and press Send. ${
-    before ? "" : "Without a before photo I'll look for your photo in the archive's photo of that spot from before the disaster and compare against that. If I can't find it there, I'll judge each building from your photo alone and send every one for a field check."}</p>`));
+  const [w, s, ea, n] = place.bbox;
+  map.fitBounds([[s, w], [n, ea]], { maxZoom: 17 });
+  $("place").value = place.short || place.label;
+  if (known && state.toStorm) state.toStorm(known.key);
+  const what = known ? `${known.name} (${yr})` : event.name || `the ${yr} ${kind}`;
+  add(div("msg agent", `<p>Got your ${before ? "before and after photos" : "after photo"} of ${esc(place.short || place.label)} after ${esc(what)}. Zoom in and drag a box over where ${before ? "they were" : "it was"} taken, then press Send. ${
+    before ? "" : `Without a before photo I'll look for your photo in the archive's photo of that spot from before ${day || known ? "the disaster" : yr} and compare against that. If I can't find it there, I'll judge each building from your photo alone and send every one for a field check.`}</p>`));
   setDrawing(true);
 });
 
@@ -626,6 +641,14 @@ async function boot() {
     $("storm").value = key;
   }
   stormMenu();
+  // the upload form ties photos to a disaster on the menu when one matches
+  state.storms = storms;
+  state.toStorm = (key) => {
+    showStorm(key);
+    const s = storms.find((x) => x.key === key);
+    if (s.imagery === "noaa") setFlight(null, true);
+    else setStormTiles(s);
+  };
   state.config = config;
   const at = params.get("at");
   const fit = params.get("fit");
