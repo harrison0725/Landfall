@@ -176,6 +176,11 @@ def describe(m: Measures, extra: dict) -> str:
             "in the pre-storm photo) is not damage. A tree that fell on the house (trunk or broken limbs lying across the roof, "
             "a root plate torn up beside it) is damage: at least minor, and major if the roof under it is broken open."
         )
+    if extra.get("uploaded"):
+        lines.append(
+            "These are photos the user uploaded (a drone or plane shot), not NOAA or satellite imagery. They may be taken at an angle, "
+            "so walls can show and roofs lean off the outline, and the outline was traced on the photo by Segment Anything, so it can be loose."
+        )
     lines.append(f"Alignment: {extra.get('status', 'unknown')} (matched = its own roof was found; neighbors = placed from nearby houses because its roof was not found where expected).")
     if extra.get("debris_share") is not None:
         if m.debris_share >= 0.05:
