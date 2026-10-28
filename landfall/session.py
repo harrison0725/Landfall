@@ -85,6 +85,7 @@ class Session:
         self.root = root
         self.area = area
         self.box: tuple[float, float, float, float] | None = None
+        self.upload: str | None = None  # photos the user uploaded for the box, by upload id
         self.use_spark = use_spark
         self.messages: list[dict] = [{"role": "system", "content": SYSTEM}]
         self.lock = threading.Lock()
@@ -114,6 +115,25 @@ class Session:
                 if self.box is None:
                     return {"error": "no box drawn yet; ask the user to draw one on the map"}
                 n = max(5, min(int(args.get("max_buildings") or 60), self.max_buildings))
+                if self.upload:
+                    from .photos import attach
+
+                    name = self.area or _name(self.box, "upload")
+                    spec = AreaSpec.for_photos(name, self.box, args.get("storm", "helene"), n)
+                    meta = attach(self.root, self.upload, self.root / name)
+                    spec.save(self.root)
+                    self.area = spec.name
+                    emit("area", name=spec.name, bbox=spec.bbox, flight=None)
+                    return {
+                        "area": spec.name,
+                        "storm": STORMS[spec.storm].name,
+                        "post_storm_photos": "the after photo the user uploaded, laid over the box",
+                        "pre_storm_photos": "the before photo the user uploaded"
+                        if meta["before"]
+                        else "none uploaded: buildings are judged from the after photo alone, and every one goes to a field check",
+                        "buildings": "found in the photo by Segment Anything, not from a map",
+                        "buildings_to_assess": spec.n_buildings,
+                    }
                 spec = AreaSpec.for_box(self.area or _name(self.box), self.box, args.get("storm", "helene"), n, cache=self.root / "cache")
                 spec.save(self.root)
                 self.area = spec.name
@@ -198,17 +218,24 @@ class Session:
 
     # ---- turns ---------------------------------------------------------
 
-    def turn(self, text: str, box: tuple[float, float, float, float] | None = None, storm: str | None = None) -> str:
+    def turn(self, text: str, box: tuple[float, float, float, float] | None = None, storm: str | None = None, upload: str | None = None) -> str:
         with self.lock:
             if box is not None:
                 self.box = tuple(round(v, 6) for v in box)
                 self.area = None
                 self.ahead = {}
+                self.upload = upload
                 w, s, e, n = self.box
                 text = (
                     f"{text}\n\n[The user drew a box on the map: west {w}, south {s}, east {e}, north {n}"
                     + (f"; storm: {storm}" if storm else "")
-                    + ".]"
+                    + "."
+                    + (
+                        " They uploaded their own photos taken over this box; locate_imagery uses those instead of NOAA or Maxar. "
+                        "Say in the report that the buildings were found in their photo and placed on the map by the box they drew, so positions are approximate.]"
+                        if upload
+                        else "]"
+                    )
                 )
             elif self.area:
                 text = f"{text}\n\n[Current area: {self.area}.]"
@@ -217,9 +244,9 @@ class Session:
             return a.text
 
 
-def _name(box: tuple[float, float, float, float]) -> str:
+def _name(box: tuple[float, float, float, float], prefix: str = "box") -> str:
     w, s, e, n = box
-    return re.sub(r"[^0-9a-z_]", "", f"box_{(s + n) / 2:.4f}_{-(w + e) / 2:.4f}".replace(".", "_"))
+    return re.sub(r"[^0-9a-z_]", "", f"{prefix}_{(s + n) / 2:.4f}_{-(w + e) / 2:.4f}".replace(".", "_"))
 
 
 def area_geojson(root: Path, area: str) -> dict:

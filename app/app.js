@@ -19,7 +19,7 @@ const STEP = {
 
 const $ = (id) => document.getElementById(id);
 const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-const state = { config: {}, sid: null, area: null, box: null, busy: false, drawing: false, layer: "after", features: {}, steps: [], spec: null };
+const state = { config: {}, sid: null, area: null, box: null, upload: null, busy: false, drawing: false, layer: "after", features: {}, steps: [], spec: null };
 
 // ---------------------------------------------------------------- map
 const map = L.map("map", { zoomControl: false }).setView([29.1375, -83.0355], 16);
@@ -202,6 +202,16 @@ mapEl.addEventListener("pointerup", (e) => {
   const km2 = ((ea - w) * 111.32 * Math.cos(((s + n) / 2) * Math.PI / 180)) * ((n - s) * 110.57);
   if (km2 < 0.002) { clearBox(); $("context").textContent = "That box was too small. Drag across a few houses."; return; }
   state.box = [w, s, ea, n];
+  if (state.upload) {
+    // the photos go where the box is: show the after photo there to check the fit
+    if (photoPreview) map.removeLayer(photoPreview);
+    photoPreview = L.imageOverlay(state.upload.url, b, { opacity: 0.85, interactive: false }).addTo(map);
+    $("context").innerHTML = `Your photos will be laid over this box, north up. <button type="button" class="linkish" id="clear-box">Draw again</button>`;
+    $("clear-box").addEventListener("click", () => { clearBox(); setDrawing(true); });
+    if (!$("input").value.trim()) $("input").value = "Assess the damage in my photos.";
+    $("input").focus();
+    return;
+  }
   const cap = Math.min(60, state.config.max_buildings || 60);  // the agent's default, capped by this server
   $("context").innerHTML = `Box drawn: ${km2 < 0.1 ? Math.round(km2 * 1e6).toLocaleString() + " m²" : km2.toFixed(2) + " km²"}${
     cap ? `. I'll assess up to ${cap} buildings in it, nearest the middle first` : ""}. <button type="button" class="linkish" id="clear-box">Clear box</button>`;
@@ -211,9 +221,47 @@ mapEl.addEventListener("pointerup", (e) => {
 });
 function clearBox() {
   if (boxLayer) map.removeLayer(boxLayer);
-  boxLayer = null;
+  if (photoPreview) map.removeLayer(photoPreview);
+  boxLayer = photoPreview = null;
   state.box = null;
 }
+
+// ---------------------------------------------------------------- uploading photos
+// The user's own photos of the land (a drone or plane shot) instead of NOAA or
+// Maxar: an after photo, a before photo if they have one, then a box over where
+// they were taken, and the same assessment runs on them.
+let photoPreview = null;
+$("upload").addEventListener("click", () => {
+  $("upload-form").hidden = !$("upload-form").hidden;
+});
+$("upload-cancel").addEventListener("click", () => { $("upload-form").hidden = true; });
+$("upload-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const after = $("upload-after").files[0];
+  const before = $("upload-before").files[0];
+  const status = $("upload-status");
+  if (!after) { status.textContent = "Pick an after photo first."; return; }
+  status.textContent = "Uploading…";
+  const put = (file, q) => fetch(`/api/uploads?${q}`, { method: "POST", body: file }).then(async (r) => {
+    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
+    return r.json();
+  });
+  try {
+    const a = await put(after, "side=after");
+    if (before) await put(before, `side=before&id=${a.id}`);
+    state.upload = { id: a.id, url: URL.createObjectURL(after), before: !!before };
+  } catch (err) {
+    status.textContent = `Couldn't upload: ${err.message}`;
+    return;
+  }
+  status.textContent = "";
+  $("upload-form").hidden = true;
+  $("upload").textContent = before ? "Photos ready" : "Photo ready";
+  $("upload").classList.add("on");
+  add(div("msg agent", `<p>Got your ${before ? "before and after photos" : "after photo"}. Now drag a box on the map over where ${before ? "they were" : "it was"} taken, pick the disaster, and press Send. ${
+    before ? "" : "Without a before photo I'll judge each building from the after photo alone, and send every one for a field check."}</p>`));
+  setDrawing(true);
+});
 
 // ---------------------------------------------------------------- conversation
 function scroll() { const l = $("log"); l.scrollTop = l.scrollHeight; }
@@ -286,7 +334,9 @@ function endStep(result) {
 
 function describeProgress(ev) {
   switch (ev.event) {
-    case "buildings": return `${ev.found} footprints in the box; assessing ${ev.kept}`;
+    case "buildings": return state.upload ? `${ev.found} buildings in the photo; assessing ${ev.kept}` : `${ev.found} footprints in the box; assessing ${ev.kept}`;
+    case "photos": return `Photos: ${ev.note}`;
+    case "detect": return `Looking for buildings in the photo: ${ev.tiles} Segment Anything calls`;
     case "imagery": return `${ev.side === "post" ? "After" : "Before"}: ${ev.source}`;
     case "aligned": return `Lined up ${ev.matched} by their own roof, ${ev.from_neighbors} from neighbors, ${ev.unaligned} couldn't be lined up`;
     case "sam": return `${ev.calls} Segment Anything calls: ${ev.prompts.join(", ")}`;
@@ -384,8 +434,14 @@ async function send(e) {
       return;
     }
   }
-  const body = { text, box: state.box, storm: state.box ? $("storm").value : null, access_code: code };
+  const body = { text, box: state.box, storm: state.box ? $("storm").value : null, access_code: code, upload: state.box && state.upload ? state.upload.id : null };
   if (state.box) { outlines.clearLayers(); state.features = {}; }
+  if (state.box && state.upload) {
+    // the photos are used once; the map shows the area's own copy when it's ready
+    state.upload = null;
+    $("upload").textContent = "Upload photos";
+    $("upload").classList.remove("on");
+  }
   state.box = null;
   $("context").textContent = "";
   const r = await fetch(`/api/sessions/${state.sid}/turn`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
@@ -594,7 +650,7 @@ async function boot() {
   }
   function goToStorm(key) {
     const own = done.filter((a) => a.spec && a.spec.storm === key);
-    const example = own.find((a) => !a.name.startsWith("box_")) || own[0];
+    const example = own.find((a) => !/^(box|upload)_/.test(a.name)) || own[0];
     if (example) { location.search = withYear(`?area=${encodeURIComponent(example.name)}`); return; }
     const s = storms.find((x) => x.key === key);
     if (s && s.view && s.view.length) location.search = withYear(`?at=${s.view.join(",")}&storm=${encodeURIComponent(key)}`);

@@ -58,11 +58,19 @@
         <select id="storm"></select>
       </label>
       <button type="button" id="draw" class="tool">Draw an area</button>
+      <button type="button" id="upload" class="tool">Upload photos</button>
       <div class="seg" role="group" aria-label="Photo layer">
         <button type="button" data-layer="after" class="on">After</button>
         <button type="button" data-layer="map">Street map</button>
       </div>
     </div>
+    <form class="upload-panel" id="upload-form" hidden>
+      <p>Photos of the land from above, like a drone or plane shot. I'll find the buildings in them and assess each one.</p>
+      <label>After the disaster <input type="file" id="upload-after" accept="image/*" required></label>
+      <label>Before it (optional) <input type="file" id="upload-before" accept="image/*"></label>
+      <div class="row"><button type="submit" class="send">Next: place them on the map</button><button type="button" class="linkish" id="upload-cancel">Cancel</button></div>
+      <p class="status" id="upload-status" aria-live="polite"></p>
+    </form>
     <div class="legend" id="legend"></div>
     <section class="card" id="card" hidden>
       <button type="button" class="close" id="card-close" aria-label="Close">×</button>

@@ -93,6 +93,7 @@ class Turn(BaseModel):
     box: list[float] | None = None
     storm: str | None = None
     access_code: str | None = None
+    upload: str | None = None  # id from /api/uploads: photos to assess instead of NOAA or Maxar
 
 
 RECENT: dict[str, list[float]] = {}
@@ -488,7 +489,7 @@ def turn(sid: str, body: Turn, request: Request) -> dict:
     def work() -> None:
         try:
             box = tuple(body.box) if body.box else None
-            text = live.session.turn(body.text, box=box, storm=body.storm)
+            text = live.session.turn(body.text, box=box, storm=body.storm, upload=body.upload if box else None)
             live.emit("message", text=text, area=live.session.area)
         except Exception as e:
             live.emit("error", text=f"{type(e).__name__}: {e}"[:500])
@@ -498,6 +499,26 @@ def turn(sid: str, body: Turn, request: Request) -> dict:
 
     threading.Thread(target=work, daemon=True).start()
     return {"ok": True}
+
+
+@app.post("/api/uploads")
+async def upload(request: Request, side: str = "after", id: str | None = None) -> dict:
+    """One photo of the land: the after photo starts an upload, a before
+    photo joins it by id. The body is the image file itself."""
+    from .photos import save_upload
+
+    if side not in ("after", "before"):
+        raise HTTPException(400, "side is after or before")
+    if side == "before" and not (id and id.isalnum() and (ROOT / "uploads" / id / "after.jpg").exists()):
+        raise HTTPException(400, "upload the after photo first")
+    _rate_limit(request)
+    raw = await request.body()
+    if not raw or len(raw) > 30_000_000:
+        raise HTTPException(400, "send one image under 30 MB")
+    try:
+        return save_upload(ROOT, id if side == "before" else uuid.uuid4().hex[:12], side, raw)
+    except Exception as e:  # not an image PIL can read
+        raise HTTPException(400, f"that file isn't an image I can read ({type(e).__name__})") from e
 
 
 @app.get("/api/sessions/{sid}/events")

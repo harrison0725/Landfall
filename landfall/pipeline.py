@@ -97,6 +97,33 @@ class AreaSpec:
         return cls(name, center, tuple(bbox), storm, f.name, s.landfall, s.stn_event, n_buildings, hwm_radius_km=radius, gauges=gauges)
 
     @classmethod
+    def for_photos(cls, name: str, bbox: tuple[float, float, float, float], storm: str, n_buildings: int = 60) -> AreaSpec:
+        """An area from photos the user uploaded, laid over the box they drew.
+        The disaster still sets the kind of damage and, in the US, where the
+        surveyed flood marks come from."""
+        from .storms import STORMS, nearest_gauges
+
+        s = STORMS[storm]
+        center = ((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2)
+        us = s.provider == "noaa"
+        gauges = nearest_gauges(*center) if us and s.kind == "hurricane" else []
+        return cls(
+            name,
+            center,
+            tuple(bbox),
+            storm,
+            "",
+            s.landfall,
+            s.stn_event if us else "",
+            n_buildings,
+            min_area_m2=25.0,
+            hwm_radius_km=2.0 if s.kind == "flood" else 5.0,
+            gauges=gauges,
+            imagery="photos",
+            post_label="Uploaded after photo",
+        )
+
+    @classmethod
     def _maxar(cls, name, bbox, center, s, n_buildings, cache) -> AreaSpec:
         from .maxar import passes, pick
 
@@ -180,6 +207,13 @@ def pick_buildings(feats: list[dict], center, n: int, min_area: float) -> list[d
     return chosen
 
 
+NO_BEFORE = "no before photo was uploaded, so the left image is blank grey; judge from the after photo alone and keep confidence modest"
+
+
+def _no_before(spec: AreaSpec, d: Path) -> bool:
+    return spec.imagery == "photos" and not (d / "upload_before.jpg").exists()
+
+
 def cloud_hidden(post: np.ndarray) -> bool:
     """True when the after crop is cloud: nearly all bright, colourless and
     flat. Real ground, even white roofs and concrete, has edges (a mean
@@ -203,22 +237,46 @@ def prepare(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
     (out / "crops").mkdir(parents=True, exist_ok=True)
     spec.save(root)
 
-    feats = ms_buildings(spec.bbox, cache, region=None)
+    pad = 64 + MAX_SHIFT
+    if spec.imagery == "photos":
+        # The photos come first here: the buildings are found in them.
+        from .photos import box_window, find_buildings, lay
+
+        b = box_window(spec.bbox, ZOOM)
+        area = Window(b.x0 - pad, b.y0 - pad, b.x1 + pad, b.y1 + pad)
+        post, post_ok, pre, pre_ok, note = lay(out, spec.bbox, ZOOM, area)
+        before = (out / "upload_before.jpg").exists()
+        log("photos", note=note)
+        # a building the disaster flattened still stands in the before photo
+        feats = find_buildings(*((pre, pre_ok) if before else (post, post_ok)), (area.x0, area.y0), ZOOM, out / "sam", log)
+        # a house the photo's edge cuts off can't be judged, and its alignment
+        # search would run off the photo: keep those well inside
+        edge = TEMPLATE_PAD + MAX_SHIFT
+
+        def inside(f) -> bool:
+            px = np.array([lonlat_to_pixel(lon, lat, ZOOM) for lon, lat in f["geometry"]["coordinates"][0]])
+            return px[:, 0].min() >= b.x0 + edge and px[:, 1].min() >= b.y0 + edge and px[:, 0].max() <= b.x1 - edge and px[:, 1].max() <= b.y1 - edge
+
+        feats = [f for f in feats if inside(f)]
+    else:
+        feats = ms_buildings(spec.bbox, cache, region=None)
     chosen = pick_buildings(feats, spec.center, spec.n_buildings, spec.min_area_m2)
     if not chosen:
-        raise LookupError("no building footprints in this box")
+        raise LookupError("no buildings found in the photo" if spec.imagery == "photos" else "no building footprints in this box")
     log("buildings", found=len(feats), kept=len(chosen))
     (out / "buildings.geojson").write_text(json.dumps({"type": "FeatureCollection", "features": chosen}))
 
     wins = {f["properties"]["id"]: building_window([tuple(p) for p in f["geometry"]["coordinates"][0][:-1]], ZOOM, MARGIN_M) for f in chosen}
-    pad = 64 + MAX_SHIFT
-    area = Window(
-        min(w.x0 for w in wins.values()) - pad,
-        min(w.y0 for w in wins.values()) - pad,
-        max(w.x1 for w in wins.values()) + pad,
-        max(w.y1 for w in wins.values()) + pad,
-    )
-    if spec.imagery == "maxar":
+    if spec.imagery != "photos":
+        area = Window(
+            min(w.x0 for w in wins.values()) - pad,
+            min(w.y0 for w in wins.values()) - pad,
+            max(w.x1 for w in wins.values()) + pad,
+            max(w.y1 for w in wins.values()) + pad,
+        )
+    if spec.imagery == "photos":
+        pre_date, pre_source, pre_id = "", "Uploaded before photo" if before else "no before photo", None
+    elif spec.imagery == "maxar":
         from .maxar import mosaic
 
         post, post_ok = mosaic(spec.post_hrefs, area, ZOOM)
@@ -228,9 +286,11 @@ def prepare(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
         post, post_ok = noaa_mosaic(spec.noaa_flight, area, ZOOM, cache)
         scene, pre, pre_ok = _naip_fill(area, spec, naip_scenes, naip_mosaic)
         pre_date, pre_source, pre_id = scene.date, f"USDA NAIP {scene.date}", scene.id
-    log("imagery", side="post", source=spec.post_source, px=[area.width, area.height], covered=round(float(post_ok.mean()), 3))
-    log("imagery", side="pre", source=pre_source, px=[area.width, area.height], covered=round(float(pre_ok.mean()), 3))
-    between = storms_between(pre_date, spec.landfall, spec.storm)
+    # an upload covers the box it was laid on, not the margin around it
+    inner = (slice(b.y0 - area.y0, b.y1 - area.y0), slice(b.x0 - area.x0, b.x1 - area.x0)) if spec.imagery == "photos" else (slice(None), slice(None))
+    log("imagery", side="post", source=spec.post_source, px=[area.width, area.height], covered=round(float(post_ok[inner].mean()), 3))
+    log("imagery", side="pre", source=pre_source, px=[area.width, area.height], covered=round(float(pre_ok[inner].mean()), 3))
+    between = storms_between(pre_date, spec.landfall, spec.storm) if pre_date else []
     if between:
         log("warning", text=f"{', '.join(between)} hit between the pre-storm photos ({pre_date}) and this storm; damage from it will look like damage from this one.")
     Image.fromarray(pre).save(out / "pre.png")
@@ -248,6 +308,11 @@ def prepare(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
         matches.append(match_building(pre[ctx], post[ctx], (m, m, m + bx1 - bx0, m + by1 - by0), m))
         centers.append(tuple(px.mean(0)))
     places = place_buildings(matches, centers)
+    if spec.imagery == "photos" and not before:
+        # matched against flat grey: meaningless, so keep each where it was found
+        from dataclasses import replace
+
+        places = [replace(pl, dx=0, dy=0, status="matched") for pl in places]
 
     results = []
     for f, pl, cover in zip(chosen, places, coverage):
@@ -282,8 +347,8 @@ def prepare(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
         zoom=ZOOM,
         m_per_px=round(meters_per_pixel(spec.center[1], ZOOM), 3),
         noaa_flight=spec.noaa_flight,
-        naip_scene=pre_id if spec.imagery != "maxar" else None,
-        naip_date=pre_date if spec.imagery != "maxar" else None,
+        naip_scene=pre_id if spec.imagery == "noaa" else None,
+        naip_date=pre_date if spec.imagery == "noaa" else None,
         post_source=spec.post_source,
         pre_source=pre_source,
         pre_date=pre_date,
@@ -493,6 +558,7 @@ def segment(spec: AreaSpec, root: Path, log: Log = _quiet, workers: int = 24, pr
     x0, y0 = al["summary"]["mosaic_origin"]
     post_mosaic = np.asarray(Image.open(d / "post.png").convert("RGB"))
     by_id = {r["id"]: r for r in al["buildings"]}
+    no_before = _no_before(spec, d)
 
     def image(bid: str, side: str) -> np.ndarray:
         if side == "pre":
@@ -535,7 +601,9 @@ def segment(spec: AreaSpec, root: Path, log: Log = _quiet, workers: int = 24, pr
         cover = coverage([pre], fp)
         kept, sdx, sdy = best_overlap(pre, post_ctx, POST_PAD, tolerance=2)
         rec = dict(id=bid, status=r["status"], pre_cover=round(cover, 3))
-        if cover < 0.3:
+        if no_before:
+            rec.update(structure_loss=None, note=NO_BEFORE)
+        elif cover < 0.3:
             rec.update(structure_loss=None, note="pre-storm structure not found on the outline")
         else:
             loss, tree_share = under_trees(pre, post_ctx, canopy_mask(image(bid, "post")), sdx, sdy, POST_PAD, tolerance=2)
@@ -587,7 +655,7 @@ def flood(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
             obs += high_water_marks(spec.stn_event, spec.center, radius)
             if obs:
                 log("warning", text=f"No high-water marks within {spec.hwm_radius_km:g} km; using marks up to {radius:g} km away, so depths are rougher.")
-    except LookupError as e:
+    except (LookupError, OSError) as e:  # USGS's service times out now and then: depth unknown, not a failed area
         log("flood_source", error=str(e))
     t0 = date.fromisoformat(spec.landfall)
     for g in spec.gauges:
@@ -778,6 +846,7 @@ def assess(
             -(floods.get(r["id"]) or 0),
         )
 
+    no_before = _no_before(spec, d)
     order = sorted(damage, key=worst)
     if only:
         keep = set(only)
@@ -795,7 +864,7 @@ def assess(
             tarp_share=yard.get("tarp_share", 0.0),
             debris_share=yard.get("debris_share", 0.0),
             flood_ft=floods.get(bid),
-            aligned=loss is not None,
+            aligned=loss is not None or no_before,
             kind=kind,
         )
         pre = np.asarray(Image.open(d / "crops" / f"{bid}_pre.png").convert("RGB"))
@@ -823,7 +892,7 @@ def assess(
                 trace=[{"model": "cloud check", "note": "after photo is cloud"}],
             )
         try:
-            a = assess_one(bid, pre, post, outline, m, {**r, **yard, "status": status[bid]}, escalate=escalate, kind=kind)
+            a = assess_one(bid, pre, post, outline, m, {**r, **yard, "status": status[bid], "uploaded": spec.imagery == "photos"}, escalate=escalate, kind=kind)
         except Exception as e:  # keep going; one bad building should not stop the area
             log("building_failed", id=bid, error=str(e)[:200])
             return dict(id=bid, error=str(e))
@@ -842,6 +911,10 @@ def assess(
             tarp_share=None if "yard_note" in yard else m.tarp_share,
             trace=a.trace,
         )
+        if no_before and not rec["needs_human"]:
+            # one photo shows what is there, not what changed
+            rec["needs_human"] = True
+            rec["trace"] = [*a.trace, {"model": "photo rule", "note": "no before photo: field check"}]
         if spec.imagery == "maxar" and rec["category"] in ("minor", "major", "destroyed") and not rec["needs_human"]:
             # Satellite photos are coarser than NOAA's aerial ones and taken
             # at an angle, so a roof can look gone when it is hidden by its
