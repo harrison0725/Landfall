@@ -15,5 +15,6 @@ def test_box_names_are_safe_folder_names():
 
 
 def test_storms_between_photo_dates():
-    assert storms_between("2023-02-15", "2024-09-26", "helene") == ["Hurricane Idalia (2023-08-30)"]
-    assert storms_between("2024-01-01", "2024-09-26", "helene") == []
+    assert storms_between("2023-02-15", "2024-09-26", "helene") == ["Hurricane Idalia (2023-08-30)", "Hurricane Debby (2024-08-05)"]
+    assert storms_between("2024-01-01", "2024-09-26", "helene") == ["Hurricane Debby (2024-08-05)"]
+    assert storms_between("2024-09-01", "2024-09-26", "helene") == []

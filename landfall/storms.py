@@ -46,10 +46,10 @@ class Storm:
 STORMS = {
     s.key: s
     for s in [
-        Storm("helene", "Hurricane Helene", "2024-09-26", "2024 Helene", view=(29.137, -83.035, 15)),
-        Storm("milton", "Hurricane Milton", "2024-10-09", "2024 Milton", view=(27.33, -82.54, 14)),
-        Storm("idalia", "Hurricane Idalia", "2023-08-30", "2023 Idalia", view=(29.66, -83.39, 14)),
-        Storm("ian", "Hurricane Ian", "2022-09-28", "2022 Ian", view=(26.45, -81.95, 14)),
+        Storm("helene", "Hurricane Helene", "2024-09-26", "2024 Helene", where="Florida, United States", view=(29.137, -83.035, 15)),
+        Storm("milton", "Hurricane Milton", "2024-10-09", "2024 Milton", where="Florida, United States", view=(27.33, -82.54, 14)),
+        Storm("idalia", "Hurricane Idalia", "2023-08-30", "2023 Idalia", where="Florida, United States", view=(29.66, -83.39, 14)),
+        Storm("ian", "Hurricane Ian", "2022-09-28", "2022 Ian", where="Florida, United States", view=(26.45, -81.95, 14)),
         # Outside the US: Maxar Open Data. Dates are landfall on the place
         # most of the event's imagery covers.
         Storm("melissa", "Hurricane Melissa", "2025-10-28", "", "Hurricane-Melissa-Oct-2025", "Jamaica, Cuba, Haiti", view=(18.465, -77.915, 14)),
@@ -57,7 +57,7 @@ STORMS = {
         Storm("maria", "Hurricane Maria", "2017-09-20", "", "Hurricane-Maria-PuertoRico-Oct-2017", "Puerto Rico", view=(18.405, -66.138, 13)),
         Storm("chido", "Cyclone Chido", "2024-12-14", "", "Cyclone-Chido-Dec15", "Mayotte", view=(-12.834, 45.207, 13)),
         Storm("mocha", "Cyclone Mocha", "2023-05-14", "", "BayofBengal-Cyclone-Mocha-May-23", "Myanmar, Bangladesh", view=(20.325, 92.785, 13)),
-        Storm("ditwah", "Cyclone Ditwah", "2025-11-28", "", "Cyclone-Ditwah-Sri-Lanka-Nov-2025", "Sri Lanka", view=(6.942, 79.937, 13)),
+        Storm("ditwah", "Cyclone Ditwah", "2025-11-28", "", "Cyclone-Ditwah-Sri-Lanka-Nov-2025", "Sri Lanka", view=(7.1684, 79.9368, 13)),
         Storm("kalmaegi", "Typhoon Kalmaegi", "2025-11-04", "", "Typhoon-Kalmaegi-Nov-2025", "Philippines", view=(14.487, 121.073, 12)),
         Storm("emnati", "Cyclone Emnati", "2022-02-22", "", "cyclone-emnati22", "Madagascar", view=(-23.374, 47.657, 13)),
         # Other disasters. NOAA flew the LA fires and the Texas floods into its
@@ -65,6 +65,20 @@ STORMS = {
         Storm("la_fires", "Los Angeles wildfires", "2025-01-07", "", where="Los Angeles, United States", kind="wildfire", catalog="2025_eri", until="2025-01-31", view=(34.19, -118.13, 14)),
         Storm("texas_floods", "Texas Hill Country floods", "2025-07-04", "2025 July TX Flood", where="Texas, United States", kind="flood", catalog="2025_eri", until="2025-07-31", view=(30.07, -99.24, 14)),
         Storm("myanmar_quake", "Myanmar earthquake", "2025-03-28", "", "Earthquake-Myanmar-March-2025", "Myanmar", kind="earthquake", view=(21.959, 96.118, 15)),
+        # More US disasters NOAA flew (older storms are only on NOAA's site as
+        # downloads, not map tiles, so they can't be read here)
+        Storm("michael", "Hurricane Michael", "2018-10-10", "2018 Michael", where="Florida, United States", view=(29.94, -85.41, 15)),
+        Storm("ida", "Hurricane Ida", "2021-08-29", "2021 Ida", where="Louisiana, United States", view=(29.236, -89.99, 15)),
+        Storm("nicole", "Hurricane Nicole", "2022-11-10", "", where="Florida, United States", view=(29.12, -80.97, 15)),
+        Storm("debby", "Hurricane Debby", "2024-08-05", "2024 Debby", where="Florida, United States", view=(29.67, -83.39, 15)),
+        Storm("francine", "Hurricane Francine", "2024-09-11", "2024 Francine", where="Louisiana, United States", view=(29.70, -91.20, 15)),
+        Storm("kentucky_floods_2025", "Kentucky floods", "2025-04-05", "2025 April KY Flood", where="Kentucky, United States", kind="flood", catalog="2025_eri", until="2025-04-30", view=(38.20, -84.87, 15)),
+        # Worldwide, from Maxar Open Data: events with photos from both before
+        # and after (several in the catalog only have one side, and are left out)
+        Storm("turkey_quake", "Turkey–Syria earthquake", "2023-02-06", "", "Kahramanmaras-turkey-earthquake-23", "Turkey, Syria", kind="earthquake", view=(36.205, 36.16, 14)),
+        Storm("spain_floods", "Valencia floods", "2024-10-29", "", "Floods-Spain-Oct24", "Spain", kind="flood", view=(39.5099, -0.3538, 15)),
+        Storm("brazil_floods", "Rio Grande do Sul floods", "2024-05-01", "", "Brazil-Flooding-May24", "Brazil", kind="flood", view=(-29.2628, -51.9797, 14)),
+        Storm("nigeria_floods", "Mokwa flood", "2025-05-29", "", "Nigeria-Flooding-May-2025", "Nigeria", kind="flood", view=(9.2893, 5.071, 14)),
     ]
 }
 
