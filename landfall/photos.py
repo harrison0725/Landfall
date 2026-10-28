@@ -105,7 +105,7 @@ def _edges(img: np.ndarray, k: float) -> np.ndarray:
     return mag / (mag.mean() + 1e-6)
 
 
-def locate(after: np.ndarray, archive: np.ndarray, box: tuple[int, int], k: float = 0.25, min_score: float = 0.12) -> dict | None:
+def locate(after: np.ndarray, archive: np.ndarray, box: tuple[int, int], k: float = 0.25, min_score: float = 0.12, ok: np.ndarray | None = None, near: bool = False) -> dict | None:
     """Where the after photo sits in a wider archive photo of the place.
 
     The user's box gives a rough place and size (`box`, its width and height
@@ -114,13 +114,19 @@ def locate(after: np.ndarray, archive: np.ndarray, box: tuple[int, int], k: floa
     the archive's. Returns the turn (quarter turns counter-clockwise), the
     top-left corner and size in archive pixels, and the match score; None
     when no placement stands out, as with a different place or a scene the
-    disaster changed beyond recognition."""
+    disaster changed beyond recognition. With `near`, the box is known to
+    within a few metres (the town search found it): the best placement is
+    taken if it stands out from its own scores and sits about there."""
     import cv2
 
+    # a big photo is matched coarser: a degree or two of turn, or a lens's
+    # bend, then moves its far edges less than an edge is wide
+    k = min(k, 256 / max(box))
     A = _edges(archive, k)
     tries = []
     for rot in range(4):
         img = np.ascontiguousarray(np.rot90(after, rot))
+        okr = None if ok is None else np.ascontiguousarray(np.rot90(ok, rot))
         aspect = img.shape[0] / img.shape[1]
         for scale in np.linspace(0.8, 1.25, 19):
             w = int(math.sqrt(box[0] * box[1] / aspect) * scale)
@@ -128,7 +134,11 @@ def locate(after: np.ndarray, archive: np.ndarray, box: tuple[int, int], k: floa
             if w * k >= A.shape[1] - 2 or h * k >= A.shape[0] - 2:
                 continue
             T = _edges(cv2.resize(img, (w, h), interpolation=cv2.INTER_AREA), k)
-            r = cv2.matchTemplate(A, T, cv2.TM_CCOEFF_NORMED)
+            if okr is None:
+                r = cv2.matchTemplate(A, T, cv2.TM_CCOEFF_NORMED)
+            else:  # a turned photo: match only where it has picture
+                M = _inside(cv2.resize(okr.astype(np.uint8), (w, h), interpolation=cv2.INTER_NEAREST), T.shape)
+                r = np.nan_to_num(cv2.matchTemplate(A, T, cv2.TM_CCOEFF_NORMED, mask=M), nan=0.0, posinf=0.0, neginf=0.0)
             _, score, _, (x, y) = cv2.minMaxLoc(r)
             z = (score - float(r.mean())) / (float(r.std()) + 1e-6)
             tries.append(dict(score=float(score), z=z, rot=rot, x=int(x / k), y=int(y / k), w=w, h=h))
@@ -138,7 +148,17 @@ def locate(after: np.ndarray, archive: np.ndarray, box: tuple[int, int], k: floa
     best = tries[0]
     # the runner-up somewhere else entirely: a real match stands well above it
     far = [t for t in tries if t["rot"] != best["rot"] or abs(t["x"] - best["x"]) + abs(t["y"] - best["y"]) > 0.2 * best["w"]]
-    if best["score"] < min_score or (far and best["score"] < 1.5 * far[0]["score"]):
+    if best["score"] < min_score:
+        return None
+    if near:
+        # checking a spot already found from afar: it is there, close to
+        # where expected, or not at all
+        m = (archive.shape[1] - box[0]) / 2, (archive.shape[0] - box[1]) / 2
+        return best if best["z"] >= 4 and math.hypot(best["x"] - m[0], best["y"] - m[1]) <= 0.25 * max(box) else None
+    # a real match stands well above the best placement elsewhere, in score
+    # or, for a big photo whose turned-round self matches part of a street
+    # grid, in how far it stands above its own turn's spread of scores
+    if far and best["score"] < 1.5 * far[0]["score"] and not (best["z"] >= 4.5 and best["z"] >= 1.5 * max(t["z"] for t in far)):
         return None
     return best
 
@@ -160,36 +180,159 @@ def _directions(img: np.ndarray, k: float, blur: float = 1.0) -> list[np.ndarray
     return [cv2.GaussianBlur(w * (gx * gx - gy * gy) / m2, (0, 0), blur), cv2.GaussianBlur(w * 2 * gx * gy / m2, (0, 0), blur)]
 
 
-def search(after: np.ndarray, archive: np.ndarray, m_per_px: float, min_m: float = 60.0, max_m: float = 1000.0, step: float = 1.04, min_z: float = 5.0, n: int = 3) -> list[dict]:
+def _inside(ok: np.ndarray, shape: tuple[int, ...], margin: int = 3) -> np.ndarray:
+    """`ok` shrunk to `shape` and pulled in from its edge by `margin` pixels."""
+    import cv2
+
+    small = cv2.resize(ok.astype(np.uint8), (shape[1], shape[0]), interpolation=cv2.INTER_NEAREST)
+    return cv2.erode(small, np.ones((2 * margin + 1, 2 * margin + 1), np.uint8)).astype(np.float32)
+
+
+def _middle(ok: np.ndarray) -> tuple[int, int, int, int]:
+    """The biggest box about the middle of a turned photo that is all picture."""
+    H, W = ok.shape
+    lo, hi = 0.0, 1.0
+    for _ in range(12):
+        f = (lo + hi) / 2
+        x0, x1 = int(W / 2 * (1 - f)), int(W / 2 * (1 + f)) - 1
+        y0, y1 = int(H / 2 * (1 - f)), int(H / 2 * (1 + f)) - 1
+        lo, hi = (f, hi) if ok[y0, x0] and ok[y0, x1] and ok[y1, x0] and ok[y1, x1] else (lo, f)
+    x0, x1 = int(W / 2 * (1 - lo)) + 1, int(W / 2 * (1 + lo)) - 1
+    y0, y1 = int(H / 2 * (1 - lo)) + 1, int(H / 2 * (1 + lo)) - 1
+    return x0, y0, x1, y1
+
+
+def turn(img: np.ndarray, deg: float) -> tuple[np.ndarray, np.ndarray]:
+    """The photo turned `deg` degrees counter-clockwise on a canvas big
+    enough to hold all of it, and where the canvas has picture."""
+    import cv2
+
+    h, w = img.shape[:2]
+    M = cv2.getRotationMatrix2D((w / 2, h / 2), deg, 1.0)
+    c, s = abs(M[0, 0]), abs(M[0, 1])
+    W, H = int(round(h * s + w * c)), int(round(h * c + w * s))
+    M[0, 2] += W / 2 - w / 2
+    M[1, 2] += H / 2 - h / 2
+    out = cv2.warpAffine(img, M, (W, H), flags=cv2.INTER_LINEAR)
+    ok = cv2.warpAffine(np.full((h, w), 255, np.uint8), M, (W, H), flags=cv2.INTER_NEAREST) > 0
+    return out, ok
+
+
+def _grid(img: np.ndarray, k: float = 0.25) -> np.ndarray:
+    """How much strong edge runs at each angle, 0 to 89 degrees (1 is
+    average): streets and buildings mostly run along a grid, whose angle
+    repeats every 90. Angles are as `turn` counts them, so turning a photo
+    by d takes d off each."""
+    import cv2
+
+    g = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    g = cv2.resize(g, None, fx=k, fy=k, interpolation=cv2.INTER_AREA).astype(np.float32)
+    g = cv2.GaussianBlur(g, (0, 0), 1.0)
+    gx, gy = cv2.Sobel(g, cv2.CV_32F, 1, 0, ksize=5), cv2.Sobel(g, cv2.CV_32F, 0, 1, ksize=5)
+    m = np.hypot(gx, gy)
+    strong = m > np.percentile(m, 80)
+    h, _ = np.histogram((np.degrees(np.arctan2(gy, gx)) % 90)[strong], 90, (0, 90))
+    h = np.convolve(np.r_[h[-1:], h, h[:1]].astype(float), np.ones(3) / 3, "same")[1:-1]
+    return h / (h.mean() + 1e-9)
+
+
+def _grids(img: np.ndarray, tile: int = 512, min_peak: float = 1.3) -> list[int]:
+    """The street grids' angles in an archive photo, most common first. A
+    town can have several (an old centre and a newer grid at an angle), and
+    water, fields and woods have none, so only tiles with a clear grid count."""
+    votes = np.zeros(90)
+    H, W = img.shape[:2]
+    for y in range(0, max(1, H - tile // 2), tile):
+        for x in range(0, max(1, W - tile // 2), tile):
+            h = _grid(img[y : y + tile, x : x + tile])
+            if h.max() >= min_peak:
+                votes += np.clip(h - 1, 0, None)
+    votes = np.convolve(np.r_[votes[-2:], votes, votes[:2]], np.ones(5), "same")[2:-2]  # 0 and 89 are one grid
+    tops = sorted((d for d in range(90) if votes[d] >= votes[d - 1] and votes[d] >= votes[(d + 1) % 90]), key=lambda d: -votes[d])
+    out: list[int] = []
+    for d in tops:
+        if votes[d] < 0.1 * votes[tops[0]]:
+            break
+        if all(not _near(d, o, 8) for o in out):
+            out.append(int(d))
+    return out
+
+
+def angles(after: np.ndarray, archive: np.ndarray, n: int = 3) -> list[int]:
+    """The turns (degrees counter-clockwise, 0 to 89) that line the photo's
+    street grid up with each of the archive's, most common grid first; the
+    quarter turns on top are left to the matching. A north-up photo gets
+    about 0; one taken at a slant gets its slant, to within a few degrees."""
+    h = _grid(after)
+    p = int(np.argmax(h))
+    return [(p - g) % 90 for g in _grids(archive)[:n]]
+
+
+def _near(a: float, b: float, tol: float = 4.0) -> bool:
+    d = abs(a - b) % 90
+    return min(d, 90 - d) <= tol
+
+
+def slant_tries(after: np.ndarray, archive: np.ndarray, n: int = 4) -> list[int]:
+    """North-up first (most photos from the air are, or a quarter turn
+    off), then the slants that would line the photo's grid up with each of
+    the archive's, most common grid first."""
+    out = [0]
+    for d in angles(after, archive, n):
+        if all(not _near(d, o) for o in out):
+            out.append(d)
+    return out
+
+
+def search(after: np.ndarray, archive: np.ndarray, m_per_px: float, min_m: float = 60.0, max_m: float = 1000.0, step: float = 1.04, min_z: float = 5.0, n: int = 3, slants: list[int] | None = None) -> list[dict]:
     """Where the after photo was taken, anywhere in an archive photo of a
     whole town, when nobody has said where or how much ground it shows.
 
-    Tries the photo turned by quarter turns (photos from the air are
-    usually north-up or a quarter turn off) at ground widths from `min_m`
-    to `max_m`, 3% apart, matching edge directions on a coarse archive photo
-    (`m_per_px` metres a pixel). Returns up to `n` likely spots, best first,
-    each with its turn and placement in archive pixels; `locate` on sharp
-    photos then says which, if any, is really it."""
+    Tries the photo north-up and turned to line its street grid up with the
+    town's (`angles`; or just `slants`), each with quarter turns on top, at ground widths from
+    `min_m` to `max_m`, 4% apart, matching edge directions on a coarse
+    archive photo (`m_per_px` metres a pixel). Returns up to `n` likely
+    spots, best first, each with its turn (`angle`, degrees counter-
+    clockwise) and the turned photo's placement in archive pixels; `locate`
+    on sharp photos then says which, if any, is really it."""
     import cv2
 
+    if slants is None:
+        slants = slant_tries(after, archive)
     feats: dict[float, list[np.ndarray]] = {}
     tries = []
-    for rot in range(4):
-        img = np.ascontiguousarray(np.rot90(after, rot))
-        aspect = img.shape[0] / img.shape[1]
-        for metres in np.geomspace(min_m, max_m, int(np.log(max_m / min_m) / np.log(step)) + 1):
-            w = int(metres / m_per_px)
-            h = int(w * aspect)
-            k = min(0.5, max(0.125, 2 ** round(np.log2(90 / w)))) if w else 0.5  # templates about 90 px across
-            if w * k < 24 or w >= archive.shape[1] - 2 or h >= archive.shape[0] - 2:
-                continue
-            if k not in feats:
-                feats[k] = _directions(archive, k)
-            T = _directions(cv2.resize(img, (w, h), interpolation=cv2.INTER_AREA), k)
-            r = sum(cv2.matchTemplate(a, t, cv2.TM_CCOEFF_NORMED) for a, t in zip(feats[k], T)) / 2
-            _, score, _, (x, y) = cv2.minMaxLoc(r)
-            z = (score - float(r.mean())) / (float(r.std()) + 1e-6)
-            tries.append(dict(score=float(score), z=z, rot=rot, x=int(x / k), y=int(y / k), w=w, h=h))
+    for slant in slants:
+        if slant:
+            # matched on the middle of the turned photo, clear of its blank
+            # corners; placed as the whole turned photo
+            whole, ok = turn(after, slant)
+            x0, y0, x1, y1 = _middle(ok)
+            base = whole[y0:y1, x0:x1]
+        else:
+            whole, base, (x0, y0) = after, after, (0, 0)
+        for rot in range(4):
+            img = np.ascontiguousarray(np.rot90(base, rot))
+            # where the middle sits in the whole turned photo, turned the same way
+            Ho, Wo = whole.shape[:2]
+            ch, cw = base.shape[:2]
+            ox, oy = [(x0, y0), (y0, Wo - x0 - cw), (Wo - x0 - cw, Ho - y0 - ch), (Ho - y0 - ch, x0)][rot]
+            H, W = (Ho, Wo) if rot % 2 == 0 else (Wo, Ho)
+            aspect = img.shape[0] / img.shape[1]
+            for metres in np.geomspace(min_m, max_m, int(np.log(max_m / min_m) / np.log(step)) + 1):
+                w = int(metres / m_per_px * img.shape[1] / W)  # the whole photo spans `metres`
+                h = int(w * aspect)
+                k = min(0.5, max(0.125, 2 ** round(np.log2(90 / w)))) if w else 0.5  # templates about 90 px across
+                if w * k < 24 or w >= archive.shape[1] - 2 or h >= archive.shape[0] - 2:
+                    continue
+                if k not in feats:
+                    feats[k] = _directions(archive, k)
+                T = _directions(cv2.resize(img, (w, h), interpolation=cv2.INTER_AREA), k)
+                r = sum(cv2.matchTemplate(a, t, cv2.TM_CCOEFF_NORMED) for a, t in zip(feats[k], T)) / 2
+                _, score, _, (x, y) = cv2.minMaxLoc(r)
+                z = (score - float(r.mean())) / (float(r.std()) + 1e-6)
+                f = w / img.shape[1]  # archive pixels per photo pixel
+                tries.append(dict(score=float(score), z=z, rot=rot, slant=slant, angle=(slant + 90 * rot) % 360,
+                                  x=int(x / k - ox * f), y=int(y / k - oy * f), w=int(W * f), h=int(H * f)))
     # a small template matches something somewhere by chance; rank each try
     # by how far its peak stands above that size's own spread of scores
     tries.sort(key=lambda t: -t["z"])
@@ -246,7 +389,8 @@ def lay(d: Path, bbox, zoom: int, area: Window, archive: tuple[np.ndarray, np.nd
         valid[oy : oy + box.height, ox : ox + box.width] = m
         return out, valid
 
-    post, post_ok = place(after, None)
+    shown = d / "upload_after_ok.png"  # a photo turned to north-up: where it has picture
+    post, post_ok = place(after, np.asarray(Image.open(shown)) > 0 if shown.exists() else None)
     if pre_full is None and archive is not None:
         pre, pre_ok = archive
         return post, post_ok, pre, pre_ok & post_ok, "before photo from the archive, lined up with the after photo"

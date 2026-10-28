@@ -93,3 +93,43 @@ def test_a_new_disaster_described_by_the_uploader():
         _event({"kind": "flood", "date": "2999-01-01"})
     spec = AreaSpec.for_photos("upload_x", (10.0, 45.0, 10.01, 45.01), "", 20, event={**ev, "name": ""})
     assert (spec.storm, spec.landfall, event_kind(spec), event_name(spec)) == ("", "2026-10-20", "flood", "the flood of 2026-10-20")
+
+
+def test_a_photo_taken_at_a_slant_is_turned_back_and_found():
+    from landfall.photos import angles, locate, turn
+
+    archive = _scene(6, (900, 1200))
+    slanted, _ = turn(archive[150:750, 300:900], 30)  # the camera turned 30 degrees
+    H, W = slanted.shape[:2]
+    photo = np.ascontiguousarray(slanted[H // 2 - 150 : H // 2 + 150, W // 2 - 200 : W // 2 + 200])
+    best = angles(photo, archive)[0]
+    assert min(abs(best - 60), 90 - abs(best - 60)) <= 4  # 30 back, less a quarter turn
+    turned, ok = turn(photo, best)
+    hit = locate(turned, archive, (turned.shape[1], turned.shape[0]), ok=ok)
+    assert hit is not None and (best + 90 * hit["rot"]) % 360 in range(325, 336)
+    assert abs(hit["x"] + hit["w"] / 2 - 600) <= 15 and abs(hit["y"] + hit["h"] / 2 - 450) <= 15
+
+
+def test_search_finds_a_slanted_photo_in_a_whole_town():
+    from landfall.photos import search, turn
+
+    archive = _scene(7, (900, 1200))
+    slanted, _ = turn(archive[100:800, 250:950], -20)  # the camera turned 20 degrees clockwise
+    H, W = slanted.shape[:2]
+    photo = np.ascontiguousarray(slanted[H // 2 - 180 : H // 2 + 180, W // 2 - 240 : W // 2 + 240])
+    spots = search(photo, archive, 1.0, min_m=300, max_m=900, min_z=3)
+    hit = next((s for s in spots if abs(s["x"] + s["w"] / 2 - 600) <= 20 and abs(s["y"] + s["h"] / 2 - 450) <= 20), None)
+    assert hit is not None and min(abs(hit["angle"] - 20), 360 - abs(hit["angle"] - 20)) <= 4
+
+
+def test_an_old_before_photo_is_flagged():
+    from landfall.agent import describe
+    from landfall.fema import Measures
+    from landfall.pipeline import OLD_BEFORE_YEARS, years_before
+
+    assert round(years_before("2019-06-01", "2024-09-26")) == 5 >= OLD_BEFORE_YEARS
+    assert years_before("", "2024-09-26") == 0
+    assert years_before("2024-03-01", "2024-09-26") < OLD_BEFORE_YEARS
+    m = Measures(roof_loss=0.0, tarp_share=0.0, debris_share=0.0, flood_ft=None, aligned=True)
+    assert "5 years older" in describe(m, {"before_years": 5.3, "structure_loss": 0.0})
+    assert "years older" not in describe(m, {"before_years": 0.5, "structure_loss": 0.0})
