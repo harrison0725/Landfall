@@ -180,6 +180,10 @@ def describe(m: Measures, extra: dict) -> str:
         lines.append(
             "These are photos the user uploaded (a drone or plane shot), not NOAA or satellite imagery. They may be taken at an angle, "
             "so walls can show and roofs lean off the outline, and the outline was traced on the photo by Segment Anything, so it can be loose."
+            if not extra.get("archive_before")
+            else "These are photos the user uploaded (a drone or plane shot) for the post-storm side; the pre-storm side is the archive's aerial or "
+            "satellite photo of the same spot, taken months or years earlier with a different camera, light and angle. Differences in colour, "
+            "shadows and sharpness between the two are not damage."
         )
     lines.append(f"Alignment: {extra.get('status', 'unknown')} (matched = its own roof was found; neighbors = placed from nearby houses because its roof was not found where expected).")
     if extra.get("debris_share") is not None:

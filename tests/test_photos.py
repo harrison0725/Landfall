@@ -54,3 +54,20 @@ def test_lay_without_a_before_photo_uses_grey(tmp_path):
     assert post.shape == pre.shape == (area.height, area.width, 3)
     assert not post_ok[:10].any() and post_ok[10:-10, 10:-10].all()
     assert (pre[post_ok] == 128).all()
+
+
+def test_locate_finds_a_turned_darker_photo_in_the_archive():
+    from landfall.photos import locate
+
+    archive = _scene(3, (900, 1200))
+    photo = (archive[200:600, 300:900] * 0.5).astype(np.uint8)  # a darker camera
+    photo = np.ascontiguousarray(np.rot90(photo, 1))  # and not north-up
+    hit = locate(photo, archive, (560, 380))  # the user's box: a bit small
+    assert hit is not None and hit["rot"] == 3
+    assert abs(hit["x"] - 300) <= 12 and abs(hit["y"] - 200) <= 12 and abs(hit["w"] - 600) <= 30
+
+
+def test_locate_gives_up_on_another_place():
+    from landfall.photos import locate
+
+    assert locate(_scene(4, (400, 600)), _scene(5, (900, 1200)), (600, 400)) is None

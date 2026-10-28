@@ -211,7 +211,69 @@ NO_BEFORE = "no before photo was uploaded, so the left image is blank grey; judg
 
 
 def _no_before(spec: AreaSpec, d: Path) -> bool:
-    return spec.imagery == "photos" and not (d / "upload_before.jpg").exists()
+    return spec.imagery == "photos" and not (d / "upload_before.jpg").exists() and not (d / "archive_before.json").exists()
+
+
+def _archive_mosaic(spec: AreaSpec, win: Window, cache: Path) -> tuple[str, np.ndarray, np.ndarray, str]:
+    """The archive's newest photo from before the disaster over a window: NAIP
+    in the US, Maxar elsewhere, as a drawn box uses. Returns its label, the
+    mosaic, where it has data, and its date."""
+    from .sources import naip_mosaic, naip_scenes, pixel_bbox_lonlat
+    from .storms import STORMS
+
+    s = STORMS[spec.storm]
+    if s.provider == "maxar":
+        from .maxar import mosaic, passes, pick
+
+        before = pick(passes(s.maxar_event, pixel_bbox_lonlat(win, ZOOM), cache), s.landfall, False)
+        if not before:
+            raise LookupError("Maxar has no photo of this spot from before the disaster")
+        img, ok = mosaic([h for p in before[:3] for h in p.hrefs], win, ZOOM)
+        return before[0].label, img, ok, before[0].date
+    scene, img, ok = _naip_fill(win, spec, naip_scenes, naip_mosaic)
+    return f"USDA NAIP {scene.date}", img, ok, scene.date
+
+
+def _archive_before(spec: AreaSpec, out: Path, log: Log) -> bool | None:
+    """No before photo uploaded: find the after photo in the archive's before
+    photo around the user's box, move the box (and the photo's turn) to
+    where it really is, and record that the archive is the before side.
+    None when the archive has nothing here or the photo can't be found in it."""
+    from PIL import Image
+
+    from .geo import pixel_to_lonlat
+    from .photos import box_window, locate
+
+    b = box_window(spec.bbox, ZOOM)
+    m = int(0.35 * max(b.width, b.height))
+    wide = Window(b.x0 - m, b.y0 - m, b.x1 + m, b.y1 + m)
+    try:
+        label, arch, ok, when = _archive_mosaic(spec, wide, out.parent / "cache")
+    except (LookupError, OSError) as e:
+        log("photos", note=f"no archive photo from before the disaster here ({e}); judging from the after photo alone")
+        return None
+    if ok.mean() < 0.5:
+        log("photos", note="the archive barely covers this spot; judging from the after photo alone")
+        return None
+    after = np.asarray(Image.open(out / "upload_after.jpg").convert("RGB"))
+    hit = locate(after, arch, (b.width, b.height))
+    if hit is None:
+        log("photos", note="couldn't find the photo in the archive photo of this spot; judging from the after photo alone")
+        return None
+    if hit["rot"]:
+        Image.fromarray(np.ascontiguousarray(np.rot90(after, hit["rot"]))).save(out / "upload_after.jpg", quality=92)
+    x0, y0 = wide.x0 + hit["x"], wide.y0 + hit["y"]
+    w_lon, n_lat = pixel_to_lonlat(x0, y0, ZOOM)
+    e_lon, s_lat = pixel_to_lonlat(x0 + hit["w"], y0 + hit["h"], ZOOM)
+    moved = round(math.hypot(x0 - b.x0, y0 - b.y0) * meters_per_pixel(spec.center[1], ZOOM))
+    spec.bbox = (w_lon, s_lat, e_lon, n_lat)
+    spec.center = ((w_lon + e_lon) / 2, (s_lat + n_lat) / 2)
+    spec.save(out.parent)
+    (out / "archive_before.json").write_text(json.dumps({"label": label, "date": when, "score": round(hit["score"], 3), "moved_m": moved, "turned": hit["rot"] * 90}))
+    log("photos", note=f"found the photo in the archive's {label} photo"
+        + (f", {moved} m from the box" if moved >= 5 else "")
+        + (f", turned {hit['rot'] * 90}°" if hit["rot"] else ""))
+    return True
 
 
 def cloud_hidden(post: np.ndarray) -> bool:
@@ -242,13 +304,27 @@ def prepare(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
         # The photos come first here: the buildings are found in them.
         from .photos import box_window, find_buildings, lay
 
+        archive = None
+        if not (out / "upload_before.jpg").exists():
+            archive = _archive_before(spec, out, log)  # may move the box onto where the photo really is
         b = box_window(spec.bbox, ZOOM)
         area = Window(b.x0 - pad, b.y0 - pad, b.x1 + pad, b.y1 + pad)
-        post, post_ok, pre, pre_ok, note = lay(out, spec.bbox, ZOOM, area)
-        before = (out / "upload_before.jpg").exists()
+        if archive is not None:
+            archive = _archive_mosaic(spec, area, cache)[1:3]
+        post, post_ok, pre, pre_ok, note = lay(out, spec.bbox, ZOOM, area, archive)
+        before = (out / "upload_before.jpg").exists() or archive is not None
         log("photos", note=note)
-        # a building the disaster flattened still stands in the before photo
-        feats = find_buildings(*((pre, pre_ok) if before else (post, post_ok)), (area.x0, area.y0), ZOOM, out / "sam", log)
+        if archive is not None:
+            # placed on the map for real now: the map's own outlines fit
+            try:
+                feats = ms_buildings(spec.bbox, cache, region=None)
+            except LookupError:
+                feats = []
+        else:
+            feats = []
+        if not feats:
+            # a building the disaster flattened still stands in the before photo
+            feats = find_buildings(*((pre, pre_ok) if before else (post, post_ok)), (area.x0, area.y0), ZOOM, out / "sam", log)
         # a house the photo's edge cuts off can't be judged, and its alignment
         # search would run off the photo: keep those well inside
         edge = TEMPLATE_PAD + MAX_SHIFT
@@ -275,7 +351,10 @@ def prepare(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
             max(w.y1 for w in wins.values()) + pad,
         )
     if spec.imagery == "photos":
-        pre_date, pre_source, pre_id = "", "Uploaded before photo" if before else "no before photo", None
+        arch = (out / "archive_before.json").exists() and json.loads((out / "archive_before.json").read_text())
+        pre_date = arch["date"] if arch else ""
+        pre_source = arch["label"] if arch else ("Uploaded before photo" if before else "no before photo")
+        pre_id = None
     elif spec.imagery == "maxar":
         from .maxar import mosaic
 
@@ -892,7 +971,7 @@ def assess(
                 trace=[{"model": "cloud check", "note": "after photo is cloud"}],
             )
         try:
-            a = assess_one(bid, pre, post, outline, m, {**r, **yard, "status": status[bid], "uploaded": spec.imagery == "photos"}, escalate=escalate, kind=kind)
+            a = assess_one(bid, pre, post, outline, m, {**r, **yard, "status": status[bid], "uploaded": spec.imagery == "photos", "archive_before": (d / "archive_before.json").exists()}, escalate=escalate, kind=kind)
         except Exception as e:  # keep going; one bad building should not stop the area
             log("building_failed", id=bid, error=str(e)[:200])
             return dict(id=bid, error=str(e))
