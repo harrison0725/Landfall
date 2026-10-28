@@ -19,7 +19,7 @@ from pathlib import Path
 
 from .area import ORDER, TOOLS as AREA_TOOLS, Area, run_tools
 from .area import SYSTEM as AREA_SYSTEM
-from .pipeline import STAGES, AreaSpec, spec_for
+from .pipeline import STAGES, AreaSpec, event_name, spec_for
 from .storms import STORMS
 
 SYSTEM = (
@@ -86,6 +86,7 @@ class Session:
         self.area = area
         self.box: tuple[float, float, float, float] | None = None
         self.upload: str | None = None  # photos the user uploaded for the box, by upload id
+        self.event: dict | None = None  # with an upload: a disaster not in the catalog ({kind, date, name})
         self.use_spark = use_spark
         self.messages: list[dict] = [{"role": "system", "content": SYSTEM}]
         self.lock = threading.Lock()
@@ -119,20 +120,21 @@ class Session:
                     from .photos import attach
 
                     name = self.area or _name(self.box, "upload")
-                    spec = AreaSpec.for_photos(name, self.box, args.get("storm", "helene"), n)
+                    spec = AreaSpec.for_photos(name, self.box, args.get("storm", "helene"), n, event=self.event)
                     meta = attach(self.root, self.upload, self.root / name)
                     spec.save(self.root)
                     self.area = spec.name
                     emit("area", name=spec.name, bbox=spec.bbox, flight=None)
                     return {
                         "area": spec.name,
-                        "storm": STORMS[spec.storm].name,
+                        "storm": event_name(spec) + ("" if spec.storm else f" ({spec.kind}, {spec.landfall}; not in the catalog, described by the user)"),
                         "post_storm_photos": "the after photo the user uploaded, laid over the box",
                         "pre_storm_photos": "the before photo the user uploaded"
                         if meta["before"]
                         else "none uploaded: the archive's photo of this spot from before the disaster is used if the after photo can be found in it "
                         "(prepare_area reports whether it was); if not, buildings are judged from the after photo alone and every one goes to a field check",
-                        "buildings": "found in the photo by Segment Anything, not from a map",
+                        "buildings": "from the map's outlines if the after photo is found in the archive photo, otherwise found in the photo by Segment Anything "
+                        "(prepare_area reports which)",
                         "buildings_to_assess": spec.n_buildings,
                     }
                 spec = AreaSpec.for_box(self.area or _name(self.box), self.box, args.get("storm", "helene"), n, cache=self.root / "cache")
@@ -219,17 +221,28 @@ class Session:
 
     # ---- turns ---------------------------------------------------------
 
-    def turn(self, text: str, box: tuple[float, float, float, float] | None = None, storm: str | None = None, upload: str | None = None) -> str:
+    def turn(
+        self, text: str, box: tuple[float, float, float, float] | None = None, storm: str | None = None, upload: str | None = None, event: dict | None = None
+    ) -> str:
         with self.lock:
             if box is not None:
                 self.box = tuple(round(v, 6) for v in box)
                 self.area = None
                 self.ahead = {}
                 self.upload = upload
+                self.event = event if upload else None
+                if self.event:
+                    storm = None  # the menu's disaster isn't the one in the photos
                 w, s, e, n = self.box
                 text = (
                     f"{text}\n\n[The user drew a box on the map: west {w}, south {s}, east {e}, north {n}"
                     + (f"; storm: {storm}" if storm else "")
+                    + (
+                        f"; the disaster: {self.event.get('name') or 'unnamed'}, a {self.event['kind']} on {self.event['date']}, which is not in the catalog "
+                        "(pass any storm to locate_imagery; the uploaded photos and this description are used)"
+                        if self.event
+                        else ""
+                    )
                     + "."
                     + (
                         " They uploaded their own photos taken over this box; locate_imagery uses those instead of NOAA or Maxar. "

@@ -68,6 +68,19 @@
       <p>Photos of the land from above, like a drone or plane shot. I'll find the buildings in them and assess each one.</p>
       <label>After the disaster <input type="file" id="upload-after" accept="image/*" required></label>
       <label>Before it (optional) <input type="file" id="upload-before" accept="image/*"></label>
+      <label>Which disaster
+        <select id="upload-event">
+          <option value="">The one picked in the Disaster menu</option>
+          <option value="hurricane">A new hurricane or storm</option>
+          <option value="flood">A new flood</option>
+          <option value="wildfire">A new wildfire</option>
+          <option value="earthquake">A new earthquake</option>
+        </select>
+      </label>
+      <div class="row" id="upload-new" hidden>
+        <label>When it happened <input type="date" id="upload-date"></label>
+        <label>Its name (optional) <input type="text" id="upload-name" maxlength="80" placeholder="Hurricane Ana"></label>
+      </div>
       <div class="row"><button type="submit" class="send">Next: place them on the map</button><button type="button" class="linkish" id="upload-cancel">Cancel</button></div>
       <p class="status" id="upload-status" aria-live="polite"></p>
     </form>
