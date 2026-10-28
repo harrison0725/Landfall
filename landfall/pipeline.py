@@ -467,6 +467,11 @@ def _outline(feats: dict, bid: str, w: Window, zoom: int) -> list[tuple[float, f
 # ---------------------------------------------------------------- segment
 
 
+# Past this share of the roof under leaves, there is too little left to
+# measure: the drafter judges from the photos.
+TREES_HIDE = 0.6
+
+
 def segment(spec: AreaSpec, root: Path, log: Log = _quiet, workers: int = 24, prompts: list[str] | None = None) -> list[dict]:
     """Structure loss: share of the pre-storm structure not found after.
 
@@ -478,7 +483,7 @@ def segment(spec: AreaSpec, root: Path, log: Log = _quiet, workers: int = 24, pr
     """
     from PIL import Image
 
-    from .measure import best_overlap, coverage, polygon_mask, structure_mask
+    from .measure import best_overlap, canopy_mask, coverage, polygon_mask, structure_mask, under_trees
 
     prompts = prompts or STRUCTURE_PROMPTS
     d = root / spec.name
@@ -533,7 +538,10 @@ def segment(spec: AreaSpec, root: Path, log: Log = _quiet, workers: int = 24, pr
         if cover < 0.3:
             rec.update(structure_loss=None, note="pre-storm structure not found on the outline")
         else:
-            rec.update(structure_loss=round(1 - kept, 3), shift=[sdx, sdy])
+            loss, tree_share = under_trees(pre, post_ctx, canopy_mask(image(bid, "post")), sdx, sdy, POST_PAD, tolerance=2)
+            rec.update(structure_loss=round(loss, 3), shift=[sdx, sdy], tree_share=round(tree_share, 3))
+            if tree_share >= TREES_HIDE:
+                rec.update(structure_loss=None, note=f"trees cover {tree_share:.0%} of the roof in the post-storm photo")
         out.append(rec)
     (d / "damage.json").write_text(json.dumps(out, indent=1))
     measured = [x for x in out if x["structure_loss"] is not None]

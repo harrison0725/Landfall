@@ -54,3 +54,35 @@ def test_best_overlap_gone():
     pre = np.zeros((40, 40), bool)
     pre[10:30, 12:28] = True
     assert best_overlap(pre, np.zeros((60, 60), bool), 10)[0] == 0.0
+
+
+def test_tree_over_roof_is_not_roof_loss():
+    import numpy as np
+
+    from landfall.measure import canopy_mask, under_trees
+
+    rng = np.random.default_rng(0)
+    pre = np.zeros((40, 40), bool)
+    pre[10:30, 10:30] = True
+    post_ctx = np.zeros((60, 60), bool)  # post window padded by 10 px
+    post_ctx[20:40, 20:40] = True
+    post_ctx[20:40, 30:40] = False  # right half of the roof not found...
+    photo = np.full((60, 60, 3), 120, np.uint8)
+    leaves = rng.integers(0, 50, (20, 10))
+    photo[20:40, 30:40] = np.stack([40 + leaves, 110 + leaves, 40 + leaves], -1)  # ...because leafy canopy is over it
+    loss, trees = under_trees(pre, post_ctx, canopy_mask(photo), 0, 0, 10)
+    assert trees > 0.4 and loss < 0.1
+
+    # the same gap with bare ground over it is loss
+    loss, trees = under_trees(pre, post_ctx, canopy_mask(np.full((60, 60, 3), 120, np.uint8)), 0, 0, 10)
+    assert trees == 0 and loss > 0.4
+
+
+def test_green_metal_roof_is_not_canopy():
+    import numpy as np
+
+    from landfall.measure import canopy_mask
+
+    roof = np.zeros((40, 40, 3), np.uint8)
+    roof[:] = (60, 130, 70)  # smooth green sheet
+    assert canopy_mask(roof).mean() < 0.05

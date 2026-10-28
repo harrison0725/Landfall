@@ -47,7 +47,7 @@ HAZARDS = {
         flooding="""Flooding: the PDA Guide judges water depth in the living space. 18 inches or more is major, less is minor; water only under a raised house (pilings) is affected. Many houses here are raised. If water stood high around a house and you can't tell whether it is raised, say so and set needs_human to true.
 
 """,
-        careful="""Be careful: trees and long shadows can hide a roof without damaging it, a house can lean differently in the two photos, and the pre-storm photo is from Feb 2023, so a lot that was empty then may have a new house now, and a building may have been torn down on purpose since. The post-storm photo was taken a few days after the storm, so if the old footprint is now covered by weeds or grass, new pavement, parking stripes, fencing or a construction site, and there is no wreckage, the building was cleared months before the storm: that is demolition, not storm damage. Set demolished_before_storm to true, call it none, say so in the evidence, and set needs_human to true. A storm leaves wreckage, scattered debris or a bare slab with debris around it.
+        careful="""Be careful: trees (including ones that have grown over the roof since the before photo) and long shadows can hide a roof without damaging it, a house can lean differently in the two photos, and the pre-storm photo is from Feb 2023, so a lot that was empty then may have a new house now, and a building may have been torn down on purpose since. The post-storm photo was taken a few days after the storm, so if the old footprint is now covered by weeds or grass, new pavement, parking stripes, fencing or a construction site, and there is no wreckage, the building was cleared months before the storm: that is demolition, not storm damage. Set demolished_before_storm to true, call it none, say so in the evidence, and set needs_human to true. A storm leaves wreckage, scattered debris or a bare slab with debris around it. A tree the storm blew down onto a house is damage, not cover: its trunk or broken limbs lie across the roof.
 
 """,
     ),
@@ -64,7 +64,7 @@ In a burn area most houses are either destroyed or untouched, often side by side
 
 """,
         flooding="",
-        careful="""Be careful: trees and long shadows can hide a roof without damaging it, a house can lean differently in the two photos, and the before photo can be a year or more older, so a lot that was empty then may have a new house now, and a building may have been torn down on purpose since. Smoke haze can grey the after photo: a roof that only looks dull under haze, with its outline, ridges and shadows intact, is standing. If the old footprint is now covered by grass, new pavement or a construction site and there is no ash or rubble, the building was cleared before the fire: set demolished_before_storm to true, call it none, say so in the evidence, and set needs_human to true.
+        careful="""Be careful: trees (including ones that have grown over the roof since the before photo) and long shadows can hide a roof without damaging it, a house can lean differently in the two photos, and the before photo can be a year or more older, so a lot that was empty then may have a new house now, and a building may have been torn down on purpose since. Smoke haze can grey the after photo: a roof that only looks dull under haze, with its outline, ridges and shadows intact, is standing. If the old footprint is now covered by grass, new pavement or a construction site and there is no ash or rubble, the building was cleared before the fire: set demolished_before_storm to true, call it none, say so in the evidence, and set needs_human to true.
 
 """,
     ),
@@ -98,7 +98,7 @@ An earthquake can collapse a building while its roof slab stays in one piece, so
         flooding="""Flooding: the PDA Guide judges water depth in the living space. 18 inches or more is major, less is minor; water only under a raised house is affected. Mud, sand or silt over the yard, flattened grass pointing downstream and debris piled against trees and fences show where the water went; a house inside that zone took water even if its roof is fine. If water stood high around a house and you can't tell whether it is raised, say so and set needs_human to true.
 
 """,
-        careful="""Be careful: trees and long shadows can hide a roof without damaging it, a house can lean differently in the two photos, and the before photo can be a year or more older, so a lot that was empty then may have a new house now, and a building may have been torn down on purpose since. A flood leaves mud, wreckage and scattered debris. If the old footprint is now covered by grass, new pavement or a construction site and none of that is there, the building was cleared before the flood: set demolished_before_storm to true, call it none, say so in the evidence, and set needs_human to true.
+        careful="""Be careful: trees (including ones that have grown over the roof since the before photo) and long shadows can hide a roof without damaging it, a house can lean differently in the two photos, and the before photo can be a year or more older, so a lot that was empty then may have a new house now, and a building may have been torn down on purpose since. A flood leaves mud, wreckage and scattered debris. If the old footprint is now covered by grass, new pavement or a construction site and none of that is there, the building was cleared before the flood: set demolished_before_storm to true, call it none, say so in the evidence, and set needs_human to true.
 
 """,
     ),
@@ -168,6 +168,14 @@ def describe(m: Measures, extra: dict) -> str:
         lines.append(f"Structure loss: not measured ({extra.get('note') or 'the pre-storm roof was not found on the outline'}). Judge from the photos.")
     else:
         lines.append(f"Share of the pre-storm structure not found in the post-storm photo: {m.roof_loss:.0%}.")
+    if (extra.get("tree_share") or 0) >= 0.05:
+        lines.append(
+            f"Tree canopy covers about {extra['tree_share']:.0%} of the pre-storm structure in the post-storm photo. "
+            "That part was left out of the structure loss: leaves hide a roof without removing it. Look at what the tree is. "
+            "A living tree that has grown or leans over the roof (green crown, trunk beside the house, often already over it "
+            "in the pre-storm photo) is not damage. A tree that fell on the house (trunk or broken limbs lying across the roof, "
+            "a root plate torn up beside it) is damage: at least minor, and major if the roof under it is broken open."
+        )
     lines.append(f"Alignment: {extra.get('status', 'unknown')} (matched = its own roof was found; neighbors = placed from nearby houses because its roof was not found where expected).")
     if extra.get("debris_share") is not None:
         if m.debris_share >= 0.05:
