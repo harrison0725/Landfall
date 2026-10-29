@@ -85,6 +85,9 @@ button { font: inherit; }
 .map-tools .field, .tool, .seg { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 1px 3px rgb(0 0 0 / 0.15); }
 .field { display: flex; align-items: center; gap: 6px; padding: 4px 8px; font-size: 0.8rem; color: var(--muted); }
 .field select { font: inherit; color: var(--ink); background: transparent; border: 0; }
+/* the open list is drawn by the browser: give it the page's own colours, or a
+   dark theme's light text can land on the browser's white list */
+select option, select optgroup { background: var(--panel); color: var(--ink); }
 .field.place { position: relative; }
 .field.place input { font: inherit; color: var(--ink); background: transparent; border: 0; outline: 0; width: 13em; }
 #place-results { position: absolute; top: calc(100% + 4px); left: 0; min-width: 100%; width: max-content; max-width: 360px; margin: 0; padding: 4px 0; list-style: none; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 8px rgb(0 0 0 / 0.2); }
