@@ -17,10 +17,10 @@
         <span class="mark" aria-hidden="true"></span>
         <div>
           <h1>Landfall</h1>
-          <p class="sub">Draft damage assessments after a disaster</p>
+          <p class="sub">See which buildings a disaster damaged</p>
         </div>
       </div>
-      <span class="badge" title="Every category is a draft for trained assessors, not an official determination">Draft</span>
+      <span class="badge" title="These are first estimates from photos. Inspectors make the official decisions.">Estimate</span>
     </header>
 
     <div class="log" id="log" aria-live="polite"></div>
@@ -28,8 +28,8 @@
     <form class="compose" id="compose">
       <div class="context" id="context"></div>
       <div class="row">
-        <textarea id="input" rows="2" placeholder="Draw a box on the map, or ask about the area" aria-label="Message"></textarea>
-        <button type="button" class="icon" id="mic" title="Ask by voice (Muse Voice Transcribe)" aria-label="Ask by voice">
+        <textarea id="input" rows="2" placeholder="Ask a question, or draw a box on the map" aria-label="Message"></textarea>
+        <button type="button" class="icon" id="mic" title="Ask by voice" aria-label="Ask by voice">
           <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg>
         </button>
         <button type="submit" class="send" id="send">Send</button>
@@ -42,7 +42,7 @@
     <div class="map-tools">
       <form class="field place" id="place-form" role="search">
         <span>Search</span>
-        <input id="place" type="search" placeholder="Place or disaster" autocomplete="off" aria-label="Search for a place or a disaster">
+        <input id="place" type="search" placeholder="Town or disaster" autocomplete="off" aria-label="Search for a place or a disaster">
         <ul id="place-results" hidden></ul>
       </form>
       <label class="field">
@@ -57,18 +57,18 @@
         <span>Disaster</span>
         <select id="storm"></select>
       </label>
-      <button type="button" id="draw" class="tool">Draw an area</button>
-      <button type="button" id="upload" class="tool">Upload photos</button>
+      <button type="button" id="draw" class="tool">Draw a box</button>
+      <button type="button" id="upload" class="tool">Use my photos</button>
       <div class="seg" role="group" aria-label="Photo layer">
-        <button type="button" data-layer="after" class="on">After</button>
+        <button type="button" data-layer="after" class="on">Photo</button>
         <button type="button" data-layer="map">Street map</button>
       </div>
     </div>
     <form class="upload-panel" id="upload-form" hidden>
-      <p>Photos of the land from above, like a drone or plane shot. I'll find the buildings in them and assess each one.</p>
-      <label>After the disaster <input type="file" id="upload-after" accept="image/*" required></label>
-      <label>Before it (optional) <input type="file" id="upload-before" accept="image/*"></label>
-      <label>Where they were taken <input type="text" id="upload-place" maxlength="160" placeholder="12 2nd St, Cedar Key, FL or just the town" required></label>
+      <p>A photo looking down at the ground, like one from a drone or plane. I'll find the buildings in it and check each one for damage.</p>
+      <label>Photo from after the disaster <input type="file" id="upload-after" accept="image/*" required></label>
+      <label>Photo from before (optional) <input type="file" id="upload-before" accept="image/*"></label>
+      <label>Where it was taken <input type="text" id="upload-place" maxlength="160" placeholder="Street address, or just the town" required></label>
       <div class="row">
         <label>What happened
           <select id="upload-kind">
@@ -81,11 +81,11 @@
         <label>Year <input type="number" id="upload-year" min="1990" step="1" required></label>
       </div>
       <div class="row">
-        <label>The day, if you know it <input type="date" id="upload-date"></label>
-        <label>Its name (optional) <input type="text" id="upload-name" maxlength="80" placeholder="Hurricane Ana"></label>
+        <label>Date, if you know it <input type="date" id="upload-date"></label>
+        <label>Name of the storm or fire (optional) <input type="text" id="upload-name" maxlength="80" placeholder="Hurricane Ana"></label>
       </div>
-      <p class="hint">A street address is quickest; with just the town I search all of it. The place and year are also how I find a photo of the spot from before, if you don't have one.</p>
-      <div class="row"><button type="submit" class="send">Next: place them on the map</button><button type="button" class="linkish" id="upload-cancel">Cancel</button></div>
+      <p class="hint">A street address is quickest; with just the town I look through all of it. I also use the place and year to find an older photo of the spot to compare with.</p>
+      <div class="row"><button type="submit" class="send">Find it and check for damage</button><button type="button" class="linkish" id="upload-cancel">Cancel</button></div>
       <p class="status" id="upload-status" aria-live="polite"></p>
     </form>
     <div class="legend" id="legend"></div>
