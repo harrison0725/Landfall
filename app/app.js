@@ -886,9 +886,12 @@ function introFor(pick) {
   const text = named || (opt ? opt.text : "");
   // "after Hurricane Helene", but "after the Myanmar earthquake"
   const storm = text ? (/^(Hurricane|Cyclone|Typhoon|the )/.test(text) ? "" : "the ") + text : "";
-  const photos = pick.spec && pick.spec.imagery === "maxar" ? "satellite" : pick.spec && pick.spec.imagery === "photos" ? "uploaded" : "aerial";
+  const kind = pick.spec && pick.spec.imagery;
+  const photos = kind === "maxar" ? "before and after satellite photos"
+    : kind === "photos" ? (pick.archive_before ? "your uploaded photo and an archive photo of the spot from before" : pick.uploaded_before ? "your uploaded before and after photos" : "your uploaded photo")
+    : "before and after aerial photos";
   const tally = ["destroyed", "major", "minor", "affected", "none"].map((c) => `${n(c)} ${LABEL[c].toLowerCase()}`).join(", ");
   const check = feats.filter((p) => p.needs_human).length;
-  return `I've drafted damage categories for **${feats.length} buildings in ${areaLabel(pick.name)}** after ${storm.split(" (")[0] || "the disaster"}, from before and after ${photos} photos: ${tally}. ${check} need a field check.\n\nAsk me about it, or draw a new area on the map and I'll assess that too.`;
+  return `I've drafted damage categories for **${feats.length} buildings in ${areaLabel(pick.name)}** after ${storm.split(" (")[0] || "the disaster"}, from ${photos}: ${tally}. ${check} need a field check.\n\nAsk me about it, or draw a new area on the map and I'll assess that too.`;
 }
 function title(name) { return name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()); }

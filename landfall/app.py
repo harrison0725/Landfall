@@ -255,7 +255,11 @@ def areas() -> list[dict]:
         label = (d / "label.txt").read_text().strip() if (d / "label.txt").exists() else None
         if label is None and spec:
             _name_later(d, spec["center"])
-        out.append({"name": d.name, "assessed": (d / "assessments.json").exists(), "spec": spec, "label": label})
+        row = {"name": d.name, "assessed": (d / "assessments.json").exists(), "spec": spec, "label": label}
+        if spec and spec.get("imagery") == "photos":  # what the before side was, for the intro
+            row["archive_before"] = (d / "archive_before.json").exists()
+            row["uploaded_before"] = (d / "upload_before.jpg").exists()
+        out.append(row)
     return out
 
 
@@ -470,7 +474,7 @@ def _shared_tiles(d: Path) -> list[dict]:
 @app.get("/api/areas/{area}/after.webp")
 def after_webp(area: str) -> Response:
     """An uploaded photo turned to north-up, see-through where it has no picture."""
-    from PIL import Image
+    from PIL import Image, ImageFilter
 
     d = _area_dir(area)
     out = d / "post_preview.webp"
@@ -478,7 +482,8 @@ def after_webp(area: str) -> Response:
         raise HTTPException(404, "no after photo yet")
     if not out.exists() or out.stat().st_mtime < (d / "post.png").stat().st_mtime:
         im = Image.open(d / "post.png").convert("RGB")
-        alpha = im.convert("L").point(lambda v: 255 if v > 0 else 0)
+        # pulled in a little from the photo's edge, where resampling left a dark fringe
+        alpha = im.convert("L").point(lambda v: 255 if v > 0 else 0).filter(ImageFilter.MinFilter(9))
         im.putalpha(alpha)
         if box := _photo_extent(d):
             im = im.crop(box)
