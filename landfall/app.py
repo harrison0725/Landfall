@@ -194,6 +194,50 @@ def _meta_api_status() -> str:
     return _meta_checked[1]
 
 
+_probe_at: list = [0.0, None]
+
+
+@app.get("/api/meta-probe")
+def meta_probe() -> dict:
+    """How Meta's API answers this server, per endpoint (status codes and error codes only, at most every 2 minutes)."""
+    import time
+
+    import requests
+
+    if _probe_at[1] is not None and time.time() - _probe_at[0] < 120:
+        return _probe_at[1]
+    key = os.environ.get("META_API_KEY", "")
+    h = {"Authorization": f"Bearer {key}"}
+    hi = [{"role": "user", "content": "Say ok."}]
+    tries = [
+        ("models", "get", "https://api.meta.ai/v1/models", None),
+        *[("chat spark", "post", "https://api.meta.ai/v1/chat/completions", {"model": "muse-spark-1.3", "messages": hi, "max_tokens": 5})] * 3,
+        ("chat wonder", "post", "https://api.meta.ai/v1/chat/completions", {"model": "muse-wonder-1.0", "messages": hi, "max_tokens": 5}),
+        *[("responses spark", "post", "https://api.meta.ai/v1/responses", {"model": "muse-spark-1.3", "input": "Say ok."})] * 2,
+        ("responses spark+search", "post", "https://api.meta.ai/v1/responses", {"model": "muse-spark-1.3", "input": "Say ok.", "tools": [{"type": "web_search"}]}),
+    ]
+    out = []
+    for name, method, url, body in tries:
+        try:
+            r = requests.request(method, url, headers=h, json=body, timeout=(5, 60))
+            try:
+                j = r.json()
+            except ValueError:
+                j = {}
+            err = j.get("error") if isinstance(j, dict) else None
+            out.append({
+                "call": name,
+                "status": r.status_code,
+                "error": (err or {}).get("code") if isinstance(err, dict) else (str(err)[:80] if err else None),
+                "models": len(j.get("data", [])) if name == "models" and isinstance(j, dict) else None,
+                "route": r.headers.get("x-route"),
+            })
+        except Exception as e:
+            out.append({"call": name, "status": type(e).__name__})
+    _probe_at[:] = [time.time(), {"at": time.strftime("%H:%M:%S UTC", time.gmtime()), "calls": out}]
+    return _probe_at[1]
+
+
 @functools.lru_cache(maxsize=1)
 def _missing_for_libraries() -> tuple[str, ...]:
     out = []
