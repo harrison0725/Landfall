@@ -390,6 +390,7 @@ def _turned_box(b: Window, photo: np.ndarray, turned: np.ndarray) -> tuple[int, 
 
 SEARCH_ZOOM = 17  # about 1 m a pixel: a whole town in one archive photo
 SEARCH_MAX_M = 5000  # the most of a town searched, around its centre
+SEARCH_BUDGET_S = 90  # how long the search for an uploaded photo's spot may take
 
 
 def is_town(bbox: tuple[float, float, float, float]) -> bool:
@@ -449,8 +450,15 @@ def find_upload(spec: AreaSpec, d: Path, cache: Path, log: Log = _quiet) -> str:
                     places.append([t])
             return [t for p in places[:4] for t in p[:3]]
         rounds.append(quick)
+    # past this, a photo that hasn't turned up is very likely not in this town:
+    # say so and let the user drag a box, rather than keep them waiting
+    deadline = time.monotonic() + SEARCH_BUDGET_S
     for spots in rounds:
+        if time.monotonic() > deadline:
+            break
         for spot in spots():
+            if time.monotonic() > deadline:
+                break
             slant = spot["slant"]
             w_lon, n_lat = pixel_to_lonlat(town.x0 + spot["x"], town.y0 + spot["y"], SEARCH_ZOOM)
             e_lon, s_lat = pixel_to_lonlat(town.x0 + spot["x"] + spot["w"], town.y0 + spot["y"] + spot["h"], SEARCH_ZOOM)
@@ -1140,6 +1148,20 @@ def debris(spec: AreaSpec, root: Path, log: Log = _quiet, workers: int = 24) -> 
 # ---------------------------------------------------------------- assess
 
 
+def _trail(trace: list[dict]) -> list[dict]:
+    """A building's trace in brief, for the live run log: who said what, and
+    whether the checker objected."""
+    out = []
+    for t in trace:
+        if "answer" in t:
+            out.append({"model": t["model"], "said": str(t["answer"].get("category", "")).lower(), "objected": bool(t.get("verifier"))})
+        elif t.get("model") in ("flood rule", "satellite rule", "photo rule", "cloud check"):
+            out.append({"model": t["model"], "said": str(t.get("to", "")).lower()})
+        elif t.get("error"):
+            out.append({"model": t["model"], "error": True})
+    return out
+
+
 def assess(
     spec: AreaSpec,
     root: Path,
@@ -1264,10 +1286,11 @@ def assess(
             id=bid,
             category=rec["category"],
             confidence=round(a.confidence, 2),
-            needs_human=a.needs_human,
+            needs_human=rec["needs_human"],
             decided_by=a.decided_by,
             revisions=sum(1 for t in a.trace if t.get("verifier")),
             evidence=a.evidence,
+            trail=_trail(rec["trace"]),
         )
         return rec
 
@@ -1280,6 +1303,15 @@ def assess(
     path.write_text(json.dumps(results, indent=1))
     counts = collections.Counter(r.get("category", "error") for r in results)
     log("assessed", counts=dict(counts), review=sum(r.get("needs_human", False) for r in results))
+    if os.environ.get("META_API_KEY"):
+        # the notes in everyday words, for the cards: in the background, as the
+        # agent goes on to costs (a card shows the original note until they're in)
+        import threading
+
+        from .plain import write as write_plain
+
+        (d / "plain.json").unlink(missing_ok=True)
+        threading.Thread(target=write_plain, args=(d,), daemon=True).start()
     return results
 
 

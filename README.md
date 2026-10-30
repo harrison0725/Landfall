@@ -104,3 +104,5 @@ pytest
 ## License
 
 MIT
+
+**Run log and plain notes.** While a new area is checked, the chat shows the agent's plan ticking off step by step and, for each building where something happened beyond one clean answer, who judged it (Muse Spark Open, then Muse Spark for hard ones), whether the second check objected, and any rule that raised the call. After drafting, a separate text-only pass (`landfall/plain.py`, Muse Spark) rewrites each building's note in everyday words for the card (`plain.json`); it never sees the photos and can't change a category, and the model's own note stays under "How this was decided". Rewording the judging prompt itself changed some calls in testing, so that prompt is unchanged.
