@@ -1,0 +1,35 @@
+# Render Blueprint for a copy in Ohio: Dashboard -> New -> Blueprint -> this repo, Blueprint path render-ohio.yaml.
+# Standard (1 CPU, 2 GB): a new 60-building box takes about a minute. The
+# free plan (0.15 CPU, 512 MB) serves the finished areas but assesses new
+# ones slowly. Assessing stays behind the access code either way.
+services:
+  - type: web
+    name: landfall-ohio
+    # Meta lists no models to calls from Render's Oregon servers (the same key works
+    # from a cloud server in Ohio), so this copy runs in Ohio.
+    region: ohio
+    runtime: docker
+    plan: standard
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/config
+    # Drawn areas live in /app/data; without a disk a restart or deploy
+    # wipes them. The app copies the demo areas onto it on first start.
+    disk:
+      name: landfall-data
+      mountPath: /app/data
+      sizeGB: 1
+    envVars:
+      - key: META_API_KEY
+        sync: false
+      - key: BASETEN_API_KEY
+        sync: false
+      - key: LANDFALL_ACCESS_CODE
+        sync: false
+      - key: LANDFALL_MAX_BUILDINGS
+        value: "60"
+      - key: LANDFALL_TURNS_PER_HOUR
+        value: "30"
+      - key: LANDFALL_PROCS
+        value: "1"
+      - key: LANDFALL_CONCURRENCY
+        value: "60"
