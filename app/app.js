@@ -18,6 +18,9 @@ const STEP = {
   get_building: "Opening a building",
   plan_inspections: "Planning a route to visit buildings",
   pda_totals: "Adding up the damage",
+  repair_costs: "Adding up repair costs",
+  urgent_needs: "Finding who needs help first",
+  find_help: "Muse Spark is searching the web for where to get help",
 };
 
 const $ = (id) => document.getElementById(id);
@@ -414,7 +417,10 @@ function linkIds(root) {
 }
 function agentMessage(text) {
   const el = div("msg agent");
-  el.innerHTML = window.marked ? marked.parse(text || "") : esc(text);
+  // web search answers bring outside text and links: strip any markup that isn't text
+  const html = window.marked ? marked.parse(text || "") : esc(text);
+  el.innerHTML = window.DOMPurify ? DOMPurify.sanitize(html) : window.marked ? esc(text) : html;
+  el.querySelectorAll("a[href^='http']").forEach((a) => { a.target = "_blank"; a.rel = "noopener noreferrer"; });
   linkIds(el);
   return add(el);
 }
@@ -572,6 +578,8 @@ function handle(ev) {
     }
     case "tool_result":
       if (ev.name === "get_building" && ev.result && ev.result.id) focusBuilding(ev.result.id);
+      // the pages a web search read: listed under the answer, straight from the search
+      if (ev.name === "find_help" && ev.result && ev.result.sources) state.sources = (state.sources || []).concat(ev.result.sources);
       endStep(ev.result);
       break;
     case "area":
@@ -606,7 +614,15 @@ function handle(ev) {
       break;
     case "message":
       if (ev.area && ev.area !== state.area) { state.area = ev.area; }
-      loadBuildings(false).then(() => agentMessage(ev.text));
+      loadBuildings(false).then(() => {
+        const el = agentMessage(ev.text);
+        const src = (state.sources || []).filter((x) => /^https:\/\//.test(x.url));
+        state.sources = null;
+        if (src.length) {
+          el.insertAdjacentHTML("beforeend", `<p class="sources"><b>Sources (web search):</b></p><ul class="sources">${src.map((x) => `<li><a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.title || x.url)}</a></li>`).join("")}</ul>`);
+          scroll();
+        }
+      });
       break;
     case "error":
       add(div("msg error", esc(ev.text)));
@@ -994,7 +1010,7 @@ async function boot() {
   ev.onmessage = (m) => handle(JSON.parse(m.data));
   if (pick && pick.assessed) {
     agentMessage(introFor(pick));
-    suggestions(["Which buildings should be visited first?", "Write a short damage summary", "How many families may have lost their homes?"]);
+    suggestions(["Which buildings should be visited first?", "Write a short damage summary", "How many families may have lost their homes?", "Where can people here get help?"]);
   } else if (fit) {
     const place = params.get("place") || "this place";
     const s = storms.find((x) => x.key === key);

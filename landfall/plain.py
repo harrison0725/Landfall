@@ -37,7 +37,9 @@ def rewrite(notes: dict[str, tuple[str, str]], batch: int = 25) -> dict[str, str
     def one(chunk: list[str]) -> dict[str, str]:
         text = "\n".join(f'{i} ({WORDS.get(notes[i][0], notes[i][0])}): {notes[i][1]}' for i in chunk)
         try:
-            reply = _chat(SPARK_URL, key, SPARK_MODEL, [{"role": "user", "content": PROMPT.format(notes=text)}], max_tokens=6000)
+            # the reply is held to one string per id, so a batch can't come back short
+            schema = {"type": "object", "properties": {i: {"type": "string"} for i in chunk}, "required": chunk, "additionalProperties": False}
+            reply = _chat(SPARK_URL, key, SPARK_MODEL, [{"role": "user", "content": PROMPT.format(notes=text)}], max_tokens=6000, schema=schema)
             m = re.search(r"\{.*\}", reply, re.S)
             got = json.loads(m.group(0)) if m else {}
         except Exception:  # a note in plain words is nice to have; the card falls back to the original

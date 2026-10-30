@@ -217,6 +217,10 @@ def describe(m: Measures, extra: dict) -> str:
 
 def _post(url: str, key: str, body: dict) -> dict:
     """POST a chat completion, retrying rate limits and server errors."""
+    if url == SPARK_URL and "prompt_cache_key" not in body:
+        # Meta's API reuses a prompt's unchanged start (the instructions) from
+        # cache; one key per model keeps those requests on the same servers
+        body = {**body, "prompt_cache_key": f"landfall-{body.get('model', '')}"}
     for attempt in range(4):
         r = http.post(url, headers={"Authorization": f"Bearer {key}"}, json=body, timeout=180)
         if (r.status_code == 429 or r.status_code >= 500) and attempt < 3:
@@ -233,8 +237,11 @@ def _post(url: str, key: str, body: dict) -> dict:
 REASONING_EFFORT = os.environ.get("LANDFALL_REASONING_EFFORT", "low")
 
 
-def _chat(url: str, key: str, model: str, messages: list[dict], max_tokens: int = 8000) -> str:
+def _chat(url: str, key: str, model: str, messages: list[dict], max_tokens: int = 8000, schema: dict | None = None) -> str:
+    """One reply's text. With a JSON `schema`, the API holds the reply to it."""
     body = {"model": model, "messages": messages, "max_tokens": max_tokens}
+    if schema:
+        body["response_format"] = {"type": "json_schema", "json_schema": {"name": "answer", "schema": schema}}
     if REASONING_EFFORT != "default":
         body["reasoning_effort"] = REASONING_EFFORT
     out = _post(url, key, body)

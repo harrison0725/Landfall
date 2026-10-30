@@ -37,6 +37,7 @@ Rules:
 - Outside the US, also give the international grade (Copernicus EMS: no visible damage, possibly damaged, damaged, destroyed) that the tools report, and say flood depth and repair cost are unknown when the tools say so.
 - Use everyday words. Call the categories "destroyed", "badly damaged" (FEMA: major), "damaged" (FEMA: minor), "slightly damaged" (FEMA: affected) and "no damage seen"; don't add the FEMA name unless the user asks about FEMA or a claim. Say "property records" not tax roll, "hotels and motels" not lodging. Say "should be visited by a person to confirm", not field check, review or PDA. Never show field names, tool names or code words (needs_review, needs_human, drafted). Explain any other term in a few words the first time you use it. Give coordinates only when asked where a building is or for a list of places to visit.
 - Call building ids "building b012", not just "b012".
+- For questions about getting help (aid, recovery centers, shelters, debris pickup, permits), use find_help. Pass on its answer in your own words, keep phone numbers and addresses exactly, and say it comes from a web search on <date> and that details may have changed. The app lists its sources under your answer, so don't repeat them.
 - Be brief and concrete. Lead with the answer."""
 
 
@@ -108,6 +109,16 @@ class Area:
                 if r.get("country")
                 else f"{r['source']}, {r['roll_year']} roll: median ${r['usd_per_sqft']:.0f}/sq ft from {r['homes']} homes nearby"
             )
+        # for the help search: the place and the disaster, in words
+        label = d / "label.txt"
+        meta["place"] = label.read_text().strip() if label.exists() else ""
+        spec_path = d / "spec.json"
+        if spec_path.exists():
+            from .storms import STORMS
+
+            spec = json.loads(spec_path.read_text())
+            s = STORMS.get(spec.get("storm", ""))
+            meta["disaster"] = f"{s.name} ({spec.get('landfall', '')[:4]})" if s else (spec.get("event_name") or "")
         area = cls(name, buildings, meta)
         area.costs, area.needs = costs, needs
         return area
@@ -256,6 +267,11 @@ class Area:
             "note": "Households come from residential units on the tax roll; water inside uses the first-floor estimate from year built and flood zone.",
         }
 
+    def find_help(self, question: str = "") -> dict:
+        from .help import find_help
+
+        return find_help(self.meta.get("place", ""), self.meta.get("disaster", ""), question or "Where can people here get help?")
+
     # ---- plumbing ----------------------------------------------------------
 
     def call(self, name: str, args: dict) -> dict:
@@ -267,6 +283,7 @@ class Area:
             "pda_totals": self.pda_totals,
             "repair_costs": self.repair_costs,
             "urgent_needs": self.urgent_needs,
+            "find_help": self.find_help,
         }.get(name)
         if fn is None:
             return {"error": f"unknown tool {name}"}
@@ -347,6 +364,13 @@ TOOLS = [
             "name": "urgent_needs",
             "description": "Households likely or possibly displaced, businesses and lodging hit, and the buildings to reach first with the reasons and coordinates.",
             "parameters": {"type": "object", "properties": {"limit": {"type": "integer"}}},
+        },
+    },    {
+        "type": "function",
+        "function": {
+            "name": "find_help",
+            "description": "Search the web, official sources first, for where people in this area can get help after the disaster: applying for FEMA aid, recovery centers, shelters, debris pickup, rebuilding permits. Returns a short answer, the pages it came from, and the date searched. Not for damage facts: those come from the other tools.",
+            "parameters": {"type": "object", "properties": {"question": {"type": "string", "description": "what the person wants help with, in their words"}}, "required": ["question"]},
         },
     },
 ]
