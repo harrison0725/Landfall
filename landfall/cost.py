@@ -96,22 +96,26 @@ def local_rate(bbox: tuple[float, float, float, float], pad: float = 0.01) -> di
     import requests
 
     w, s, e, n = bbox
-    r = requests.get(
-        CADASTRAL,
-        params=dict(
-            geometry=f"{w - pad},{s - pad},{e + pad},{n + pad}",
-            geometryType="esriGeometryEnvelope",
-            inSR=4326,
-            spatialRel="esriSpatialRelIntersects",
-            where="TOT_LVG_AR > 0",
-            outFields="DOR_UC,JV,LND_VAL,TOT_LVG_AR,ASMNT_YR,CO_NO",
-            returnGeometry="false",
-            resultRecordCount=2000,
-            f="json",
-        ),
-        timeout=90,
+    params = dict(
+        geometry=f"{w - pad},{s - pad},{e + pad},{n + pad}",
+        geometryType="esriGeometryEnvelope",
+        inSR=4326,
+        spatialRel="esriSpatialRelIntersects",
+        where="TOT_LVG_AR > 0",
+        outFields="DOR_UC,JV,LND_VAL,TOT_LVG_AR,ASMNT_YR,CO_NO",
+        returnGeometry="false",
+        resultRecordCount=2000,
+        f="json",
     )
-    r.raise_for_status()
+    # the server now and then holds a request without answering: ask again soon
+    for attempt in range(3):
+        try:
+            r = requests.get(CADASTRAL, params=params, timeout=(5, 30))
+            r.raise_for_status()
+            break
+        except requests.RequestException:
+            if attempt == 2:
+                raise
     rows = [f["attributes"] for f in r.json().get("features", [])]
     rates = [
         (x["JV"] - x["LND_VAL"]) / x["TOT_LVG_AR"]
