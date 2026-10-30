@@ -234,7 +234,15 @@ def meta_probe() -> dict:
             })
         except Exception as e:
             out.append({"call": name, "status": type(e).__name__})
-    _probe_at[:] = [time.time(), {"at": time.strftime("%H:%M:%S UTC", time.gmtime()), "calls": out}]
+    import hashlib
+
+    # a fingerprint to tell two copies of the key apart without showing it
+    key_id = {
+        "sha256_prefix": hashlib.sha256(key.encode()).hexdigest()[:8],
+        "stripped_sha256_prefix": hashlib.sha256(key.strip().encode()).hexdigest()[:8],
+        "length": len(key),
+    }
+    _probe_at[:] = [time.time(), {"at": time.strftime("%H:%M:%S UTC", time.gmtime()), "key": key_id, "calls": out}]
     return _probe_at[1]
 
 
