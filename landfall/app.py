@@ -589,10 +589,15 @@ def turn(sid: str, body: Turn, request: Request) -> dict:
 
 
 @app.post("/api/uploads")
-async def upload(request: Request, side: str = "after", id: str | None = None) -> dict:
+async def upload(request: Request, side: str = "after", id: str | None = None, check: bool = True) -> dict:
     """One photo of the land: the after photo starts an upload, a before
-    photo joins it by id. The body is the image file itself."""
+    photo joins it by id. The body is the image file itself. Muse Wonder
+    looks at the after photo first (`check`), so a photo that can't be used
+    is caught in seconds instead of after a minute of searching."""
+    import asyncio
+
     from .photos import save_upload
+    from .wonder import look
 
     if side not in ("after", "before"):
         raise HTTPException(400, "side is after or before")
@@ -603,9 +608,14 @@ async def upload(request: Request, side: str = "after", id: str | None = None) -
     if not raw or len(raw) > 30_000_000:
         raise HTTPException(400, "send one image under 30 MB")
     try:
-        return save_upload(ROOT, id if side == "before" else uuid.uuid4().hex[:12], side, raw)
+        saved = save_upload(ROOT, id if side == "before" else uuid.uuid4().hex[:12], side, raw)
     except Exception as e:  # not an image PIL can read
         raise HTTPException(400, f"that file isn't an image I can read ({type(e).__name__})") from e
+    if side == "after" and check:
+        seen = await asyncio.to_thread(look, (ROOT / "uploads" / saved["id"] / "after.jpg").read_bytes())
+        if seen:
+            saved["check"] = seen
+    return saved
 
 
 def _event(raw: dict) -> dict:

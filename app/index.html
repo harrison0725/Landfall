@@ -85,11 +85,17 @@
         <label>Name of the storm or fire (optional) <input type="text" id="upload-name" maxlength="80" placeholder="Hurricane Ana"></label>
       </div>
       <p class="hint">A street address is quickest; with just the town I look through all of it. I also use the place and year to find an older photo of the spot to compare with.</p>
-      <div class="row"><button type="submit" class="send">Find it and check for damage</button><button type="button" class="linkish" id="upload-cancel">Cancel</button></div>
+      <div class="row"><button type="submit" class="send">Find it and check for damage</button><button type="submit" class="linkish" id="upload-anyway" hidden>Use it anyway</button><button type="button" class="linkish" id="upload-cancel">Cancel</button></div>
       <p class="status" id="upload-status" aria-live="polite"></p>
     </form>
     <button type="button" class="mapsize" id="mapsize" aria-pressed="false">Full map</button>
     <div class="legend" id="legend"></div>
+    <section class="card levels" id="levels" hidden aria-labelledby="levels-title">
+      <button type="button" class="close" id="levels-close" aria-label="Close">×</button>
+      <h2 id="levels-title">What the damage words mean</h2>
+      <div id="levels-list"></div>
+      <p class="hint">Drawings made with Muse Image to explain the words; they aren't photos of real buildings. The words follow FEMA's damage levels. From the air, water damage inside a building can't be seen, so a flooded building can be worse than it looks.</p>
+    </section>
     <section class="card" id="card" hidden>
       <button type="button" class="close" id="card-close" aria-label="Close">×</button>
       <div id="card-body"></div>

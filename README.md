@@ -70,7 +70,10 @@ Known gaps: SAM only finds heavy debris, so light yard debris is left to the mod
 | SAM 3.1 (Meta Model API) | Roof, tarp, debris and water masks on both photo dates |
 | Muse Spark Open (Baseten, `meta-models/muse-spark-open`) | Default agent: assigns categories, plans, writes new SAM prompts |
 | Muse Spark (Meta Model API) | Second opinion on low-confidence calls |
+| Muse Spark (Meta Model API) | Rewrites each building's note in everyday words (text only; can't change a category) |
 | Muse Voice Transcribe | Voice questions |
+| Muse Wonder (Meta Model API) | Checks an uploaded photo was taken from above before the search for where it was taken |
+| Muse Image (Meta Model API) | The drawings that explain each damage level ("What do these mean?" on the map key) |
 
 ## Run the tests
 
@@ -106,3 +109,5 @@ pytest
 MIT
 
 **Run log and plain notes.** While a new area is checked, the chat shows the agent's plan ticking off step by step and, for each building where something happened beyond one clean answer, who judged it (Muse Spark Open, then Muse Spark for hard ones), whether the second check objected, and any rule that raised the call. After drafting, a separate text-only pass (`landfall/plain.py`, Muse Spark) rewrites each building's note in everyday words for the card (`plain.json`); it never sees the photos and can't change a category, and the model's own note stays under "How this was decided". Rewording the judging prompt itself changed some calls in testing, so that prompt is unchanged.
+
+**Muse Wonder and Muse Image.** When someone uploads a photo, Muse Wonder (`landfall/wonder.py`) looks at it first, in about 5 seconds, and says whether it was taken from above. A photo from the street, from a low drone angle, a screenshot or a selfie used to cost a minute or more of searching before being turned away; now the uploader is told at once and can still go on ("Use it anyway"). On 21 test photos it turned away all four unusable ones (made with Muse Image for the test) and passed all 17 real aerial ones, from every demo area. It only screens the photo: it never judges a building. The map key's "What do these mean?" panel shows a drawing of each damage level, made once with Muse Image and labelled as drawings, not photos. At the end of each run the log lists which Meta model did what in it. Tried and left out: sending Segment Anything four buildings per image instead of one (four times fewer calls), because on Cedar Key it changed a few measurements near the thresholds and one destroyed house was missed in the re-judged test set.
