@@ -208,11 +208,27 @@ function paintBuilding(id, props) {
   layer.setStyle(styleFor(layer.feature));
 }
 
+// what each level means, in everyday words (from FEMA's damage levels)
+const MEANS = {
+  none: "Nothing wrong can be seen from the air.",
+  affected: "Small damage, like a few lost shingles or water in the yard. People can usually still live there.",
+  minor: "Damage that can be repaired, like part of the roof torn off. It may not be safe to live in until it's fixed.",
+  major: "Serious damage to the roof or walls. It needs big repairs before anyone can live there.",
+  destroyed: "The building is gone or can't be repaired.",
+};
+
 function legend() {
   $("legend").innerHTML =
     CATS.map((c) => `<span><i style="--c:var(--${c})"></i>${LABEL[c]}</span>`).join("") +
-    `<span><i class="dash"></i>Needs a visit to confirm</span>`;
+    `<span><i class="dash"></i>Needs a visit to confirm</span>` +
+    `<button type="button" class="linkish" id="levels-open">What do these mean?</button>`;
+  $("levels-open").addEventListener("click", () => {
+    $("levels").hidden = false;
+    $("levels-close").focus();
+  });
 }
+$("levels-list").innerHTML = CATS.map((c) => `<div class="level"><img src="/static/img/levels/${c}.webp" alt="" width="96" height="96" loading="lazy"><div><b><i style="--c:var(--${c})"></i>${LABEL[c]}</b><p>${MEANS[c]}</p></div></div>`).join("");
+$("levels-close").addEventListener("click", () => { $("levels").hidden = true; });
 
 // ---------------------------------------------------------------- phone: the whole screen for the map
 $("mapsize").addEventListener("click", () => {
@@ -294,6 +310,7 @@ $("upload").addEventListener("click", () => {
   $("upload-form").hidden = !$("upload-form").hidden;
 });
 $("upload-cancel").addEventListener("click", () => { $("upload-form").hidden = true; });
+$("upload-after").addEventListener("change", () => { $("upload-anyway").hidden = true; $("upload-status").textContent = ""; });
 // where and when: the map goes there, and the place and year pick the photo of
 // the spot from before (and the disaster, when it's one Landfall has)
 $("upload-year").max = new Date().getFullYear();
@@ -319,15 +336,25 @@ $("upload-form").addEventListener("submit", async (e) => {
   // a disaster Landfall already has here that year: use it (its photos, dates and flood marks)
   const known = (state.storms || []).find((s) => place.disasters.includes(s.key) && s.landfall.startsWith(yr) && (s.kind || "hurricane") === kind && (!day || Math.abs(new Date(day) - new Date(s.landfall)) < 21 * 864e5));
   const event = known ? null : { kind, date: day || yr, name: $("upload-name").value.trim() };
-  status.textContent = "Uploading…";
+  const anyway = e.submitter && e.submitter.id === "upload-anyway";
+  status.textContent = anyway ? "Uploading…" : "Uploading… Muse Wonder is checking the photo.";
   const put = (file, q) => fetch(`/api/uploads?${q}`, { method: "POST", body: file }).then(async (r) => {
     if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
     return r.json();
   });
   try {
-    const a = await put(after, "side=after");
+    const a = await put(after, anyway ? "side=after&check=false" : "side=after");
+    // a photo from the street or a screenshot can't be found on the map: say so
+    // now, not after a minute of searching, and let them go on if they disagree
+    if (a.check && !a.check.usable) {
+      status.textContent = `Muse Wonder says this photo probably won't work: ${a.check.reason || "it doesn't look like it was taken from above."} I need one taken looking down from a drone, plane or satellite.`;
+      $("upload-anyway").hidden = false;
+      return;
+    }
+    $("upload-anyway").hidden = true;
+    if (a.check && a.check.shows) $("upload").title = `Muse Wonder: ${a.check.shows}`;
     if (before) await put(before, `side=before&id=${a.id}`);
-    state.upload = { id: a.id, url: URL.createObjectURL(after), before: !!before, event, gps: a.gps };
+    state.upload = { id: a.id, url: URL.createObjectURL(after), before: !!before, event, gps: a.gps, check: a.check };
   } catch (err) {
     status.textContent = `Couldn't upload: ${err.message}`;
     return;
@@ -412,12 +439,29 @@ function planStep(name, status) {
   if (!plan || (name === PLAN[0] && status === "running")) {
     const el = div("plan");
     el.innerHTML = `<div class="plan-head"><b>My plan</b><span class="meta"></span></div><ol>${PLAN.map((t) => `<li data-tool="${t}"><span class="mark"></span>${esc(STEP[t])}</li>`).join("")}</ol>`;
-    plan = { el, t0: performance.now(), timer: setInterval(() => { el.querySelector(".meta").textContent = `${Math.round((performance.now() - plan.t0) / 1000)}s`; }, 1000) };
+    plan = { el, t0: performance.now(), sam: 0, wonder: !!(state.upload && state.upload.check), timer: setInterval(() => { el.querySelector(".meta").textContent = `${Math.round((performance.now() - plan.t0) / 1000)}s`; }, 1000) };
     add(el);
   }
   const li = plan.el.querySelector(`li[data-tool="${name}"]`);
   li.className = status;
-  if (status !== "running" && (name === PLAN[PLAN.length - 1] || status === "failed")) { clearInterval(plan.timer); plan = null; }
+  if (status !== "running" && (name === PLAN[PLAN.length - 1] || status === "failed")) {
+    clearInterval(plan.timer);
+    metaUsed(plan);
+    plan = null;
+  }
+}
+// at the end of a run, which of Meta's models did what in it
+function metaUsed(p) {
+  const tr = p.trails || [];
+  const by = (name) => tr.filter((t) => t.some((x) => modelName(x.model) === name)).length;
+  const parts = [
+    p.wonder && "Muse Wonder checked the photo was taken from above",
+    p.sam && `Segment Anything 3.1 outlined buildings, debris and tarps in ${p.sam} images`,
+    tr.length && `Muse Spark Open judged ${by("Muse Spark Open")} buildings and ran this plan`,
+    by("Muse Spark") && `Muse Spark gave a second opinion on ${by("Muse Spark")} hard ${by("Muse Spark") === 1 ? "one" : "ones"}`,
+    tr.length && "Muse Spark is rewriting each note in everyday words",
+  ].filter(Boolean);
+  if (parts.length) p.el.insertAdjacentHTML("beforeend", `<p class="meta-used"><b>Meta models in this run:</b> ${esc(parts.join("; "))}.</p>`);
 }
 const SHORT = { "flood rule": "the flood rule", "satellite rule": "the satellite rule", "photo rule": "the one-photo rule", "cloud check": "the cloud check" };
 function trailText(id, trail) {
@@ -477,7 +521,9 @@ function describeProgress(ev) {
     case "detect": return `Looking for buildings in the photo, piece by piece (${ev.tiles} pieces)`;
     case "imagery": return `${ev.side === "post" ? "After" : "Before"}: ${ev.source}`;
     case "aligned": return `Matched ${ev.matched} buildings between the two photos, ${ev.from_neighbors} more using the houses next door; ${ev.unaligned} couldn't be matched`;
-    case "sam": return `Outlining ${ev.prompts.join(", ")} in the photos`;
+    case "sam":
+      if (plan) plan.sam += ev.calls || 0;
+      return `Segment Anything 3.1 is outlining ${ev.prompts.join(", ")} in ${ev.calls} images`;
     case "structure_loss": return `Measured ${ev.measured} of ${ev.of} buildings. Mostly gone: ${ev.over_60.join(", ") || "none"}. Partly gone: ${ev.over_25.join(", ") || "none"}`;
     case "flood_source": return ev.error ? ev.error : `${ev.source}: ${ev.elev_ft} ft NAVD88`;
     case "flood": return ev.error ? ev.error : `Flood water reached ${ev.flooded} of ${ev.of} buildings, up to ${ev.max_ft} ft deep`;
@@ -514,6 +560,7 @@ function handle(ev) {
         }
         if (current && ev.trail) {
           current.trails.push(ev.trail);
+          if (plan) (plan.trails = plan.trails || []).push(ev.trail);
           if (notable(ev.trail)) stepLine(trailText(ev.id, ev.trail));
         }
         paintBuilding(ev.id, { category: ev.category, needs_human: ev.needs_human, confidence: ev.confidence, evidence: ev.evidence });
