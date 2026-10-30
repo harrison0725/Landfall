@@ -730,7 +730,7 @@ async function send(e) {
     }
   }
   const storm = $("storm").value === EVENT ? null : $("storm").value || null;
-  const body = { text, box: state.box, storm: state.box ? storm : null, access_code: code, upload: state.box && state.upload ? state.upload.id : null, event: state.box && state.upload ? state.upload.event : null };
+  const body = { text, lang: lang(), box: state.box, storm: state.box ? storm : null, access_code: code, upload: state.box && state.upload ? state.upload.id : null, event: state.box && state.upload ? state.upload.event : null };
   if (state.box) { outlines.clearLayers(); state.features = {}; }
   if (state.box && state.upload && !state.findUpload) {
     // the photos are used once; the map shows the area's own copy when it's ready
@@ -804,7 +804,7 @@ async function openBuilding(id) {
     <div class="cap"><span>Before${a && a.photos ? ": " + esc(shortSource(a.photos.before)) : ""}</span><span>After${a && a.photos ? ": " + esc(shortSource(a.photos.after)) : ""}</span></div>
     <p>${a ? esc(a.plain || a.evidence) : gone ? "This area was lost when the site restarted. Draw the box again to redo it." : "Not checked yet. The check of this area is still running, or it stopped before it reached this building; the chat shows which step it is on."}</p>
     ${a ? `<dl class="kv">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>` : ""}
-    ${a ? `<p><a class="packet" href="/api/areas/${state.area}/packet/${id}" target="_blank" rel="noopener">Printable page for an insurance or aid claim</a></p>` : ""}
+    ${a ? `<p><a class="packet" href="${packetUrl(state.area, id)}" target="_blank" rel="noopener">Printable page for an insurance or aid claim</a></p>` : ""}
     ${trace.length ? `<div class="trace"><b>How this was decided</b>${a.plain ? `<div class="t">The AI's own note: ${esc(a.evidence)}</div>` : ""}${trace.map(traceRow).join("")}</div>` : ""}`;
   $("card").hidden = false;
 }
@@ -1127,6 +1127,25 @@ function checkedOwnWork(feats) {
 function claimPage(feats, area) {
   const worst = feats.filter((p) => p.category).sort((a, b) => ORDER.indexOf(b.category) - ORDER.indexOf(a.category))[0];
   if (!worst || ORDER.indexOf(worst.category) < ORDER.indexOf("minor")) return "";
-  return `\n\n**Ready for a claim:** every building has a printable page for an insurance or aid claim, with its photos and the reasons. [Open the page for the most damaged building](/api/areas/${encodeURIComponent(area)}/packet/${worst.id}).`;
+  return `\n\n**Ready for a claim:** every building has a printable page for an insurance or aid claim, with its photos and the reasons. [Open the page for the most damaged building](${packetUrl(area, worst.id)}).`;
 }
 function title(name) { return name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()); }
+
+// ---------------------------------------------------------------- language
+// Many families in the storm areas speak Spanish or Haitian Creole: the agent
+// answers in the chosen language and claim pages open translated (by Muse Spark,
+// with the English original linked). The rest of the page stays in English.
+const SAID = {
+  es: "Ahora respondo en español, y las páginas para reclamos se abren en español. Puede escribir o hablar en español.",
+  ht: "Kounye a m ap reponn an kreyòl ayisyen, epi paj pou reklamasyon yo ap louvri an kreyòl. Ou ka ekri oswa pale an kreyòl.",
+};
+function lang() { return $("lang").value; }
+function packetUrl(area, id) {
+  return `/api/areas/${encodeURIComponent(area)}/packet/${id}${lang() === "en" ? "" : `?lang=${lang()}`}`;
+}
+try { const saved = localStorage.getItem("landfall-lang"); if (saved && SAID[saved]) $("lang").value = saved; } catch (e) {}
+$("lang").addEventListener("change", () => {
+  try { localStorage.setItem("landfall-lang", lang()); } catch (e) {}
+  if (SAID[lang()]) agentMessage(SAID[lang()]);
+  else agentMessage("I'll answer in English, and claim pages open in English.");
+});

@@ -29,6 +29,7 @@ from pydantic import BaseModel
 from .pipeline import AreaSpec
 from .session import Session, area_geojson
 from .storms import STORMS
+from .translate import LANGS
 
 ROOT = Path(os.environ.get("LANDFALL_DATA", "data"))
 
@@ -99,6 +100,7 @@ class Turn(BaseModel):
     storm: str | None = None
     access_code: str | None = None
     upload: str | None = None  # id from /api/uploads: photos to assess instead of NOAA or Maxar
+    lang: str | None = None  # "es" or "ht": the agent answers in Spanish or Haitian Creole
     event: dict | None = None  # with an upload, a disaster not in the catalog: {kind, date, name}
 
 
@@ -556,15 +558,17 @@ def after_jpg(area: str) -> Response:
 
 
 @app.get("/api/areas/{area}/packet/{bid}", response_class=HTMLResponse)
-def packet(area: str, bid: str) -> HTMLResponse:
-    """Printable evidence packet for one building."""
+def packet(area: str, bid: str, lang: str = "en") -> HTMLResponse:
+    """Printable evidence packet for one building, in English, Spanish (es) or Haitian Creole (ht)."""
     from .packet import render
+    from .translate import page
 
     d = _area_dir(area)
     try:
-        return HTMLResponse(render(d, bid, _pair_png(area, bid)))
+        doc = render(d, bid, _pair_png(area, bid))
     except KeyError:
         raise HTTPException(404, f"no draft for {bid}") from None
+    return HTMLResponse(page(doc, lang, d, f"/api/areas/{area}/packet/{bid}") if lang != "en" else doc)
 
 
 def _pair_png(area: str, bid: str) -> bytes:
@@ -617,7 +621,10 @@ def turn(sid: str, body: Turn, request: Request) -> dict:
     def work() -> None:
         try:
             box = tuple(body.box) if body.box else None
-            text = live.session.turn(body.text, box=box, storm=body.storm, upload=body.upload if box else None, event=event)
+            ask = body.text
+            if body.lang in LANGS:
+                ask += f"\n\n[Answer in {LANGS[body.lang]}, in everyday words. Keep building ids, numbers, phone numbers, web addresses and the names of agencies as they are.]"
+            text = live.session.turn(ask, box=box, storm=body.storm, upload=body.upload if box else None, event=event)
             live.emit("message", text=text, area=live.session.area)
         except Exception as e:
             live.emit("error", text=f"{type(e).__name__}: {e}"[:500])
