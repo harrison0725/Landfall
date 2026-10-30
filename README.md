@@ -6,9 +6,19 @@ An agent that turns aerial and satellite photos taken after a hurricane, wildfir
 
 > Landfall produces a draft for trained assessors. It is not an official damage determination.
 
-## Status
+## Why
 
-Day 1. Working so far:
+After a disaster, a county has to show FEMA how many homes were damaged and how badly before federal aid can be declared: the Preliminary Damage Assessment. Today that means teams driving street by street and looking at each house, in the days when roads are blocked and staff are stretched. NOAA flies the coast within days and Maxar photographs disasters worldwide, but nobody has time to look at every roof in those photos.
+
+Landfall does that first look. Draw a box over a town and the agent fetches the before and after photos, lines up every building, measures what is gone, estimates flood depth, sorts each building into FEMA's categories with its reasons, prices the repairs, counts the households likely displaced, and writes the report. A full box of 60 buildings takes about a minute. Every call is a draft: the uncertain ones are marked for a visit, so field teams go first where they are needed.
+
+**How it differs from today's process:** it doesn't replace the field visit, it decides where the visits go. The county starts the day with a map of every building already sorted, the worst ones first, and a printable page per building (photos, measurements, flood, property record, repair range) that a family can use for an insurance or aid claim.
+
+## Try it
+
+https://landfall-z02h.onrender.com opens with finished examples: Cedar Key after Hurricane Helene, Altadena after the Los Angeles wildfires, Ingram after the Texas floods, Mandalay after the Myanmar earthquake, and Montego Bay after Hurricane Melissa. Click any building to see its before and after photos and how its call was made, switch the map to **Before | after** and drag the handle, or ask a question by typing or with the microphone. Drawing a new box runs the whole agent live.
+
+## How it works
 
 - `landfall/geo.py`: Web Mercator math to turn building outlines into pixel crops of aerial tiles.
 - `landfall/sources.py`: downloads NOAA post-storm tiles, warps NAIP pre-storm photos into the same pixel grid, and pulls Microsoft building outlines.
@@ -31,7 +41,7 @@ Day 1. Working so far:
 
 ## Hosted copy
 
-The public copy runs on Render's free plan from `render.yaml` (Docker, redeployed on every push to main). It ships with four finished areas from `demo/` (Cedar Key and Treasure Island after Helene, two in Montego Bay after Melissa): anyone can open them, click buildings and ask questions (30 an hour each). The free plan has a tenth of a CPU, too little to assess a new area in reasonable time, so drawing a new box needs the access code set as `LANDFALL_ACCESS_CODE`. On a machine with a few CPUs a 60-building box takes about 4 minutes. `deploy/huggingface/` holds the same setup for a Hugging Face Space.
+The public copy runs on Render (one CPU, 2 GB, a 1 GB disk for drawn areas) from `render.yaml`, redeployed on every push to main. It ships with the finished example areas from `demo/`; anyone can open them, click buildings and ask questions. Drawing a new box spends API credits, so it needs the access code set as `LANDFALL_ACCESS_CODE`. `deploy/huggingface/` holds the same setup for a Hugging Face Space.
 
 ## Run the app
 
@@ -40,7 +50,7 @@ pip install -e ".[app,data,sam]"
 BASETEN_API_KEY=... META_API_KEY=... uvicorn landfall.app:app --port 8000
 ```
 
-Open http://localhost:8000. Cedar Key opens already assessed: ask about it by typing or with the mic (Muse Voice Transcribe), or click a building to see the photo pair and how its call was made. To assess somewhere new, pick the storm, click **Draw an area**, drag a box over a town and send. The agent finds the NOAA flight, the pre-storm photos and the tide gauges for that box, then runs each stage as a tool and reports as it goes; buildings color in on the map as their drafts arrive. A box of about 30 to 60 buildings takes 3 to 6 minutes. `?at=lat,lon,zoom` opens the map somewhere else.
+Open http://localhost:8000. Cedar Key opens already assessed: ask about it by typing or with the mic (Muse Voice Transcribe), or click a building to see the photo pair and how its call was made. To assess somewhere new, pick the storm, click **Draw an area**, drag a box over a town and send. The agent finds the NOAA flight, the pre-storm photos and the tide gauges for that box, then runs each stage as a tool and reports as it goes; buildings color in on the map as their drafts arrive. A box of 60 buildings takes about a minute (62 s end to end in a test on Oct 30; the property records are fetched while the photos are measured, and all buildings are judged at once). `?at=lat,lon,zoom` opens the map somewhere else.
 
 Reproduce the Cedar Key data (about a minute, plus about 2 minutes of SAM calls):
 
@@ -57,24 +67,59 @@ BASETEN_API_KEY=... python scripts/ask_area.py --area cedar_key "Which flooded h
 BASETEN_API_KEY=... python scripts/ask_area.py --area cedar_key --pda   # draft PDA summary
 ```
 
-Evaluation: 50 Cedar Key buildings labeled by hand from the photos by two labelers working blind (`eval/`). The two labelers agree exactly on 43 of 50 (Cohen's kappa 0.49) and within one category on all 50; they split on yard debris (Affected or none) and on two houses with some walls standing (Destroyed or Major). Counting surveyed flood water (0.5 ft or more around a house makes it at least Affected under the PDA rule, which aerial labels can't see), the agent matches 47/50 of Claude's labels and 48/50 of Harry's, and 50/50 within one category for both. Every remaining miss is a building the two labelers disagree on: light yard debris (Claude said Affected, Harry and the agent said none) and two houses with some walls standing (Harry said Major, Claude and the agent said Destroyed). See `eval/cedar_key_score.txt` and the caveats in the label files.
+## Results
+
+**Accuracy.** 50 Cedar Key buildings were labeled by hand from the photos by two labelers working blind (`eval/`). The two labelers agree exactly on 43 of 50 (Cohen's kappa 0.49) and within one category on all 50; they split on yard debris (Affected or none) and on two houses with some walls standing (Destroyed or Major). Counting surveyed flood water (0.5 ft or more around a house makes it at least Affected under the PDA rule, which aerial labels can't see), the agent matches 47/50 of Claude's labels and 48/50 of Harry's, and 50/50 within one category for both. Every remaining miss is a building the two labelers disagree on. Against Harry's labels:
+
+| label \ agent | none | slightly | damaged | badly | destroyed |
+|---|---|---|---|---|---|
+| none | 25 | | | | |
+| slightly damaged (Affected) | | 20 | | | |
+| damaged (Minor) | | | | | |
+| badly damaged (Major) | | | | | 2 |
+| destroyed | | | | | 3 |
+
+The two misses (b094, b098) are the houses with some walls standing that Claude's labels also call destroyed. On Altadena the drafts match a by-eye read of all 51 buildings (`eval/altadena_labels.json`). See `eval/cedar_key_score.txt`.
+
+**Open model alone vs. with Muse Spark.** The same 50 buildings, drafted fresh on Oct 30 with each setup (one run each, so small differences are within run-to-run noise):
+
+| Setup | Model calls | Time for 50 | Matches Claude / Harry (with flood rule) | Destroyed found |
+|---|---|---|---|---|
+| Muse Spark Open only (open weights, Baseten) | 70 Muse Spark Open | 20 s | 47/50 / 48/50 | 5/5 (Claude), 3/3 (Harry) |
+| Muse Spark Open, hard calls to Muse Spark | 68 Muse Spark Open + 13 Muse Spark | 28 s | 45/50 / 46/50 | 4/5, 2/3 |
+
+The open-weight model alone is as accurate on this set; the second opinion goes to 13 of 50 buildings and adds about 8 seconds. In the mixed run b023, a destroyed house, came back "no damage seen" but was sent for a visit; that building is the one that flips between runs in either setup. The second opinion stays on in the app because its value is on hard cases (satellite photos abroad, earthquakes) that this hurricane set has few of. Full output: `eval/cedar_key_open_vs_mixed.txt`.
+
+**Speed.** In test runs on Oct 30, a full 60-building box ran end to end in about a minute: photos and alignment ~12 s, Segment Anything ~12 s (flood, debris and property records run alongside), drafting ~25 s, costs ~0 s.
 
 Example output: [`examples/cedar_key_pda_summary.md`](examples/cedar_key_pda_summary.md), the draft PDA summary the area agent wrote for Cedar Key.
 
-Known gaps: SAM only finds heavy debris, so light yard debris is left to the model's eye; flood-only houses are drafted Affected because aerial photos don't show first-floor height.
+## Limitations
+
+- **Drafts, not decisions.** Every category is a draft for a trained assessor. Uncertain calls are marked "needs a visit to confirm", and the app says so on every page.
+- **What a photo from above can't see.** Water inside a house, first-floor height and interior damage are invisible from the air. Flood depth comes from surveyed high-water marks and lidar ground, and the first floor is estimated from the year built and the flood zone, so flood-only houses are drafted Affected unless the numbers say more.
+- **Light debris.** Segment Anything finds heavy debris piles; light yard debris is left to the model's eye, which is where the two human labelers disagreed too.
+- **Old before photos.** The newest public before photo can be years old (NAIP is flown every two to three years). Before photos two or more years older than the disaster are flagged, and the agent is told new houses or demolitions since then aren't damage.
+- **Satellite photos abroad.** Maxar's are about 0.3 to 0.5 m a pixel and taken at an angle, and a different sun angle moves shadows, so earthquake and satellite calls are leads for a field check. Outside Florida, repair costs use national average building values (rougher, at 2010 prices).
+- **Small evaluation.** 50 double-labeled buildings in one town and 51 by-eye in one wildfire area; there is no ground-truth set from a real FEMA PDA.
+- **Uploaded photos.** Finding where an uploaded photo was taken takes 40 to 65 seconds and can fail for small photos taken at a slant; the user can then drag a box over the spot.
 
 ## Meta models
 
 | Model | Role |
 |---|---|
 | SAM 3.1 (Meta Model API) | Roof, tarp, debris and water masks on both photo dates |
-| Muse Spark Open (Baseten, `meta-models/muse-spark-open`) | Default agent: assigns categories, plans, writes new SAM prompts |
+| Muse Spark Open (Baseten, `meta-models/muse-spark-open`) | Default agent: assigns categories, runs the plan, answers questions with tools |
 | Muse Spark (Meta Model API) | Second opinion on low-confidence calls |
 | Muse Spark (Meta Model API) | Rewrites each building's note in everyday words (text only; can't change a category) |
 | Muse Spark with web search (Meta Model API, Responses) | "Where can people here get help?": aid, recovery centers, debris pickup, permits, from official sources, with the pages it read listed under the answer |
 | Muse Voice Transcribe | Voice questions |
 | Muse Wonder (Meta Model API) | Checks an uploaded photo was taken from above before the search for where it was taken |
 | Muse Image (Meta Model API) | The drawings that explain each damage level ("What do these mean?" on the map key) |
+
+**Run log and plain notes.** While a new area is checked, the chat shows the agent's plan ticking off step by step and, for each building where something happened beyond one clean answer, who judged it (Muse Spark Open, then Muse Spark for hard ones), whether the second check objected, and any rule that raised the call. After drafting, a separate text-only pass (`landfall/plain.py`, Muse Spark) rewrites each building's note in everyday words for the card (`plain.json`); it never sees the photos and can't change a category, and the model's own note stays under "How this was decided". Rewording the judging prompt itself changed some calls in testing, so that prompt is unchanged.
+
+**Muse Wonder and Muse Image.** When someone uploads a photo, Muse Wonder (`landfall/wonder.py`) looks at it first, in about 5 seconds, and says whether it was taken from above. A photo from the street, from a low drone angle, a screenshot or a selfie used to cost a minute or more of searching before being turned away; now the uploader is told at once and can still go on ("Use it anyway"). On 21 test photos it turned away all four unusable ones (made with Muse Image for the test) and passed all 17 real aerial ones, from every demo area. It only screens the photo: it never judges a building. The map key's "What do these mean?" panel shows a drawing of each damage level, made once with Muse Image and labelled as drawings, not photos. At the end of each run the log lists which Meta model did what in it. From Meta's API cookbook: the photo check and the everyday-words notes use structured output (a JSON schema the reply is held to, so a batch of notes can't come back short), Muse Spark calls carry a prompt cache key so the unchanged instructions are reused from cache, and the area agent has a `find_help` tool (`landfall/help.py`) that asks Muse Spark to search the web, official sources first, and says the date it searched and that details may have changed. Tried and left out: sending Segment Anything four buildings per image instead of one (four times fewer calls), because on Cedar Key it changed a few measurements near the thresholds and one destroyed house was missed in the re-judged test set.
 
 ## Run the tests
 
@@ -108,7 +153,3 @@ pytest
 ## License
 
 MIT
-
-**Run log and plain notes.** While a new area is checked, the chat shows the agent's plan ticking off step by step and, for each building where something happened beyond one clean answer, who judged it (Muse Spark Open, then Muse Spark for hard ones), whether the second check objected, and any rule that raised the call. After drafting, a separate text-only pass (`landfall/plain.py`, Muse Spark) rewrites each building's note in everyday words for the card (`plain.json`); it never sees the photos and can't change a category, and the model's own note stays under "How this was decided". Rewording the judging prompt itself changed some calls in testing, so that prompt is unchanged.
-
-**Muse Wonder and Muse Image.** When someone uploads a photo, Muse Wonder (`landfall/wonder.py`) looks at it first, in about 5 seconds, and says whether it was taken from above. A photo from the street, from a low drone angle, a screenshot or a selfie used to cost a minute or more of searching before being turned away; now the uploader is told at once and can still go on ("Use it anyway"). On 21 test photos it turned away all four unusable ones (made with Muse Image for the test) and passed all 17 real aerial ones, from every demo area. It only screens the photo: it never judges a building. The map key's "What do these mean?" panel shows a drawing of each damage level, made once with Muse Image and labelled as drawings, not photos. At the end of each run the log lists which Meta model did what in it. From Meta's API cookbook: the photo check and the everyday-words notes use structured output (a JSON schema the reply is held to, so a batch of notes can't come back short), Muse Spark calls carry a prompt cache key so the unchanged instructions are reused from cache, and the area agent has a `find_help` tool (`landfall/help.py`) that asks Muse Spark to search the web, official sources first, and says the date it searched and that details may have changed. Tried and left out: sending Segment Anything four buildings per image instead of one (four times fewer calls), because on Cedar Key it changed a few measurements near the thresholds and one destroyed house was missed in the re-judged test set.
