@@ -57,7 +57,8 @@ def translate(texts: list[str], lang: str, batch: int = 40) -> dict[str, str]:
             reply = _chat(SPARK_URL, key, SPARK_MODEL, [{"role": "user", "content": PROMPT.format(lang=LANGS[lang], texts=body)}], max_tokens=8000, schema=schema)
             m = re.search(r"\{.*\}", reply, re.S)
             got = json.loads(m.group(0)) if m else {}
-        except Exception:  # noqa: BLE001 - an untranslated sentence stays in English
+        except Exception as e:  # noqa: BLE001 - an untranslated sentence stays in English
+            errors.append(f"{type(e).__name__}: {e}"[:300])
             return {}
         return {t: str(got[k]).strip() for k, t in zip(keys, chunk) if isinstance(got.get(k), str) and got[k].strip()}
 
@@ -66,6 +67,9 @@ def translate(texts: list[str], lang: str, batch: int = 40) -> dict[str, str]:
         for part in pool.map(one, [texts[k : k + batch] for k in range(0, len(texts), batch)]):
             out.update(part)
     return out
+
+
+errors: list[str] = []  # the last few translation failures, for the server log and the page's source
 
 
 # text worth translating: has a letter, and isn't just an id, a number with units or a code
@@ -93,11 +97,15 @@ def page(doc: str, lang: str, d: Path, english_url: str) -> str:
     path = d / f"translations.{lang}.json"
     with _lock:
         known = json.loads(path.read_text()) if path.exists() else {}
+    errors.clear()
     new = translate([t for t in texts if t not in known], lang)
+    for err in errors:
+        print(f"translation to {lang} failed: {err}", flush=True)
     if new:
         with _lock:
             known = {**(json.loads(path.read_text()) if path.exists() else {}), **new}
             path.write_text(json.dumps(known, indent=1, ensure_ascii=False))
+    translated = any(html.unescape(parts[i]).strip() in known for i in spots)
     for i in spots:
         raw = parts[i]
         text = html.unescape(raw).strip()
@@ -108,6 +116,8 @@ def page(doc: str, lang: str, d: Path, english_url: str) -> str:
         '<p style="background:#eef6fb;border:1px solid #b9d7ea;padding:8px 10px;border-radius:6px">'
         f'{html.escape(NOTICE[lang])} <a href="{html.escape(english_url)}">English</a></p>'
     )
+    if not translated:
+        notice = f'<p style="background:#fbeeee;border:1px solid #eab9b9;padding:8px 10px;border-radius:6px">The translation isn\'t available right now, so this page is in English.</p><!-- {html.escape("; ".join(errors))} -->'
     out = "".join(parts).replace('<html lang="en">', f'<html lang="{lang}">', 1)
     # the notice goes under the page's title block, before the draft warning
     return out.replace('<div class="draft">', notice + '<div class="draft">', 1)
