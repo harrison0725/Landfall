@@ -242,13 +242,32 @@ def meta_probe() -> dict:
         "stripped_sha256_prefix": hashlib.sha256(key.strip().encode()).hexdigest()[:8],
         "length": len(key),
     }
+    import socket
+
+    import urllib3
+
+    # which of Meta's front doors this server reaches, and whether another one answers differently
+    try:
+        doors = sorted({a[4][0] for a in socket.getaddrinfo("api.meta.ai", 443, socket.AF_INET)})
+    except Exception as e:
+        doors = [type(e).__name__]
+    pinned = []
+    for ip in dict.fromkeys(["157.240.254.12", *doors, *os.environ.get("META_PROBE_IPS", "").split()]):
+        if not ip[:1].isdigit():
+            continue
+        try:
+            pool = urllib3.HTTPSConnectionPool(ip, 443, server_hostname="api.meta.ai", assert_hostname="api.meta.ai", timeout=urllib3.Timeout(connect=5, read=30))
+            r = pool.request("GET", "/v1/models", headers={"Host": "api.meta.ai", **h})
+            pinned.append({"ip": ip, "status": r.status, "models": len(json.loads(r.data or b"{}").get("data", []))})
+        except Exception as e:
+            pinned.append({"ip": ip, "status": type(e).__name__})
     try:
         # where the API sees this server calling from
         w = requests.get("https://ipinfo.io/json", timeout=10).json()
         seen_from = {k: w.get(k) for k in ("city", "region", "country", "org")}
     except Exception as e:
         seen_from = type(e).__name__
-    _probe_at[:] = [time.time(), {"at": time.strftime("%H:%M:%S UTC", time.gmtime()), "key": key_id, "from": seen_from, "calls": out}]
+    _probe_at[:] = [time.time(), {"at": time.strftime("%H:%M:%S UTC", time.gmtime()), "key": key_id, "from": seen_from, "doors": doors, "pinned": pinned, "calls": out}]
     return _probe_at[1]
 
 
