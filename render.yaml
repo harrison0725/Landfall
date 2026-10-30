@@ -29,4 +29,4 @@ services:
       - key: LANDFALL_PROCS
         value: "1"
       - key: LANDFALL_CONCURRENCY
-        value: "24"
+        value: "60"

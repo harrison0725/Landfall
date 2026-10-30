@@ -50,7 +50,7 @@ def _point_query(url: str, lon: float, lat: float, fields: str) -> dict | None:
                     returnGeometry="false",
                     f="json",
                 ),
-                timeout=60,
+                timeout=(5, 15),
             )
             r.raise_for_status()
             feats = r.json().get("features", [])
@@ -59,6 +59,79 @@ def _point_query(url: str, lon: float, lat: float, fields: str) -> dict | None:
             if attempt == 2:
                 return None
     return None
+
+
+def _box_query(url: str, bbox: tuple[float, float, float, float], fields: str) -> list | None:
+    """Every record in the box with its outline, in one request: [(shape, attributes)].
+    Asking point by point took a minute or more for a box: a hundred requests,
+    and the odd one that hung until its timeout."""
+    import requests
+    from shapely.geometry import shape
+
+    w, s, e, n = bbox
+    # the tax roll's server now and then holds a request without answering:
+    # give up on it soon and ask again, rather than wait out a long timeout
+    for attempt in range(3):
+        try:
+            r = requests.get(
+                url,
+                params=dict(
+                    geometry=f"{w},{s},{e},{n}",
+                    geometryType="esriGeometryEnvelope",
+                    inSR=4326,
+                    outSR=4326,
+                    spatialRel="esriSpatialRelIntersects",
+                    outFields=fields,
+                    returnGeometry="true",
+                    geometryPrecision=6,
+                    resultRecordCount=2000,
+                    f="geojson",
+                ),
+                timeout=(5, 15),
+            )
+            r.raise_for_status()
+            j = r.json()
+            if j.get("exceededTransferLimit") or (j.get("properties") or {}).get("exceededTransferLimit") or "features" not in j:
+                return None  # too many to be sure each building finds its own: ask point by point
+            return [(shape(f["geometry"]), f.get("properties") or {}) for f in j["features"] if f.get("geometry")]
+        except Exception:
+            continue
+    return None
+
+
+def _at(rows: list, lon: float, lat: float) -> dict | None:
+    from shapely.geometry import Point
+
+    pt = Point(lon, lat)
+    return next((a for g, a in rows if g.intersects(pt)), None)
+
+
+def fetch(d: Path, workers: int = 16) -> dict:
+    """The parcel and flood-zone records for every building, kept in
+    parcels.json. Needs only the outlines, so it can run while the photos
+    are still being measured."""
+    path = d / "parcels.json"
+    feats = json.loads((d / "buildings.geojson").read_text())["features"]
+    cached = json.loads(path.read_text()) if path.exists() else {}
+    todo = [f for f in feats if not (f["properties"]["id"] in cached and "parcel" in cached[f["properties"]["id"]])]
+    if todo:
+        pts = [f["properties"]["centroid"] for f in todo]
+        bbox = (min(p[0] for p in pts) - 1e-4, min(p[1] for p in pts) - 1e-4, max(p[0] for p in pts) + 1e-4, max(p[1] for p in pts) + 1e-4)
+        layers = {"parcel": (CADASTRAL, PARCEL_FIELDS), "zone": (NFHL, "FLD_ZONE,STATIC_BFE,V_DATUM")}
+        with ThreadPoolExecutor(2) as pool:
+            rows = dict(zip(layers, pool.map(lambda k: _box_query(layers[k][0], bbox, layers[k][1]), layers)))
+
+        def one(f) -> tuple[str, dict]:
+            lon, lat = f["properties"]["centroid"]
+            rec = {}
+            for k, (url, fields) in layers.items():
+                rec[k] = _at(rows[k], lon, lat) if rows[k] is not None else _point_query(url, lon, lat, fields)
+            return f["properties"]["id"], rec
+
+        with ThreadPoolExecutor(workers) as pool:
+            cached.update(dict(pool.map(one, todo)))
+        path.write_text(json.dumps(cached, indent=1))
+    return cached
 
 
 def first_floor(year: int | None, zone: str | None, bfe: float | None, ground_ft: float | None) -> dict:
@@ -85,15 +158,11 @@ def lookup(d: Path, workers: int = 16) -> dict:
     grounds = {}
     if (d / "flood.json").exists():
         grounds = {b["id"]: b.get("ground_ft") for b in json.loads((d / "flood.json").read_text()).get("buildings", [])}
-    cached = json.loads(path.read_text()) if path.exists() else {}
+    cached = fetch(d, workers)
 
     def one(f) -> tuple[str, dict]:
         bid = f["properties"]["id"]
-        if bid in cached and "parcel" in cached[bid]:
-            rec = cached[bid]
-        else:
-            lon, lat = f["properties"]["centroid"]
-            rec = {"parcel": _point_query(CADASTRAL, lon, lat, PARCEL_FIELDS), "zone": _point_query(NFHL, lon, lat, "FLD_ZONE,STATIC_BFE,V_DATUM")}
+        rec = dict(cached[bid])
         p = rec["parcel"] or {}
         z = rec["zone"] or {}
         bfe = z.get("STATIC_BFE")
@@ -103,7 +172,6 @@ def lookup(d: Path, workers: int = 16) -> dict:
         rec.update(year_built=year, flood_zone=z.get("FLD_ZONE"), bfe_ft=bfe, units=int(p.get("NO_RES_UNT") or 0), land_use=p.get("DOR_UC"))
         return bid, rec
 
-    with ThreadPoolExecutor(workers) as pool:
-        out = dict(pool.map(one, feats))
+    out = dict(map(one, feats))
     path.write_text(json.dumps(out, indent=1))
     return out

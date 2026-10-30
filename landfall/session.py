@@ -19,7 +19,7 @@ from pathlib import Path
 
 from .area import ORDER, TOOLS as AREA_TOOLS, Area, run_tools
 from .area import SYSTEM as AREA_SYSTEM
-from .pipeline import STAGES, AreaSpec, event_name, is_town, spec_for
+from .pipeline import STAGES, AreaSpec, _trail, event_name, is_town, records, spec_for
 from .storms import STORMS
 
 SYSTEM = (
@@ -95,7 +95,7 @@ class Session:
         # the pipeline spends API credits, questions about finished areas don't.
         self.may_run_pipeline = True
         self.max_buildings = 150
-        self.pool = ThreadPoolExecutor(2)
+        self.pool = ThreadPoolExecutor(3)
         self.ahead: dict[str, Future] = {}
 
     # ---- tools ---------------------------------------------------------
@@ -191,6 +191,11 @@ class Session:
                 else:
                     if stage == "segment":
                         self._start_ahead(spec)
+                    if stage == "costs" and "records" in self.ahead:
+                        try:
+                            self.ahead.pop("records").result()
+                        except Exception:  # noqa: BLE001 - the cost step fetches what's missing itself
+                            traceback.print_exc()
                     STAGES[stage](spec, self.root, log, **kwargs)
                 if stage == "prepare":
                     emit("buildings", area=self.area)
@@ -224,6 +229,9 @@ class Session:
         for stage in ("debris", "flood"):
             if stage not in self.ahead:
                 self.ahead[stage] = self.pool.submit(run, stage)
+        # and the property records the cost step will read
+        if "records" not in self.ahead:
+            self.ahead["records"] = self.pool.submit(records, spec, self.root)
 
     # ---- turns ---------------------------------------------------------
 
@@ -316,6 +324,7 @@ def area_geojson(root: Path, area: str) -> dict:
                     "flood_ft": floods.get(bid),
                     "structure_loss": a.get("structure_loss"),
                     "severity": ORDER.index(a["category"]) if a.get("category") in ORDER else None,
+                    "trail": _trail(a.get("trace") or []) or None,
                 },
             }
         )

@@ -3,6 +3,7 @@
 
 const CATS = ["none", "affected", "minor", "major", "destroyed"];
 // plain words for FEMA's five damage categories (none, affected, minor, major, destroyed)
+const ORDER = ["none", "affected", "minor", "major", "destroyed"];
 const LABEL = { none: "No damage seen", affected: "Slightly damaged", minor: "Damaged", major: "Badly damaged", destroyed: "Destroyed" };
 const FEMA = { none: "No visible damage", affected: "Affected", minor: "Minor", major: "Major", destroyed: "Destroyed" };
 const STEP = {
@@ -430,7 +431,7 @@ function agentMessage(text) {
   // web search answers bring outside text and links: strip any markup that isn't text
   const html = window.marked ? marked.parse(text || "") : esc(text);
   el.innerHTML = window.DOMPurify ? DOMPurify.sanitize(html) : window.marked ? esc(text) : html;
-  el.querySelectorAll("a[href^='http']").forEach((a) => { a.target = "_blank"; a.rel = "noopener noreferrer"; });
+  el.querySelectorAll("a[href^='http'], a[href^='/api/']").forEach((a) => { a.target = "_blank"; a.rel = "noopener noreferrer"; });
   linkIds(el);
   return add(el);
 }
@@ -524,7 +525,8 @@ function endStep(result) {
     const tr = current.trails;
     const by = (name) => tr.filter((t) => t.some((x) => modelName(x.model) === name)).length;
     const objected = tr.filter((t) => t.some((x) => x.objected)).length;
-    stepLine(`${by("Muse Spark Open")} buildings judged by Muse Spark Open; ${by("Muse Spark")} hard ones also went to Muse Spark; the second check pushed back on ${objected}.`);
+    const changed = tr.filter((t) => new Set(t.filter((x) => x.said).map((x) => x.said)).size > 1).length;
+    stepLine(`${by("Muse Spark Open")} buildings judged by Muse Spark Open; ${by("Muse Spark")} hard ones also went to Muse Spark; the second check pushed back on ${objected}, and ${changed} ${changed === 1 ? "call was" : "calls were"} changed because of it.`);
   }
   planStep(current.el.dataset.tool, failed ? "failed" : "done");
   current = null;
@@ -1050,6 +1052,27 @@ function introFor(pick) {
     : "photos taken from planes before and after";
   const tally = ["destroyed", "major", "minor", "affected", "none"].map((c) => `${n(c)} ${c === "none" ? "with no damage seen" : LABEL[c].toLowerCase()}`).join(", ");
   const check = feats.filter((p) => p.needs_human).length;
-  return `I've checked **${feats.length} buildings in ${areaLabel(pick.name)}** after ${storm.split(" (")[0] || "the disaster"}, using ${photos}: ${tally}. ${check} should be visited by a person to confirm.\n\nAsk me anything about it, or draw a new box on the map and I'll check that too.`;
+  return `I've checked **${feats.length} buildings in ${areaLabel(pick.name)}** after ${storm.split(" (")[0] || "the disaster"}, using ${photos}: ${tally}. ${check} should be visited by a person to confirm.`
+    + checkedOwnWork(feats) + claimPage(feats, pick.name)
+    + "\n\nAsk me anything about it in everyday words, by typing or with the microphone, or draw a new box on the map and I'll check that too.";
+}
+// what sets the drafts apart, said up front: every call was checked, and some changed because of it
+function checkedOwnWork(feats) {
+  const tr = feats.filter((p) => p.trail && p.trail.length);
+  if (!tr.length) return "";
+  const objected = tr.filter((p) => p.trail.some((t) => t.objected)).length;
+  const second = tr.filter((p) => p.trail.some((t) => modelName(t.model) === "Muse Spark")).length;
+  const first = (p) => (p.trail.find((t) => t.said) || {}).said;
+  const changed = tr.filter((p) => first(p) && first(p) !== p.category);
+  const sev = (c) => ORDER.indexOf(c);
+  const ex = changed.slice().sort((a, b) => Math.max(sev(b.category), sev(first(b))) - Math.max(sev(a.category), sev(first(a))))[0];
+  return `\n\n**I checked my own work.** A second check compared each of my calls with the measurements and questioned ${objected}; ${second} hard ones also went to a stronger model for a second opinion. `
+    + (ex ? `I changed ${changed.length} ${changed.length === 1 ? "call" : "calls"} because of it, for example ${ex.id}: first ${LABEL[first(ex)].toLowerCase()}, now ${LABEL[ex.category].toLowerCase()}. ` : "")
+    + "Click any building to see how its call was made.";
+}
+function claimPage(feats, area) {
+  const worst = feats.filter((p) => p.category).sort((a, b) => ORDER.indexOf(b.category) - ORDER.indexOf(a.category))[0];
+  if (!worst || ORDER.indexOf(worst.category) < ORDER.indexOf("minor")) return "";
+  return `\n\n**Ready for a claim:** every building has a printable page for an insurance or aid claim, with its photos and the reasons. [Open the page for the most damaged building](/api/areas/${encodeURIComponent(area)}/packet/${worst.id}).`;
 }
 function title(name) { return name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()); }

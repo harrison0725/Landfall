@@ -1329,7 +1329,7 @@ def costs(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
     from .priority import rank
 
     try:
-        rate = cost.local_rate(spec.bbox if spec.name != "cedar_key" else _drafted_bbox(feats))
+        rate = _local_rate(spec, d, feats)
     except (LookupError, OSError) as e:
         # No Florida tax roll here: price repairs from the country's average
         # building value instead, and skip FEMA's US-only 50% rule.
@@ -1386,6 +1386,34 @@ def costs(spec: AreaSpec, root: Path, log: Log = _quiet) -> dict:
         substantial_possible=len(out["substantial_damage_possible"]),
     )
     return out
+
+
+def _local_rate(spec: AreaSpec, d: Path, feats: dict) -> dict:
+    """Building value per sq ft around the area, kept in rate.json."""
+    from . import cost
+
+    path = d / "rate.json"
+    if path.exists():
+        return json.loads(path.read_text())
+    rate = cost.local_rate(spec.bbox if spec.name != "cedar_key" else _drafted_bbox(feats))
+    path.write_text(json.dumps(rate))
+    return rate
+
+
+def records(spec: AreaSpec, root: Path, log: Log = _quiet) -> None:
+    """The public records the cost step reads (local building values, each
+    building's parcel and flood zone), fetched while the photos are still
+    being measured: they need only the outlines, and fetched after the drafts
+    they held the end of a run up by a minute or more."""
+    from . import parcels
+
+    d = root / spec.name
+    _, feats = _load(d)
+    try:
+        _local_rate(spec, d, feats)
+    except (LookupError, OSError):
+        return  # no Florida tax roll here: the cost step uses national averages, no parcels
+    parcels.fetch(d)
 
 
 def _drafted_bbox(feats: dict) -> tuple[float, float, float, float]:
