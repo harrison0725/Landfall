@@ -16,7 +16,7 @@ Landfall does that first look. Draw a box over a town and the agent fetches the 
 
 ## Try it
 
-https://landfall-z02h.onrender.com opens with finished examples: Cedar Key after Hurricane Helene, Altadena after the Los Angeles wildfires, Ingram after the Texas floods, Mandalay after the Myanmar earthquake, and Montego Bay after Hurricane Melissa. Click any building to see its before and after photos and how its call was made, switch the map to **Before | after** and drag the handle, or ask a question by typing or with the microphone. Drawing a new box runs the whole agent live.
+https://landfall-z02h.onrender.com opens with finished examples: Cedar Key after Hurricane Helene, Altadena after the Los Angeles wildfires, Ingram after the Texas floods, Mandalay after the Myanmar earthquake, and Montego Bay after Hurricane Melissa. Pick English, Español or Kreyòl ayisyen at the top for answers and claim pages in that language. Click any building to see its before and after photos and how its call was made, switch the map to **Before | after** and drag the handle, or ask a question by typing or with the microphone. Drawing a new box runs the whole agent live.
 
 ## How it works
 
@@ -113,6 +113,7 @@ Example output: [`examples/cedar_key_pda_summary.md`](examples/cedar_key_pda_sum
 | Muse Spark (Meta Model API) | Second opinion on low-confidence calls |
 | Muse Spark (Meta Model API) | Rewrites each building's note in everyday words (text only; can't change a category) |
 | Muse Spark with web search (Meta Model API, Responses) | "Where can people here get help?": aid, recovery centers, debris pickup, permits, from official sources, with the pages it read listed under the answer |
+| Muse Spark (Meta Model API) | Spanish and Haitian Creole: answers in the chosen language, and claim pages translated (`landfall/translate.py`; numbers, ids and agency names kept, English original linked, translations cached per area) |
 | Muse Voice Transcribe | Voice questions |
 | Muse Wonder (Meta Model API) | Checks an uploaded photo was taken from above before the search for where it was taken |
 | Muse Image (Meta Model API) | The drawings that explain each damage level ("What do these mean?" on the map key) |

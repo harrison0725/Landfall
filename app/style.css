@@ -191,3 +191,7 @@ ul.sources { padding-left: 18px; }
 .swipe-tag { position: absolute; top: calc(50% + 26px); padding: 4px 8px; border-radius: 6px; background: rgb(0 0 0 / 0.65); color: #fff; font-size: 0.8rem; }
 .swipe-tag.left { left: 12px; }
 .swipe-tag.right { right: 12px; }
+
+/* language for the agent's answers and the claim pages */
+.bar-end { display: flex; align-items: center; gap: 8px; }
+.lang { font: inherit; font-size: 0.8rem; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 3px 4px; }
