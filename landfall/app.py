@@ -147,6 +147,7 @@ def config() -> dict:
         "can_assess": not missing,
         "missing": missing,
         "meta_api": _meta_api_status(),
+        "meta_models": _meta_models,
         "host": _host(),
     }
 
@@ -172,6 +173,7 @@ def _host() -> dict:
 
 
 _meta_checked: list = [0.0, None]
+_meta_models: list[str] = []
 
 
 def _meta_api_status() -> str:
@@ -184,6 +186,8 @@ def _meta_api_status() -> str:
         try:
             r = requests.get("https://api.meta.ai/v1/models", headers={"Authorization": f"Bearer {os.environ.get('META_API_KEY', '')}"}, timeout=15)
             _meta_checked[1] = "ok" if r.ok else f"HTTP {r.status_code}"
+            # which models this key can use (ids only): a model missing here answers 404
+            _meta_models[:] = sorted(m.get("id", "") for m in r.json().get("data", [])) if r.ok else []
         except Exception as e:
             _meta_checked[1] = type(e).__name__
         _meta_checked[0] = time.time()
