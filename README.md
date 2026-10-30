@@ -103,7 +103,7 @@ pytest
 ## Third-party code and tools
 
 - Python libraries listed in `pyproject.toml`.
-- Development tools: Muse Code with the [Superpowers](https://github.com/obra/superpowers) skills (MIT), and Claude Code. These helped write code; they are not part of the product.
+- Development tools, not part of the product: Claude Code wrote most of the code. Muse Code, Meta's coding agent (`muse exec`, run headless with the Meta Model API), wrote `tests/test_area_help.py`, the tests for the area agent's help search, and ran the test suite.
 
 ## License
 
