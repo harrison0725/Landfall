@@ -313,7 +313,20 @@ $("upload").addEventListener("click", () => {
   $("upload-form").hidden = !$("upload-form").hidden;
 });
 $("upload-cancel").addEventListener("click", () => { $("upload-form").hidden = true; });
-$("upload-after").addEventListener("change", () => { $("upload-anyway").hidden = true; $("upload-status").textContent = ""; });
+const putUpload = (file, q) => fetch(`/api/uploads?${q}`, { method: "POST", body: file }).then(async (r) => {
+  if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
+  return r.json();
+});
+// the after photo goes up (and Muse Wonder looks at it) as soon as it's picked,
+// while the rest of the form is filled in, so pressing the button doesn't wait on it
+let early = null;
+$("upload-after").addEventListener("change", () => {
+  $("upload-anyway").hidden = true;
+  $("upload-status").textContent = "";
+  const file = $("upload-after").files[0];
+  early = file ? { file, sent: putUpload(file, "side=after") } : null;
+  if (early) early.sent.catch(() => {});
+});
 // where and when: the map goes there, and the place and year pick the photo of
 // the spot from before (and the disaster, when it's one Landfall has)
 $("upload-year").max = new Date().getFullYear();
@@ -341,15 +354,12 @@ $("upload-form").addEventListener("submit", async (e) => {
   const event = known ? null : { kind, date: day || yr, name: $("upload-name").value.trim() };
   const anyway = e.submitter && e.submitter.id === "upload-anyway";
   status.textContent = anyway ? "Uploading…" : "Uploading… Muse Wonder is checking the photo.";
-  const put = (file, q) => fetch(`/api/uploads?${q}`, { method: "POST", body: file }).then(async (r) => {
-    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
-    return r.json();
-  });
+  const put = putUpload;
   try {
-    const a = await put(after, anyway ? "side=after&check=false" : "side=after");
+    const a = early && early.file === after ? await early.sent.catch(() => put(after, "side=after")) : await put(after, anyway ? "side=after&check=false" : "side=after");
     // a photo from the street or a screenshot can't be found on the map: say so
     // now, not after a minute of searching, and let them go on if they disagree
-    if (a.check && !a.check.usable) {
+    if (a.check && !a.check.usable && !anyway) {
       status.textContent = `Muse Wonder says this photo probably won't work: ${a.check.reason || "it doesn't look like it was taken from above."} I need one taken looking down from a drone, plane or satellite.`;
       $("upload-anyway").hidden = false;
       return;
