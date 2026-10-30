@@ -39,7 +39,11 @@ const streets = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 21, maxNativeZoom: 19, zIndex: 0, attribution: "© OpenStreetMap contributors",
 });
 let after = null;
-const outlines = L.geoJSON(null, { style: styleFor, onEachFeature: bindFeature }).addTo(map);
+// the before photo sits in its own pane, above the after photo and below the outlines,
+// clipped to the left of the slider
+map.createPane("before").style.zIndex = 410;
+map.createPane("outlines").style.zIndex = 420;
+const outlines = L.geoJSON(null, { style: styleFor, onEachFeature: bindFeature, pane: "outlines" }).addTo(map);
 let boxLayer = null;
 
 // One layer for every NOAA flight of the storm. Each map tile waits for all the
@@ -161,10 +165,59 @@ function layerLabel(text) {
 function applyLayer() {
   // the street map stays underneath: past the last after-storm photo it shows, never older photos
   streets.addTo(map);
-  if (state.layer === "after" && after) after.addTo(map);
+  if (state.layer !== "map" && after) after.addTo(map);
   else if (after) map.removeLayer(after);
+  showCompare(state.layer === "compare");
   outlines.bringToFront();
 }
+
+// ---------------------------------------------------------------- before | after slider
+// The before photo the drafts were made from, on the same grid as the after one;
+// left of the handle is before, right is after.
+const swipe = L.DomUtil.create("div", "swipe", map.getContainer());
+swipe.hidden = true;
+swipe.innerHTML = `<div class="swipe-line"></div><span class="swipe-tag left"></span><span class="swipe-tag right">After</span><input type="range" min="0" max="100" value="50" aria-label="Move to compare the photos before and after">`;
+L.DomEvent.disableClickPropagation(swipe);
+const swipeRange = swipe.querySelector("input");
+let before = null;  // {area, info, layer}
+async function checkBefore() {
+  const btn = document.querySelector('.seg button[data-layer="compare"]');
+  const area = state.area;
+  if (before && before.area === area) { btn.hidden = !before.info; return; }
+  if (before && before.layer) map.removeLayer(before.layer);
+  before = { area, info: null, layer: null };
+  const r = area ? await fetch(`/api/areas/${area}/before`).catch(() => null) : null;
+  if (!r || !r.ok || state.area !== area) { btn.hidden = true; if (state.layer === "compare") document.querySelector('.seg button[data-layer="after"]').click(); return; }
+  before.info = await r.json();
+  btn.hidden = false;
+  if (state.layer === "compare") showCompare(true);
+}
+function showCompare(on) {
+  if (on && before && before.info) {
+    if (!before.layer) before.layer = L.imageOverlay(before.info.url, before.info.bounds, { pane: "before", interactive: false });
+    before.layer.addTo(map);
+    const src = before.info.source.replace(/\s*\d{4}-\d{2}-\d{2}$/, "").replace(/^USDA /, "");
+    const d = before.info.date ? new Date(before.info.date + "T00:00:00Z") : null;
+    swipe.querySelector(".left").textContent = `Before · ${src}${d ? `, ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}` : ""}`;
+    swipe.hidden = false;
+    clipBefore();
+  } else {
+    if (before && before.layer) map.removeLayer(before.layer);
+    swipe.hidden = true;
+  }
+}
+function clipBefore() {
+  if (swipe.hidden) return;
+  const size = map.getSize();
+  const x = (swipeRange.value / 100) * size.x;
+  const nw = map.containerPointToLayerPoint([0, 0]);
+  const se = map.containerPointToLayerPoint(size);
+  const cx = map.containerPointToLayerPoint([x, 0]).x;
+  map.getPane("before").style.clip = `rect(${nw.y}px, ${cx}px, ${se.y}px, ${nw.x}px)`;
+  swipe.querySelector(".swipe-line").style.left = `${x}px`;
+}
+swipeRange.addEventListener("input", clipBefore);
+map.on("move zoom resize zoomend", clipBefore);
 document.querySelectorAll(".seg button").forEach((b) =>
   b.addEventListener("click", () => {
     state.layer = b.dataset.layer;
@@ -204,6 +257,7 @@ async function loadBuildings(fit) {
   outlines.addData(gj);
   // same framing for every area: all drafted buildings in view, never closer than street level
   if (fit && gj.features.length) map.fitBounds(outlines.getBounds(), { padding: [30, 30], maxZoom: 18 });
+  checkBefore();
 }
 function paintBuilding(id, props) {
   const layer = state.features[id];

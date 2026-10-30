@@ -180,3 +180,14 @@ ul.sources { padding-left: 18px; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
 .packet { display: inline-block; margin: 2px 0 4px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); text-decoration: none; font-size: 0.85rem; }
 .packet:hover { border-color: var(--muted); }
+
+/* before | after slider over the map */
+.swipe { position: absolute; inset: 0; z-index: 500; pointer-events: none; }
+.swipe-line { position: absolute; top: 0; bottom: 0; width: 3px; margin-left: -1.5px; background: #fff; box-shadow: 0 0 4px rgb(0 0 0 / 0.5); }
+.swipe input { position: absolute; left: 0; right: 0; top: 50%; width: 100%; margin: 0; -webkit-appearance: none; appearance: none; background: transparent; pointer-events: none; }
+.swipe input::-webkit-slider-thumb { -webkit-appearance: none; pointer-events: auto; width: 34px; height: 34px; border-radius: 50%; background: #fff; border: 2px solid var(--ink); cursor: ew-resize; box-shadow: 0 1px 4px rgb(0 0 0 / 0.4); }
+.swipe input::-moz-range-thumb { pointer-events: auto; width: 30px; height: 30px; border-radius: 50%; background: #fff; border: 2px solid var(--ink); cursor: ew-resize; }
+.swipe input::-moz-range-track { background: transparent; }
+.swipe-tag { position: absolute; top: calc(50% + 26px); padding: 4px 8px; border-radius: 6px; background: rgb(0 0 0 / 0.65); color: #fff; font-size: 0.8rem; }
+.swipe-tag.left { left: 12px; }
+.swipe-tag.right { right: 12px; }

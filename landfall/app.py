@@ -478,6 +478,47 @@ def _shared_tiles(d: Path) -> list[dict]:
     return sorted(out.values(), key=lambda t: t["max_native_zoom"])
 
 
+@app.get("/api/areas/{area}/before")
+def area_before(area: str) -> dict:
+    """The before photo the drafts were made from, for the map's before/after
+    slider: the same pixel grid as the after mosaic, with its source and date."""
+    from .geo import pixel_to_lonlat
+
+    d = _area_dir(area)
+    spec = json.loads((d / "spec.json").read_text()) if (d / "spec.json").exists() else {}
+    if spec.get("imagery") == "photos" or not ((d / "pre.png").exists() or (d / "pre_preview.jpg").exists()):
+        raise HTTPException(404, "no before photo for this area")
+    from PIL import Image
+
+    s = json.loads((d / "alignment.json").read_text())["summary"]
+    x0, y0 = s["mosaic_origin"]
+    w, h = json.loads((d / "pre_size.json").read_text()) if not (d / "pre.png").exists() else Image.open(d / "pre.png").size
+    w_lon, n_lat = pixel_to_lonlat(x0, y0, s.get("zoom", 19))
+    e_lon, s_lat = pixel_to_lonlat(x0 + w, y0 + h, s.get("zoom", 19))
+    source = s.get("pre_source") or (f"USDA NAIP {s['naip_date']}" if s.get("naip_date") else "archive photo")
+    return {
+        "url": f"/api/areas/{area}/before.jpg",
+        "bounds": [[s_lat, w_lon], [n_lat, e_lon]],
+        "date": s.get("pre_date") or s.get("naip_date"),
+        "source": source.split(" (")[0],
+    }
+
+
+@app.get("/api/areas/{area}/before.jpg")
+def before_jpg(area: str) -> Response:
+    from PIL import Image
+
+    d = _area_dir(area)
+    out = d / "pre_preview.jpg"
+    if (d / "pre.png").exists() and (not out.exists() or out.stat().st_mtime < (d / "pre.png").stat().st_mtime):
+        im = Image.open(d / "pre.png").convert("RGB")
+        im.thumbnail((4096, 4096))
+        im.save(out, quality=85)
+    if not out.exists():
+        raise HTTPException(404, "no before photo for this area")
+    return FileResponse(out, media_type="image/jpeg")
+
+
 @app.get("/api/areas/{area}/after.webp")
 def after_webp(area: str) -> Response:
     """An uploaded photo turned to north-up, see-through where it has no picture."""
