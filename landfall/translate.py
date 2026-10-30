@@ -21,7 +21,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from .agent import SPARK_MODEL, SPARK_URL, _chat
+from .agent import SPARK_MODEL, muse_chat
 
 LANGS = {"es": "Spanish", "ht": "Haitian Creole"}
 NOTICE = {
@@ -44,8 +44,7 @@ _lock = threading.Lock()
 
 def translate(texts: list[str], lang: str, batch: int = 40) -> dict[str, str]:
     """English texts -> {english: translation}. Texts it can't translate are left out."""
-    key = os.environ.get("META_API_KEY")
-    if not key or lang not in LANGS or not texts:
+    if lang not in LANGS or not texts or not (os.environ.get("META_API_KEY") or os.environ.get("BASETEN_API_KEY")):
         return {}
 
     def one(chunk: list[str]) -> dict[str, str]:
@@ -54,7 +53,7 @@ def translate(texts: list[str], lang: str, batch: int = 40) -> dict[str, str]:
         # the reply is held to one string per key, so a batch can't come back short
         schema = {"type": "object", "properties": {k: {"type": "string"} for k in keys}, "required": keys, "additionalProperties": False}
         try:
-            reply = _chat(SPARK_URL, key, SPARK_MODEL, [{"role": "user", "content": PROMPT.format(lang=LANGS[lang], texts=body)}], max_tokens=8000, schema=schema)
+            reply, _ = muse_chat(SPARK_MODEL, [{"role": "user", "content": PROMPT.format(lang=LANGS[lang], texts=body)}], max_tokens=8000, schema=schema)
             m = re.search(r"\{.*\}", reply, re.S)
             got = json.loads(m.group(0)) if m else {}
         except Exception as e:  # noqa: BLE001 - an untranslated sentence stays in English

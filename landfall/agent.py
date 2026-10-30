@@ -248,6 +248,26 @@ def _chat(url: str, key: str, model: str, messages: list[dict], max_tokens: int 
     return out["choices"][0]["message"].get("content") or ""
 
 
+def muse_chat(model: str, messages: list[dict], max_tokens: int = 8000, schema: dict | None = None) -> tuple[str, str]:
+    """One reply from a Muse model on Meta's API, or from Muse Spark Open on
+    Baseten when Meta's API won't serve that model here: (text, model used).
+    Some hosts get "not found" for the Muse models from Meta's API while the
+    same key works elsewhere (the hosted copy on Render does), and the
+    open-weight model answers the same prompts."""
+    import requests
+
+    key = os.environ.get("META_API_KEY")
+    if key:
+        try:
+            return _chat(SPARK_URL, key, model, messages, max_tokens, schema), model
+        except requests.HTTPError as e:
+            if e.response is None or e.response.status_code not in (401, 403, 404):
+                raise
+    if not os.environ.get("BASETEN_API_KEY"):
+        raise RuntimeError(f"{model} isn't available here and there's no Baseten key for Muse Spark Open")
+    return _chat(OPEN_URL, os.environ["BASETEN_API_KEY"], OPEN_MODEL, messages, max_tokens, schema), OPEN_MODEL
+
+
 def parse_answer(text: str) -> dict:
     """Pull the JSON object out of a model reply. Raises ValueError if there
     is none or the category is not one of ours."""

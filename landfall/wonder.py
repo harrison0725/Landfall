@@ -17,7 +17,7 @@ import json
 import os
 import re
 
-from .agent import SPARK_URL, _chat
+from .agent import OPEN_MODEL, muse_chat
 
 MODEL = "muse-wonder-1.0"
 VIEWS = ["straight down", "angled from above", "from the ground", "not a photo of a place"]
@@ -46,8 +46,7 @@ Mark it not usable only when you are sure: a photo from the ground or a street, 
 def look(jpeg: bytes) -> dict | None:
     """Muse Wonder's read of a photo, or None when it can't be had (the
     check is a convenience: the search runs either way)."""
-    key = os.environ.get("META_API_KEY")
-    if not key:
+    if not (os.environ.get("META_API_KEY") or os.environ.get("BASETEN_API_KEY")):
         return None
     from PIL import Image
 
@@ -58,7 +57,7 @@ def look(jpeg: bytes) -> dict | None:
     url = "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
     msg = [{"role": "user", "content": [{"type": "text", "text": PROMPT}, {"type": "image_url", "image_url": {"url": url}}]}]
     try:
-        reply = _chat(SPARK_URL, key, MODEL, msg, max_tokens=4000, schema=SCHEMA)
+        reply, used = muse_chat(MODEL, msg, max_tokens=4000, schema=SCHEMA)
         m = re.search(r"\{.*\}", reply, re.S)
         got = json.loads(m.group(0)) if m else None
     except Exception:  # noqa: BLE001 - any failure: no check, not a failed upload
@@ -70,5 +69,6 @@ def look(jpeg: bytes) -> dict | None:
         "view": str(got.get("view", ""))[:40],
         "shows": str(got.get("shows", ""))[:120],
         "reason": str(got.get("reason", ""))[:240],
-        "model": MODEL,
+        # where Meta's API won't serve Muse Wonder, Muse Spark Open looks instead
+        "model": "Muse Wonder" if used == MODEL else "Muse Spark Open" if used == OPEN_MODEL else used,
     }

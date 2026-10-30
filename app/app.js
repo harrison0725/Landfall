@@ -408,19 +408,19 @@ $("upload-form").addEventListener("submit", async (e) => {
   const known = (state.storms || []).find((s) => place.disasters.includes(s.key) && s.landfall.startsWith(yr) && (s.kind || "hurricane") === kind && (!day || Math.abs(new Date(day) - new Date(s.landfall)) < 21 * 864e5));
   const event = known ? null : { kind, date: day || yr, name: $("upload-name").value.trim() };
   const anyway = e.submitter && e.submitter.id === "upload-anyway";
-  status.textContent = anyway ? "Uploading…" : "Uploading… Muse Wonder is checking the photo.";
+  status.textContent = anyway ? "Uploading…" : "Uploading… checking the photo was taken from above.";
   const put = putUpload;
   try {
     const a = early && early.file === after ? await early.sent.catch(() => put(after, "side=after")) : await put(after, anyway ? "side=after&check=false" : "side=after");
     // a photo from the street or a screenshot can't be found on the map: say so
     // now, not after a minute of searching, and let them go on if they disagree
     if (a.check && !a.check.usable && !anyway) {
-      status.textContent = `Muse Wonder says this photo probably won't work: ${a.check.reason || "it doesn't look like it was taken from above."} I need one taken looking down from a drone, plane or satellite.`;
+      status.textContent = `${a.check.model || "Muse Wonder"} says this photo probably won't work: ${a.check.reason || "it doesn't look like it was taken from above."} I need one taken looking down from a drone, plane or satellite.`;
       $("upload-anyway").hidden = false;
       return;
     }
     $("upload-anyway").hidden = true;
-    if (a.check && a.check.shows) $("upload").title = `Muse Wonder: ${a.check.shows}`;
+    if (a.check && a.check.shows) $("upload").title = `${a.check.model || "Muse Wonder"}: ${a.check.shows}`;
     if (before) await put(before, `side=before&id=${a.id}`);
     state.upload = { id: a.id, url: URL.createObjectURL(after), before: !!before, event, gps: a.gps, check: a.check };
   } catch (err) {
@@ -510,7 +510,7 @@ function planStep(name, status) {
   if (!plan || (name === PLAN[0] && status === "running")) {
     const el = div("plan");
     el.innerHTML = `<div class="plan-head"><b>My plan</b><span class="meta"></span></div><ol>${PLAN.map((t) => `<li data-tool="${t}"><span class="mark"></span>${esc(STEP[t])}</li>`).join("")}</ol>`;
-    plan = { el, t0: performance.now(), sam: 0, wonder: !!(state.upload && state.upload.check), timer: setInterval(() => { el.querySelector(".meta").textContent = `${Math.round((performance.now() - plan.t0) / 1000)}s`; }, 1000) };
+    plan = { el, t0: performance.now(), sam: 0, wonder: state.upload && state.upload.check ? state.upload.check.model || "Muse Wonder" : null, timer: setInterval(() => { el.querySelector(".meta").textContent = `${Math.round((performance.now() - plan.t0) / 1000)}s`; }, 1000) };
     add(el);
   }
   const li = plan.el.querySelector(`li[data-tool="${name}"]`);
@@ -526,7 +526,7 @@ function metaUsed(p) {
   const tr = p.trails || [];
   const by = (name) => tr.filter((t) => t.some((x) => modelName(x.model) === name)).length;
   const parts = [
-    p.wonder && "Muse Wonder checked the photo was taken from above",
+    p.wonder && `${p.wonder} checked the photo was taken from above`,
     p.sam && `Segment Anything 3.1 outlined buildings, debris and tarps in ${p.sam} images`,
     tr.length && `Muse Spark Open judged ${by("Muse Spark Open")} buildings and ran this plan`,
     by("Muse Spark") && `Muse Spark gave a second opinion on ${by("Muse Spark")} hard ${by("Muse Spark") === 1 ? "one" : "ones"}`,

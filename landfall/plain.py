@@ -16,7 +16,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from .agent import SPARK_MODEL, SPARK_URL, _chat
+from .agent import SPARK_MODEL, muse_chat
 
 WORDS = {"none": "no damage seen", "affected": "slightly damaged", "minor": "damaged", "major": "badly damaged", "destroyed": "destroyed"}
 
@@ -31,7 +31,6 @@ Answer with one JSON object mapping each id to its rewritten note, nothing else.
 
 def rewrite(notes: dict[str, tuple[str, str]], batch: int = 25) -> dict[str, str]:
     """{id: (category, note)} -> {id: plain note}. Notes it can't rewrite are left out."""
-    key = os.environ["META_API_KEY"]
     ids = list(notes)
 
     def one(chunk: list[str]) -> dict[str, str]:
@@ -39,7 +38,7 @@ def rewrite(notes: dict[str, tuple[str, str]], batch: int = 25) -> dict[str, str
         try:
             # the reply is held to one string per id, so a batch can't come back short
             schema = {"type": "object", "properties": {i: {"type": "string"} for i in chunk}, "required": chunk, "additionalProperties": False}
-            reply = _chat(SPARK_URL, key, SPARK_MODEL, [{"role": "user", "content": PROMPT.format(notes=text)}], max_tokens=6000, schema=schema)
+            reply, _ = muse_chat(SPARK_MODEL, [{"role": "user", "content": PROMPT.format(notes=text)}], max_tokens=6000, schema=schema)
             m = re.search(r"\{.*\}", reply, re.S)
             got = json.loads(m.group(0)) if m else {}
         except Exception:  # a note in plain words is nice to have; the card falls back to the original
