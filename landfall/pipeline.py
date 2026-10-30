@@ -261,7 +261,12 @@ def _archive_mosaic(spec: AreaSpec, win: Window, cache: Path, zoom: int = ZOOM) 
     """The archive's newest photo from before the disaster over a window: for
     a catalog disaster NAIP in the US and Maxar elsewhere, as a drawn box
     uses; for a new one, and wherever those have nothing, Esri's Wayback
-    archive. Returns its label, the mosaic, where it has data, and its date."""
+    archive. Returns its label, the mosaic, where it has data, and its date.
+
+    Esri's photos are Esri's, used under its terms with credit, so for a
+    catalog disaster the public archives come first even when their photo
+    is old (that is flagged instead). An uploaded photo of a new disaster
+    still needs Esri's newer photo: NAIP missed every slanted test photo."""
     from .storms import STORMS
 
     s = STORMS.get(spec.storm)
@@ -284,18 +289,9 @@ def _archive_mosaic(spec: AreaSpec, win: Window, cache: Path, zoom: int = ZOOM) 
             raise LookupError("no archive photo of this spot from before the disaster")
         return newest
     try:
-        got = _catalog_archive(s, spec, win, cache, zoom)
+        return _catalog_archive(s, spec, win, cache, zoom)
     except (LookupError, OSError):
         return _wayback_mosaic(spec, win, cache, zoom)
-    if years_before(got[3], spec.landfall) >= OLD_BEFORE_YEARS:
-        # an old photo: Esri's archive may have a newer one from before it
-        try:
-            esri = _wayback_mosaic(spec, win, cache, zoom)
-            if esri[3] > got[3] and esri[2].mean() >= 0.9 * got[2].mean():
-                return esri
-        except (LookupError, OSError):
-            pass
-    return got
 
 
 def _wayback_mosaic(spec: AreaSpec, win: Window, cache: Path, zoom: int = ZOOM) -> tuple[str, np.ndarray, np.ndarray, str]:
@@ -490,7 +486,9 @@ def find_upload(spec: AreaSpec, d: Path, cache: Path, log: Log = _quiet) -> str:
 
 def _newest_photo(spec: AreaSpec, win: Window, cache: Path) -> tuple[str, np.ndarray, np.ndarray]:
     """The newest archive photo over a window, for finding a recent photo's
-    spot: Esri's latest, else the archive's before photo."""
+    spot: Esri's latest, else the archive's before photo. Only the search
+    uses it, to find where the photo was taken; it is never shown as the
+    before photo. NAIP was tried here instead and missed slanted photos."""
     from .geo import pixel_to_lonlat
     from .wayback import Photo, captured, mosaic, releases
 
