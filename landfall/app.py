@@ -242,6 +242,13 @@ def meta_probe() -> dict:
         "stripped_sha256_prefix": hashlib.sha256(key.strip().encode()).hexdigest()[:8],
         "length": len(key),
     }
+    try:
+        from . import sam
+
+        sam.request(np.zeros((32, 32, 3), np.uint8), "roof", scale=1, retries=1)
+        out.append({"call": "sam", "status": 200})
+    except Exception as e:
+        out.append({"call": "sam", "status": f"{type(e).__name__}: {str(e)[:120]}"})
     import socket
 
     import urllib3
