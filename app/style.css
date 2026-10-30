@@ -137,6 +137,8 @@ select option, select optgroup { background: var(--panel); color: var(--ink); }
 .levels .level b { display: flex; align-items: center; gap: 6px; }
 .levels .level i { width: 12px; height: 12px; border-radius: 3px; background: var(--c); display: inline-block; }
 .levels .level p { margin: 2px 0 0; font-size: 0.85rem; }
+.msg .sources { font-size: 0.82rem; margin: 6px 0 0; }
+ul.sources { padding-left: 18px; }
 .plan .meta-used { margin: 8px 0 0; font-size: 0.8rem; color: var(--muted); }
 .legend .linkish { font-size: inherit; text-align: left; margin-top: 2px; }
 .card .close { position: absolute; top: 8px; right: 10px; border: 0; background: none; font-size: 1.4rem; color: var(--muted); cursor: pointer; }

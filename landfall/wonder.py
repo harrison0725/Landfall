@@ -20,6 +20,18 @@ import re
 from .agent import SPARK_URL, _chat
 
 MODEL = "muse-wonder-1.0"
+VIEWS = ["straight down", "angled from above", "from the ground", "not a photo of a place"]
+SCHEMA = {
+    "type": "object",
+    "properties": {
+        "usable": {"type": "boolean"},
+        "view": {"type": "string", "enum": VIEWS},
+        "shows": {"type": "string"},
+        "reason": {"type": "string"},
+    },
+    "required": ["usable", "view", "shows", "reason"],
+    "additionalProperties": False,
+}
 
 PROMPT = """Someone uploaded this photo to a tool that finds the buildings in an aerial photo on a map and compares them with an older aerial photo of the same place.
 That only works for a photo taken from above (a drone, plane or satellite) looking down on buildings, roads or land: straight down, or close to it.
@@ -46,7 +58,7 @@ def look(jpeg: bytes) -> dict | None:
     url = "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
     msg = [{"role": "user", "content": [{"type": "text", "text": PROMPT}, {"type": "image_url", "image_url": {"url": url}}]}]
     try:
-        reply = _chat(SPARK_URL, key, MODEL, msg, max_tokens=4000)
+        reply = _chat(SPARK_URL, key, MODEL, msg, max_tokens=4000, schema=SCHEMA)
         m = re.search(r"\{.*\}", reply, re.S)
         got = json.loads(m.group(0)) if m else None
     except Exception:  # noqa: BLE001 - any failure: no check, not a failed upload
