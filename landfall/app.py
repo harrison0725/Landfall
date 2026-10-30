@@ -642,6 +642,8 @@ def after_jpg(area: str) -> Response:
             im = im.crop(box)
         im.thumbnail((4096, 4096))
         im.save(out, quality=85)
+    if not out.exists():  # NOAA areas: the map shows NOAA's own tiles instead
+        raise HTTPException(404, "no after-storm mosaic for this area")
     return FileResponse(out, media_type="image/jpeg")
 
 
