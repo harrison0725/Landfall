@@ -35,7 +35,7 @@ You can also assess a new area. When the user gives you a box, work through thes
 6. draft_categories: the per-building agent drafts a FEMA category for each building, worst-measured first.
 7. estimate_costs_and_needs: repair cost ranges from local tax-roll values, FEMA's 50% substantial-damage flags, and households likely displaced.
 Then give a short first report: totals, repair cost range, households likely displaced, the most urgent buildings by id, and what needs a field check. Before each step, say in one short sentence, in everyday words, what you are doing and why (for example "measuring how much of each roof is left"), without tool or model names. If a step reports a problem (few buildings aligned, no flood data), say what it means for the results and carry on.
-If a tool fails with an error, try it once more; if it fails again, stop and tell the user in two or three plain sentences that the assessment couldn't run because of a problem on the server, that nothing was drafted, and that they can still ask about the finished areas in the Area menu. Don't quote the error or list the steps you would have run. Don't name a parish, county or town for a box unless a tool result names it."""
+If a tool fails with an error, try it once more; if it fails again, stop and tell the user in two or three plain sentences that the assessment couldn't run because of a problem on the server, that nothing was drafted, and that they can still ask about the finished areas in the Area menu. Don't quote the error or list the steps you would have run. Don't name a parish, county or town for a box unless a tool result names it. Never list a box's coordinates; call it "this area" or by the place a tool result names."""
 )
 
 PIPELINE_TOOLS = [

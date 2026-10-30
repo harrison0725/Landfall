@@ -27,6 +27,9 @@ const EVENT = "__upload";  // the Disaster menu's entry for a disaster only the 
 
 // ---------------------------------------------------------------- map
 const map = L.map("map", { zoomControl: false }).setView([29.1375, -83.0355], 16);
+// keep the tiles already on screen while zooming and panning, instead of loading
+// (and dropping) every in-between level, which flashed blank squares
+L.GridLayer.mergeOptions({ updateWhenZooming: false, keepBuffer: 4 });
 L.control.zoom({ position: "bottomright" }).addTo(map);
 const streets = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 21, maxNativeZoom: 19, zIndex: 0, attribution: "© OpenStreetMap contributors",
@@ -39,6 +42,15 @@ let boxLayer = null;
 // flights that cover it and draws them in one go, the area's own flight last so it
 // wins wherever it has photos. Separate layers per flight showed whichever flight
 // loaded first, then swapped to another day's photo as the rest arrived.
+// A flight's tile with no photo is a 1-pixel image; every tile inside it is empty
+// too, so those are never asked for again (most flights cover a narrow strip).
+const noaaEmpty = new Set();
+function noaaKnownEmpty(name, z, x, y) {
+  for (let up = 0; up <= 6 && z - up >= 0; up++) {
+    if (noaaEmpty.has(`${name}/${z - up}/${x >> up}/${y >> up}`)) return true;
+  }
+  return false;
+}
 const NoaaStack = L.GridLayer.extend({
   createTile(coords, done) {
     const tile = document.createElement("canvas");
@@ -46,20 +58,30 @@ const NoaaStack = L.GridLayer.extend({
     tile.width = size.x;
     tile.height = size.y;
     const tb = this._tileCoordsToBounds(coords);
-    const fs = this.options.flights.filter((f) => !f.bounds || L.latLngBounds(f.bounds).intersects(tb));
+    const fs = this.options.flights.filter((f) => (!f.bounds || L.latLngBounds(f.bounds).intersects(tb)) && !noaaKnownEmpty(f.name, coords.z, coords.x, coords.y));
     let left = fs.length;
-    const finish = () => {
+    let shown = false;
+    const draw = () => {
       const ctx = tile.getContext("2d");
-      imgs.forEach((im) => { if (im.naturalWidth) ctx.drawImage(im, 0, 0, size.x, size.y); });
-      done(null, tile);
+      ctx.clearRect(0, 0, size.x, size.y);
+      imgs.forEach((im) => { if (im.complete && im.naturalWidth > 1) ctx.drawImage(im, 0, 0, size.x, size.y); });
     };
+    const show = () => { if (!shown) { shown = true; done(null, tile); } };
     const imgs = fs.map((f) => {
       const im = new Image();
-      im.onload = im.onerror = () => { if (--left === 0) finish(); };
+      im.onload = im.onerror = () => {
+        if (im.naturalWidth === 1) noaaEmpty.add(`${f.name}/${coords.z}/${coords.x}/${coords.y}`);
+        draw();
+        left--;
+        // show the tile once all its flights are in, or soon after the first photo
+        // arrives, so one slow flight doesn't hold up the whole map
+        if (left === 0) show();
+        else if (im.naturalWidth > 1) setTimeout(show, 800);
+      };
       im.src = `https://stormscdn.ngs.noaa.gov/${f.name}/${coords.z}/${coords.x}/${coords.y}`;
       return im;
     });
-    if (!fs.length) setTimeout(finish);
+    if (!fs.length) setTimeout(show);
     return tile;
   },
 });
@@ -192,6 +214,14 @@ function legend() {
     `<span><i class="dash"></i>Needs a visit to confirm</span>`;
 }
 
+// ---------------------------------------------------------------- phone: the whole screen for the map
+$("mapsize").addEventListener("click", () => {
+  const big = document.querySelector(".shell").classList.toggle("bigmap");
+  $("mapsize").textContent = big ? "Back to chat" : "Full map";
+  $("mapsize").setAttribute("aria-pressed", String(big));
+  setTimeout(() => map.invalidateSize(), 50);
+});
+
 // ---------------------------------------------------------------- drawing a box
 let start = null;
 $("draw").addEventListener("click", () => setDrawing(!state.drawing));
@@ -230,6 +260,7 @@ mapEl.addEventListener("pointerup", (e) => {
   const km2 = ((ea - w) * 111.32 * Math.cos(((s + n) / 2) * Math.PI / 180)) * ((n - s) * 110.57);
   if (km2 < 0.002) { clearBox(); $("context").textContent = "That box was too small. Drag across a few houses."; return; }
   state.box = [w, s, ea, n];
+  if (document.querySelector(".shell.bigmap")) $("mapsize").click();  // back to the chat, to send it
   if (state.upload) {
     // the photos go where the box is: show the after photo there to check the fit
     if (photoPreview) map.removeLayer(photoPreview);
@@ -371,6 +402,36 @@ function suggestions(list) {
   add(box);
 }
 
+// The run log: when the agent assesses a new area, a plan card lists its steps
+// and ticks them off as they finish, so anyone watching sees where it is and
+// what it has done; each step's card below holds the details.
+const PLAN = ["locate_imagery", "prepare_area", "measure_structures", "measure_flood", "look_for_debris", "draft_categories", "estimate_costs_and_needs"];
+let plan = null;
+function planStep(name, status) {
+  if (!PLAN.includes(name)) return;
+  if (!plan || (name === PLAN[0] && status === "running")) {
+    const el = div("plan");
+    el.innerHTML = `<div class="plan-head"><b>My plan</b><span class="meta"></span></div><ol>${PLAN.map((t) => `<li data-tool="${t}"><span class="mark"></span>${esc(STEP[t])}</li>`).join("")}</ol>`;
+    plan = { el, t0: performance.now(), timer: setInterval(() => { el.querySelector(".meta").textContent = `${Math.round((performance.now() - plan.t0) / 1000)}s`; }, 1000) };
+    add(el);
+  }
+  const li = plan.el.querySelector(`li[data-tool="${name}"]`);
+  li.className = status;
+  if (status !== "running" && (name === PLAN[PLAN.length - 1] || status === "failed")) { clearInterval(plan.timer); plan = null; }
+}
+const SHORT = { "flood rule": "the flood rule", "satellite rule": "the satellite rule", "photo rule": "the one-photo rule", "cloud check": "the cloud check" };
+function trailText(id, trail) {
+  // "b094: Muse Spark Open said destroyed, the second check objected; Muse Spark said badly damaged"
+  const said = (c) => (LABEL[c] || c).toLowerCase();
+  const parts = trail.map((t, i) => t.error ? `${modelName(t.model)} didn't answer`
+    : SHORT[t.model] ? `${SHORT[t.model]} ${t.said ? `raised it to ${said(t.said)}` : "sent it for a visit"}`
+    : i && trail[i - 1].model === t.model ? `it changed its answer to ${said(t.said)}${t.objected ? ", and the second check still objected" : ""}`
+    : `${modelName(t.model)} said ${said(t.said)}${t.objected ? ", the second check objected" : ""}`);
+  return `${id}: ${parts.join("; ")}`;
+}
+// only the buildings where something happened beyond one clean answer
+const notable = (trail) => trail.length > 1 || trail.some((t) => t.objected || t.error);
+
 let current = null; // the step card for the running tool
 function startStep(name, args) {
   const d = document.createElement("details");
@@ -382,7 +443,8 @@ function startStep(name, args) {
     d.open = true;
     d.insertAdjacentHTML("beforeend", `<div class="drafts"></div>`);
   }
-  current = { el: d, t0: performance.now() };
+  current = { el: d, t0: performance.now(), trails: [] };
+  planStep(name, "running");
   return add(d);
 }
 function stepLine(text) {
@@ -397,6 +459,14 @@ function endStep(result) {
   const secs = ((performance.now() - current.t0) / 1000).toFixed(0);
   current.el.querySelector(".meta").textContent = `${secs}s`;
   if (failed) { stepLine(result.error); current.el.open = true; }  // show why without a click
+  if (current.trails.length) {
+    // the draft step's tally: who judged, how often the stronger model was called, how often the checker pushed back
+    const tr = current.trails;
+    const by = (name) => tr.filter((t) => t.some((x) => modelName(x.model) === name)).length;
+    const objected = tr.filter((t) => t.some((x) => x.objected)).length;
+    stepLine(`${by("Muse Spark Open")} buildings judged by Muse Spark Open; ${by("Muse Spark")} hard ones also went to Muse Spark; the second check pushed back on ${objected}.`);
+  }
+  planStep(current.el.dataset.tool, failed ? "failed" : "done");
   current = null;
 }
 
@@ -442,6 +512,10 @@ function handle(ev) {
           grid.appendChild(c);
           scroll();
         }
+        if (current && ev.trail) {
+          current.trails.push(ev.trail);
+          if (notable(ev.trail)) stepLine(trailText(ev.id, ev.trail));
+        }
         paintBuilding(ev.id, { category: ev.category, needs_human: ev.needs_human, confidence: ev.confidence, evidence: ev.evidence });
       } else {
         const line = describeProgress(ev);
@@ -462,8 +536,16 @@ function handle(ev) {
       state.area = ev.area;
       // the new area joins the Area menu, picked, named after the place searched
       if (ev.area && ![...$("area").options].some((o) => o.value === ev.area)) {
-        areaLabels[ev.area] = areaLabels[ev.area] || ($("place").value.trim() || areaLabel(ev.area));
+        const kind = ev.area.startsWith("upload_") ? "your photos" : "your box";
+        areaLabels[ev.area] = areaLabels[ev.area] || `${$("place").value.trim() || "New area"}, ${kind}`;
         $("area").insertAdjacentHTML("beforeend", `<option value="${esc(ev.area)}">${esc(areaLabels[ev.area])}</option>`);
+        // the server names the place in a moment (from the map's address search): use that name
+        const area = ev.area;
+        setTimeout(() => fetch("/api/areas").then((r) => r.json()).then((rows) => {
+          const row = rows.find((x) => x.name === area);
+          const opt = [...$("area").options].find((o) => o.value === area);
+          if (row && row.label && opt) opt.textContent = areaLabels[area] = `${row.label}, ${kind}`;
+        }).catch(() => {}), 4000);
       }
       if (ev.area) $("area").value = ev.area;
       if (state.upload) {
@@ -591,10 +673,10 @@ async function openBuilding(id) {
     <h2>Building ${esc(id)} ${cat ? `<span class="pill ${cat}" style="--c:var(--${cat})" title="FEMA category: ${FEMA[cat]}">${LABEL[cat]}</span>` : ""}${a && a.needs_human ? `<span class="pill" style="--c:var(--review)" title="A person should visit to confirm">Needs a visit</span>` : ""}</h2>
     <img src="/api/areas/${state.area}/pair/${id}.jpg" alt="Before and after photos of ${esc(id)}">
     <div class="cap"><span>Before${a && a.photos ? ": " + esc(shortSource(a.photos.before)) : ""}</span><span>After${a && a.photos ? ": " + esc(shortSource(a.photos.after)) : ""}</span></div>
-    <p>${a ? esc(a.evidence) : gone ? "This area was lost when the site restarted. Draw the box again to redo it." : "Not checked yet. The check of this area is still running, or it stopped before it reached this building; the chat shows which step it is on."}</p>
+    <p>${a ? esc(a.plain || a.evidence) : gone ? "This area was lost when the site restarted. Draw the box again to redo it." : "Not checked yet. The check of this area is still running, or it stopped before it reached this building; the chat shows which step it is on."}</p>
     ${a ? `<dl class="kv">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>` : ""}
     ${a ? `<p><a class="packet" href="/api/areas/${state.area}/packet/${id}" target="_blank" rel="noopener">Printable page for an insurance or aid claim</a></p>` : ""}
-    ${trace.length ? `<div class="trace"><b>How this was decided</b>${trace.map(traceRow).join("")}</div>` : ""}`;
+    ${trace.length ? `<div class="trace"><b>How this was decided</b>${a.plain ? `<div class="t">The AI's own note: ${esc(a.evidence)}</div>` : ""}${trace.map(traceRow).join("")}</div>` : ""}`;
   $("card").hidden = false;
 }
 function modelName(m) {

@@ -48,6 +48,11 @@ def _seed(root: Path, demo: Path) -> None:
         dst = root / src.relative_to(demo)
         if not dst.exists():
             (shutil.copytree if src.is_dir() else shutil.copy2)(src, dst)
+        elif src.is_dir() and src.name != "tiles" and (src / "assessments.json").exists():
+            # a demo area already copied: add files shipped since (plain.json, say)
+            for f in src.iterdir():
+                if f.is_file() and not (dst / f.name).exists():
+                    shutil.copy2(f, dst / f.name)
 
 
 try:
@@ -355,8 +360,10 @@ def building(area: str, bid: str) -> dict:
 
     f = facts(d, bid)
     rec = f["parcel"]
+    plain = json.loads((d / "plain.json").read_text()) if (d / "plain.json").exists() else {}
     return {
         **drafts[bid],
+        "plain": plain.get(bid),
         "photos": {"before": before_source(f["photos"]), "after": after_source(f["photos"])},
         "cost": f["cost"],
         "need": f["need"],
