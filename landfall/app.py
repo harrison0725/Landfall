@@ -242,7 +242,13 @@ def meta_probe() -> dict:
         "stripped_sha256_prefix": hashlib.sha256(key.strip().encode()).hexdigest()[:8],
         "length": len(key),
     }
-    _probe_at[:] = [time.time(), {"at": time.strftime("%H:%M:%S UTC", time.gmtime()), "key": key_id, "calls": out}]
+    try:
+        # where the API sees this server calling from
+        w = requests.get("https://ipinfo.io/json", timeout=10).json()
+        seen_from = {k: w.get(k) for k in ("city", "region", "country", "org")}
+    except Exception as e:
+        seen_from = type(e).__name__
+    _probe_at[:] = [time.time(), {"at": time.strftime("%H:%M:%S UTC", time.gmtime()), "key": key_id, "from": seen_from, "calls": out}]
     return _probe_at[1]
 
 
