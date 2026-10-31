@@ -2,6 +2,8 @@
 
 An agent that turns aerial and satellite photos taken after a hurricane, wildfire, earthquake or flood into a draft FEMA Preliminary Damage Assessment: every building compared with its pre-storm photo, flood depth estimated, each one sorted into FEMA's categories with its evidence, and a report a county can work from.
 
+**Demo video (2:32):** https://youtu.be/a-CPgRJi1y8 · **Try it:** https://landfall-ohio.onrender.com
+
 **Built during the Meta Global AI Developer Hackathon, Oct 26 to Nov 4, 2026.** Everything in this repository was written during the event. See [BUILD_LOG.md](BUILD_LOG.md) for a dated record of what was built each day.
 
 > Landfall produces a draft for trained assessors. It is not an official damage determination.
