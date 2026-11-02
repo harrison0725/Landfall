@@ -73,7 +73,7 @@ BASETEN_API_KEY=... python scripts/ask_area.py --area cedar_key --pda   # draft 
 
 ## Results
 
-**Accuracy.** 50 Cedar Key buildings were labeled by hand from the photos by two labelers working blind, Harry and Claude (`eval/`). The two labelers agree exactly on 43 of 50 (Cohen's kappa 0.49) and within one category on all 50; they split on yard debris (Affected or none) and on two houses with some walls standing (Destroyed or Major). Counting surveyed flood water (0.5 ft or more around a house makes it at least Affected under the PDA rule, which aerial labels can't see), the agent matches 47/50 of Claude's labels and 48/50 of Harry's, and 50/50 within one category for both. Every remaining miss is a building the two labelers disagree on. Against Harry's labels:
+**Accuracy.** 50 Cedar Key buildings were labeled by hand from the photos by two labelers working blind, Seokhwan and Claude (`eval/`). The two labelers agree exactly on 43 of 50 (Cohen's kappa 0.49) and within one category on all 50; they split on yard debris (Affected or none) and on two houses with some walls standing (Destroyed or Major). Counting surveyed flood water (0.5 ft or more around a house makes it at least Affected under the PDA rule, which aerial labels can't see), the agent matches 47/50 of Claude's labels and 48/50 of Seokhwan's, and 50/50 within one category for both. Every remaining miss is a building the two labelers disagree on. Against Seokhwan's labels:
 
 | label \ agent | none | slightly | damaged | badly | destroyed |
 |---|---|---|---|---|---|
@@ -87,9 +87,9 @@ The two misses (b094, b098) are the houses with some walls standing that Claude'
 
 **Open model alone vs. with Muse Spark.** The same 50 buildings, drafted fresh on Oct 30 with each setup (one run each, so small differences are within run-to-run noise):
 
-| Setup | Model calls | Time for 50 | Matches Claude / Harry (with flood rule) | Destroyed found |
+| Setup | Model calls | Time for 50 | Matches Claude / Seokhwan (with flood rule) | Destroyed found |
 |---|---|---|---|---|
-| Muse Spark Open only (open weights, Baseten) | 70 Muse Spark Open | 20 s | 47/50 / 48/50 | 5/5 (Claude), 3/3 (Harry) |
+| Muse Spark Open only (open weights, Baseten) | 70 Muse Spark Open | 20 s | 47/50 / 48/50 | 5/5 (Claude), 3/3 (Seokhwan) |
 | Muse Spark Open, hard calls to Muse Spark | 68 Muse Spark Open + 13 Muse Spark | 28 s | 45/50 / 46/50 | 4/5, 2/3 |
 
 The open-weight model alone is as accurate on this set; the second opinion goes to 13 of 50 buildings and adds about 8 seconds. In the mixed run b023, a destroyed house, came back "no damage seen" but was sent for a visit; that building is the one that flips between runs in either setup. The second opinion stays on in the app because its value is on hard cases (satellite photos abroad, earthquakes) that this hurricane set has few of. Full output: `eval/cedar_key_open_vs_mixed.txt`.
@@ -102,7 +102,7 @@ Example output: [`examples/cedar_key_pda_summary.md`](examples/cedar_key_pda_sum
 
 - **Drafts, not decisions.** Every category is a draft for a trained assessor. Uncertain calls are marked "needs a visit to confirm", and the app says so on every page.
 - **What a photo from above can't see.** Water inside a house, first-floor height and interior damage are invisible from the air. Flood depth comes from surveyed high-water marks and lidar ground, and the first floor is estimated from the year built and the flood zone, so flood-only houses are drafted Affected unless the numbers say more.
-- **Light debris.** Segment Anything finds heavy debris piles; light yard debris is left to the model's eye, which is where the two labelers (Harry and Claude, labelling separately) disagreed too.
+- **Light debris.** Segment Anything finds heavy debris piles; light yard debris is left to the model's eye, which is where the two labelers (Seokhwan and Claude, labelling separately) disagreed too.
 - **Old before photos.** The newest public before photo can be years old (NAIP is flown every two to three years). Before photos two or more years older than the disaster are flagged, and the agent is told new houses or demolitions since then aren't damage.
 - **Satellite photos abroad.** Maxar's are about 0.3 to 0.5 m a pixel and taken at an angle, and a different sun angle moves shadows, so earthquake and satellite calls are leads for a field check. Outside Florida, repair costs use national average building values (rougher, at 2010 prices).
 - **Small evaluation.** 50 double-labeled buildings in one town and 51 by-eye in one wildfire area; there is no ground-truth set from a real FEMA PDA.
