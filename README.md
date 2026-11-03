@@ -111,6 +111,10 @@ Example output: [`examples/cedar_key_pda_summary.md`](examples/cedar_key_pda_sum
 - **Small evaluation.** 50 double-labeled buildings in one town and 51 by-eye in one wildfire area; there is no ground-truth set from a real FEMA PDA.
 - **Uploaded photos.** Finding where an uploaded photo was taken takes 40 to 65 seconds and can fail for small photos taken at a slant; the user can then drag a box over the spot.
 
+## What's next
+
+Landfall is continuing as a year-long research project with Professor David Prevatt at the University of Florida. The first step is to score its building-by-building calls against engineers' on-the-ground surveys from the StEER network after Hurricane Helene, and to find which kinds of damage aerial photos miss.
+
 ## Meta models
 
 | Model | Role |
