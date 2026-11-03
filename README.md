@@ -10,6 +10,9 @@ An agent that turns aerial and satellite photos taken after a hurricane, wildfir
 
 > Landfall produces a draft for trained assessors. It is not an official damage determination.
 
+> "One of the challenges facing communities after a storm is that getting to sites and conducting post-storm assessment is very hard and often dangerous. Your tool could provide a preliminary analysis in minutes, and enable emergency personnel to respond immediately to areas most in need."
+> — Jeff Carney, Florida Institute for Built Environment Resilience (FIBER), University of Florida
+
 ## Why
 
 After a disaster, a county has to show FEMA how many homes were damaged and how badly before federal aid can be declared: the Preliminary Damage Assessment. Today that means teams driving street by street and looking at each house, in the days when roads are blocked and staff are stretched. NOAA flies the coast within days and Maxar photographs disasters worldwide, but nobody has time to look at every roof in those photos.
@@ -107,6 +110,10 @@ Example output: [`examples/cedar_key_pda_summary.md`](examples/cedar_key_pda_sum
 - **Satellite photos abroad.** Maxar's are about 0.3 to 0.5 m a pixel and taken at an angle, and a different sun angle moves shadows, so earthquake and satellite calls are leads for a field check. Outside Florida, repair costs use national average building values (rougher, at 2010 prices).
 - **Small evaluation.** 50 double-labeled buildings in one town and 51 by-eye in one wildfire area; there is no ground-truth set from a real FEMA PDA.
 - **Uploaded photos.** Finding where an uploaded photo was taken takes 40 to 65 seconds and can fail for small photos taken at a slant; the user can then drag a box over the spot.
+
+## What's next
+
+Landfall is continuing as a year-long research project with Professor David Prevatt at the University of Florida. The first step is to score its building-by-building calls against engineers' on-the-ground surveys from the StEER network after Hurricane Helene, and to find which kinds of damage aerial photos miss.
 
 ## Meta models
 
