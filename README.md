@@ -10,6 +10,9 @@ An agent that turns aerial and satellite photos taken after a hurricane, wildfir
 
 > Landfall produces a draft for trained assessors. It is not an official damage determination.
 
+> "One of the challenges facing communities after a storm is that getting to sites and conducting post-storm assessment is very hard and often dangerous. Your tool could provide a preliminary analysis in minutes, and enable emergency personnel to respond immediately to areas most in need."
+> — Jeff Carney, Florida Institute for Built Environment Resilience (FIBER), University of Florida, whose team worked with Cedar Key on storm preparation
+
 ## Why
 
 After a disaster, a county has to show FEMA how many homes were damaged and how badly before federal aid can be declared: the Preliminary Damage Assessment. Today that means teams driving street by street and looking at each house, in the days when roads are blocked and staff are stretched. NOAA flies the coast within days and Maxar photographs disasters worldwide, but nobody has time to look at every roof in those photos.
