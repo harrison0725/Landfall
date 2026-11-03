@@ -11,7 +11,7 @@ An agent that turns aerial and satellite photos taken after a hurricane, wildfir
 > Landfall produces a draft for trained assessors. It is not an official damage determination.
 
 > "One of the challenges facing communities after a storm is that getting to sites and conducting post-storm assessment is very hard and often dangerous. Your tool could provide a preliminary analysis in minutes, and enable emergency personnel to respond immediately to areas most in need."
-> — Jeff Carney, Florida Institute for Built Environment Resilience (FIBER), University of Florida, whose team worked with Cedar Key on storm preparation
+> — Jeff Carney, Florida Institute for Built Environment Resilience (FIBER), University of Florida
 
 ## Why
 
