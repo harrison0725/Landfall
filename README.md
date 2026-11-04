@@ -48,13 +48,46 @@ https://landfall-ohio.onrender.com opens with finished examples: Cedar Key after
 
 ## Hosted copy
 
-The public copy runs on Render (one CPU, 2 GB, a 1 GB disk for drawn areas) from `render.yaml`, redeployed on every push to main. It ships with the finished example areas from `demo/`; anyone can open them, click buildings and ask questions. Drawing a new box spends API credits, so it needs the access code set as `LANDFALL_ACCESS_CODE`. `deploy/huggingface/` holds the same setup for a Hugging Face Space.
+The public copy runs on Render (one CPU, 2 GB, a 1 GB disk for drawn areas) from `render.yaml`, redeployed on every push to main. It ships with the finished example areas from `demo/`; anyone can open them, click buildings and ask questions, with no sign-up. Drawing a new box with the real models spends API credits, so the public copy keeps that behind an access code (`LANDFALL_ACCESS_CODE`, never in this repo). Without the code, press **Skip** when asked: the box is answered with a replay of the nearest finished example's recorded run (mock mode, below), clearly labelled as one. `deploy/huggingface/` holds the same setup for a Hugging Face Space.
 
 ## Run the app
 
+### With no accounts (mock mode)
+
 ```
+git clone https://github.com/harrison0725/landfall && cd landfall
 pip install -e ".[app,data,sam]"
-BASETEN_API_KEY=... META_API_KEY=... uvicorn landfall.app:app --port 8000
+uvicorn landfall.app:app --port 8000
+```
+
+Open http://localhost:8000. With no API keys set, Landfall runs in **mock mode** (`landfall/mock.py`), which needs no sign-up and calls no model:
+
+- All seven finished example areas (Cedar Key, Treasure Island, Altadena, Ingram, Mandalay, Montego Bay and its hills) load from `demo/`, the sample data shipped in the repo, with every building's photos, measurements, drafts, trail of who judged it, claim page and costs.
+- Questions are answered by fixed rules instead of the model: they pick the same area tools the agent uses (inspection route, repair costs, displaced households, flooded buildings, one building by id) and answer from the saved results.
+- **Draw an area** replays the recorded run of the nearest finished example, stage by stage, as a real run streams it: the plan ticks off and the buildings color in. The answer says it is a replay.
+- Not available in mock mode: assessing a genuinely new box, uploaded photos, voice questions, web search for help and translation. These need the models.
+
+`LANDFALL_MOCK=1` forces mock mode even with keys set. The tests also run without keys: `pip install -e ".[dev]" && pytest`.
+
+### With the real models
+
+Copy `.env.example` to `.env` and fill in the keys; Landfall reads `.env` at start (variables already set in the environment win). `.env` is in `.gitignore` and `.dockerignore`, so keys never reach the repo or an image.
+
+| Variable | What it is for |
+|---|---|
+| `META_API_KEY` | Meta Model API: SAM 3.1, Muse Spark, Muse Wonder, Muse Image, Muse Voice Transcribe |
+| `BASETEN_API_KEY` | Muse Spark Open, the open-weights model that drafts every building and runs the agent |
+| `BASETEN_MODEL` | its model id on Baseten (default `meta-models/muse-spark-open`) |
+| `OPEN_MODEL_URL` | optional: any OpenAI-compatible server hosting Muse Spark Open instead of Baseten (vLLM, say); `BASETEN_API_KEY` is then sent as that server's key |
+| `LANDFALL_MOCK` | `1` forces mock mode |
+| `LANDFALL_ACCESS_CODE` | optional: a hosted copy asks for it before running new assessments |
+| `LANDFALL_DATA` | where drawn areas are stored (default `./data`) |
+
+**Where the models run.** Muse Spark Open, the open-weights model, runs on Baseten's hosted inference (`https://inference.baseten.co/v1/chat/completions`) by default; because its weights are open, `OPEN_MODEL_URL` points Landfall at a copy you host yourself. The other Meta models run on Meta's Model API (`https://api.meta.ai/v1`). If the Meta API refuses a request, the agent falls back to Muse Spark Open. Photos, building outlines, flood marks and property records come from public services that need no account (see Data sources).
+
+```
+cp .env.example .env    # then fill in META_API_KEY and BASETEN_API_KEY
+uvicorn landfall.app:app --port 8000
 ```
 
 Open http://localhost:8000. Cedar Key opens already assessed: ask about it by typing or with the mic (Muse Voice Transcribe), or click a building to see the photo pair and how its call was made. To assess somewhere new, pick the storm, click **Draw an area**, drag a box over a town and send. The agent finds the NOAA flight, the pre-storm photos and the tide gauges for that box, then runs each stage as a tool and reports as it goes; buildings color in on the map as their drafts arrive. A box of 60 buildings takes about a minute (62 s end to end in a test on Oct 30; the property records are fetched while the photos are measured, and all buildings are judged at once). `?at=lat,lon,zoom` opens the map somewhere else.

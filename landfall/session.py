@@ -96,6 +96,9 @@ class Session:
         self.may_run_pipeline = True
         self.max_buildings = 150
         self.pool = ThreadPoolExecutor(3)
+        # Mock mode (mock.py): fixed rules instead of the model, and pipeline
+        # tools that replay a finished example. None follows mock.enabled().
+        self.mock: bool | None = None
         self.ahead: dict[str, Future] = {}
 
     # ---- tools ---------------------------------------------------------
@@ -112,6 +115,8 @@ class Session:
                 "(it spends API credits). Tell the user, and suggest one of the finished areas."
             }
         try:
+            if self._mocking() and name in PIPELINE_NAMES:
+                return self._replay(name)
             if name == "locate_imagery":
                 if self.box is None:
                     return {"error": "no box drawn yet; ask the user to draw one on the map"}
@@ -213,6 +218,40 @@ class Session:
             emit("progress", stage=name, event="error", message=f"{type(e).__name__}: {e}"[:200])
             return {"error": f"{type(e).__name__}: {e}"[:400]}
 
+    def _mocking(self) -> bool:
+        from . import mock
+
+        return mock.enabled() if self.mock is None else self.mock
+
+    def _replay(self, name: str) -> dict:
+        """A pipeline tool in mock mode: the nearest finished example's recorded run."""
+        from . import mock
+
+        emit = self.on_event
+        if name == "locate_imagery":
+            if self.box is None:
+                return {"error": "no box drawn yet; ask the user to draw one on the map"}
+            found = mock.locate(self.root, self.box)
+            if "error" in found:
+                return found
+            self.area = found["area"]
+            emit("area", name=self.area, bbox=found["bbox"], flight=found["flight"])
+            return found
+        if not self.area:
+            return {"error": "no area yet: call locate_imagery first"}
+        stage = {"prepare_area": "prepare", "measure_structures": "segment", "measure_flood": "flood", "look_for_debris": "debris", "draft_categories": "assess"}.get(name)
+        events: list[dict] = []
+
+        def log(kind: str, **fields) -> None:
+            events.append({"event": kind, **fields})
+            emit("progress", stage=stage or name, event=kind, **fields)
+
+        if stage:
+            mock.replay(self.root, self.area, stage, log)
+        if name in ("prepare_area", "estimate_costs_and_needs"):
+            emit("buildings", area=self.area)
+        return {"done": True, "replayed": True, "summary": [e for e in events if e["event"] != "building"]}
+
     def _start_ahead(self, spec: AreaSpec) -> None:
         """Flood and debris need only the prepared area, not the structure
         masks, so run them while measure_structures does. Most of each is
@@ -269,7 +308,7 @@ class Session:
             elif self.area:
                 text = f"{text}\n\n[Current area: {self.area}.]"
             self.messages.append({"role": "user", "content": text})
-            a = run_tools(self.messages, self.tools, self.call, use_spark=self.use_spark, max_steps=20, on_event=self.on_event)
+            a = run_tools(self.messages, self.tools, self.call, use_spark=self.use_spark, max_steps=20, on_event=self.on_event, mock=self._mocking())
             return a.text
 
 
