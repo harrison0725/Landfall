@@ -723,11 +723,7 @@ async function send(e) {
   let code = null;
   if (state.box && state.config.access_code_required) {
     code = stored("landfall-code") || (await askCode());
-    if (!code) {
-      add(div("msg error", "No problem. Without the code I can't check a new area here, but you can pick a finished area from the Area menu and ask me about it."));
-      setBusy(false);
-      return;
-    }
+    // no code: the server replays the nearest finished example instead (mock mode, no AI calls)
   }
   const storm = $("storm").value === EVENT ? null : $("storm").value || null;
   const body = { text, lang: lang(), box: state.box, storm: state.box ? storm : null, access_code: code, upload: state.box && state.upload ? state.upload.id : null, event: state.box && state.upload ? state.upload.event : null };
@@ -751,7 +747,7 @@ async function send(e) {
 function askCode() {
   // asked in the chat, not a browser pop-up; resolves with the code, or null if they skip it
   return new Promise((resolve) => {
-    const box = add(div("msg agent codeask", `<p>Assessing a new area runs the AI models, which costs money, so this public copy needs an access code.</p>
+    const box = add(div("msg agent codeask", `<p>Assessing a new area runs the AI models, which costs money, so this public copy needs an access code. No code? Press Skip to watch a replay of a recorded run instead (no AI models are called).</p>
       <form class="coderow"><input type="password" autocomplete="off" placeholder="Access code" aria-label="Access code"><button class="send" type="submit">Assess</button><button class="linkish" type="button">Skip</button></form>`));
     const form = box.querySelector("form");
     const done = (v) => { form.remove(); resolve(v); };

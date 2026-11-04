@@ -26,7 +26,9 @@ import numpy as np
 from . import http
 from .fema import Category, Measures, flood_floor, verify
 
-OPEN_URL = "https://inference.baseten.co/v1/chat/completions"
+# Muse Spark Open runs on Baseten by default. Its weights are open, so any
+# OpenAI-compatible server hosting it (vLLM, for example) works: set OPEN_MODEL_URL.
+OPEN_URL = os.environ.get("OPEN_MODEL_URL", "https://inference.baseten.co/v1/chat/completions")
 OPEN_MODEL = os.environ.get("BASETEN_MODEL", "meta-models/muse-spark-open")
 SPARK_URL = "https://api.meta.ai/v1/chat/completions"
 SPARK_MODEL = "muse-spark-1.3"

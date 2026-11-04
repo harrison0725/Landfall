@@ -435,26 +435,35 @@ def run_tools(
     max_steps: int = MAX_STEPS,
     max_tokens: int = 8000,
     on_event=None,
+    mock: bool | None = None,
 ) -> Answer:
     """The tool loop: let the model call tools until it answers in words.
 
     `messages` is extended in place, so a caller can keep the conversation
     going. `call(name, args)` runs a tool; `on_event(kind, **fields)` hears
-    each step as it happens.
+    each step as it happens. With `mock` (default: mock.enabled()), fixed
+    rules stand in for the model; see mock.py.
     """
+    from . import mock as mocking
     from .agent import REASONING_EFFORT, _post
+
+    if mock is None:
+        mock = mocking.enabled()
 
     url, key, model = model_for(use_spark)
     effort = {"reasoning_effort": REASONING_EFFORT} if REASONING_EFFORT != "default" else {}
     emit = on_event or (lambda kind, **f: None)
     steps: list[dict] = []
     for _ in range(max_steps):
-        msg = _post(url, key, {"model": model, "messages": messages, "tools": tools, "max_tokens": max_tokens, **effort})["choices"][0]["message"]
+        if mock:
+            msg = mocking.reply(messages)
+        else:
+            msg = _post(url, key, {"model": model, "messages": messages, "tools": tools, "max_tokens": max_tokens, **effort})["choices"][0]["message"]
         calls = msg.get("tool_calls") or []
         text = msg.get("content") or ""
         messages.append({"role": "assistant", "content": text, **({"tool_calls": calls} if calls else {})})
         if not calls:
-            return Answer(text, steps, model)
+            return Answer(text, steps, "mock" if mock else model)
         if text.strip():
             emit("thought", text=text.strip())
         for c in calls:

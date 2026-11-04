@@ -145,11 +145,18 @@ def config() -> dict:
         "access_code_required": bool(ACCESS_CODE),
         "max_buildings": MAX_BUILDINGS,
         "can_assess": not missing,
+        "mock": _mock_enabled(),
         "missing": missing,
         "meta_api": _meta_api_status(),
         "meta_models": _meta_models,
         "host": _host(),
     }
+
+
+def _mock_enabled() -> bool:
+    from .mock import enabled
+
+    return enabled()
 
 
 @functools.lru_cache(maxsize=1)
@@ -699,11 +706,14 @@ def turn(sid: str, body: Turn, request: Request) -> dict:
     if live.busy:
         raise HTTPException(409, "the agent is still working on the last message")
     allowed = _code_ok(body.access_code)
-    if body.box and not allowed:
-        raise HTTPException(403, "Assessing a new area needs the access code. You can still ask about the finished areas.")
+    if body.box and body.access_code and not allowed:
+        raise HTTPException(403, "That access code isn't right. Send again without one to watch a replay of a finished example instead.")
     _rate_limit(request)
     event = _event(body.event) if body.upload and body.event else None
-    live.session.may_run_pipeline = allowed
+    # A box without the access code still gets an answer: a replay of the
+    # nearest finished example (mock mode, no API calls), labelled as one.
+    live.session.mock = True if (body.box and not allowed) else None
+    live.session.may_run_pipeline = allowed or bool(body.box)
     live.session.max_buildings = MAX_BUILDINGS
     live.busy = True
     live.emit("user", text=body.text, box=body.box)
