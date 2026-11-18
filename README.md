@@ -79,6 +79,7 @@ Copy `.env.example` to `.env` and fill in the keys; Landfall reads `.env` at sta
 | `BASETEN_API_KEY` | Muse Spark Open, the open-weights model that drafts every building and runs the agent |
 | `BASETEN_MODEL` | its model id on Baseten (default `meta-models/muse-spark-open`) |
 | `OPEN_MODEL_URL` | optional: any OpenAI-compatible server hosting Muse Spark Open instead of Baseten (vLLM, say); `BASETEN_API_KEY` is then sent as that server's key |
+| `MAPILLARY_ACCESS_TOKEN` | optional: a free Mapillary client token; the agent then also looks at street-level photos taken after the disaster (walls, windows, foundations, first-floor height) |
 | `LANDFALL_MOCK` | `1` forces mock mode |
 | `LANDFALL_ACCESS_CODE` | optional: a hosted copy asks for it before running new assessments |
 | `LANDFALL_DATA` | where drawn areas are stored (default `./data`) |
@@ -147,6 +148,8 @@ Example output: [`examples/cedar_key_pda_summary.md`](examples/cedar_key_pda_sum
 ## What's next
 
 Landfall is continuing as a year-long research project with Professor David Prevatt at the University of Florida. The first step is to score its building-by-building calls against engineers' on-the-ground surveys from the StEER network after Hurricane Helene, and to find which kinds of damage aerial photos miss.
+
+First results (`eval/field/README.md`, `eval/cedar_key_field_score.txt`): against a Cedar Key survey of 771 buildings validated with StEER field ratings (DesignSafe PRJ-6245), Landfall found all 3 destroyed buildings with no false calls, but only 4 of 16 with Minor or worse damage. Most misses had intact roofs and damage below the roofline (walls, windows and doors, foundations), in deep water. Street-level photos from Mapillary (`landfall/street.py`) are now an optional extra source for exactly that, and the model reads each house's first-floor height off them for the flood rule.
 
 ## Meta models
 

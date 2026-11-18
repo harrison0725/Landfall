@@ -19,7 +19,7 @@ import json
 import os
 import re
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 import numpy as np
 
@@ -116,6 +116,27 @@ ANSWER = """Answer with JSON only, no other text:
 {"category": "none|affected|minor|major|destroyed", "confidence": 0.0-1.0, "evidence": "one or two sentences naming what you see in the photos", "needs_human": true|false, "demolished_before_storm": true|false}"""
 
 
+STREET_NOTE = """Street-level photos (Mapillary) taken after the disaster follow the aerial pair, one image each, with where each was taken from. A photo from above sees only the roof; these show what it can't: walls and siding torn off or punched in, broken or boarded windows and doors, a house shifted on or knocked off its foundation or pilings, a porch, deck or stairs torn away, a waterline or mud line on the walls, soaked furniture, drywall or carpet piled at the curb (a sign water got inside). Use them for the parts of the house the aerial pair can't see, and let clear damage in them raise your call: walls broken open or a house off its foundation is major. They can show a neighbour, a car or a tree instead of this house: the building is where the photo looks (its middle), at the distance given; if you can't tell which building is this one, ignore the photo and say so. Street photos taken weeks later may show repairs or cleanup already done.
+
+From the street photos, also estimate how high the lowest living floor is above the ground in feet (the top of the steps up to the front door, or the floor above pilings or a garage; count the steps at about 0.6 ft each). Give null if you can't see it. Add two fields to your JSON answer: "first_floor_ft": number or null, and "street_evidence": one sentence on what the street photos show of this building, or why they don't help.
+
+"""
+
+
+def street_content(photos: list[dict]) -> list[dict]:
+    """The street photos as message parts, each introduced by where it was taken."""
+    parts: list[dict] = []
+    for i, ph in enumerate(photos, 1):
+        kind = "360° photo, cut to the view toward the building" if ph.get("is_pano") else "photo"
+        parts.append({"type": "text", "text": f"Street photo {i}: {kind} taken {ph['captured']}, about {ph['distance_m']:.0f} m from the building, looking {_compass(ph['bearing'])} toward it."})
+        parts.append({"type": "image_url", "image_url": {"url": ph["data_url"]}})
+    return parts
+
+
+def _compass(deg: float) -> str:
+    return ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"][int((deg % 360) / 45 + 0.5) % 8]
+
+
 def system(kind: str = "hurricane") -> str:
     """The building prompt for one kind of disaster: what each FEMA category
     looks like from the air after it."""
@@ -139,6 +160,8 @@ class Assessment:
     verified: bool
     trace: list[dict] = field(default_factory=list)
     demolished: bool = False  # the building was gone before the storm
+    first_floor_ft: float | None = None  # read off street photos, when there were any
+    street_photos: int = 0
 
 
 def pair_image(pre: np.ndarray, post: np.ndarray, outline: list[tuple[float, float]], scale: int = 3) -> str:
@@ -287,7 +310,18 @@ def parse_answer(text: str) -> dict:
         evidence=str(a.get("evidence", "")).strip(),
         needs_human=bool(a.get("needs_human", False)),
         demolished=bool(a.get("demolished_before_storm", False)),
+        first_floor_ft=_feet(a.get("first_floor_ft")),
+        street_evidence=str(a.get("street_evidence") or "").strip(),
     )
+
+
+def _feet(x) -> float | None:
+    """A first-floor height the model read off street photos, if it's plausible."""
+    try:
+        v = float(x)
+    except (TypeError, ValueError):
+        return None
+    return v if 0 <= v <= 30 else None
 
 
 def _converse(url: str, key: str, model: str, messages: list[dict], m: Measures, trace: list[dict]) -> tuple[dict, bool]:
@@ -342,13 +376,17 @@ def assess(
     extra: dict,
     escalate: bool = True,
     kind: str = "hurricane",
+    street: list[dict] | None = None,
 ) -> Assessment:
     image = pair_image(pre, post, outline)
     prompt_system = system(kind)
+    if street:
+        prompt_system = prompt_system.replace(ANSWER, STREET_NOTE + ANSWER)
+    extra_parts = street_content(street) if street else []
     prompt = f"Building {building_id}.\n{describe(m, extra)}"
     messages = [
         {"role": "system", "content": prompt_system},
-        {"role": "user", "content": [{"type": "text", "text": prompt}, {"type": "image_url", "image_url": {"url": image}}]},
+        {"role": "user", "content": [{"type": "text", "text": prompt}, {"type": "image_url", "image_url": {"url": image}}, *extra_parts]},
     ]
     trace: list[dict] = []
     answer, ok = _converse(OPEN_URL, os.environ["BASETEN_API_KEY"], OPEN_MODEL, messages, m, trace)
@@ -370,6 +408,7 @@ def assess(
                         "Give your own independent call.",
                     },
                     {"type": "image_url", "image_url": {"url": image}},
+                    *extra_parts,
                 ],
             },
         ]
@@ -382,24 +421,40 @@ def assess(
 
     category = answer["category"]
     evidence = answer["evidence"]
+    first_floor = answer.get("first_floor_ft") if street else None
+    if street and answer.get("street_evidence"):
+        evidence += f" Street photos: {answer['street_evidence']}"
+    if first_floor is not None and (m.flood_ft or 0) >= 0.5 and m.first_floor_ft is None:
+        # The street photos show how high the floor is, so the PDA flood rule
+        # can judge water in the living space instead of only around the house.
+        m = replace(m, first_floor_ft=first_floor)
     water = flood_floor(m)
     if answer["demolished"]:
         category = Category.NONE
     elif category < water:
         # The model won't always concede a fact it can't see. Surveyed water
         # isn't open to its judgment, so apply the floor here and say so.
-        trace.append(dict(model="flood rule", raised_from=category.name, to=water.name))
+        trace.append(dict(model="flood rule", raised_from=category.name, to=water.name, first_floor_ft=m.first_floor_ft))
         category = water
-        evidence += f" Raised to {water.label}: surveyed water stood {m.flood_ft:.1f} ft around the building (PDA flood rule)."
+        if m.first_floor_ft is not None:
+            evidence += (f" Raised to {water.label}: surveyed water stood {m.flood_ft:.1f} ft above the ground and the street photos put the"
+                         f" first floor about {m.first_floor_ft:.1f} ft up, so about {max(0.0, m.flood_ft - m.first_floor_ft):.1f} ft reached the living space (PDA flood rule).")
+        else:
+            evidence += f" Raised to {water.label}: surveyed water stood {m.flood_ft:.1f} ft around the building (PDA flood rule)."
 
     return Assessment(
         building_id=building_id,
         category=category,
         confidence=answer["confidence"],
         evidence=evidence,
-        needs_human=answer["needs_human"] or not ok or not m.aligned or answer["demolished"],
+        # a floor height read off a photo is an estimate: an assessor confirms
+        # any call it raised
+        needs_human=answer["needs_human"] or not ok or not m.aligned or answer["demolished"]
+        or (first_floor is not None and category is water and water > Category.AFFECTED),
         decided_by=decided_by,
         verified=ok,
         trace=trace,
         demolished=answer["demolished"],
+        first_floor_ft=first_floor,
+        street_photos=len(street or []),
     )

@@ -196,6 +196,12 @@ class Session:
                 else:
                     if stage == "segment":
                         self._start_ahead(spec)
+                    if stage == "assess" and "street" in self.ahead:
+                        # street photos are extra evidence: use them if they came, never fail on them
+                        try:
+                            self.ahead.pop("street").result()
+                        except Exception:  # noqa: BLE001
+                            traceback.print_exc()
                     if stage == "costs" and "records" in self.ahead:
                         try:
                             self.ahead.pop("records").result()
@@ -265,7 +271,9 @@ class Session:
             except Exception as e:  # raised again when the tool is called
                 return e, early
 
-        for stage in ("debris", "flood"):
+        from .street import token
+
+        for stage in ("debris", "flood", *(("street",) if token() else ())):
             if stage not in self.ahead:
                 self.ahead[stage] = self.pool.submit(run, stage)
         # and the property records the cost step will read
