@@ -60,3 +60,32 @@ Files copied unchanged from that publication:
 Street-level photos (Mapillary, `landfall/street.py`) target both gaps: they
 show walls, openings and foundations, and the model reads the first-floor
 height off them.
+
+## With Mapillary street photos (Nov 18, 2026)
+
+Run: `prepare`, `segment`, `flood`, `debris`, then `street` and `assess` on
+a fresh copy of Cedar Key. Drafts: `eval/cedar_key_drafts_street_2026-11-18.json`;
+photo list: `eval/cedar_key_street_2026-11-18.json` (Mapillary image ids, no
+photos are stored here); full score: `eval/cedar_key_field_score_street.txt`.
+
+* **Coverage is nearly complete.** 149 of 150 buildings have at least one
+  photo aimed at them, 337 in all. Every one is a 360° panorama from one
+  contributor (Sitetour), taken October 4, 2024, eight days after landfall,
+  so they show the town in the middle of the clean-out.
+* **Minor or worse found: 9 of 16, up from 4 of 16.** Major or worse: 6 of
+  10 (was 3). Destroyed is unchanged at 3 of 3 with no false calls.
+* **Precision dropped, but mostly because of the scale, not the photos.** The
+  agent calls 19 survey-DS0 buildings Major. In all 18 of those with a
+  surveyed first floor, the flood surface stood 1.5 ft or more above that
+  floor, which is FEMA Major (water in the living space) under the PDA rule.
+  9 of the 19 were raised by the flood rule; the other 10 the model called
+  Major itself after seeing curb piles of drywall, mattresses and appliances
+  that Segment Anything had not flagged from the air.
+* **First-floor reads.** The model gave a first-floor height on 109 buildings
+  that also have a surveyed one: median error 0.8 ft, 77 within 1 ft, and a
+  slight tendency to read high (mean +0.4 ft).
+* Still missed (7): mostly roof-only cosmetic damage (b016, b134) and walls or
+  foundations on raised buildings where the photos are 20 to 40 m away.
+* Kappa falls (0.53 to 0.31) because the survey scores those flooded houses
+  DS0. Whether the scorer should treat "water in the living space, structure
+  standing" as a match is the question for Prof. Prevatt and the StEER data.
