@@ -1,14 +1,15 @@
 {
- "households_likely_displaced": 16,
- "households_possibly_displaced": 32,
+ "households_likely_displaced": 13,
+ "households_possibly_displaced": 30,
  "businesses_or_lodging_hit": [
   "b107",
   "b114",
   "b098",
+  "b106",
   "b094",
+  "b103",
   "b139",
   "b123",
-  "b103",
   "b076",
   "b146",
   "b122",
@@ -32,7 +33,7 @@
     "drafted destroyed",
     "hotel or motel on the tax roll, not a home (counted as a business or lodging, not households)"
    ],
-   "score": 11.5
+   "score": 11.0
   },
   {
    "id": "b114",
@@ -71,21 +72,22 @@
    "score": 10.63
   },
   {
-   "id": "b087",
+   "id": "b106",
    "category": "major",
-   "households": 1,
-   "likely_displaced": true,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": null,
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": true,
+   "land_use": "039",
    "water_inside_ft": [
     0.0,
-    9.6
+    5.5
    ],
    "reasons": [
-    "drafted major"
+    "drafted major",
+    "hotel or motel on the tax roll, not a home (counted as a business or lodging, not households)"
    ],
-   "score": 10.5
+   "score": 10.28
   },
   {
    "id": "b094",
@@ -106,41 +108,6 @@
    "score": 10.13
   },
   {
-   "id": "b023",
-   "category": "destroyed",
-   "households": 1,
-   "likely_displaced": true,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": "000",
-   "water_inside_ft": [
-    0.0,
-    2.6
-   ],
-   "reasons": [
-    "drafted destroyed"
-   ],
-   "score": 9.28
-  },
-  {
-   "id": "b139",
-   "category": "affected",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": true,
-   "land_use": "012",
-   "water_inside_ft": [
-    6.5,
-    8.5
-   ],
-   "reasons": [
-    "about 6.5 ft or more of water inside (built 1940, before flood rules: likely 1-3 ft above ground)",
-    "shop with living space on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 8.5
-  },
-  {
    "id": "b073",
    "category": "affected",
    "households": 1,
@@ -155,42 +122,7 @@
    "reasons": [
     "about 3.7 ft or more of water inside (built 1901, before flood rules: likely 1-3 ft above ground)"
    ],
-   "score": 8.32
-  },
-  {
-   "id": "b123",
-   "category": "affected",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": true,
-   "land_use": "011",
-   "water_inside_ft": [
-    3.7,
-    5.7
-   ],
-   "reasons": [
-    "about 3.7 ft or more of water inside (built 1965, before flood rules: likely 1-3 ft above ground)",
-    "store on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 8.32
-  },
-  {
-   "id": "b064",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": true,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    3.6,
-    5.6
-   ],
-   "reasons": [
-    "about 3.6 ft or more of water inside (built 1930, before flood rules: likely 1-3 ft above ground)"
-   ],
-   "score": 8.29
+   "score": 7.83
   },
   {
    "id": "b103",
@@ -208,11 +140,64 @@
     "about 3.4 ft or more of water inside (built 1954, before flood rules: likely 1-3 ft above ground)",
     "auto service on the tax roll, not a home (counted as a business or lodging, not households)"
    ],
-   "score": 8.21
+   "score": 7.71
+  },
+  {
+   "id": "b139",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": true,
+   "land_use": "012",
+   "water_inside_ft": [
+    6.5,
+    8.5
+   ],
+   "reasons": [
+    "about 6.5 ft or more of water inside (built 1940, before flood rules: likely 1-3 ft above ground)",
+    "shop with living space on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
+   "score": 7.0
+  },
+  {
+   "id": "b123",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": true,
+   "land_use": "011",
+   "water_inside_ft": [
+    3.7,
+    5.7
+   ],
+   "reasons": [
+    "about 3.7 ft or more of water inside (built 1965, before flood rules: likely 1-3 ft above ground)",
+    "store on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
+   "score": 6.83
+  },
+  {
+   "id": "b064",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": true,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    3.6,
+    5.6
+   ],
+   "reasons": [
+    "about 3.6 ft or more of water inside (built 1930, before flood rules: likely 1-3 ft above ground)"
+   ],
+   "score": 6.79
   },
   {
    "id": "b000",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": true,
    "possibly_displaced": true,
@@ -225,11 +210,11 @@
    "reasons": [
     "about 3.3 ft or more of water inside (built 1974, before flood rules: likely 1-3 ft above ground)"
    ],
-   "score": 8.17
+   "score": 6.67
   },
   {
    "id": "b076",
-   "category": "affected",
+   "category": "none",
    "households": 0,
    "likely_displaced": false,
    "possibly_displaced": false,
@@ -243,11 +228,11 @@
     "about 3.0 ft or more of water inside (built 1953, before flood rules: likely 1-3 ft above ground)",
     "church on the tax roll, not a home (counted as a business or lodging, not households)"
    ],
-   "score": 8.0
+   "score": 6.5
   },
   {
    "id": "b007",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": true,
    "possibly_displaced": true,
@@ -260,11 +245,11 @@
    "reasons": [
     "about 2.8 ft or more of water inside (built 1919, before flood rules: likely 1-3 ft above ground)"
    ],
-   "score": 7.9
+   "score": 6.4
   },
   {
    "id": "b146",
-   "category": "affected",
+   "category": "none",
    "households": 0,
    "likely_displaced": false,
    "possibly_displaced": false,
@@ -278,11 +263,11 @@
     "about 2.8 ft or more of water inside (built 1901, before flood rules: likely 1-3 ft above ground)",
     "shop with living space on the tax roll, not a home (counted as a business or lodging, not households)"
    ],
-   "score": 7.88
+   "score": 6.38
   },
   {
    "id": "b148",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": true,
    "possibly_displaced": true,
@@ -295,11 +280,11 @@
    "reasons": [
     "about 2.7 ft or more of water inside (built 1925, before flood rules: likely 1-3 ft above ground)"
    ],
-   "score": 7.85
+   "score": 6.35
   },
   {
    "id": "b122",
-   "category": "affected",
+   "category": "none",
    "households": 0,
    "likely_displaced": false,
    "possibly_displaced": false,
@@ -313,11 +298,11 @@
     "about 2.5 ft or more of water inside (built 1901, before flood rules: likely 1-3 ft above ground)",
     "land use 079 on the tax roll, not a home (counted as a business or lodging, not households)"
    ],
-   "score": 7.76
+   "score": 6.26
   },
   {
    "id": "b010",
-   "category": "affected",
+   "category": "none",
    "households": 2,
    "likely_displaced": true,
    "possibly_displaced": true,
@@ -330,11 +315,11 @@
    "reasons": [
     "about 2.5 ft or more of water inside (built 1930, before flood rules: likely 1-3 ft above ground)"
    ],
-   "score": 7.75
+   "score": 6.25
   },
   {
    "id": "b051",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": true,
    "possibly_displaced": true,
@@ -347,11 +332,11 @@
    "reasons": [
     "about 2.5 ft or more of water inside (built 1902, before flood rules: likely 1-3 ft above ground)"
    ],
-   "score": 7.73
+   "score": 6.23
   },
   {
    "id": "b086",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": true,
    "possibly_displaced": true,
@@ -364,11 +349,11 @@
    "reasons": [
     "about 2.4 ft or more of water inside (built 1965, before flood rules: likely 1-3 ft above ground)"
    ],
-   "score": 7.71
+   "score": 6.21
   },
   {
    "id": "b131",
-   "category": "affected",
+   "category": "none",
    "households": 0,
    "likely_displaced": false,
    "possibly_displaced": false,
@@ -382,11 +367,11 @@
     "about 2.4 ft or more of water inside (built 1901, before flood rules: likely 1-3 ft above ground)",
     "land use 079 on the tax roll, not a home (counted as a business or lodging, not households)"
    ],
-   "score": 7.7
+   "score": 6.2
   },
   {
    "id": "b002",
-   "category": "affected",
+   "category": "none",
    "households": 0,
    "likely_displaced": false,
    "possibly_displaced": false,
@@ -400,11 +385,11 @@
     "about 2.3 ft or more of water inside (built 1962, before flood rules: likely 1-3 ft above ground)",
     "county property on the tax roll, not a home (counted as a business or lodging, not households)"
    ],
-   "score": 7.64
+   "score": 6.14
   },
   {
    "id": "b093",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": true,
    "possibly_displaced": true,
@@ -417,45 +402,11 @@
    "reasons": [
     "about 2.1 ft or more of water inside (built 1949, before flood rules: likely 1-3 ft above ground)"
    ],
-   "score": 7.56
-  },
-  {
-   "id": "b105",
-   "category": "minor",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    6.6
-   ],
-   "reasons": [
-    "up to 6.6 ft of water inside if the floor is low"
-   ],
-   "score": 7.5
-  },
-  {
-   "id": "b005",
-   "category": "major",
-   "households": 1,
-   "likely_displaced": true,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "drafted major"
-   ],
-   "score": 7.5
+   "score": 6.06
   },
   {
    "id": "b118",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": true,
    "possibly_displaced": true,
@@ -468,11 +419,11 @@
    "reasons": [
     "about 1.8 ft or more of water inside (built 1915, before flood rules: likely 1-3 ft above ground)"
    ],
-   "score": 7.39
+   "score": 5.89
   },
   {
    "id": "b096",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": true,
    "possibly_displaced": true,
@@ -485,11 +436,11 @@
    "reasons": [
     "about 1.7 ft or more of water inside (built 1905, before flood rules: likely 1-3 ft above ground)"
    ],
-   "score": 7.37
+   "score": 5.87
   },
   {
    "id": "b003",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": true,
    "possibly_displaced": true,
@@ -502,94 +453,7 @@
    "reasons": [
     "about 1.6 ft or more of water inside (built 1945, before flood rules: likely 1-3 ft above ground)"
    ],
-   "score": 7.29
-  },
-  {
-   "id": "b128",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": "000",
-   "water_inside_ft": [
-    0.0,
-    9.5
-   ],
-   "reasons": [
-    "up to 9.5 ft of water inside if the floor is low"
-   ],
-   "score": 6.5
-  },
-  {
-   "id": "b145",
-   "category": "affected",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "067",
-   "water_inside_ft": [
-    0.0,
-    10.6
-   ],
-   "reasons": [
-    "up to 10.6 ft of water inside if the floor is low",
-    "land use 067 on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 6.5
-  },
-  {
-   "id": "b001",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": "000",
-   "water_inside_ft": [
-    0.0,
-    6.0
-   ],
-   "reasons": [
-    "up to 6.0 ft of water inside if the floor is low"
-   ],
-   "score": 6.5
-  },
-  {
-   "id": "b004",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": "000",
-   "water_inside_ft": [
-    0.0,
-    5.6
-   ],
-   "reasons": [
-    "up to 5.6 ft of water inside if the floor is low"
-   ],
-   "score": 6.32
-  },
-  {
-   "id": "b106",
-   "category": "affected",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "039",
-   "water_inside_ft": [
-    0.0,
-    5.5
-   ],
-   "reasons": [
-    "up to 5.5 ft of water inside if the floor is low",
-    "hotel or motel on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 6.28
+   "score": 5.79
   },
   {
    "id": "b126",
@@ -606,11 +470,97 @@
    "reasons": [
     "up to 5.1 ft of water inside if the floor is low"
    ],
-   "score": 6.03
+   "score": 5.53
+  },
+  {
+   "id": "b145",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "067",
+   "water_inside_ft": [
+    0.0,
+    10.6
+   ],
+   "reasons": [
+    "up to 10.6 ft of water inside if the floor is low",
+    "land use 067 on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
+   "score": 5.5
+  },
+  {
+   "id": "b128",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": "000",
+   "water_inside_ft": [
+    0.0,
+    9.5
+   ],
+   "reasons": [
+    "up to 9.5 ft of water inside if the floor is low"
+   ],
+   "score": 5.5
+  },
+  {
+   "id": "b087",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": null,
+   "water_inside_ft": [
+    0.0,
+    9.6
+   ],
+   "reasons": [
+    "up to 9.6 ft of water inside if the floor is low"
+   ],
+   "score": 5.5
+  },
+  {
+   "id": "b001",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": "000",
+   "water_inside_ft": [
+    0.0,
+    6.0
+   ],
+   "reasons": [
+    "up to 6.0 ft of water inside if the floor is low"
+   ],
+   "score": 5.0
+  },
+  {
+   "id": "b105",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    6.6
+   ],
+   "reasons": [
+    "up to 6.6 ft of water inside if the floor is low"
+   ],
+   "score": 5.0
   },
   {
    "id": "b135",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": false,
    "possibly_displaced": true,
@@ -623,11 +573,28 @@
    "reasons": [
     "up to 4.8 ft of water inside if the floor is low"
    ],
-   "score": 5.92
+   "score": 4.92
+  },
+  {
+   "id": "b004",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": "000",
+   "water_inside_ft": [
+    0.0,
+    5.6
+   ],
+   "reasons": [
+    "up to 5.6 ft of water inside if the floor is low"
+   ],
+   "score": 4.82
   },
   {
    "id": "b011",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": false,
    "possibly_displaced": true,
@@ -640,93 +607,7 @@
    "reasons": [
     "up to 4.6 ft of water inside if the floor is low"
    ],
-   "score": 5.78
-  },
-  {
-   "id": "b008",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    3.7
-   ],
-   "reasons": [
-    "up to 3.7 ft of water inside if the floor is low"
-   ],
-   "score": 5.33
-  },
-  {
-   "id": "b078",
-   "category": "affected",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "012",
-   "water_inside_ft": [
-    1.5,
-    3.5
-   ],
-   "reasons": [
-    "up to 3.5 ft of water inside if the floor is low",
-    "shop with living space on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 5.22
-  },
-  {
-   "id": "b013",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    1.3,
-    3.3
-   ],
-   "reasons": [
-    "up to 3.3 ft of water inside if the floor is low"
-   ],
-   "score": 5.17
-  },
-  {
-   "id": "b065",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    1.3,
-    3.3
-   ],
-   "reasons": [
-    "up to 3.3 ft of water inside if the floor is low"
-   ],
-   "score": 5.15
-  },
-  {
-   "id": "b017",
-   "category": "affected",
-   "households": 2,
-   "likely_displaced": false,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    1.2,
-    3.2
-   ],
-   "reasons": [
-    "up to 3.2 ft of water inside if the floor is low"
-   ],
-   "score": 5.11
+   "score": 4.78
   },
   {
    "id": "b095",
@@ -744,11 +625,131 @@
     "up to 2.7 ft of water inside if the floor is low",
     "hotel or motel on the tax roll, not a home (counted as a business or lodging, not households)"
    ],
-   "score": 4.85
+   "score": 4.35
+  },
+  {
+   "id": "b008",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    3.7
+   ],
+   "reasons": [
+    "up to 3.7 ft of water inside if the floor is low"
+   ],
+   "score": 3.83
+  },
+  {
+   "id": "b023",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "000",
+   "water_inside_ft": [
+    0.0,
+    2.6
+   ],
+   "reasons": [
+    "up to 2.6 ft of water inside if the floor is low"
+   ],
+   "score": 3.78
+  },
+  {
+   "id": "b078",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "012",
+   "water_inside_ft": [
+    1.5,
+    3.5
+   ],
+   "reasons": [
+    "up to 3.5 ft of water inside if the floor is low",
+    "shop with living space on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
+   "score": 3.73
+  },
+  {
+   "id": "b013",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    1.3,
+    3.3
+   ],
+   "reasons": [
+    "up to 3.3 ft of water inside if the floor is low"
+   ],
+   "score": 3.67
+  },
+  {
+   "id": "b065",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    1.3,
+    3.3
+   ],
+   "reasons": [
+    "up to 3.3 ft of water inside if the floor is low"
+   ],
+   "score": 3.65
+  },
+  {
+   "id": "b017",
+   "category": "none",
+   "households": 2,
+   "likely_displaced": false,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    1.2,
+    3.2
+   ],
+   "reasons": [
+    "up to 3.2 ft of water inside if the floor is low"
+   ],
+   "score": 3.6
+  },
+  {
+   "id": "b020",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    1.6
+   ],
+   "reasons": [
+    "up to 1.6 ft of water inside if the floor is low"
+   ],
+   "score": 3.31
   },
   {
    "id": "b081",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": false,
    "possibly_displaced": true,
@@ -761,11 +762,11 @@
    "reasons": [
     "up to 2.3 ft of water inside if the floor is low"
    ],
-   "score": 4.67
+   "score": 3.17
   },
   {
    "id": "b009",
-   "category": "affected",
+   "category": "none",
    "households": 0,
    "likely_displaced": false,
    "possibly_displaced": false,
@@ -779,11 +780,11 @@
     "up to 2.0 ft of water inside if the floor is low",
     "county property on the tax roll, not a home (counted as a business or lodging, not households)"
    ],
-   "score": 4.53
+   "score": 3.02
   },
   {
    "id": "b019",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": false,
    "possibly_displaced": true,
@@ -796,11 +797,11 @@
    "reasons": [
     "up to 1.8 ft of water inside if the floor is low"
    ],
-   "score": 4.39
+   "score": 2.89
   },
   {
    "id": "b055",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": false,
    "possibly_displaced": true,
@@ -813,61 +814,12 @@
    "reasons": [
     "up to 1.7 ft of water inside if the floor is low"
    ],
-   "score": 4.37
+   "score": 2.87
   },
   {
-   "id": "b020",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    1.6
-   ],
-   "reasons": [
-    "up to 1.6 ft of water inside if the floor is low"
-   ],
-   "score": 4.31
-  },
-  {
-   "id": "b006",
+   "id": "b050",
    "category": "minor",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.4
-   ],
-   "reasons": [],
-   "score": 2.68
-  },
-  {
-   "id": "b048",
-   "category": "minor",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "086",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "county property on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 2.5
-  },
-  {
-   "id": "b137",
-   "category": "minor",
-   "households": 1,
+   "households": 2,
    "likely_displaced": false,
    "possibly_displaced": false,
    "business_or_lodging_hit": false,
@@ -895,81 +847,6 @@
    "score": 1.86
   },
   {
-   "id": "b021",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.6
-   ],
-   "reasons": [],
-   "score": 1.82
-  },
-  {
-   "id": "b142",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.6
-   ],
-   "reasons": [],
-   "score": 1.81
-  },
-  {
-   "id": "b014",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.4
-   ],
-   "reasons": [],
-   "score": 1.69
-  },
-  {
-   "id": "b068",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.3
-   ],
-   "reasons": [],
-   "score": 1.65
-  },
-  {
-   "id": "b024",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.2
-   ],
-   "reasons": [],
-   "score": 1.59
-  },
-  {
    "id": "b075",
    "category": "affected",
    "households": 1,
@@ -982,144 +859,7 @@
     0.0
    ],
    "reasons": [],
-   "score": 1.5
-  },
-  {
-   "id": "b129",
-   "category": "affected",
-   "households": 3,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 1.5
-  },
-  {
-   "id": "b102",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 1.5
-  },
-  {
-   "id": "b138",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 1.5
-  },
-  {
-   "id": "b083",
-   "category": "affected",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "012",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "shop with living space on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 1.5
-  },
-  {
-   "id": "b141",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 1.5
-  },
-  {
-   "id": "b040",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 1.5
-  },
-  {
-   "id": "b043",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 1.5
-  },
-  {
-   "id": "b030",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 1.5
-  },
-  {
-   "id": "b136",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 1.5
+   "score": 1.0
   },
   {
    "id": "b062",
@@ -1154,6 +894,96 @@
    "score": 0.5
   },
   {
+   "id": "b021",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.6
+   ],
+   "reasons": [],
+   "score": 0.32
+  },
+  {
+   "id": "b142",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.6
+   ],
+   "reasons": [],
+   "score": 0.31
+  },
+  {
+   "id": "b014",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.4
+   ],
+   "reasons": [],
+   "score": 0.19
+  },
+  {
+   "id": "b006",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.4
+   ],
+   "reasons": [],
+   "score": 0.18
+  },
+  {
+   "id": "b068",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.3
+   ],
+   "reasons": [],
+   "score": 0.15
+  },
+  {
+   "id": "b024",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.2
+   ],
+   "reasons": [],
+   "score": 0.09
+  },
+  {
    "id": "b092",
    "category": "none",
    "households": 1,
@@ -1166,7 +996,7 @@
     0.0
    ],
    "reasons": [],
-   "score": 0.5
+   "score": 0.0
   },
   {
    "id": "b067",
@@ -1183,7 +1013,22 @@
    "reasons": [
     "county property on the tax roll, not a home (counted as a business or lodging, not households)"
    ],
-   "score": 0.5
+   "score": 0.0
+  },
+  {
+   "id": "b102",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
   },
   {
    "id": "b016",
@@ -1198,7 +1043,52 @@
     0.0
    ],
    "reasons": [],
-   "score": 0.5
+   "score": 0.0
+  },
+  {
+   "id": "b101",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b133",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b099",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
   },
   {
    "id": "b140",
@@ -1231,82 +1121,7 @@
    "score": 0.0
   },
   {
-   "id": "b133",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b101",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b143",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b072",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b069",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b049",
+   "id": "b038",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -1351,7 +1166,7 @@
    "score": 0.0
   },
   {
-   "id": "b038",
+   "id": "b069",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -1366,9 +1181,9 @@
    "score": 0.0
   },
   {
-   "id": "b015",
+   "id": "b129",
    "category": "none",
-   "households": 1,
+   "households": 3,
    "likely_displaced": false,
    "possibly_displaced": false,
    "business_or_lodging_hit": false,
@@ -1398,7 +1213,7 @@
    "score": 0.0
   },
   {
-   "id": "b044",
+   "id": "b049",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -1413,7 +1228,101 @@
    "score": 0.0
   },
   {
-   "id": "b099",
+   "id": "b109",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "071",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "church on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
+   "score": 0.0
+  },
+  {
+   "id": "b143",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b015",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b031",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b130",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": " ",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "land use   on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
+   "score": 0.0
+  },
+  {
+   "id": "b134",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b044",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -1445,37 +1354,18 @@
    "score": 0.0
   },
   {
-   "id": "b130",
+   "id": "b077",
    "category": "none",
-   "households": 0,
+   "households": 1,
    "likely_displaced": false,
    "possibly_displaced": false,
    "business_or_lodging_hit": false,
-   "land_use": " ",
+   "land_use": "001",
    "water_inside_ft": [
     0.0,
     0.0
    ],
-   "reasons": [
-    "land use   on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 0.0
-  },
-  {
-   "id": "b109",
-   "category": "none",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "071",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "church on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
+   "reasons": [],
    "score": 0.0
   },
   {
@@ -1494,37 +1384,7 @@
    "score": 0.0
   },
   {
-   "id": "b034",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
    "id": "b058",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b063",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -1556,7 +1416,7 @@
    "score": 0.0
   },
   {
-   "id": "b031",
+   "id": "b063",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -1571,7 +1431,7 @@
    "score": 0.0
   },
   {
-   "id": "b054",
+   "id": "b138",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -1586,37 +1446,7 @@
    "score": 0.0
   },
   {
-   "id": "b077",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b120",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b046",
+   "id": "b072",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -1646,52 +1476,71 @@
    "score": 0.0
   },
   {
-   "id": "b100",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b082",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "002",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b112",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
    "id": "b039",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b054",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b083",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "012",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "shop with living space on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
+   "score": 0.0
+  },
+  {
+   "id": "b048",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "086",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "county property on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
+   "score": 0.0
+  },
+  {
+   "id": "b100",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -1736,67 +1585,7 @@
    "score": 0.0
   },
   {
-   "id": "b127",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "004",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b050",
-   "category": "none",
-   "households": 2,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b124",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "004",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b117",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b115",
+   "id": "b035",
    "category": "none",
    "households": 0,
    "likely_displaced": false,
@@ -1813,7 +1602,22 @@
    "score": 0.0
   },
   {
-   "id": "b121",
+   "id": "b082",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "002",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b120",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -1828,7 +1632,7 @@
    "score": 0.0
   },
   {
-   "id": "b134",
+   "id": "b040",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -1843,69 +1647,7 @@
    "score": 0.0
   },
   {
-   "id": "b057",
-   "category": "none",
-   "households": 2,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b104",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b029",
-   "category": "none",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "086",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "county property on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 0.0
-  },
-  {
-   "id": "b037",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b056",
+   "id": "b034",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -1935,39 +1677,9 @@
    "score": 0.0
   },
   {
-   "id": "b132",
+   "id": "b057",
    "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b119",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "004",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b042",
-   "category": "none",
-   "households": 1,
+   "households": 2,
    "likely_displaced": false,
    "possibly_displaced": false,
    "business_or_lodging_hit": false,
@@ -1995,58 +1707,7 @@
    "score": 0.0
   },
   {
-   "id": "b035",
-   "category": "none",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "071",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "church on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 0.0
-  },
-  {
-   "id": "b084",
-   "category": "none",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "086",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "county property on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 0.0
-  },
-  {
-   "id": "b025",
-   "category": "none",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "086",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "county property on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 0.0
-  },
-  {
-   "id": "b047",
+   "id": "b104",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -2078,7 +1739,7 @@
    "score": 0.0
   },
   {
-   "id": "b041",
+   "id": "b121",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -2093,7 +1754,7 @@
    "score": 0.0
   },
   {
-   "id": "b074",
+   "id": "b136",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -2108,7 +1769,37 @@
    "score": 0.0
   },
   {
-   "id": "b113",
+   "id": "b042",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b141",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b029",
    "category": "none",
    "households": 0,
    "likely_displaced": false,
@@ -2125,7 +1816,7 @@
    "score": 0.0
   },
   {
-   "id": "b032",
+   "id": "b047",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -2140,7 +1831,22 @@
    "score": 0.0
   },
   {
-   "id": "b052",
+   "id": "b124",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "004",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b132",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -2152,6 +1858,113 @@
     0.0
    ],
    "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b005",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b137",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b030",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b043",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b090",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b018",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b025",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "086",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "county property on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
    "score": 0.0
   },
   {
@@ -2170,7 +1983,7 @@
    "score": 0.0
   },
   {
-   "id": "b060",
+   "id": "b032",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -2185,7 +1998,24 @@
    "score": 0.0
   },
   {
-   "id": "b088",
+   "id": "b036",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "086",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "county property on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
+   "score": 0.0
+  },
+  {
+   "id": "b037",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -2200,7 +2030,37 @@
    "score": 0.0
   },
   {
-   "id": "b090",
+   "id": "b041",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b046",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b052",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -2232,41 +2092,7 @@
    "score": 0.0
   },
   {
-   "id": "b036",
-   "category": "none",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "086",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "county property on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 0.0
-  },
-  {
-   "id": "b097",
-   "category": "none",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "086",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "county property on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 0.0
-  },
-  {
-   "id": "b125",
+   "id": "b056",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -2281,7 +2107,99 @@
    "score": 0.0
   },
   {
-   "id": "b147",
+   "id": "b059",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b060",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b070",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b074",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b084",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "086",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "county property on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
+   "score": 0.0
+  },
+  {
+   "id": "b085",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b088",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -2330,6 +2248,23 @@
    "score": 0.0
   },
   {
+   "id": "b097",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "086",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "county property on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
+   "score": 0.0
+  },
+  {
    "id": "b111",
    "category": "none",
    "households": 1,
@@ -2345,7 +2280,7 @@
    "score": 0.0
   },
   {
-   "id": "b085",
+   "id": "b112",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -2360,7 +2295,101 @@
    "score": 0.0
   },
   {
-   "id": "b018",
+   "id": "b113",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "086",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "county property on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
+   "score": 0.0
+  },
+  {
+   "id": "b115",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "071",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "church on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
+   "score": 0.0
+  },
+  {
+   "id": "b117",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b119",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "004",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b125",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b127",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "004",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 0.0
+  },
+  {
+   "id": "b147",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -2376,36 +2405,6 @@
   },
   {
    "id": "b149",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b059",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b070",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
