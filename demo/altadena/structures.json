@@ -1,0 +1,820 @@
+{
+ "b000": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 1,
+  "floor_area_sqft": 2021,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062206,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b001": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 2,
+  "floor_area_sqft": 2173,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062203,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b002": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 2,
+  "floor_area_sqft": 4723,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062211,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b003": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 2,
+  "floor_area_sqft": 4350,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062232,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b004": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 1,
+  "floor_area_sqft": 1673,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062230,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b005": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 1,
+  "floor_area_sqft": 2704,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062209,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b006": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 1,
+  "floor_area_sqft": 1691,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062204,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b007": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 2,
+  "floor_area_sqft": 4688,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062235,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b008": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "code_era": null,
+  "sources": [],
+  "note": "No National Structure Inventory record here."
+ },
+ "b009": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 1,
+  "floor_area_sqft": 1689,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062227,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b010": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 1,
+  "floor_area_sqft": 835,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062238,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b011": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "code_era": null,
+  "sources": [],
+  "note": "No National Structure Inventory record here."
+ },
+ "b012": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 1,
+  "floor_area_sqft": 900,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062239,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b013": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "code_era": null,
+  "sources": [],
+  "note": "No National Structure Inventory record here."
+ },
+ "b014": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "code_era": null,
+  "sources": [],
+  "note": "No National Structure Inventory record here."
+ },
+ "b015": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 2,
+  "floor_area_sqft": 4951,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062223,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b016": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 1,
+  "floor_area_sqft": 2171,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062066,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b017": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 2,
+  "floor_area_sqft": 4951,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062223,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b018": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 1,
+  "floor_area_sqft": 2004,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062074,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b019": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 1,
+  "floor_area_sqft": 2590,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062199,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b020": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 2,
+  "floor_area_sqft": 4214,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062195,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b021": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 1,
+  "floor_area_sqft": 2560,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062192,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b022": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 2,
+  "floor_area_sqft": 3237,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062242,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b023": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 1,
+  "floor_area_sqft": 1989,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062065,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b024": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 1,
+  "floor_area_sqft": 2079,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062182,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b025": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 1,
+  "floor_area_sqft": 2203,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062249,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b026": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "code_era": null,
+  "sources": [],
+  "note": "No National Structure Inventory record here."
+ },
+ "b027": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 1,
+  "floor_area_sqft": 1930,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062185,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b028": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 2,
+  "floor_area_sqft": 4924,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062190,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b029": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "code_era": null,
+  "sources": [],
+  "note": "No National Structure Inventory record here."
+ },
+ "b030": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 1,
+  "floor_area_sqft": 1278,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062202,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b031": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 2,
+  "floor_area_sqft": 3114,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062246,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b032": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "code_era": null,
+  "sources": [],
+  "note": "No National Structure Inventory record here."
+ },
+ "b033": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 1,
+  "floor_area_sqft": 3670,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062197,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b034": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "piers",
+  "foundation_height_ft": 5.25,
+  "stories": 1,
+  "floor_area_sqft": 2696,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062073,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b035": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 2,
+  "floor_area_sqft": 3878,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062064,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b036": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 1,
+  "floor_area_sqft": 2062,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062236,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b037": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 1,
+  "floor_area_sqft": 3670,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062197,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b038": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 1,
+  "floor_area_sqft": 2313,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062058,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b039": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 1,
+  "floor_area_sqft": 2438,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062210,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b040": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 2,
+  "floor_area_sqft": 4009,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062245,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b041": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 1,
+  "floor_area_sqft": 2978,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062080,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b042": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "code_era": null,
+  "sources": [],
+  "note": "No National Structure Inventory record here."
+ },
+ "b043": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 2,
+  "floor_area_sqft": 3862,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062233,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b044": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "code_era": null,
+  "sources": [],
+  "note": "No National Structure Inventory record here."
+ },
+ "b045": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 2,
+  "floor_area_sqft": 2626,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062188,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b046": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "crawlspace",
+  "foundation_height_ft": 2,
+  "stories": 1,
+  "floor_area_sqft": 3888,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062056,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b047": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 2,
+  "floor_area_sqft": 1430,
+  "occupancy": "RES1-2SNB",
+  "nsi_id": 42062247,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b048": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 3,
+  "floor_area_sqft": 7176,
+  "occupancy": "RES1-3SNB",
+  "nsi_id": 42062079,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b049": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "wood frame",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 1,
+  "floor_area_sqft": 1679,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 42062243,
+  "block_median_year_built": 1947,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ],
+  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+ },
+ "b050": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "code_era": null,
+  "sources": [],
+  "note": "No National Structure Inventory record here."
+ }
+}

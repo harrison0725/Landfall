@@ -93,3 +93,39 @@ photos are stored here); full score: `eval/cedar_key_field_score_street.txt`.
   is within 1 ft of the survey's on 78 of 108 (median error 1.0 ft).
 * An earlier run the same day, with water still counted (PDA rule), found 9
   of 16 but called 19 survey-DS0 houses Major, all for water inside.
+
+## How and when each building was built (Nov 18, 2026)
+
+The research goal: predict the damage to a building from how and when it was
+built. `scripts/building_table.py` writes `cedar_key_buildings.csv`, one row
+for each of the 771 surveyed buildings: the survey's assessor-checked
+material, foundation, stories and first-floor height, the component damage
+states, and the county tax roll's actual and effective year built, living
+area, land use and construction class, plus the building-rules era (before
+1975, 1975-2001, Florida Building Code 2002+). First look:
+`cedar_key_buildings_first_look.txt`.
+
+Where Landfall gets these facts for any building (`landfall/structures.py`,
+shown on the map card and the claim page, and in the chat's
+`damage_by_construction` tool), checked against the survey's assessors on
+122 matched buildings (`cedar_key_built_accuracy.txt`, `scripts/score_built.py`):
+
+| source | year built | material | stories | foundation |
+| --- | --- | --- | --- | --- |
+| County tax roll (Florida statewide cadastral) | actual year; reliable | construction class says masonry for most wood houses: not used | | |
+| Street photos read by the agent (Mapillary) | | 86% | 84% | 39% (57% as at grade / short / tall) |
+| USACE National Structure Inventory (live API) | block median only | 16% | 73% | 28% |
+
+The older NSI copy inside the survey file agrees far better (material 85%),
+so the live API's Cedar Key records have probably been re-derived from the
+tax roll's construction class.
+
+**Known gap: today's tax roll drops destroyed buildings.** 89 of the 771
+have no year built on the 2026 roll, and they are the worst hit (40% DS4 or
+worse against 5-8% for the rest). Without a pre-storm (2024) roll, the
+year-built comparison is biased toward survivors. Florida DOR posts only the
+current roll; older rolls are requested from the Department of Revenue or
+the Levy County Property Appraiser. In the rows that do have a year, the
+era makes little difference on its own (DS4+ 8% before 1975, 5% 1975-2001,
+8% after 2002), while the flood zone does (VE 20% against AE 8%), so exposure
+has to be controlled for before reading anything into construction.

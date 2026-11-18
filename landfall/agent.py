@@ -118,7 +118,7 @@ ANSWER = """Answer with JSON only, no other text:
 
 STREET_NOTE = """Street-level photos (Mapillary) taken after the disaster follow the aerial pair, one image each, with where each was taken from. A photo from above sees only the roof; these show what it can't: walls and siding torn off or punched in, broken or boarded windows and doors, a house shifted on or knocked off its foundation or pilings, a porch, deck or stairs torn away, a waterline or mud line on the walls, soaked furniture, drywall or carpet piled at the curb (a sign water got inside: say so, but it is flooding, not damage). Use them for the parts of the house the aerial pair can't see, and let clear damage to the building in them raise your call: walls broken open or a house off its foundation is major. They can show a neighbour, a car or a tree instead of this house: the building is where the photo looks (its middle), at the distance given; if you can't tell which building is this one, ignore the photo and say so. Street photos taken weeks later may show repairs or cleanup already done.
 
-From the street photos, also estimate how high the lowest living floor is above the ground in feet (the top of the steps up to the front door, or the floor above pilings or a garage; count the steps at about 0.6 ft each). Give null if you can't see it. Add two fields to your JSON answer: "first_floor_ft": number or null, and "street_evidence": one sentence on what the street photos show of this building, or why they don't help.
+From the street photos, also estimate how high the lowest living floor is above the ground in feet (the top of the steps up to the front door, or the floor above pilings or a garage; count the steps at about 0.6 ft each). Give null if you can't see it. Also say how the building is built, as far as the street photos show it: "material" (what the walls are made of: "wood" for wood frame with siding, "masonry" for concrete block or brick, "concrete" for poured concrete, "steel", "manufactured" for a mobile or manufactured home, or null), "foundation" (what it stands on: "slab", "crawlspace", "piers" for short posts or block columns, "piles" for tall pilings or columns with open space or parking under the house, "fill", "solid wall", or null) and "stories" (living floors above the ground, not counting parking or open space under the house, or null). Add these fields to your JSON answer: "first_floor_ft": number or null, "material", "foundation", "stories", and "street_evidence": one sentence on what the street photos show of this building, or why they don't help.
 
 """
 
@@ -163,6 +163,7 @@ class Assessment:
     first_floor_ft: float | None = None  # read off street photos, when there were any
     street_photos: int = 0
     flood: dict | None = None  # flooding, stated beside the category (fema.flood_status)
+    built: dict | None = None  # material, foundation, stories read off street photos
 
 
 def pair_image(pre: np.ndarray, post: np.ndarray, outline: list[tuple[float, float]], scale: int = 3) -> str:
@@ -313,7 +314,25 @@ def parse_answer(text: str) -> dict:
         demolished=bool(a.get("demolished_before_storm", False)),
         first_floor_ft=_feet(a.get("first_floor_ft")),
         street_evidence=str(a.get("street_evidence") or "").strip(),
+        built=_built(a),
     )
+
+
+MATERIALS = {"wood", "masonry", "concrete", "steel", "manufactured"}
+FOUNDATIONS = {"slab", "crawlspace", "piers", "piles", "fill", "solid wall"}
+
+
+def _built(a: dict) -> dict | None:
+    """How the building is built, as the model read it off street photos."""
+    mat = str(a.get("material") or "").strip().lower()
+    fnd = str(a.get("foundation") or "").strip().lower()
+    try:
+        stories = int(a["stories"]) if a.get("stories") is not None else None
+    except (TypeError, ValueError):
+        stories = None
+    out = {"material": mat if mat in MATERIALS else None, "foundation": fnd if fnd in FOUNDATIONS else None,
+           "stories": stories if stories and 0 < stories < 40 else None}
+    return out if any(v is not None for v in out.values()) else None
 
 
 def _feet(x) -> float | None:
@@ -446,4 +465,5 @@ def assess(
         first_floor_ft=first_floor,
         street_photos=len(street or []),
         flood=flood,
+        built=answer.get("built") if street else None,
     )

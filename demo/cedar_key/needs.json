@@ -7,9 +7,9 @@
   "b098",
   "b106",
   "b094",
-  "b103",
   "b139",
   "b123",
+  "b103",
   "b076",
   "b146",
   "b122",
@@ -108,7 +108,7 @@
    "score": 10.13
   },
   {
-   "id": "b073",
+   "id": "b051",
    "category": "affected",
    "households": 1,
    "likely_displaced": true,
@@ -116,31 +116,13 @@
    "business_or_lodging_hit": false,
    "land_use": "001",
    "water_inside_ft": [
-    3.7,
-    5.7
+    2.5,
+    4.5
    ],
    "reasons": [
-    "about 3.7 ft or more of water inside (built 1901, before flood rules: likely 1-3 ft above ground)"
+    "about 2.5 ft or more of water inside (built 1902, before flood rules: likely 1-3 ft above ground)"
    ],
-   "score": 7.83
-  },
-  {
-   "id": "b103",
-   "category": "affected",
-   "households": 0,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": true,
-   "land_use": "027",
-   "water_inside_ft": [
-    3.4,
-    5.4
-   ],
-   "reasons": [
-    "about 3.4 ft or more of water inside (built 1954, before flood rules: likely 1-3 ft above ground)",
-    "auto service on the tax roll, not a home (counted as a business or lodging, not households)"
-   ],
-   "score": 7.71
+   "score": 7.23
   },
   {
    "id": "b139",
@@ -159,6 +141,40 @@
     "shop with living space on the tax roll, not a home (counted as a business or lodging, not households)"
    ],
    "score": 7.0
+  },
+  {
+   "id": "b087",
+   "category": "minor",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": null,
+   "water_inside_ft": [
+    0.0,
+    9.6
+   ],
+   "reasons": [
+    "up to 9.6 ft of water inside if the floor is low"
+   ],
+   "score": 7.0
+  },
+  {
+   "id": "b073",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": true,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": "001",
+   "water_inside_ft": [
+    3.7,
+    5.7
+   ],
+   "reasons": [
+    "about 3.7 ft or more of water inside (built 1901, before flood rules: likely 1-3 ft above ground)"
+   ],
+   "score": 6.83
   },
   {
    "id": "b123",
@@ -194,6 +210,24 @@
     "about 3.6 ft or more of water inside (built 1930, before flood rules: likely 1-3 ft above ground)"
    ],
    "score": 6.79
+  },
+  {
+   "id": "b103",
+   "category": "none",
+   "households": 0,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": true,
+   "land_use": "027",
+   "water_inside_ft": [
+    3.4,
+    5.4
+   ],
+   "reasons": [
+    "about 3.4 ft or more of water inside (built 1954, before flood rules: likely 1-3 ft above ground)",
+    "auto service on the tax roll, not a home (counted as a business or lodging, not households)"
+   ],
+   "score": 6.71
   },
   {
    "id": "b000",
@@ -318,23 +352,6 @@
    "score": 6.25
   },
   {
-   "id": "b051",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": true,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": "001",
-   "water_inside_ft": [
-    2.5,
-    4.5
-   ],
-   "reasons": [
-    "about 2.5 ft or more of water inside (built 1902, before flood rules: likely 1-3 ft above ground)"
-   ],
-   "score": 6.23
-  },
-  {
    "id": "b086",
    "category": "none",
    "households": 1,
@@ -456,23 +473,6 @@
    "score": 5.79
   },
   {
-   "id": "b126",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": "004",
-   "water_inside_ft": [
-    0.0,
-    5.1
-   ],
-   "reasons": [
-    "up to 5.1 ft of water inside if the floor is low"
-   ],
-   "score": 5.53
-  },
-  {
    "id": "b145",
    "category": "none",
    "households": 0,
@@ -504,23 +504,6 @@
    ],
    "reasons": [
     "up to 9.5 ft of water inside if the floor is low"
-   ],
-   "score": 5.5
-  },
-  {
-   "id": "b087",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": null,
-   "water_inside_ft": [
-    0.0,
-    9.6
-   ],
-   "reasons": [
-    "up to 9.6 ft of water inside if the floor is low"
    ],
    "score": 5.5
   },
@@ -608,6 +591,23 @@
     "up to 4.6 ft of water inside if the floor is low"
    ],
    "score": 4.78
+  },
+  {
+   "id": "b126",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": "004",
+   "water_inside_ft": [
+    0.0,
+    5.1
+   ],
+   "reasons": [
+    "up to 5.1 ft of water inside if the floor is low"
+   ],
+   "score": 4.53
   },
   {
    "id": "b095",
@@ -854,6 +854,21 @@
    "possibly_displaced": false,
    "business_or_lodging_hit": false,
    "land_use": "001",
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [],
+   "score": 1.0
+  },
+  {
+   "id": "b124",
+   "category": "affected",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": "004",
    "water_inside_ft": [
     0.0,
     0.0
@@ -1823,21 +1838,6 @@
    "possibly_displaced": false,
    "business_or_lodging_hit": false,
    "land_use": "001",
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [],
-   "score": 0.0
-  },
-  {
-   "id": "b124",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": "004",
    "water_inside_ft": [
     0.0,
     0.0

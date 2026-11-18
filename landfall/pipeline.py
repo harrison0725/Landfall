@@ -1279,6 +1279,8 @@ def assess(
         if a.street_photos:
             rec["street_photos"] = a.street_photos
             rec["first_floor_ft"] = a.first_floor_ft
+            if a.built:
+                rec["built_from_street"] = a.built
         if no_before and not rec["needs_human"]:
             # one photo shows what is there, not what changed
             rec["needs_human"] = True
@@ -1423,8 +1425,17 @@ def records(spec: AreaSpec, root: Path, log: Log = _quiet) -> None:
     try:
         _local_rate(spec, d, feats)
     except (LookupError, OSError):
-        return  # no Florida tax roll here: the cost step uses national averages, no parcels
-    parcels.fetch(d)
+        florida = False  # no Florida tax roll here: the cost step uses national averages, no parcels
+    else:
+        florida = True
+        parcels.fetch(d)
+    if spec.imagery != "maxar":  # the National Structure Inventory is US-only
+        from .structures import fetch as fetch_structures
+
+        try:
+            fetch_structures(d, "FL" if florida else None)
+        except Exception as e:  # how buildings were built is nice to have; the drafts don't need it
+            log("warning", text=f"building records (National Structure Inventory) unavailable: {e}"[:300])
 
 
 def _drafted_bbox(feats: dict) -> tuple[float, float, float, float]:
