@@ -786,6 +786,7 @@ async function openBuilding(id) {
     ["Judged by", a ? modelName(a.decided_by) : "–"],
     ["Building missing", a && a.structure_loss != null ? `${Math.round(a.structure_loss * 100)}%` : "not measured"],
     ["Debris in yard", a && a.debris_share ? `${Math.round(a.debris_share * 100)}%` : "none found"],
+    ["Flooded", a && a.flood ? a.flood.label.replace(/^Flooded: /, "yes: ") : a && a.flood_ft != null && a.flood_ft >= 0.5 ? "yes (not counted as damage)" : "no"],
     ["Flood water outside", a && a.flood_ft != null ? `${a.flood_ft.toFixed(1)} ft deep` : us ? "none measured here" : "unknown (not measured here)"],
     ["Floor height", a && a.record && a.record.basis ? a.record.basis : us ? "unknown" : "unknown (no property records)"],
     ["Water inside", !us ? "unknown" : need && need.water_inside_ft[1] > 0 ? `${need.water_inside_ft[0].toFixed(1)}–${need.water_inside_ft[1].toFixed(1)} ft (estimate)` : "none"],
@@ -795,7 +796,7 @@ async function openBuilding(id) {
     ...(a && a.demolished ? [["Note", "gone before the disaster (demolished)"]] : []),
   ];
   $("card-body").innerHTML = `
-    <h2>Building ${esc(id)} ${cat ? `<span class="pill ${cat}" style="--c:var(--${cat})" title="FEMA category: ${FEMA[cat]}">${LABEL[cat]}</span>` : ""}${a && a.needs_human ? `<span class="pill" style="--c:var(--review)" title="A person should visit to confirm">Needs a visit</span>` : ""}</h2>
+    <h2>Building ${esc(id)} ${cat ? `<span class="pill ${cat}" style="--c:var(--${cat})" title="FEMA category: ${FEMA[cat]}">${LABEL[cat]}</span>` : ""}${a && (a.flood || (a.flood_ft || 0) >= 0.5) ? `<span class="pill" style="--c:var(--flood, #2b6cb0)" title="Flood water stood here. Flooding is stated on its own and not counted in the damage category.">Flooded</span>` : ""}${a && a.needs_human ? `<span class="pill" style="--c:var(--review)" title="A person should visit to confirm">Needs a visit</span>` : ""}</h2>
     <img src="/api/areas/${state.area}/pair/${id}.jpg" alt="Before and after photos of ${esc(id)}">
     <div class="cap"><span>Before${a && a.photos ? ": " + esc(shortSource(a.photos.before)) : ""}</span><span>After${a && a.photos ? ": " + esc(shortSource(a.photos.after)) : ""}</span></div>
     <p>${a ? esc(a.plain || a.evidence) : gone ? "This area was lost when the site restarted. Draw the box again to redo it." : "Not checked yet. The check of this area is still running, or it stopped before it reached this building; the chat shows which step it is on."}</p>

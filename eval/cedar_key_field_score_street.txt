@@ -8,89 +8,74 @@ survey ratings on the matched outlines (overall DS): DS0: 95, DS1: 11, DS2: 2, D
 ########################################################################
 
 == overall DS -> FEMA (DS5 partial collapse = Major)
-122 buildings: exact 67/122 (55%); within one step 88/122 (72%); quadratic-weighted kappa 0.31
+122 buildings: exact 95/122 (78%); within one step 111/122 (91%); quadratic-weighted kappa 0.53
 confusion (rows = survey, cols = agent):
               none  affec  minor  major  destr
-       none     59     12      5     19      0
-   affected      5      1      1      4      0
-      minor      2      1      1      2      0
-      major      1      3      0      3      0
+       none     90      5      0      0      0
+   affected      9      1      1      0      0
+      minor      5      1      0      0      0
+      major      6      0      0      1      0
   destroyed      0      0      0      0      3
-  damaged (Minor or worse): found 9/16 (56%); agent's calls right 9/38 (24%)
-  severe (Major or worse): found 6/10 (60%); agent's calls right 6/31 (19%)
+  damaged (Minor or worse): found 4/16 (25%); agent's calls right 4/5 (80%)
+  severe (Major or worse): found 4/10 (40%); agent's calls right 4/4 (100%)
   destroyed: found 3/3 (100%); agent's calls right 3/3 (100%)
-  agent lower than survey: 12; higher: 43
-  39 sent to human review, of which 33 disagree with the survey
+  agent lower than survey: 21; higher: 6
+  7 sent to human review, of which 3 disagree with the survey
 
 == same, with No visible damage and Affected merged (the survey rates the structure; Affected is mostly water around the house, which it doesn't record)
-122 buildings: exact 84/122 (69%); within one step 86/122 (70%); quadratic-weighted kappa 0.26
+122 buildings: exact 109/122 (89%); within one step 109/122 (89%); quadratic-weighted kappa 0.55
 confusion (rows = survey, cols = agent):
               none  affec  minor  major  destr
-       none     77      0      6     23      0
+       none    105      0      1      0      0
    affected      0      0      0      0      0
-      minor      3      0      1      2      0
-      major      4      0      0      3      0
+      minor      6      0      0      0      0
+      major      6      0      0      1      0
   destroyed      0      0      0      0      3
-  damaged (Minor or worse): found 9/16 (56%); agent's calls right 9/38 (24%)
-  severe (Major or worse): found 6/10 (60%); agent's calls right 6/31 (19%)
+  damaged (Minor or worse): found 4/16 (25%); agent's calls right 4/5 (80%)
+  severe (Major or worse): found 4/10 (40%); agent's calls right 4/4 (100%)
   destroyed: found 3/3 (100%); agent's calls right 3/3 (100%)
-  agent lower than survey: 7; higher: 31
-  39 sent to human review, of which 33 disagree with the survey
+  agent lower than survey: 12; higher: 1
+  7 sent to human review, of which 3 disagree with the survey
 
 == overall DS -> FEMA (DS5 partial collapse = Destroyed)
-122 buildings: exact 66/122 (54%); within one step 88/122 (72%); quadratic-weighted kappa 0.31
+122 buildings: exact 95/122 (78%); within one step 111/122 (91%); quadratic-weighted kappa 0.48
 
 == roof rating only (what a photo from above can see), same mapping
-122 buildings: exact 65/122 (53%); within one step 87/122 (71%); quadratic-weighted kappa 0.18
+122 buildings: exact 98/122 (80%); within one step 118/122 (97%); quadratic-weighted kappa 0.65
 
-== what the agent rated lower than the survey, where the survey says Minor or worse: 7 buildings
-  4 of 7 have a roof the survey itself rates Affected or better: the damage is below the roofline
+== what the agent rated lower than the survey, where the survey says Minor or worse: 12 buildings
+  8 of 12 have a roof the survey itself rates Affected or better: the damage is below the roofline
   component(s) carrying the worst rating (a building can count twice):
+    walls / elevated floors: 4
+    windows and doors: 3
     roof: 2
     foundation: 2
-    walls / elevated floors: 2
-    windows and doors: 1
-    decks, porches, sheds: 1
-  4 of 7 had water 0.5 ft or more around them in the agent's flood estimate
-  0 of 7 were not visible in street-level photos to the surveyors
+    decks, porches, sheds: 2
+  9 of 12 had water 0.5 ft or more around them in the agent's flood estimate
+  0 of 12 were not visible in street-level photos to the surveyors
   buildings (survey overall / roof / walls / foundation / openings / attached -> agent):
+    b001: DS 4/2/4/1/0/0 (major) -> agent none; flood 7.0 ft; 4/4/2025  11:40:00 AM Building is clearly visible for assessment
     b016: DS 3/2/1/0/1/0 (minor) -> agent none; flood 0.0 ft; 4/10/25 1:16PM rust on roof, weathering and aesthetic damage to walls, side door boarded up (possible damage)
+    b019: DS 2/0/1/0/2/0 (minor) -> agent none; flood 2.8 ft; 4/4/2025  11:17:00 AM Building can be seen well from street view for DS assessment
+    b095: DS 3/0/1/0/3/0 (minor) -> agent affected; flood 3.7 ft; 5/22/2025 17:35
     b119: DS 4/4/1/5/0/3 (major) -> agent none; flood 0.0 ft; 4/1/2025  10:11:00 AM There is imaging of the complex, but only the front and side of building can be seen, no
-    b126: DS 3/0/1/3/3/3 (minor) -> agent affected; flood 6.1 ft; 4/3/2025  2:38:00 PM Building is clearly visible
-    b129: DS 5/1/3/5/3/3 (major) -> agent affected; flood 0.8 ft; 4/3/2025  2:54:00 PM Building is clearly visible for DS assessment
+    b123: DS 5/1/5/1/0/0 (major) -> agent none; flood 6.7 ft; 5/22/2025 18:27
+    b126: DS 3/0/1/3/3/3 (minor) -> agent none; flood 6.1 ft; 4/3/2025  2:38:00 PM Building is clearly visible
+    b129: DS 5/1/3/5/3/3 (major) -> agent none [review]; flood 0.8 ft; 4/3/2025  2:54:00 PM Building is clearly visible for DS assessment
     b134: DS 2/2/0/0/0/0 (minor) -> agent none; flood 0.0 ft; The house is in very good state, it is just missing its shingles. (04/13/2025)
-    b137: DS 4/0/4/2/3/0 (major) -> agent affected; flood 5.7 ft; 4/3/2025  3:05:00 PM Building is clearly visible for DS assessment
-    b138: DS 5/0/5/1/0/0 (major) -> agent affected; flood 4.7 ft; 5/6/2025  12:25:00 AM Building is clearly visible, except for one palm tree, for FFE measurements and DS asses
+    b137: DS 4/0/4/2/3/0 (major) -> agent none; flood 5.7 ft; 4/3/2025  3:05:00 PM Building is clearly visible for DS assessment
+    b138: DS 5/0/5/1/0/0 (major) -> agent none; flood 4.7 ft; 5/6/2025  12:25:00 AM Building is clearly visible, except for one palm tree, for FFE measurements and DS asses
+    b139: DS 3/1/0/0/0/3 (minor) -> agent none; flood 9.5 ft; 12:38 PM 3/27/2025. Property appraiser map splits property into two with same effective year built but differe
 
 == StEER field ratings (0-4) on the agent's outlines: 1 buildings
   b106 847 Third St: field 4 (fits destroyed), virtual DS4, agent major  <- differs
   agent fits the field rating on 0/1
 
-== upper bound: the flood rule with known first-floor heights (the survey's, from street photos)
-first-floor height known for 119 of 122 matched buildings; 8 calls raised:
-  b020: affected -> minor (water 2.6 ft above ground, floor 2.2 ft up; survey DS0)
-  b009: affected -> minor (water 3.0 ft above ground, floor 3.0 ft up; survey DS0)
-  b138: affected -> major (water 4.7 ft above ground, floor 0.3 ft up; survey DS5)
-  b065: minor -> major (water 4.3 ft above ground, floor 1.8 ft up; survey DS0)
-  b081: affected -> major (water 3.3 ft above ground, floor 0.0 ft up; survey DS0)
-  b126: affected -> major (water 6.1 ft above ground, floor 0.2 ft up; survey DS3)
-  b019: minor -> major (water 2.8 ft above ground, floor 0.9 ft up; survey DS2)
-  b142: affected -> major (water 1.6 ft above ground, floor 0.0 ft up; survey DS0)
-
-== overall DS -> FEMA, after raising by known first floors
-122 buildings: exact 67/122 (55%); within one step 85/122 (70%); quadratic-weighted kappa 0.32
-confusion (rows = survey, cols = agent):
-              none  affec  minor  major  destr
-       none     59      8      6     22      0
-   affected      5      1      1      4      0
-      minor      2      0      0      4      0
-      major      1      2      0      4      0
-  destroyed      0      0      0      0      3
-  damaged (Minor or worse): found 11/16 (69%); agent's calls right 11/44 (25%)
-  severe (Major or worse): found 7/10 (70%); agent's calls right 7/37 (19%)
-  destroyed: found 3/3 (100%); agent's calls right 3/3 (100%)
-  agent lower than survey: 10; higher: 45
-  39 sent to human review, of which 34 disagree with the survey
+== flooding (stated beside the category): water in the living space, by the survey's first floors
+119 matched buildings with a surveyed first floor; water reached the living space at 44
+  agent's note says inside on 34: 34 right, 0 where the survey's floor is above the water
+  of the 44 with water inside, the note says so on 34; 6 have no first-floor reading
+  agent's first-floor reading vs the survey's: median error 1.0 ft, 78 of 108 within 1 ft, mean +0.2 ft
 
 ########################################################################
 # drafts: eval/cedar_key_drafts_2026-11-18.json
@@ -161,58 +146,6 @@ confusion (rows = survey, cols = agent):
   b106 847 Third St: field 4 (fits destroyed), virtual DS4, agent affected  <- differs
   agent fits the field rating on 0/1
 
-== upper bound: the flood rule with known first-floor heights (the survey's, from street photos)
-first-floor height known for 119 of 122 matched buildings; 38 calls raised:
-  b020: affected -> minor (water 2.6 ft above ground, floor 2.2 ft up; survey DS0)
-  b118: affected -> major (water 4.8 ft above ground, floor 0.8 ft up; survey DS0)
-  b073: affected -> major (water 6.7 ft above ground, floor 1.2 ft up; survey DS0)
-  b148: affected -> major (water 5.7 ft above ground, floor 0.0 ft up; survey DS1)
-  b003: affected -> major (water 4.6 ft above ground, floor 1.2 ft up; survey DS1)
-  b068: affected -> minor (water 1.3 ft above ground, floor 1.0 ft up; survey DS0)
-  b000: affected -> major (water 6.3 ft above ground, floor 0.0 ft up; survey DS0)
-  b095: affected -> major (water 3.7 ft above ground, floor 0.0 ft up; survey DS3)
-  b131: affected -> major (water 5.4 ft above ground, floor 0.0 ft up; survey DS0)
-  b055: affected -> major (water 2.7 ft above ground, floor 0.0 ft up; survey DS0)
-  b007: affected -> major (water 5.8 ft above ground, floor 2.8 ft up; survey DS0)
-  b001: affected -> major (water 7.0 ft above ground, floor 1.9 ft up; survey DS4)
-  b009: affected -> minor (water 3.0 ft above ground, floor 3.0 ft up; survey DS0)
-  b138: affected -> major (water 4.7 ft above ground, floor 0.3 ft up; survey DS5)
-  b105: affected -> major (water 7.6 ft above ground, floor 0.0 ft up; survey DS0)
-  b008: affected -> major (water 4.7 ft above ground, floor 2.8 ft up; survey DS0)
-  b065: affected -> major (water 4.3 ft above ground, floor 1.8 ft up; survey DS0)
-  b064: affected -> major (water 6.6 ft above ground, floor 3.2 ft up; survey DS0)
-  b083: affected -> major (water 2.2 ft above ground, floor 0.0 ft up; survey DS0)
-  b048: affected -> minor (water 0.8 ft above ground, floor 0.0 ft up; survey DS0)
-  b106: affected -> major (water 6.5 ft above ground, floor 0.0 ft up; survey DS4)
-  b081: affected -> major (water 3.3 ft above ground, floor 0.0 ft up; survey DS0)
-  b123: affected -> major (water 6.7 ft above ground, floor 0.0 ft up; survey DS5)
-  b146: affected -> major (water 5.8 ft above ground, floor 1.3 ft up; survey DS1)
-  b139: affected -> major (water 9.5 ft above ground, floor 0.0 ft up; survey DS3)
-  b122: affected -> major (water 5.5 ft above ground, floor 2.9 ft up; survey DS0)
-  b078: affected -> major (water 4.5 ft above ground, floor 0.0 ft up; survey DS0)
-  b076: affected -> major (water 6.0 ft above ground, floor 1.7 ft up; survey DS0)
-  b024: affected -> minor (water 1.2 ft above ground, floor 0.6 ft up; survey DS0)
-  b103: affected -> major (water 6.4 ft above ground, floor 0.0 ft up; survey DS0)
-  b126: affected -> major (water 6.1 ft above ground, floor 0.2 ft up; survey DS3)
-  b051: affected -> major (water 5.5 ft above ground, floor 3.2 ft up; survey DS0)
-  b086: affected -> major (water 5.4 ft above ground, floor 0.0 ft up; survey DS0)
-  b002: affected -> major (water 5.3 ft above ground, floor 0.0 ft up; survey DS0)
-  b017: affected -> major (water 4.2 ft above ground, floor 0.9 ft up; survey DS0)
-  b019: affected -> major (water 2.8 ft above ground, floor 0.9 ft up; survey DS2)
-  b142: affected -> major (water 1.6 ft above ground, floor 0.0 ft up; survey DS0)
-  b030: affected -> minor (water 0.6 ft above ground, floor 0.0 ft up; survey DS0)
-
-== overall DS -> FEMA, after raising by known first floors
-122 buildings: exact 66/122 (54%); within one step 86/122 (70%); quadratic-weighted kappa 0.33
-confusion (rows = survey, cols = agent):
-              none  affec  minor  major  destr
-       none     59      8      7     21      0
-   affected      7      0      0      4      0
-      minor      2      0      0      4      0
-      major      1      1      1      4      0
-  destroyed      0      0      0      0      3
-  damaged (Minor or worse): found 12/16 (75%); agent's calls right 12/44 (27%)
-  severe (Major or worse): found 7/10 (70%); agent's calls right 7/36 (19%)
-  destroyed: found 3/3 (100%); agent's calls right 3/3 (100%)
-  agent lower than survey: 12; higher: 44
-  49 sent to human review, of which 44 disagree with the survey
+== flooding (stated beside the category): water in the living space, by the survey's first floors
+119 matched buildings with a surveyed first floor; water reached the living space at 44
+  the drafts have no first-floor reading (no street photos), so the note can't say whether water got inside

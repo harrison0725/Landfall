@@ -217,9 +217,9 @@ class Area:
                 "water_around_house_1_5ft_plus": sum((x["flood_ft"] or 0) >= 1.5 for x in rows),
             }
         out["note"] = (
-            "Water 1.5 ft or more above ground could put 18 inches or more in the living space of a house built at grade, "
-            "which is Major under the PDA guide. Aerial photos do not show first-floor height, so those houses are drafted "
-            "at the category the photos support and need a field check."
+            "Categories rate damage to the building only; flooding is stated beside them, never counted as damage. "
+            "Water 1.5 ft or more above ground could put 18 inches or more in the living space of a house built at grade "
+            "(the PDA guide's line for Major), so an assessor applying that rule should check those houses."
         )
         return out
 

@@ -1274,6 +1274,8 @@ def assess(
             tarp_share=None if "yard_note" in yard else m.tarp_share,
             trace=a.trace,
         )
+        if a.flood:
+            rec["flood"] = a.flood  # stated beside the category, not part of it
         if a.street_photos:
             rec["street_photos"] = a.street_photos
             rec["first_floor_ft"] = a.first_floor_ft

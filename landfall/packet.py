@@ -104,6 +104,8 @@ def render(d: Path, bid: str, pair_png: bytes) -> str:
         ("Blue tarp on roof", f"{round(a['tarp_share'] * 100)}%" if a.get("tarp_share") else ("not measured" if "tarp_share" in a and a["tarp_share"] is None else "none found")),
         ("Debris in the yard", f"{round(a['debris_share'] * 100)}%" if a.get("debris_share") else ("not measured" if "debris_share" in a and a["debris_share"] is None else "none found")),
     ]
+    if a.get("flood") or (a.get("flood_ft") or 0) >= 0.5:
+        rows_draft.append(("Flooded", ((a.get("flood") or {}).get("label") or "Flooded").replace("Flooded: ", "yes: ") + " (not counted in the category)"))
     if a.get("demolished"):
         rows_draft.append(("Note", "No building stood here during the storm (demolished before it)"))
 

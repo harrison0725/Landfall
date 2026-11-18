@@ -14,24 +14,24 @@ def test_tarp_means_at_least_minor():
     assert floor_from_measures(m(tarp=0.02)) is Category.NONE  # mask noise
 
 
-def test_flood_raises_intact_roof():
-    # The case roof-only models miss: roof fine, water high in a slab house.
+def test_flood_never_sets_the_category():
+    # Flooding is stated beside the category, not counted as damage.
     slab = Measures(0.0, 0.0, 0.0, 4.2, True, first_floor_ft=1.0)
-    assert floor_from_measures(slab) is Category.MAJOR
+    assert floor_from_measures(slab) is Category.NONE
+    assert floor_from_measures(m(flood=6.0)) is Category.NONE
+    assert floor_from_measures(Measures(0.4, 0.0, 0.0, 6.0, True, first_floor_ft=0.0)) is Category.MAJOR  # roof still counts
 
 
-def test_flood_under_raised_house_is_affected():
-    stilts = Measures(0.0, 0.0, 0.0, 4.2, True, first_floor_ft=9.0)
-    assert floor_from_measures(stilts) is Category.AFFECTED
+def test_flood_status_states_water_inside():
+    from landfall.fema import flood_status
 
-
-def test_flood_with_unknown_floor_height_only_proves_affected():
-    assert floor_from_measures(m(flood=6.0)) is Category.AFFECTED
-    assert floor_from_measures(m(flood=0.2)) is Category.NONE
-
-
-def test_shallow_living_space_water_is_minor():
-    assert floor_from_measures(Measures(0.0, 0.0, 0.0, 2.0, True, first_floor_ft=1.0)) is Category.MINOR
+    inside = flood_status(Measures(0.0, 0.0, 0.0, 4.2, True, first_floor_ft=1.0))
+    assert inside["flooded"] and inside["living_ft"] == 3.2 and "inside the living space" in inside["label"]
+    stilts = flood_status(Measures(0.0, 0.0, 0.0, 4.2, True, first_floor_ft=9.0))
+    assert stilts["living_ft"] == 0.0 and "below the living floor" in stilts["label"]
+    unknown = flood_status(m(flood=6.0))
+    assert unknown["living_ft"] is None and "unknown" in unknown["label"]
+    assert flood_status(m(flood=0.2)) is None and flood_status(m()) is None
 
 
 def test_verifier_rejects_undercall():
@@ -53,9 +53,7 @@ def test_unaligned_goes_to_review():
     assert not v.ok and "human review" in v.problems[0]
 
 
-def test_flood_objection_is_separate_from_mask_noise():
-    from landfall.fema import flood_floor
-
-    assert flood_floor(m(roof=0.5, flood=3.0)) is Category.AFFECTED
-    v = verify(Category.NONE, m(roof=0.0, flood=3.0))
-    assert not v.ok and "surveyed flood water" in v.problems[0]
+def test_verifier_does_not_raise_for_flood():
+    assert verify(Category.NONE, m(flood=3.0)).ok
+    v = verify(Category.MAJOR, m(flood=6.0))
+    assert not v.ok  # two steps above what the building shows

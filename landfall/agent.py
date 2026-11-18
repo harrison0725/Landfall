@@ -24,7 +24,7 @@ from dataclasses import dataclass, field, replace
 import numpy as np
 
 from . import http
-from .fema import Category, Measures, flood_floor, verify
+from .fema import Category, Measures, flood_status, verify
 
 # Muse Spark Open runs on Baseten by default. Its weights are open, so any
 # OpenAI-compatible server hosting it (vLLM, for example) works: set OPEN_MODEL_URL.
@@ -46,7 +46,7 @@ HAZARDS = {
 - destroyed: the house is gone or a total loss: empty slab or lot, pile of debris where it stood.
 
 """,
-        flooding="""Flooding: the PDA Guide judges water depth in the living space. 18 inches or more is major, less is minor; water only under a raised house (pilings) is affected. Many houses here are raised. If water stood high around a house and you can't tell whether it is raised, say so and set needs_human to true.
+        flooding="""Flooding is not damage here: judge the category only by damage to the building itself (roof, walls, windows and doors, foundation, porches and decks). Don't raise the category because water stood around the house or got inside it; Landfall states flooding separately, beside the category. If the photos show that water got inside (a waterline or mud line on the walls, soaked furniture, drywall or carpet piled at the curb), say so in the evidence, but that alone is not damage.
 
 """,
         careful="""Be careful: trees (including ones that have grown over the roof since the before photo) and long shadows can hide a roof without damaging it, a house can lean differently in the two photos, and the pre-storm photo is from Feb 2023, so a lot that was empty then may have a new house now, and a building may have been torn down on purpose since. The post-storm photo was taken a few days after the storm, so if the old footprint is now covered by weeds or grass, new pavement, parking stripes, fencing or a construction site, and there is no wreckage, the building was cleared months before the storm: that is demolition, not storm damage. Set demolished_before_storm to true, call it none, say so in the evidence, and set needs_human to true. A storm leaves wreckage, scattered debris or a bare slab with debris around it. A tree the storm blew down onto a house is damage, not cover: its trunk or broken limbs lie across the roof.
@@ -97,7 +97,7 @@ An earthquake can collapse a building while its roof slab stays in one piece, so
 - destroyed: the house is gone or a total loss: swept off its foundation, carried away, an empty slab, a pile of wreckage where it stood or wreckage of it lodged elsewhere.
 
 """,
-        flooding="""Flooding: the PDA Guide judges water depth in the living space. 18 inches or more is major, less is minor; water only under a raised house is affected. Mud, sand or silt over the yard, flattened grass pointing downstream and debris piled against trees and fences show where the water went; a house inside that zone took water even if its roof is fine. If water stood high around a house and you can't tell whether it is raised, say so and set needs_human to true.
+        flooding="""Flooding is not damage here: judge the category only by damage to the building itself (roof, walls, windows and doors, foundation, porches and decks). Don't raise the category because water stood around the house or got inside it; Landfall states flooding separately, beside the category. If the photos show that water got inside (a waterline or mud line on the walls, soaked furniture, drywall or carpet piled at the curb), say so in the evidence, but that alone is not damage. Mud, sand or silt over the yard, flattened grass pointing downstream and debris piled against trees and fences show where the water went; a house the water carried off, broke open or shifted is damaged, and that counts.
 
 """,
         careful="""Be careful: trees (including ones that have grown over the roof since the before photo) and long shadows can hide a roof without damaging it, a house can lean differently in the two photos, and the before photo can be a year or more older, so a lot that was empty then may have a new house now, and a building may have been torn down on purpose since. A flood leaves mud, wreckage and scattered debris. If the old footprint is now covered by grass, new pavement or a construction site and none of that is there, the building was cleared before the flood: set demolished_before_storm to true, call it none, say so in the evidence, and set needs_human to true.
@@ -116,7 +116,7 @@ ANSWER = """Answer with JSON only, no other text:
 {"category": "none|affected|minor|major|destroyed", "confidence": 0.0-1.0, "evidence": "one or two sentences naming what you see in the photos", "needs_human": true|false, "demolished_before_storm": true|false}"""
 
 
-STREET_NOTE = """Street-level photos (Mapillary) taken after the disaster follow the aerial pair, one image each, with where each was taken from. A photo from above sees only the roof; these show what it can't: walls and siding torn off or punched in, broken or boarded windows and doors, a house shifted on or knocked off its foundation or pilings, a porch, deck or stairs torn away, a waterline or mud line on the walls, soaked furniture, drywall or carpet piled at the curb (a sign water got inside). Use them for the parts of the house the aerial pair can't see, and let clear damage in them raise your call: walls broken open or a house off its foundation is major. They can show a neighbour, a car or a tree instead of this house: the building is where the photo looks (its middle), at the distance given; if you can't tell which building is this one, ignore the photo and say so. Street photos taken weeks later may show repairs or cleanup already done.
+STREET_NOTE = """Street-level photos (Mapillary) taken after the disaster follow the aerial pair, one image each, with where each was taken from. A photo from above sees only the roof; these show what it can't: walls and siding torn off or punched in, broken or boarded windows and doors, a house shifted on or knocked off its foundation or pilings, a porch, deck or stairs torn away, a waterline or mud line on the walls, soaked furniture, drywall or carpet piled at the curb (a sign water got inside: say so, but it is flooding, not damage). Use them for the parts of the house the aerial pair can't see, and let clear damage to the building in them raise your call: walls broken open or a house off its foundation is major. They can show a neighbour, a car or a tree instead of this house: the building is where the photo looks (its middle), at the distance given; if you can't tell which building is this one, ignore the photo and say so. Street photos taken weeks later may show repairs or cleanup already done.
 
 From the street photos, also estimate how high the lowest living floor is above the ground in feet (the top of the steps up to the front door, or the floor above pilings or a garage; count the steps at about 0.6 ft each). Give null if you can't see it. Add two fields to your JSON answer: "first_floor_ft": number or null, and "street_evidence": one sentence on what the street photos show of this building, or why they don't help.
 
@@ -162,6 +162,7 @@ class Assessment:
     demolished: bool = False  # the building was gone before the storm
     first_floor_ft: float | None = None  # read off street photos, when there were any
     street_photos: int = 0
+    flood: dict | None = None  # flooding, stated beside the category (fema.flood_status)
 
 
 def pair_image(pre: np.ndarray, post: np.ndarray, outline: list[tuple[float, float]], scale: int = 3) -> str:
@@ -235,7 +236,7 @@ def describe(m: Measures, extra: dict) -> str:
         lines.append(
             f"Storm water stood about {m.flood_ft:.1f} ft above the ground at this building "
             "(surveyed high-water mark and tide gauge minus lidar ground elevation). "
-            "How much reached the living space depends on how high the first floor is, which these photos don't show."
+            "This is reported as flooding beside your category; it is not damage and doesn't change the category."
         )
     return "\n".join(lines)
 
@@ -424,37 +425,25 @@ def assess(
     first_floor = answer.get("first_floor_ft") if street else None
     if street and answer.get("street_evidence"):
         evidence += f" Street photos: {answer['street_evidence']}"
-    if first_floor is not None and (m.flood_ft or 0) >= 0.5 and m.first_floor_ft is None:
-        # The street photos show how high the floor is, so the PDA flood rule
-        # can judge water in the living space instead of only around the house.
+    if first_floor is not None and m.first_floor_ft is None:
+        # the street photos show how high the floor is, so the flood note can
+        # say whether water reached the living space
         m = replace(m, first_floor_ft=first_floor)
-    water = flood_floor(m)
+    flood = flood_status(m)
     if answer["demolished"]:
         category = Category.NONE
-    elif category < water:
-        # The model won't always concede a fact it can't see. Surveyed water
-        # isn't open to its judgment, so apply the floor here and say so.
-        trace.append(dict(model="flood rule", raised_from=category.name, to=water.name, first_floor_ft=m.first_floor_ft))
-        category = water
-        if m.first_floor_ft is not None:
-            evidence += (f" Raised to {water.label}: surveyed water stood {m.flood_ft:.1f} ft above the ground and the street photos put the"
-                         f" first floor about {m.first_floor_ft:.1f} ft up, so about {max(0.0, m.flood_ft - m.first_floor_ft):.1f} ft reached the living space (PDA flood rule).")
-        else:
-            evidence += f" Raised to {water.label}: surveyed water stood {m.flood_ft:.1f} ft around the building (PDA flood rule)."
 
     return Assessment(
         building_id=building_id,
         category=category,
         confidence=answer["confidence"],
         evidence=evidence,
-        # a floor height read off a photo is an estimate: an assessor confirms
-        # any call it raised
-        needs_human=answer["needs_human"] or not ok or not m.aligned or answer["demolished"]
-        or (first_floor is not None and category is water and water > Category.AFFECTED),
+        needs_human=answer["needs_human"] or not ok or not m.aligned or answer["demolished"],
         decided_by=decided_by,
         verified=ok,
         trace=trace,
         demolished=answer["demolished"],
         first_floor_ft=first_floor,
         street_photos=len(street or []),
+        flood=flood,
     )
