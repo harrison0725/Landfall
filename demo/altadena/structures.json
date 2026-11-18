@@ -1,820 +1,1372 @@
 {
  "b000": {
-  "year_built": null,
+  "year_built": 1952,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 1,
   "floor_area_sqft": 2021,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062206,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Enclosed",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Multi Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b001": {
-  "year_built": null,
+  "year_built": 1925,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 2,
   "floor_area_sqft": 2173,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062203,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "eaves": "Unenclosed",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b002": {
-  "year_built": null,
+  "year_built": 1927,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 2,
   "floor_area_sqft": 4723,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062211,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "eaves": "Unenclosed",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b003": {
-  "year_built": null,
+  "year_built": 1925,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 2,
   "floor_area_sqft": 4350,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062232,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "eaves": "No Eaves",
+   "vent_screens": "Mesh Screen <= 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "Wood"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b004": {
-  "year_built": null,
+  "year_built": 1947,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "wood siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 1,
   "floor_area_sqft": 1673,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062230,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "vent_screens": "Mesh Screen <= 1/8\"",
+   "siding": "Wood",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b005": {
-  "year_built": null,
+  "year_built": 1918,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 1,
   "floor_area_sqft": 2704,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062209,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "eaves": "Enclosed",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "No Deck/Porch"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b006": {
-  "year_built": null,
+  "year_built": 1941,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 1,
   "floor_area_sqft": 1691,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062204,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b007": {
-  "year_built": null,
+  "year_built": 1913,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 2,
   "floor_area_sqft": 4688,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062235,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Unenclosed",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b008": {
-  "year_built": null,
+  "year_built": 1927,
   "effective_year_built": null,
-  "year_source": null,
-  "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "No Eaves",
+   "vent_screens": "No Vents",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Multi Pane",
+   "deck_or_porch": "No Deck/Porch"
+  },
+  "structure_type": "Utility Misc Structure",
+  "material": "stucco brick cement siding",
+  "material_source": "CAL FIRE damage inspection",
+  "code_era": "before California's wildfire building rules (pre-2008)",
+  "sources": [
+   "CAL FIRE damage inspection"
+  ]
  },
  "b009": {
-  "year_built": null,
+  "year_built": 1947,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 1,
   "floor_area_sqft": 1689,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062227,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "vent_screens": "Mesh Screen <= 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b010": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
-  "material": "wood frame",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 1,
   "floor_area_sqft": 835,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062238,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "No Eaves",
+   "vent_screens": "No Vents",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Multi Story",
   "code_era": null,
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b011": {
-  "year_built": null,
+  "year_built": 1913,
   "effective_year_built": null,
-  "year_source": null,
-  "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "fire": {
+   "roof": "Tile",
+   "eaves": "Unenclosed",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "material": "stucco brick cement siding",
+  "material_source": "CAL FIRE damage inspection",
+  "code_era": "before California's wildfire building rules (pre-2008)",
+  "sources": [
+   "CAL FIRE damage inspection"
+  ]
  },
  "b012": {
-  "year_built": null,
+  "year_built": 1922,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 1,
   "floor_area_sqft": 900,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062239,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Unenclosed",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "No Deck/Porch"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b013": {
-  "year_built": null,
+  "year_built": 1919,
   "effective_year_built": null,
-  "year_source": null,
-  "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "fire": {
+   "roof": "Asphalt",
+   "vent_screens": "No Vents",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Utility Misc Structure",
+  "material": "stucco brick cement siding",
+  "material_source": "CAL FIRE damage inspection",
+  "code_era": "before California's wildfire building rules (pre-2008)",
+  "sources": [
+   "CAL FIRE damage inspection"
+  ]
  },
  "b014": {
-  "year_built": null,
+  "year_built": 1935,
   "effective_year_built": null,
-  "year_source": null,
-  "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "fire": {
+   "roof": "Asphalt",
+   "vent_screens": "No Vents",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "No Deck/Porch"
+  },
+  "structure_type": "Utility Misc Structure",
+  "material": "stucco brick cement siding",
+  "material_source": "CAL FIRE damage inspection",
+  "code_era": "before California's wildfire building rules (pre-2008)",
+  "sources": [
+   "CAL FIRE damage inspection"
+  ]
  },
  "b015": {
-  "year_built": null,
+  "year_built": 1931,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 2,
   "floor_area_sqft": 4951,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062223,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Multi Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b016": {
-  "year_built": null,
+  "year_built": 1941,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 1,
   "floor_area_sqft": 2171,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062066,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Unenclosed",
+   "vent_screens": "No Vents",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Multi Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b017": {
-  "year_built": null,
+  "year_built": 1931,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 2,
   "floor_area_sqft": 4951,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062223,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Multi Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b018": {
-  "year_built": null,
+  "year_built": 1956,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 1,
   "floor_area_sqft": 2004,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062074,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "eaves": "Unenclosed",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Multi Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b019": {
-  "year_built": null,
+  "year_built": 1935,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 1,
   "floor_area_sqft": 2590,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062199,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Enclosed",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b020": {
-  "year_built": null,
+  "year_built": 1913,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 2,
   "floor_area_sqft": 4214,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062195,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "eaves": "Unenclosed",
+   "vent_screens": "Mesh Screen <= 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b021": {
-  "year_built": null,
+  "year_built": 1965,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 1,
   "floor_area_sqft": 2560,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062192,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Unenclosed",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Multi Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b022": {
-  "year_built": null,
+  "year_built": 1927,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 2,
   "floor_area_sqft": 3237,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062242,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Unenclosed",
+   "vent_screens": "No Vents",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "No Deck/Porch"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b023": {
-  "year_built": null,
+  "year_built": 1941,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 1,
   "floor_area_sqft": 1989,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062065,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Unenclosed",
+   "vent_screens": "No Vents",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Multi Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b024": {
-  "year_built": null,
+  "year_built": 1948,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 1,
   "floor_area_sqft": 2079,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062182,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Enclosed",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b025": {
-  "year_built": null,
+  "year_built": 1968,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 1,
   "floor_area_sqft": 2203,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062249,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "eaves": "Unenclosed",
+   "vent_screens": "No Vents",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "No Deck/Porch"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b026": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b027": {
-  "year_built": null,
+  "year_built": 1976,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 1,
   "floor_area_sqft": 1930,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062185,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Unenclosed",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Multi Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b028": {
-  "year_built": null,
+  "year_built": 1919,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 2,
   "floor_area_sqft": 4924,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062190,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b029": {
-  "year_built": null,
+  "year_built": 1960,
   "effective_year_built": null,
-  "year_source": null,
-  "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "fire": {
+   "roof": "Asphalt",
+   "vent_screens": "No Vents",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "No Windows",
+   "deck_or_porch": "No Deck/Porch"
+  },
+  "structure_type": "Utility Misc Structure",
+  "material": "stucco brick cement siding",
+  "material_source": "CAL FIRE damage inspection",
+  "code_era": "before California's wildfire building rules (pre-2008)",
+  "sources": [
+   "CAL FIRE damage inspection"
+  ]
  },
  "b030": {
-  "year_built": null,
+  "year_built": 1936,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 1,
   "floor_area_sqft": 1278,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062202,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Enclosed",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b031": {
-  "year_built": null,
+  "year_built": 1925,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 2,
   "floor_area_sqft": 3114,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062246,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "Wood"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b032": {
-  "year_built": null,
+  "year_built": 1968,
   "effective_year_built": null,
-  "year_source": null,
-  "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "fire": {
+   "roof": "Tile",
+   "eaves": "Unenclosed",
+   "vent_screens": "No Vents",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "No Deck/Porch"
+  },
+  "structure_type": "Utility Misc Structure",
+  "material": "stucco brick cement siding",
+  "material_source": "CAL FIRE damage inspection",
+  "code_era": "before California's wildfire building rules (pre-2008)",
+  "sources": [
+   "CAL FIRE damage inspection"
+  ]
  },
  "b033": {
-  "year_built": null,
+  "year_built": 1916,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 1,
   "floor_area_sqft": 3670,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062197,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Unenclosed",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b034": {
-  "year_built": null,
+  "year_built": 1958,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "piers",
   "foundation_height_ft": 5.25,
   "stories": 1,
   "floor_area_sqft": 2696,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062073,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Enclosed",
+   "vent_screens": "Mesh Screen <= 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Multi Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b035": {
-  "year_built": null,
+  "year_built": 1925,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 2,
   "floor_area_sqft": 3878,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062064,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "eaves": "Unenclosed",
+   "vent_screens": "No Vents",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b036": {
-  "year_built": null,
+  "year_built": 1946,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "wood siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 1,
   "floor_area_sqft": 2062,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062236,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "siding": "Wood",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b037": {
-  "year_built": null,
+  "year_built": 1916,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 1,
   "floor_area_sqft": 3670,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062197,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Unenclosed",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b038": {
-  "year_built": null,
+  "year_built": 1956,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 1,
   "floor_area_sqft": 2313,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062058,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "eaves": "Unenclosed",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Multi Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b039": {
-  "year_built": null,
+  "year_built": 1936,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 1,
   "floor_area_sqft": 2438,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062210,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b040": {
-  "year_built": null,
+  "year_built": 1924,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 2,
   "floor_area_sqft": 4009,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062245,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "No Deck/Porch"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b041": {
-  "year_built": null,
+  "year_built": 1960,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 1,
   "floor_area_sqft": 2978,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062080,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Unenclosed",
+   "vent_screens": "Mesh Screen <= 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Multi Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b042": {
-  "year_built": null,
+  "year_built": 1939,
   "effective_year_built": null,
-  "year_source": null,
-  "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "fire": {
+   "roof": "Asphalt",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "No Deck/Porch"
+  },
+  "structure_type": "Utility Misc Structure",
+  "material": "stucco brick cement siding",
+  "material_source": "CAL FIRE damage inspection",
+  "code_era": "before California's wildfire building rules (pre-2008)",
+  "sources": [
+   "CAL FIRE damage inspection"
+  ]
  },
  "b043": {
-  "year_built": null,
+  "year_built": 1927,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 2,
   "floor_area_sqft": 3862,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062233,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b044": {
-  "year_built": null,
+  "year_built": 1923,
   "effective_year_built": null,
-  "year_source": null,
-  "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "fire": {
+   "roof": "Tile",
+   "eaves": "No Eaves",
+   "vent_screens": "No Vents",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Utility Misc Structure",
+  "material": "stucco brick cement siding",
+  "material_source": "CAL FIRE damage inspection",
+  "code_era": "before California's wildfire building rules (pre-2008)",
+  "sources": [
+   "CAL FIRE damage inspection"
+  ]
  },
  "b045": {
-  "year_built": null,
+  "year_built": 1923,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 2,
   "floor_area_sqft": 2626,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062188,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "eaves": "No Eaves",
+   "vent_screens": "Mesh Screen > 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Single Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b046": {
-  "year_built": null,
+  "year_built": 1920,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "crawlspace",
   "foundation_height_ft": 2,
   "stories": 1,
   "floor_area_sqft": 3888,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062056,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "eaves": "Unenclosed",
+   "vent_screens": "Mesh Screen <= 1/8\"",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Multi Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b047": {
-  "year_built": null,
+  "year_built": 1939,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 2,
   "floor_area_sqft": 1430,
   "occupancy": "RES1-2SNB",
   "nsi_id": 42062247,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b048": {
-  "year_built": null,
+  "year_built": 1915,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 3,
   "floor_area_sqft": 7176,
   "occupancy": "RES1-3SNB",
   "nsi_id": 42062079,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Tile",
+   "eaves": "Unenclosed",
+   "vent_screens": "No Vents",
+   "siding": "Stucco Brick Cement",
+   "window_panes": "Multi Pane",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Multi Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b049": {
-  "year_built": null,
+  "year_built": 1948,
   "effective_year_built": null,
-  "year_source": null,
-  "material": "wood frame",
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "material": "stucco brick cement siding",
   "foundation": "slab",
   "foundation_height_ft": 0.75,
   "stories": 1,
   "floor_area_sqft": 1679,
   "occupancy": "RES1-1SNB",
   "nsi_id": 42062243,
+  "material_source": "CAL FIRE damage inspection",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1947,
-  "code_era": null,
+  "fire": {
+   "roof": "Asphalt",
+   "eaves": "Enclosed",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "Masonry/Concrete"
+  },
+  "structure_type": "Single Family Residence Single Story",
+  "code_era": "before California's wildfire building rules (pre-2008)",
   "sources": [
-   "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+   "USACE National Structure Inventory",
+   "CAL FIRE damage inspection"
+  ]
  },
  "b050": {
-  "year_built": null,
+  "year_built": 1948,
   "effective_year_built": null,
-  "year_source": null,
-  "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "year_source": "CAL FIRE damage inspection (from the assessor)",
+  "fire": {
+   "roof": "Asphalt",
+   "siding": "Stucco Brick Cement",
+   "deck_or_porch": "No Deck/Porch"
+  },
+  "structure_type": "Utility Misc Structure",
+  "material": "stucco brick cement siding",
+  "material_source": "CAL FIRE damage inspection",
+  "code_era": "before California's wildfire building rules (pre-2008)",
+  "sources": [
+   "CAL FIRE damage inspection"
+  ]
  }
 }

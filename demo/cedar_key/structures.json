@@ -10,12 +10,14 @@
   "floor_area_sqft": 1088,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136411,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b001": {
   "year_built": null,
@@ -28,12 +30,14 @@
   "floor_area_sqft": 608,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136359,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1989,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b002": {
   "year_built": 1962,
@@ -46,12 +50,14 @@
   "floor_area_sqft": 1449,
   "occupancy": "GOV1",
   "nsi_id": 99135826,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b003": {
   "year_built": 1945,
@@ -64,12 +70,14 @@
   "floor_area_sqft": 1470,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136408,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b004": {
   "year_built": null,
@@ -82,12 +90,14 @@
   "floor_area_sqft": 1472,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136364,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1989,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b005": {
   "year_built": 2007,
@@ -100,12 +110,14 @@
   "floor_area_sqft": 1472,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136364,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "Florida Building Code (2002 or later)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b006": {
   "year_built": 1949,
@@ -118,12 +130,14 @@
   "floor_area_sqft": 800,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136406,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b007": {
   "year_built": 1919,
@@ -136,12 +150,14 @@
   "floor_area_sqft": 724,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135829,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b008": {
   "year_built": 1975,
@@ -154,12 +170,14 @@
   "floor_area_sqft": 796,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136407,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b009": {
   "year_built": 1962,
@@ -172,12 +190,14 @@
   "floor_area_sqft": 1975.71,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135827,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b010": {
   "year_built": 1930,
@@ -190,12 +210,14 @@
   "floor_area_sqft": 848,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136361,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b011": {
   "year_built": null,
@@ -208,12 +230,14 @@
   "floor_area_sqft": 1016,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136365,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1989,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b012": {
   "year_built": 1901,
@@ -226,12 +250,14 @@
   "floor_area_sqft": 590,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99136404,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b013": {
   "year_built": 1920,
@@ -244,12 +270,14 @@
   "floor_area_sqft": 1020,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99136360,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b014": {
   "year_built": 1901,
@@ -262,12 +290,14 @@
   "floor_area_sqft": 2234,
   "occupancy": "RES3C",
   "nsi_id": 99135830,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b015": {
   "year_built": 1964,
@@ -280,12 +310,14 @@
   "floor_area_sqft": 1092,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136409,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b016": {
   "year_built": 1951,
@@ -298,12 +330,14 @@
   "floor_area_sqft": 1272,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136410,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b017": {
   "year_built": 1930,
@@ -316,12 +350,14 @@
   "floor_area_sqft": 848,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136361,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b018": {
   "year_built": 1901,
@@ -334,12 +370,14 @@
   "floor_area_sqft": 1092,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136409,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b019": {
   "year_built": 1925,
@@ -352,12 +390,14 @@
   "floor_area_sqft": 1690,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136357,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b020": {
   "year_built": 1925,
@@ -370,12 +410,14 @@
   "floor_area_sqft": 878,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136469,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b021": {
   "year_built": 1935,
@@ -384,8 +426,7 @@
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "county tax roll"
-  ],
-  "note": "No National Structure Inventory record here."
+  ]
  },
  "b022": {
   "year_built": 1901,
@@ -398,12 +439,14 @@
   "floor_area_sqft": 2816,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99136405,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b023": {
   "year_built": null,
@@ -416,12 +459,14 @@
   "floor_area_sqft": 720,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136363,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1989,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b024": {
   "year_built": 1910,
@@ -434,12 +479,14 @@
   "floor_area_sqft": 660,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136362,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b025": {
   "year_built": 1962,
@@ -452,12 +499,14 @@
   "floor_area_sqft": 1650,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135821,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b026": {
   "year_built": 1901,
@@ -470,12 +519,14 @@
   "floor_area_sqft": 4104,
   "occupancy": "RES3A",
   "nsi_id": 99135446,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b027": {
   "year_built": 1920,
@@ -488,12 +539,14 @@
   "floor_area_sqft": 660,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136358,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b028": {
   "year_built": 1935,
@@ -506,12 +559,14 @@
   "floor_area_sqft": 1520,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136467,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b029": {
   "year_built": 1962,
@@ -524,12 +579,14 @@
   "floor_area_sqft": 1451,
   "occupancy": "GOV1",
   "nsi_id": 99135823,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b030": {
   "year_built": 1975,
@@ -542,12 +599,14 @@
   "floor_area_sqft": 1881,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136512,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b031": {
   "year_built": 1920,
@@ -560,12 +619,14 @@
   "floor_area_sqft": 660,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136358,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b032": {
   "year_built": 1987,
@@ -578,12 +639,14 @@
   "floor_area_sqft": 612,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99135844,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b033": {
   "year_built": 1952,
@@ -596,12 +659,14 @@
   "floor_area_sqft": 2900,
   "occupancy": "REL1",
   "nsi_id": 99136474,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b034": {
   "year_built": 1901,
@@ -614,12 +679,14 @@
   "floor_area_sqft": 928,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135444,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b035": {
   "year_built": 1952,
@@ -632,12 +699,14 @@
   "floor_area_sqft": 983.4,
   "occupancy": "REL1",
   "nsi_id": 99136472,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b036": {
   "year_built": 1962,
@@ -650,12 +719,14 @@
   "floor_area_sqft": 1486,
   "occupancy": "GOV1",
   "nsi_id": 99135825,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b037": {
   "year_built": 1970,
@@ -668,12 +739,14 @@
   "floor_area_sqft": 1134,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135718,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b038": {
   "year_built": 1940,
@@ -686,12 +759,14 @@
   "floor_area_sqft": 938,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135726,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b039": {
   "year_built": 1938,
@@ -704,12 +779,14 @@
   "floor_area_sqft": 1287,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135450,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b040": {
   "year_built": 2019,
@@ -722,12 +799,14 @@
   "floor_area_sqft": 720,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136511,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "Florida Building Code (2002 or later)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b041": {
   "year_built": 1998,
@@ -740,12 +819,14 @@
   "floor_area_sqft": 1042,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135846,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b042": {
   "year_built": 1884,
@@ -758,12 +839,14 @@
   "floor_area_sqft": 2466,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135448,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b043": {
   "year_built": 2019,
@@ -776,12 +859,14 @@
   "floor_area_sqft": 1488,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136513,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "Florida Building Code (2002 or later)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b044": {
   "year_built": 1930,
@@ -794,12 +879,14 @@
   "floor_area_sqft": 1040,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99135712,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b045": {
   "year_built": 1980,
@@ -812,12 +899,14 @@
   "floor_area_sqft": 5884,
   "occupancy": "RES3C",
   "nsi_id": 99136468,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b046": {
   "year_built": 1920,
@@ -830,12 +919,14 @@
   "floor_area_sqft": 840,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135728,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b047": {
   "year_built": 1992,
@@ -848,12 +939,14 @@
   "floor_area_sqft": 2906,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135833,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b048": {
   "year_built": 1962,
@@ -866,12 +959,14 @@
   "floor_area_sqft": 1498,
   "occupancy": "GOV1",
   "nsi_id": 99135824,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b049": {
   "year_built": 1993,
@@ -884,12 +979,14 @@
   "floor_area_sqft": 1200,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135714,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b050": {
   "year_built": 1952,
@@ -902,12 +999,14 @@
   "floor_area_sqft": 840,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135728,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b051": {
   "year_built": 1902,
@@ -920,12 +1019,14 @@
   "floor_area_sqft": 2116,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136514,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b052": {
   "year_built": 1903,
@@ -938,12 +1039,14 @@
   "floor_area_sqft": 1100,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135722,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b053": {
   "year_built": 1962,
@@ -956,12 +1059,14 @@
   "floor_area_sqft": 1459,
   "occupancy": "GOV1",
   "nsi_id": 99135838,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b054": {
   "year_built": 1996,
@@ -974,12 +1079,14 @@
   "floor_area_sqft": 510,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135847,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b055": {
   "year_built": 1930,
@@ -992,12 +1099,14 @@
   "floor_area_sqft": 756,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99136510,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b056": {
   "year_built": 1951,
@@ -1010,12 +1119,14 @@
   "floor_area_sqft": 684,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135443,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b057": {
   "year_built": 1952,
@@ -1028,12 +1139,14 @@
   "floor_area_sqft": 1100,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135709,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b058": {
   "year_built": 1915,
@@ -1046,12 +1159,14 @@
   "floor_area_sqft": 1480,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135710,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b059": {
   "year_built": 1925,
@@ -1064,12 +1179,14 @@
   "floor_area_sqft": 1826,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135835,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b060": {
   "year_built": 1992,
@@ -1082,12 +1199,14 @@
   "floor_area_sqft": 2122,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99135837,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b061": {
   "year_built": 1950,
@@ -1100,12 +1219,14 @@
   "floor_area_sqft": 3853,
   "occupancy": "REL1",
   "nsi_id": 99135449,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b062": {
   "year_built": 1998,
@@ -1118,12 +1239,14 @@
   "floor_area_sqft": 1312,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99135447,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b063": {
   "year_built": 1901,
@@ -1136,12 +1259,14 @@
   "floor_area_sqft": 1258,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135950,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b064": {
   "year_built": 1930,
@@ -1154,12 +1279,14 @@
   "floor_area_sqft": 1508,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136509,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b065": {
   "year_built": 1901,
@@ -1172,12 +1299,14 @@
   "floor_area_sqft": 1270,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99135311,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b066": {
   "year_built": 1954,
@@ -1190,12 +1319,14 @@
   "floor_area_sqft": 1373,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135845,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b067": {
   "year_built": 1962,
@@ -1208,12 +1339,14 @@
   "floor_area_sqft": 1594.29,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135841,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b068": {
   "year_built": 1940,
@@ -1226,12 +1359,14 @@
   "floor_area_sqft": 1696,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135312,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b069": {
   "year_built": 1949,
@@ -1244,12 +1379,14 @@
   "floor_area_sqft": 936,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135720,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b070": {
   "year_built": 1998,
@@ -1262,12 +1399,14 @@
   "floor_area_sqft": 1312,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99135447,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b071": {
   "year_built": 1954,
@@ -1280,12 +1419,14 @@
   "floor_area_sqft": 1661,
   "occupancy": "REL1",
   "nsi_id": 99135445,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b072": {
   "year_built": 1940,
@@ -1294,8 +1435,7 @@
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "county tax roll"
-  ],
-  "note": "No National Structure Inventory record here."
+  ]
  },
  "b073": {
   "year_built": 1901,
@@ -1308,12 +1448,14 @@
   "floor_area_sqft": 1327,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135331,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b074": {
   "year_built": 1925,
@@ -1326,12 +1468,14 @@
   "floor_area_sqft": 1345,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135708,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b075": {
   "year_built": 1925,
@@ -1344,12 +1488,14 @@
   "floor_area_sqft": 848,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99135951,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b076": {
   "year_built": 1953,
@@ -1362,12 +1508,14 @@
   "floor_area_sqft": 9213,
   "occupancy": "REL1",
   "nsi_id": 99136508,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b077": {
   "year_built": 1920,
@@ -1380,12 +1528,14 @@
   "floor_area_sqft": 1746,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135831,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b078": {
   "year_built": 1945,
@@ -1398,12 +1548,14 @@
   "floor_area_sqft": 3897,
   "occupancy": "COM1",
   "nsi_id": 99135321,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b079": {
   "year_built": 1999,
@@ -1416,12 +1568,14 @@
   "floor_area_sqft": 2000,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135834,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b080": {
   "year_built": 1940,
@@ -1434,12 +1588,14 @@
   "floor_area_sqft": 1438,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135703,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b081": {
   "year_built": null,
@@ -1452,12 +1608,14 @@
   "floor_area_sqft": 1244,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135949,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1989,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b082": {
   "year_built": 1967,
@@ -1470,12 +1628,14 @@
   "floor_area_sqft": 2928,
   "occupancy": "RES3B",
   "nsi_id": 99135843,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b083": {
   "year_built": 1993,
@@ -1488,12 +1648,14 @@
   "floor_area_sqft": 1717,
   "occupancy": "COM8",
   "nsi_id": 99135713,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b084": {
   "year_built": 1962,
@@ -1506,12 +1668,14 @@
   "floor_area_sqft": 1544.57,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135839,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b085": {
   "year_built": 1978,
@@ -1524,12 +1688,14 @@
   "floor_area_sqft": 2201,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135832,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b086": {
   "year_built": 1965,
@@ -1542,20 +1708,21 @@
   "floor_area_sqft": 640,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135329,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b087": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b088": {
   "year_built": 1968,
@@ -1568,12 +1735,14 @@
   "floor_area_sqft": 576,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136504,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b089": {
   "year_built": 1968,
@@ -1582,8 +1751,7 @@
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "county tax roll"
-  ],
-  "note": "No National Structure Inventory record here."
+  ]
  },
  "b090": {
   "year_built": 1901,
@@ -1596,12 +1764,14 @@
   "floor_area_sqft": 1000,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135836,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b091": {
   "year_built": 1990,
@@ -1614,12 +1784,14 @@
   "floor_area_sqft": 5234.09,
   "occupancy": "RES3B",
   "nsi_id": 99136443,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b092": {
   "year_built": 1904,
@@ -1632,12 +1804,14 @@
   "floor_area_sqft": 1188,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99136376,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b093": {
   "year_built": 1949,
@@ -1650,20 +1824,21 @@
   "floor_area_sqft": 780,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99136377,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b094": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b095": {
   "year_built": null,
@@ -1676,12 +1851,14 @@
   "floor_area_sqft": 1711,
   "occupancy": "RES4",
   "nsi_id": 99135952,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1989,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b096": {
   "year_built": 1905,
@@ -1694,12 +1871,14 @@
   "floor_area_sqft": 1582,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99135948,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b097": {
   "year_built": 1962,
@@ -1712,20 +1891,21 @@
   "floor_area_sqft": 2278,
   "occupancy": "GOV1",
   "nsi_id": 99136445,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b098": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b099": {
   "year_built": 1940,
@@ -1738,12 +1918,14 @@
   "floor_area_sqft": 1249,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135927,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b100": {
   "year_built": 1904,
@@ -1756,12 +1938,14 @@
   "floor_area_sqft": 1182,
   "occupancy": "RES1-2SWB",
   "nsi_id": 99136378,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b101": {
   "year_built": 2005,
@@ -1774,12 +1958,14 @@
   "floor_area_sqft": 676,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135939,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "Florida Building Code (2002 or later)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b102": {
   "year_built": 1998,
@@ -1792,12 +1978,14 @@
   "floor_area_sqft": 1532,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135721,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b103": {
   "year_built": 1954,
@@ -1810,12 +1998,14 @@
   "floor_area_sqft": 6150,
   "occupancy": "COM1",
   "nsi_id": 99135316,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b104": {
   "year_built": 2012,
@@ -1828,12 +2018,14 @@
   "floor_area_sqft": 1200,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136503,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "Florida Building Code (2002 or later)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b105": {
   "year_built": 1984,
@@ -1846,12 +2038,14 @@
   "floor_area_sqft": 1791,
   "occupancy": "COM4",
   "nsi_id": 99135322,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b106": {
   "year_built": null,
@@ -1864,20 +2058,21 @@
   "floor_area_sqft": 2192,
   "occupancy": "RES4",
   "nsi_id": 99135953,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1989,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b107": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b108": {
   "year_built": 1880,
@@ -1890,12 +2085,14 @@
   "floor_area_sqft": 2687,
   "occupancy": "RES4",
   "nsi_id": 99136447,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b109": {
   "year_built": 1945,
@@ -1908,12 +2105,14 @@
   "floor_area_sqft": 3668.33,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136499,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b110": {
   "year_built": 1995,
@@ -1926,12 +2125,14 @@
   "floor_area_sqft": 1152,
   "occupancy": "RES3A",
   "nsi_id": 99158028,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b111": {
   "year_built": 1995,
@@ -1944,12 +2145,14 @@
   "floor_area_sqft": 1024,
   "occupancy": "RES3A",
   "nsi_id": 99135944,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b112": {
   "year_built": 1973,
@@ -1962,12 +2165,14 @@
   "floor_area_sqft": 1020,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99135723,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b113": {
   "year_built": 1962,
@@ -1980,20 +2185,21 @@
   "floor_area_sqft": 2302,
   "occupancy": "GOV1",
   "nsi_id": 99136446,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b114": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b115": {
   "year_built": 1945,
@@ -2006,12 +2212,14 @@
   "floor_area_sqft": 2323,
   "occupancy": "REL1",
   "nsi_id": 99136498,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b116": {
   "year_built": 2002,
@@ -2024,12 +2232,14 @@
   "floor_area_sqft": 2472,
   "occupancy": "REL1",
   "nsi_id": 99136502,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "Florida Building Code (2002 or later)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b117": {
   "year_built": 1930,
@@ -2042,12 +2252,14 @@
   "floor_area_sqft": 1024,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99135711,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b118": {
   "year_built": 1915,
@@ -2060,12 +2272,14 @@
   "floor_area_sqft": 5668,
   "occupancy": "RES3A",
   "nsi_id": 99136375,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b119": {
   "year_built": 1995,
@@ -2078,12 +2292,14 @@
   "floor_area_sqft": 1024,
   "occupancy": "RES3A",
   "nsi_id": 99135917,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b120": {
   "year_built": 2014,
@@ -2096,12 +2312,14 @@
   "floor_area_sqft": 884,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136501,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "Florida Building Code (2002 or later)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b121": {
   "year_built": 1920,
@@ -2114,12 +2332,14 @@
   "floor_area_sqft": 1152,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135908,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b122": {
   "year_built": 1901,
@@ -2132,12 +2352,14 @@
   "floor_area_sqft": 3440,
   "occupancy": "COM8",
   "nsi_id": 99136374,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b123": {
   "year_built": 1965,
@@ -2150,12 +2372,14 @@
   "floor_area_sqft": 4296.32,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135695,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b124": {
   "year_built": 1995,
@@ -2168,12 +2392,14 @@
   "floor_area_sqft": 3332,
   "occupancy": "RES4",
   "nsi_id": 99135931,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b125": {
   "year_built": 2019,
@@ -2186,12 +2412,14 @@
   "floor_area_sqft": 924,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135707,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "Florida Building Code (2002 or later)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b126": {
   "year_built": 1981,
@@ -2204,12 +2432,14 @@
   "floor_area_sqft": 1120,
   "occupancy": "RES3A",
   "nsi_id": 99158030,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b127": {
   "year_built": 1995,
@@ -2222,20 +2452,21 @@
   "floor_area_sqft": 1024,
   "occupancy": "RES3A",
   "nsi_id": 99135923,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b128": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b129": {
   "year_built": 1918,
@@ -2248,12 +2479,14 @@
   "floor_area_sqft": 1820,
   "occupancy": "RES1-1SWB",
   "nsi_id": 99136453,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b130": {
   "year_built": null,
@@ -2266,12 +2499,14 @@
   "floor_area_sqft": 1184,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135943,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1989,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b131": {
   "year_built": 1901,
@@ -2284,12 +2519,14 @@
   "floor_area_sqft": 2280,
   "occupancy": "COM8",
   "nsi_id": 99136373,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b132": {
   "year_built": 1912,
@@ -2302,12 +2539,14 @@
   "floor_area_sqft": 1184,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135943,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b133": {
   "year_built": 1925,
@@ -2320,12 +2559,14 @@
   "floor_area_sqft": 1702,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99136245,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b134": {
   "year_built": 1981,
@@ -2338,12 +2579,14 @@
   "floor_area_sqft": 1239,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99135719,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b135": {
   "year_built": 1981,
@@ -2356,12 +2599,14 @@
   "floor_area_sqft": 1120,
   "occupancy": "RES3A",
   "nsi_id": 99136452,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b136": {
   "year_built": 1978,
@@ -2374,12 +2619,14 @@
   "floor_area_sqft": 1020,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135724,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b137": {
   "year_built": 2009,
@@ -2392,12 +2639,14 @@
   "floor_area_sqft": 1280,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99136448,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "Florida Building Code (2002 or later)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b138": {
   "year_built": 2009,
@@ -2410,12 +2659,14 @@
   "floor_area_sqft": 1280,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99136449,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "Florida Building Code (2002 or later)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b139": {
   "year_built": 1940,
@@ -2428,12 +2679,14 @@
   "floor_area_sqft": 4323,
   "occupancy": "COM4",
   "nsi_id": 99135338,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b140": {
   "year_built": 1992,
@@ -2446,12 +2699,14 @@
   "floor_area_sqft": 448,
   "occupancy": "RES3A",
   "nsi_id": 99135936,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b141": {
   "year_built": 2009,
@@ -2464,12 +2719,14 @@
   "floor_area_sqft": 1632,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136450,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "Florida Building Code (2002 or later)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b142": {
   "year_built": 1901,
@@ -2482,12 +2739,14 @@
   "floor_area_sqft": 1674,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99136248,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b143": {
   "year_built": 1901,
@@ -2500,12 +2759,14 @@
   "floor_area_sqft": 1815,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99136252,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b144": {
   "year_built": 1901,
@@ -2518,20 +2779,21 @@
   "floor_area_sqft": 2640,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99136260,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b145": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b146": {
   "year_built": 1901,
@@ -2544,12 +2806,14 @@
   "floor_area_sqft": 4521.85,
   "occupancy": "COM1",
   "nsi_id": 99135689,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b147": {
   "year_built": 2006,
@@ -2562,12 +2826,14 @@
   "floor_area_sqft": 1280,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99135920,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "Florida Building Code (2002 or later)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b148": {
   "year_built": 1925,
@@ -2580,12 +2846,14 @@
   "floor_area_sqft": 1704,
   "occupancy": "RES1-1SNB",
   "nsi_id": 99136253,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b149": {
   "year_built": 1925,
@@ -2598,11 +2866,13 @@
   "floor_area_sqft": 1702,
   "occupancy": "RES1-2SNB",
   "nsi_id": 99136245,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "code_era": "before flood-elevation rules (pre-1975)",
   "sources": [
    "USACE National Structure Inventory",
    "county tax roll"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  }
 }

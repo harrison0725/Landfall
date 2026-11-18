@@ -10,12 +10,14 @@
   "floor_area_sqft": 1396,
   "occupancy": "RES2",
   "nsi_id": 125908065,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1990,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b001": {
   "year_built": null,
@@ -28,12 +30,14 @@
   "floor_area_sqft": 2577,
   "occupancy": "COM1",
   "nsi_id": 125904318,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1990,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b002": {
   "year_built": null,
@@ -46,20 +50,21 @@
   "floor_area_sqft": 2168,
   "occupancy": "RES1-1SNB",
   "nsi_id": 125904320,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1990,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b003": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b004": {
   "year_built": null,
@@ -72,12 +77,14 @@
   "floor_area_sqft": 558,
   "occupancy": "COM1",
   "nsi_id": 125904316,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1990,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b005": {
   "year_built": null,
@@ -90,12 +97,14 @@
   "floor_area_sqft": 1055.87,
   "occupancy": "IND3",
   "nsi_id": 125904312,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1990,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b006": {
   "year_built": null,
@@ -108,12 +117,14 @@
   "floor_area_sqft": 558,
   "occupancy": "COM1",
   "nsi_id": 125904316,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1990,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b007": {
   "year_built": null,
@@ -126,12 +137,14 @@
   "floor_area_sqft": 2573,
   "occupancy": "RES1-1SNB",
   "nsi_id": 125904465,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1985,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b008": {
   "year_built": null,
@@ -144,12 +157,14 @@
   "floor_area_sqft": 1904,
   "occupancy": "RES2",
   "nsi_id": 125908046,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1990,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b009": {
   "year_built": null,
@@ -162,20 +177,21 @@
   "floor_area_sqft": 1915,
   "occupancy": "RES1-1SNB",
   "nsi_id": 125904317,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1990,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b010": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b011": {
   "year_built": null,
@@ -188,20 +204,21 @@
   "floor_area_sqft": 1139,
   "occupancy": "COM1",
   "nsi_id": 125904319,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1990,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b012": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b013": {
   "year_built": null,
@@ -214,20 +231,21 @@
   "floor_area_sqft": 1915,
   "occupancy": "RES1-1SNB",
   "nsi_id": 125904317,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1990,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b014": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b015": {
   "year_built": null,
@@ -240,20 +258,21 @@
   "floor_area_sqft": 1108,
   "occupancy": "COM1",
   "nsi_id": 125904315,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1990,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b016": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b017": {
   "year_built": null,
@@ -266,12 +285,14 @@
   "floor_area_sqft": 1414,
   "occupancy": "COM1",
   "nsi_id": 125904311,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1990,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b018": {
   "year_built": null,
@@ -284,20 +305,21 @@
   "floor_area_sqft": 1743,
   "occupancy": "RES1-1SNB",
   "nsi_id": 125904471,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1985,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b019": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b020": {
   "year_built": null,
@@ -310,12 +332,14 @@
   "floor_area_sqft": 2759.17,
   "occupancy": "RES4",
   "nsi_id": 125904464,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1985,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b021": {
   "year_built": null,
@@ -328,12 +352,14 @@
   "floor_area_sqft": 3067,
   "occupancy": "RES1-1SNB",
   "nsi_id": 125908021,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1990,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b022": {
   "year_built": null,
@@ -346,12 +372,14 @@
   "floor_area_sqft": 5129,
   "occupancy": "RES3B",
   "nsi_id": 125904314,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1990,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b023": {
   "year_built": null,
@@ -364,28 +392,28 @@
   "floor_area_sqft": 5963,
   "occupancy": "COM4",
   "nsi_id": 125915674,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1985,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b024": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b025": {
   "year_built": null,
   "effective_year_built": null,
   "year_source": null,
   "code_era": null,
-  "sources": [],
-  "note": "No National Structure Inventory record here."
+  "sources": []
  },
  "b026": {
   "year_built": null,
@@ -398,12 +426,14 @@
   "floor_area_sqft": 1134,
   "occupancy": "COM1",
   "nsi_id": 125904472,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1985,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  },
  "b027": {
   "year_built": null,
@@ -416,11 +446,13 @@
   "floor_area_sqft": 1328,
   "occupancy": "RES2",
   "nsi_id": 125904473,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
   "block_median_year_built": 1985,
   "code_era": null,
   "sources": [
    "USACE National Structure Inventory"
-  ],
-  "note": "Material and stories from the National Structure Inventory are usually right; its foundation type often is not (41% agreement with field assessors in Cedar Key)."
+  ]
  }
 }

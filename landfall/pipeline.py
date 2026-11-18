@@ -1433,7 +1433,7 @@ def records(spec: AreaSpec, root: Path, log: Log = _quiet) -> None:
         from .structures import fetch as fetch_structures
 
         try:
-            fetch_structures(d, "FL" if florida else None)
+            fetch_structures(d, "FL" if florida else None, event_kind(spec), spec.storm)
         except Exception as e:  # how buildings were built is nice to have; the drafts don't need it
             log("warning", text=f"building records (National Structure Inventory) unavailable: {e}"[:300])
 

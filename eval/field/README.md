@@ -129,3 +129,28 @@ the Levy County Property Appraiser. In the rows that do have a year, the
 era makes little difference on its own (DS4+ 8% before 1975, 5% 1975-2001,
 8% after 2002), while the flood zone does (VE 20% against AE 8%), so exposure
 has to be controlled for before reading anything into construction.
+
+## Other disasters (Nov 18, 2026)
+
+`landfall/structures.py` now picks sources by disaster and place:
+
+| disaster (demo area) | year built | how it was built | damage ground truth for research |
+| --- | --- | --- | --- |
+| Hurricane, Florida (Cedar Key, Treasure Island) | county tax roll | street photos, NSI | PRJ-6245 survey (Cedar Key) |
+| Wildfire, California (Altadena) | CAL FIRE inspection (from the assessor; kept for burned houses) | CAL FIRE inspection: roof, eaves, vent screens, siding, windows, deck; NSI | CAL FIRE inspection damage (`la_fires_dins.csv`, 30,507 structures) |
+| Flood, Texas (Ingram) | none free (NSI block median only) | NSI; no Mapillary photos after the flood | none found yet |
+| Earthquake, Myanmar (Mandalay); hurricane, Jamaica (Montego Bay) | none | street photos where Mapillary has them (none yet) | none found yet |
+
+The code era follows the disaster: flood-elevation rules (1975), Florida
+Building Code (2002) for hurricanes, California's wildfire building rules
+(Chapter 7A, 2008), US seismic codes (1976, 1997) and Myanmar's national
+building code (2012) for earthquakes.
+
+`scripts/fire_table.py` writes `la_fires_dins.csv` (no street addresses or
+parcel numbers) and `la_fires_first_look.txt`. First look, destroyed share:
+enclosed eaves 17% against unenclosed 26%; vent mesh 1/8 inch or finer 36%
+against coarser 48%; tile roofs 40% against asphalt 54%; double-wide mobile
+homes 96%. Two cautions: "Unknown" features go with destroyed houses (an
+inspector can't see the eaves of a house that burned down), so the feature
+comparisons lean on survivors; and none of this holds location, wind or
+neighbouring houses equal yet.

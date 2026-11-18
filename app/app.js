@@ -790,6 +790,7 @@ async function openBuilding(id) {
     ["Flood water outside", a && a.flood_ft != null ? `${a.flood_ft.toFixed(1)} ft deep` : us ? "none measured here" : "unknown (not measured here)"],
     ["Built", a && a.built && (a.built.year_built || a.built.block_median_year_built) ? (a.built.year_built ? String(a.built.year_built) : `around ${a.built.block_median_year_built} (typical for the block)`) + (a.built.code_era ? `, ${a.built.code_era}` : "") : us ? "unknown (no property record)" : "unknown (no property records)"],
     ["Made of", a && a.built && a.built.material ? a.built.material + (a.built.material_source && /Inventory/.test(a.built.material_source) ? " (national inventory, often wrong)" : "") : "unknown"],
+    ...(a && a.built && a.built.fire && Object.keys(a.built.fire).length ? [["Fire features", Object.entries(a.built.fire).map(([k, v]) => `${k.replace(/_/g, " ")}: ${v}`).join("; ") + " (CAL FIRE inspection)"]] : []),
     ["Stands on", a && a.built && a.built.foundation ? a.built.foundation + (a.built.stories ? `, ${a.built.stories} ${a.built.stories === 1 ? "story" : "stories"}` : "") + (a.built.foundation_source && /Inventory/.test(a.built.foundation_source) ? " (national inventory, often wrong)" : "") : "unknown"],
     ["Floor height", a && a.record && a.record.basis ? a.record.basis : us ? "unknown" : "unknown (no property records)"],
     ["Water inside", !us ? "unknown" : need && need.water_inside_ft[1] > 0 ? `${need.water_inside_ft[0].toFixed(1)}–${need.water_inside_ft[1].toFixed(1)} ft (estimate)` : "none"],

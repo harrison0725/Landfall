@@ -34,3 +34,22 @@ def test_describe_and_street_photos_win_over_the_inventory():
 def test_without_a_tax_roll_year_the_block_median_is_marked_as_such():
     rec = describe({"bldgtype": "W", "med_yr_blt": 1989}, None, None)
     assert rec["year_built"] is None and rec["block_median_year_built"] == 1989 and rec["code_era"] is None
+
+
+def test_code_era_depends_on_the_disaster():
+    assert "pre-2008" in code_era(1950, "CA", "wildfire")
+    assert "2008 or later" in code_era(2015, "CA", "wildfire")
+    assert "pre-1976" in code_era(1960, "CA", "earthquake")
+    assert "Myanmar" in code_era(2015, None, "earthquake")
+    assert "flood-elevation" in code_era(1960, "TX", "flood")
+
+
+def test_fire_inspection_gives_year_and_fire_features():
+    dins = {"YEARBUILT": 1941, "ROOFCONSTR": "Asphalt", "EAVES": "Unenclosed", "VENTSCREEN": "Unknown",
+            "EXTERIORSI": "Wood", "STRUCTURET": "Single Family Residence Single Story"}
+    rec = describe({"bldgtype": "M", "num_story": 1}, None, "CA", "wildfire", dins)
+    assert rec["year_built"] == 1941 and "inspection" in rec["year_source"] and "pre-2008" in rec["code_era"]
+    assert rec["fire"] == {"roof": "Asphalt", "eaves": "Unenclosed", "siding": "Wood"}  # unknowns left out
+    assert rec["material"] == "wood siding"
+    out = merge(rec, {"material": "masonry", "foundation": None, "stories": 2})
+    assert out["material"] == "wood siding" and out["stories"] == 2  # an inspector beats the photos

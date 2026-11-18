@@ -135,6 +135,8 @@ def render(d: Path, bid: str, pair_png: bytes) -> str:
             ("Foundation", f"{built['foundation']} ({built.get('foundation_source')})" if built.get("foundation") else "unknown"),
             ("Stories", f"{built['stories']} ({built.get('stories_source')})" if built.get("stories") else "unknown"),
         ]
+        if built.get("fire"):
+            rows_record.append(("Fire features (CAL FIRE inspection)", "; ".join(f"{k.replace('_', ' ')}: {v}" for k, v in built["fire"].items())))
     if n:
         lo, hi = n["water_inside_ft"]
         if flood_known:

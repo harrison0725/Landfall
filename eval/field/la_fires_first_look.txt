@@ -1,0 +1,95 @@
+30507 structures inspected
+damage: {'Destroyed (>50%)': 16263, 'No Damage': 12154, 'Affected (1-9%)': 1590, 'Minor (10-25%)': 319, 'Major (26-50%)': 141, 'Inaccessible': 40}
+
+== damage by fire (groups of 30+)
+  group                                                 n  damaged  destroyed
+  Eaton                                             18426      57%        51%
+  Palisades                                         12081      65%        57%
+
+== damage by building-rules era (year built) (groups of 30+)
+  group                                                 n  damaged  destroyed
+  before California's wildfire building rules (pre  28736      60%        54%
+  unknown                                            1047      48%        40%
+  California wildfire building rules (2008 or late    724      62%        53%
+
+== damage by decade built (groups of 30+)
+  group                                                 n  damaged  destroyed
+  1940s                                              6848      66%        61%
+  1950s                                              6176      62%        55%
+  1920s                                              5299      65%        61%
+  1960s                                              2713      61%        51%
+  1930s                                              1920      58%        52%
+  1970s                                              1508      38%        31%
+  1990s                                              1367      44%        32%
+  unknown                                            1047      48%        40%
+  2000s                                              1010      59%        51%
+  1980s                                               948      45%        37%
+  1910s                                               768      54%        51%
+  2010s                                               544      64%        56%
+  1900s                                               275      74%        71%
+  1890s                                                36      58%        56%
+  2020s                                                33      61%        39%
+
+== damage by roof (groups of 30+)
+  group                                                 n  damaged  destroyed
+  Asphalt                                           20670      61%        54%
+  Tile                                               5712      48%        40%
+  Unknown                                            2332      89%        87%
+  Metal                                               992      55%        46%
+  Concrete                                            493      43%        30%
+  Other                                               176      34%        20%
+  Wood                                                130      63%        58%
+
+== damage by eaves (groups of 30+)
+  group                                                 n  damaged  destroyed
+  Unknown                                           11643      99%        99%
+  Unenclosed                                        11277      36%        26%
+  Enclosed                                           4213      29%        17%
+  No Eaves                                           3372      44%        32%
+
+== damage by vent screens (groups of 30+)
+  group                                                 n  damaged  destroyed
+  Mesh Screen > 1/8"                                12047      56%        48%
+  Unknown                                            7862      94%        93%
+  No Vents                                           6217      36%        26%
+  Mesh Screen <= 1/8"                                3787      44%        36%
+  Unscreened                                          593      31%        21%
+
+== damage by exterior siding (groups of 30+)
+  group                                                 n  damaged  destroyed
+  Stucco Brick Cement                               24652      63%        57%
+  Wood                                               4500      37%        30%
+  Unknown                                             771      94%        93%
+  Metal                                               260      53%        48%
+  Vinyl                                               171      43%        32%
+  Other                                               153      45%        35%
+
+== damage by window panes (groups of 30+)
+  group                                                 n  damaged  destroyed
+  Multi Pane                                        10560      45%        34%
+  Single Pane                                       10268      50%        43%
+  Unknown                                            7462      99%        98%
+  No Windows                                         2216      51%        45%
+
+== damage by deck or porch (groups of 30+)
+  group                                                 n  damaged  destroyed
+  Masonry/Concrete                                  19075      59%        52%
+  No Deck/Porch                                      8852      59%        53%
+  Unknown                                            1444      93%        93%
+  Wood                                               1002      43%        36%
+  Composite                                           134      33%        19%
+
+== damage by structure type (groups of 30+)
+  group                                                 n  damaged  destroyed
+  Single Family Residence Single Story              13103      64%        57%
+  Single Family Residence Multi Story                7840      54%        46%
+  Utility Misc Structure                             7481      62%        57%
+  Multi Family Residence Multi Story                  584      43%        32%
+  Commercial Building Single Story                    371      53%        44%
+  Mobile Home Double Wide                             246      98%        96%
+  School                                              223      48%        43%
+  Infrastructure                                      164      21%         7%
+  Multi Family Residence Single Story                 149      40%        31%
+  Commercial Building Multi Story                     129      48%        28%
+  Mobile Home Single Wide                             113      90%        90%
+  Church                                               34      50%        44%
