@@ -6,6 +6,7 @@ and the web app all run the same code.
     segment(spec, root)          # SAM 3.1 structure masks -> structure loss
     flood(spec, root)            # surveyed water surface minus lidar ground
     debris(spec, root)           # SAM debris piles and blue tarps
+    street(spec, root)           # Mapillary street-level photos (needs a token)
     assess(spec, root)           # per-building agent drafts
 
 Each stage reads and writes files in root/<area>/ and reports progress
@@ -1193,6 +1194,11 @@ def assess(
     yards = {b["id"]: b for b in json.loads(debris_path.read_text())} if debris_path.exists() else {}
     flood_path = d / "flood.json"
     floods = {b["id"]: b["flood_ft"] for b in json.loads(flood_path.read_text())["buildings"]} if flood_path.exists() else {}
+    from .street import load as load_street
+
+    streets = load_street(d)  # Mapillary photos, when the street stage found any
+    if streets:
+        log("street_photos", buildings=len(streets))
 
     def worst(r: dict) -> tuple:
         y = yards.get(r["id"], {})
@@ -1249,7 +1255,7 @@ def assess(
                 trace=[{"model": "cloud check", "note": "after photo is cloud"}],
             )
         try:
-            a = assess_one(bid, pre, post, outline, m, {**r, **yard, "status": status[bid], "uploaded": spec.imagery == "photos", "archive_before": (d / "archive_before.json").exists(), "before_years": gap}, escalate=escalate, kind=kind)
+            a = assess_one(bid, pre, post, outline, m, {**r, **yard, "status": status[bid], "uploaded": spec.imagery == "photos", "archive_before": (d / "archive_before.json").exists(), "before_years": gap}, escalate=escalate, kind=kind, street=streets.get(bid))
         except Exception as e:  # keep going; one bad building should not stop the area
             log("building_failed", id=bid, error=str(e)[:200])
             return dict(id=bid, error=str(e))
@@ -1268,6 +1274,9 @@ def assess(
             tarp_share=None if "yard_note" in yard else m.tarp_share,
             trace=a.trace,
         )
+        if a.street_photos:
+            rec["street_photos"] = a.street_photos
+            rec["first_floor_ft"] = a.first_floor_ft
         if no_before and not rec["needs_human"]:
             # one photo shows what is there, not what changed
             rec["needs_human"] = True
@@ -1422,7 +1431,15 @@ def _drafted_bbox(feats: dict) -> tuple[float, float, float, float]:
     return (min(xs), min(ys), max(xs), max(ys))
 
 
-STAGES = {"prepare": prepare, "segment": segment, "flood": flood, "debris": debris, "assess": assess, "costs": costs}
+def street(spec: AreaSpec, root: Path, log: Log = _quiet, days_after: int = 120) -> dict:
+    """Mapillary street-level photos of each building, taken after the
+    disaster (landfall/street.py). Does nothing without a Mapillary token."""
+    from .street import fetch
+
+    return fetch(spec, root, log, days_after=days_after)
+
+
+STAGES = {"prepare": prepare, "segment": segment, "flood": flood, "debris": debris, "street": street, "assess": assess, "costs": costs}
 
 
 def spec_for(root: Path, name: str) -> AreaSpec:
