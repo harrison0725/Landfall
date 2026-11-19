@@ -6,3 +6,4 @@ __pycache__/
 .venv/
 /data/
 landfall/native/*.so
+demo/*/nsi.json

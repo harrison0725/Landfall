@@ -60,3 +60,97 @@ Files copied unchanged from that publication:
 Street-level photos (Mapillary, `landfall/street.py`) target both gaps: they
 show walls, openings and foundations, and the model reads the first-floor
 height off them.
+
+## With Mapillary street photos, flooding stated apart (Nov 18, 2026)
+
+Seokhwan's rule from this run on: **flooding is not damage.** The category
+rates the building itself; water around or inside it is stated beside the
+category (`flood` in each record: depth around it, first-floor height, water
+in the living space, and a sentence) and never raises it. The PDA flood rule
+that used to raise calls is gone, and the model is told not to count water.
+
+Run: `prepare`, `segment`, `flood`, `debris`, `street` and `assess` on a fresh
+copy of Cedar Key. Drafts: `eval/cedar_key_drafts_street_2026-11-18.json`;
+photo list: `eval/cedar_key_street_2026-11-18.json` (Mapillary image ids, no
+photos are stored here); full score: `eval/cedar_key_field_score_street.txt`.
+
+* **Coverage is nearly complete.** 149 of 150 buildings have at least one
+  photo aimed at them, 337 in all. Every one is a 360° panorama from one
+  contributor (Sitetour), taken October 4, 2024, eight days after landfall.
+* **Agreement with the survey: 95 of 122 exact (78%), up from 65 (53%)**;
+  kappa 0.53, the same. Destroyed 3 of 3, Major or worse 4 of 10 (was 3), and
+  the agent's damage calls are right 4 of 5 times. No flooded house is called
+  damaged because of water any more.
+* **Minor or worse found: still 4 of 16.** The street photos did not add
+  structural finds. Of the 12 missed, 8 have a sound roof; the worst parts
+  are walls and elevated floors (4), windows and doors (3). On raised houses
+  (b137, b138) the survey rates the walls or elevated floor DS4-5 and the
+  model sees the house "intact on its pilings". The survey's own photos are
+  from March to May 2025, ours from October 2024.
+* **The flood note works.** By the survey's first floors, water reached the
+  living space of 44 matched buildings. The note says so on 34, with no false
+  alarms; 6 more had no first-floor reading. The model's first-floor reading
+  is within 1 ft of the survey's on 78 of 108 (median error 1.0 ft).
+* An earlier run the same day, with water still counted (PDA rule), found 9
+  of 16 but called 19 survey-DS0 houses Major, all for water inside.
+
+## How and when each building was built (Nov 18, 2026)
+
+The research goal: predict the damage to a building from how and when it was
+built. `scripts/building_table.py` writes `cedar_key_buildings.csv`, one row
+for each of the 771 surveyed buildings: the survey's assessor-checked
+material, foundation, stories and first-floor height, the component damage
+states, and the county tax roll's actual and effective year built, living
+area, land use and construction class, plus the building-rules era (before
+1975, 1975-2001, Florida Building Code 2002+). First look:
+`cedar_key_buildings_first_look.txt`.
+
+Where Landfall gets these facts for any building (`landfall/structures.py`,
+shown on the map card and the claim page, and in the chat's
+`damage_by_construction` tool), checked against the survey's assessors on
+122 matched buildings (`cedar_key_built_accuracy.txt`, `scripts/score_built.py`):
+
+| source | year built | material | stories | foundation |
+| --- | --- | --- | --- | --- |
+| County tax roll (Florida statewide cadastral) | actual year; reliable | construction class says masonry for most wood houses: not used | | |
+| Street photos read by the agent (Mapillary) | | 86% | 84% | 39% (57% as at grade / short / tall) |
+| USACE National Structure Inventory (live API) | block median only | 16% | 73% | 28% |
+
+The older NSI copy inside the survey file agrees far better (material 85%),
+so the live API's Cedar Key records have probably been re-derived from the
+tax roll's construction class.
+
+**Known gap: today's tax roll drops destroyed buildings.** 89 of the 771
+have no year built on the 2026 roll, and they are the worst hit (40% DS4 or
+worse against 5-8% for the rest). Without a pre-storm (2024) roll, the
+year-built comparison is biased toward survivors. Florida DOR posts only the
+current roll; older rolls are requested from the Department of Revenue or
+the Levy County Property Appraiser. In the rows that do have a year, the
+era makes little difference on its own (DS4+ 8% before 1975, 5% 1975-2001,
+8% after 2002), while the flood zone does (VE 20% against AE 8%), so exposure
+has to be controlled for before reading anything into construction.
+
+## Other disasters (Nov 18, 2026)
+
+`landfall/structures.py` now picks sources by disaster and place:
+
+| disaster (demo area) | year built | how it was built | damage ground truth for research |
+| --- | --- | --- | --- |
+| Hurricane, Florida (Cedar Key, Treasure Island) | county tax roll | street photos, NSI | PRJ-6245 survey (Cedar Key) |
+| Wildfire, California (Altadena) | CAL FIRE inspection (from the assessor; kept for burned houses) | CAL FIRE inspection: roof, eaves, vent screens, siding, windows, deck; NSI | CAL FIRE inspection damage (`la_fires_dins.csv`, 30,507 structures) |
+| Flood, Texas (Ingram) | none free (NSI block median only) | NSI; no Mapillary photos after the flood | none found yet |
+| Earthquake, Myanmar (Mandalay); hurricane, Jamaica (Montego Bay) | none | street photos where Mapillary has them (none yet) | none found yet |
+
+The code era follows the disaster: flood-elevation rules (1975), Florida
+Building Code (2002) for hurricanes, California's wildfire building rules
+(Chapter 7A, 2008), US seismic codes (1976, 1997) and Myanmar's national
+building code (2012) for earthquakes.
+
+`scripts/fire_table.py` writes `la_fires_dins.csv` (no street addresses or
+parcel numbers) and `la_fires_first_look.txt`. First look, destroyed share:
+enclosed eaves 17% against unenclosed 26%; vent mesh 1/8 inch or finer 36%
+against coarser 48%; tile roofs 40% against asphalt 54%; double-wide mobile
+homes 96%. Two cautions: "Unknown" features go with destroyed houses (an
+inspector can't see the eaves of a house that burned down), so the feature
+comparisons lean on survivors; and none of this holds location, wind or
+neighbouring houses equal yet.

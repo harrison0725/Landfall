@@ -104,6 +104,8 @@ def render(d: Path, bid: str, pair_png: bytes) -> str:
         ("Blue tarp on roof", f"{round(a['tarp_share'] * 100)}%" if a.get("tarp_share") else ("not measured" if "tarp_share" in a and a["tarp_share"] is None else "none found")),
         ("Debris in the yard", f"{round(a['debris_share'] * 100)}%" if a.get("debris_share") else ("not measured" if "debris_share" in a and a["debris_share"] is None else "none found")),
     ]
+    if a.get("flood") or (a.get("flood_ft") or 0) >= 0.5:
+        rows_draft.append(("Flooded", ((a.get("flood") or {}).get("label") or "Flooded").replace("Flooded: ", "yes: ") + " (not counted in the category)"))
     if a.get("demolished"):
         rows_draft.append(("Note", "No building stood here during the storm (demolished before it)"))
 
@@ -123,6 +125,18 @@ def render(d: Path, bid: str, pair_png: bytes) -> str:
             ("First floor (estimate)", pr.get("basis") or "unknown"),
         ]
     )
+    from .structures import merge
+
+    built = merge((_read(d / "structures.json") or {}).get(bid), a.get("built_from_street"))
+    if built:
+        rows_record += [
+            ("Building rules when built", built.get("code_era") or "unknown"),
+            ("Made of", f"{built['material']} ({built.get('material_source')})" if built.get("material") else "unknown"),
+            ("Foundation", f"{built['foundation']} ({built.get('foundation_source')})" if built.get("foundation") else "unknown"),
+            ("Stories", f"{built['stories']} ({built.get('stories_source')})" if built.get("stories") else "unknown"),
+        ]
+        if built.get("fire"):
+            rows_record.append(("Fire features (CAL FIRE inspection)", "; ".join(f"{k.replace('_', ' ')}: {v}" for k, v in built["fire"].items())))
     if n:
         lo, hi = n["water_inside_ft"]
         if flood_known:

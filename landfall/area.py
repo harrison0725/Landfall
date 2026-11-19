@@ -32,7 +32,8 @@ Rules:
 - Use the tools for every number and every building you mention. Never guess a count, a depth or a building id.
 - These are first estimates from photos; inspectors make the official decisions. Say so in anything meant to be shared.
 - Name buildings by id and say why each one matters (how badly damaged, how deep the water got, whether a person should visit).
-- Aerial photos can't see inside a house. Where water stood around a house but the first-floor height is unknown, the estimate says slightly damaged; the real damage may be worse. Point this out when flood matters to the answer.
+- Flooding is not counted as damage: the category rates the building itself, and each building says separately whether it flooded and how deep. When flooding matters to the answer, say both.
+- How each building was built (what it's made of, what it stands on, stories, year built and which building rules applied then) is in get_building under built, and damage_by_construction compares damage across those. Say where a fact comes from when it matters: property records and street photos are usually right, the national structure inventory often is not.
 - When you give coordinates, copy them exactly as the tools give them ("lat, lon").
 - Outside the US, also give the international grade (Copernicus EMS: no visible damage, possibly damaged, damaged, destroyed) that the tools report, and say flood depth and repair cost are unknown when the tools say so.
 - Use everyday words. Call the categories "destroyed", "badly damaged" (FEMA: major), "damaged" (FEMA: minor), "slightly damaged" (FEMA: affected) and "no damage seen"; don't add the FEMA name unless the user asks about FEMA or a claim. Say "property records" not tax roll, "hotels and motels" not lodging. Say "should be visited by a person to confirm", not field check, review or PDA. Never show field names, tool names or code words (needs_review, needs_human, drafted). Explain any other term in a few words the first time you use it. Give coordinates only when asked where a building is or for a list of places to visit.
@@ -61,6 +62,9 @@ class Area:
         needs = json.loads((d / "needs.json").read_text()) if (d / "needs.json").exists() else None
         cost_of = {c["id"]: c for c in (costs or {}).get("buildings", [])}
         need_of = {n["id"]: n for n in (needs or {}).get("buildings", [])}
+        from .structures import merge
+
+        structures = json.loads((d / "structures.json").read_text()) if (d / "structures.json").exists() else {}
         buildings = {}
         for bid, a in drafts.items():
             p = feats.get(bid, {})
@@ -82,6 +86,8 @@ class Area:
                 "lat": p.get("centroid", [None, None])[1],
                 "area_m2": p.get("area_m2"),
                 "objections": [o for t in a.get("trace", []) for o in t.get("verifier", [])],
+                "flood": a.get("flood"),
+                "built": merge(structures.get(bid), a.get("built_from_street")),
             }
             if bid in cost_of:
                 c = cost_of[bid]
@@ -175,6 +181,20 @@ class Area:
             out["lat_lon"] = f"{x['lat']:.5f}, {x['lon']:.5f}"
         return out
 
+    def damage_by_construction(self, by: str = "code_era") -> dict:
+        """Damage categories counted by how the buildings were built."""
+        if by not in ("code_era", "material", "foundation", "stories", "decade_built"):
+            return {"error": "by must be code_era, material, foundation, stories or decade_built"}
+        table: dict[str, dict] = {}
+        for x in self.buildings.values():
+            b = x.get("built") or {}
+            key = f"{b['year_built'] // 10 * 10}s" if by == "decade_built" and b.get("year_built") else b.get(by)
+            row = table.setdefault(str(key) if key is not None else "unknown", {c: 0 for c in ORDER} | {"flooded": 0, "buildings": 0})
+            row[x["category"] if x["category"] in ORDER else "none"] += 1
+            row["flooded"] += bool(x.get("flood"))
+            row["buildings"] += 1
+        return {"by": by, "groups": table, "note": "Counts of first estimates; flooding is counted apart, not as damage."}
+
     def plan_inspections(self, max_stops: int = 15, include_flood_only: bool = True) -> dict:
         """Which buildings a field team should visit, in walking order.
 
@@ -217,9 +237,9 @@ class Area:
                 "water_around_house_1_5ft_plus": sum((x["flood_ft"] or 0) >= 1.5 for x in rows),
             }
         out["note"] = (
-            "Water 1.5 ft or more above ground could put 18 inches or more in the living space of a house built at grade, "
-            "which is Major under the PDA guide. Aerial photos do not show first-floor height, so those houses are drafted "
-            "at the category the photos support and need a field check."
+            "Categories rate damage to the building only; flooding is stated beside them, never counted as damage. "
+            "Water 1.5 ft or more above ground could put 18 inches or more in the living space of a house built at grade "
+            "(the PDA guide's line for Major), so an assessor applying that rule should check those houses."
         )
         return out
 
@@ -280,6 +300,7 @@ class Area:
             "find_buildings": self.find_buildings,
             "get_building": self.get_building,
             "plan_inspections": self.plan_inspections,
+            "damage_by_construction": self.damage_by_construction,
             "pda_totals": self.pda_totals,
             "repair_costs": self.repair_costs,
             "urgent_needs": self.urgent_needs,
@@ -326,6 +347,14 @@ TOOLS = [
             "name": "get_building",
             "description": "Everything known about one building: category, confidence, evidence, measurements, location, and what the checker objected to.",
             "parameters": {"type": "object", "properties": {"building_id": {"type": "string"}}, "required": ["building_id"]},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "damage_by_construction",
+            "description": "Count damage categories (and flooded buildings) by how the buildings were built: building-rules era, wall material, foundation, stories, or decade built.",
+            "parameters": {"type": "object", "properties": {"by": {"type": "string", "enum": ["code_era", "material", "foundation", "stories", "decade_built"]}}},
         },
     },
     {

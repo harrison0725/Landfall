@@ -465,7 +465,16 @@ def building(area: str, bid: str) -> dict:
         "cost": f["cost"],
         "need": f["need"],
         "record": {k: rec.get(k) for k in ("year_built", "flood_zone", "bfe_ft", "basis", "land_use")} if rec else None,
+        "built": _built(d, bid, drafts[bid]),
     }
+
+
+def _built(d: Path, bid: str, draft: dict) -> dict | None:
+    from .structures import merge
+
+    path = d / "structures.json"
+    recs = json.loads(path.read_text()) if path.exists() else {}
+    return merge(recs.get(bid), draft.get("built_from_street"))
 
 
 @app.get("/api/areas/{area}/pair/{bid}.jpg")

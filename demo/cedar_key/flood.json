@@ -1,5 +1,6 @@
 {
  "surface_ft_navd88": 10.9,
+ "radius_km": 5.0,
  "observations": [
   {
    "source": "USGS HWM 46592",

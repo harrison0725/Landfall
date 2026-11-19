@@ -1,0 +1,490 @@
+{
+ "b000": {
+  "year_built": 1959,
+  "effective_year_built": 1984,
+  "year_source": "county tax roll",
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 1,
+  "floor_area_sqft": 6246,
+  "occupancy": "COM4",
+  "nsi_id": 102094446,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b001": {
+  "year_built": 1953,
+  "effective_year_built": 1981,
+  "year_source": "county tax roll",
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 1,
+  "floor_area_sqft": 13907.86,
+  "occupancy": "COM5",
+  "nsi_id": 102094440,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b002": {
+  "year_built": 2010,
+  "effective_year_built": 2010,
+  "year_source": "county tax roll",
+  "material": "wood frame",
+  "foundation": "piles",
+  "foundation_height_ft": 6.25,
+  "stories": 2,
+  "floor_area_sqft": 16463.42,
+  "occupancy": "RES3C",
+  "nsi_id": 102094447,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "Florida Building Code (2002 or later)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b003": {
+  "year_built": 1971,
+  "effective_year_built": 1977,
+  "year_source": "county tax roll",
+  "material": "masonry",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 2,
+  "floor_area_sqft": 3336,
+  "occupancy": "COM4",
+  "nsi_id": 102094453,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b004": {
+  "year_built": 1954,
+  "effective_year_built": 1991,
+  "year_source": "county tax roll",
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 1,
+  "floor_area_sqft": 11179,
+  "occupancy": "COM8",
+  "nsi_id": 102166314,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b005": {
+  "year_built": 1988,
+  "effective_year_built": 1990,
+  "year_source": "county tax roll",
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 1,
+  "floor_area_sqft": 1725,
+  "occupancy": "IND5",
+  "nsi_id": 102166315,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b006": {
+  "year_built": 1958,
+  "effective_year_built": 1983,
+  "year_source": "county tax roll",
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 1,
+  "floor_area_sqft": 2401,
+  "occupancy": "GOV1",
+  "nsi_id": 102166311,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b007": {
+  "year_built": 1959,
+  "effective_year_built": 1989,
+  "year_source": "county tax roll",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "county tax roll"
+  ]
+ },
+ "b008": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "masonry",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 1,
+  "floor_area_sqft": 17176.7,
+  "occupancy": "COM2",
+  "nsi_id": 102190518,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "block_median_year_built": 1971,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ]
+ },
+ "b009": {
+  "year_built": 1965,
+  "effective_year_built": 1993,
+  "year_source": "county tax roll",
+  "material": "masonry",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 1,
+  "floor_area_sqft": 1976,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 102166301,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b010": {
+  "year_built": 1958,
+  "effective_year_built": 1983,
+  "year_source": "county tax roll",
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 1,
+  "floor_area_sqft": 13562,
+  "occupancy": "GOV2",
+  "nsi_id": 102166321,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b011": {
+  "year_built": 1988,
+  "effective_year_built": 1990,
+  "year_source": "county tax roll",
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 1,
+  "floor_area_sqft": 3405,
+  "occupancy": "IND5",
+  "nsi_id": 102166322,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b012": {
+  "year_built": 1965,
+  "effective_year_built": 1993,
+  "year_source": "county tax roll",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "county tax roll"
+  ]
+ },
+ "b013": {
+  "year_built": 1960,
+  "effective_year_built": 1988,
+  "year_source": "county tax roll",
+  "material": "masonry",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 1,
+  "floor_area_sqft": 19035,
+  "occupancy": "COM1",
+  "nsi_id": 102190535,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b014": {
+  "year_built": 1967,
+  "effective_year_built": 1981,
+  "year_source": "county tax roll",
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 1,
+  "floor_area_sqft": 1399,
+  "occupancy": "COM4",
+  "nsi_id": 102188744,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b015": {
+  "year_built": 1971,
+  "effective_year_built": 2001,
+  "year_source": "county tax roll",
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 1,
+  "floor_area_sqft": 4686,
+  "occupancy": "COM1",
+  "nsi_id": 102188740,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b016": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 2,
+  "floor_area_sqft": 14234,
+  "occupancy": "COM4",
+  "nsi_id": 102190512,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "block_median_year_built": 1971,
+  "code_era": null,
+  "sources": [
+   "USACE National Structure Inventory"
+  ]
+ },
+ "b017": {
+  "year_built": 1956,
+  "effective_year_built": 1989,
+  "year_source": "county tax roll",
+  "material": "masonry",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 1,
+  "floor_area_sqft": 8206,
+  "occupancy": "COM2",
+  "nsi_id": 102166300,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b018": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "code_era": null,
+  "sources": []
+ },
+ "b019": {
+  "year_built": 1991,
+  "effective_year_built": 2009,
+  "year_source": "county tax roll",
+  "material": "masonry",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 2,
+  "floor_area_sqft": 4318,
+  "occupancy": "COM4",
+  "nsi_id": 102188741,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "after flood-elevation rules, before the Florida Building Code (1975-2001)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b020": {
+  "year_built": 1957,
+  "effective_year_built": 1984,
+  "year_source": "county tax roll",
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 2,
+  "floor_area_sqft": 8964,
+  "occupancy": "RES4",
+  "nsi_id": 101961903,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b021": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "code_era": null,
+  "sources": []
+ },
+ "b022": {
+  "year_built": 1953,
+  "effective_year_built": 1988,
+  "year_source": "county tax roll",
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 1,
+  "floor_area_sqft": 1500,
+  "occupancy": "COM8",
+  "nsi_id": 102188742,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b023": {
+  "year_built": 1956,
+  "effective_year_built": 1984,
+  "year_source": "county tax roll",
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 2,
+  "floor_area_sqft": 16172,
+  "occupancy": "RES4",
+  "nsi_id": 101961899,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b024": {
+  "year_built": 1957,
+  "effective_year_built": 1984,
+  "year_source": "county tax roll",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "county tax roll"
+  ]
+ },
+ "b025": {
+  "year_built": 1962,
+  "effective_year_built": 1988,
+  "year_source": "county tax roll",
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.25,
+  "stories": 1,
+  "floor_area_sqft": 3911,
+  "occupancy": "COM8",
+  "nsi_id": 102188745,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ },
+ "b026": {
+  "year_built": null,
+  "effective_year_built": null,
+  "year_source": null,
+  "code_era": null,
+  "sources": []
+ },
+ "b027": {
+  "year_built": 1958,
+  "effective_year_built": 1996,
+  "year_source": "county tax roll",
+  "material": "concrete",
+  "foundation": "slab",
+  "foundation_height_ft": 0.75,
+  "stories": 1,
+  "floor_area_sqft": 1590,
+  "occupancy": "RES1-1SNB",
+  "nsi_id": 102166308,
+  "material_source": "National Structure Inventory (often wrong here)",
+  "foundation_source": "National Structure Inventory (often wrong here)",
+  "stories_source": "National Structure Inventory (often wrong here)",
+  "code_era": "before flood-elevation rules (pre-1975)",
+  "sources": [
+   "USACE National Structure Inventory",
+   "county tax roll"
+  ]
+ }
+}

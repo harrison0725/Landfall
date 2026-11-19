@@ -1,0 +1,151 @@
+Field-validated survey vs. Landfall drafts, Cedar Key, Hurricane Helene
+survey: 771 rated buildings; 122 of the agent's outlines have a rating within 3 m
+5 outlines hold more than one rated unit (worst rating used)
+survey ratings on the matched outlines (overall DS): DS0: 95, DS1: 11, DS2: 2, DS3: 4, DS4: 4, DS5: 3, DS6: 3
+
+########################################################################
+# drafts: eval/cedar_key_drafts_street_2026-11-18.json
+########################################################################
+
+== overall DS -> FEMA (DS5 partial collapse = Major)
+122 buildings: exact 95/122 (78%); within one step 111/122 (91%); quadratic-weighted kappa 0.53
+confusion (rows = survey, cols = agent):
+              none  affec  minor  major  destr
+       none     90      5      0      0      0
+   affected      9      1      1      0      0
+      minor      5      1      0      0      0
+      major      6      0      0      1      0
+  destroyed      0      0      0      0      3
+  damaged (Minor or worse): found 4/16 (25%); agent's calls right 4/5 (80%)
+  severe (Major or worse): found 4/10 (40%); agent's calls right 4/4 (100%)
+  destroyed: found 3/3 (100%); agent's calls right 3/3 (100%)
+  agent lower than survey: 21; higher: 6
+  7 sent to human review, of which 3 disagree with the survey
+
+== same, with No visible damage and Affected merged (the survey rates the structure; Affected is mostly water around the house, which it doesn't record)
+122 buildings: exact 109/122 (89%); within one step 109/122 (89%); quadratic-weighted kappa 0.55
+confusion (rows = survey, cols = agent):
+              none  affec  minor  major  destr
+       none    105      0      1      0      0
+   affected      0      0      0      0      0
+      minor      6      0      0      0      0
+      major      6      0      0      1      0
+  destroyed      0      0      0      0      3
+  damaged (Minor or worse): found 4/16 (25%); agent's calls right 4/5 (80%)
+  severe (Major or worse): found 4/10 (40%); agent's calls right 4/4 (100%)
+  destroyed: found 3/3 (100%); agent's calls right 3/3 (100%)
+  agent lower than survey: 12; higher: 1
+  7 sent to human review, of which 3 disagree with the survey
+
+== overall DS -> FEMA (DS5 partial collapse = Destroyed)
+122 buildings: exact 95/122 (78%); within one step 111/122 (91%); quadratic-weighted kappa 0.48
+
+== roof rating only (what a photo from above can see), same mapping
+122 buildings: exact 98/122 (80%); within one step 118/122 (97%); quadratic-weighted kappa 0.65
+
+== what the agent rated lower than the survey, where the survey says Minor or worse: 12 buildings
+  8 of 12 have a roof the survey itself rates Affected or better: the damage is below the roofline
+  component(s) carrying the worst rating (a building can count twice):
+    walls / elevated floors: 4
+    windows and doors: 3
+    roof: 2
+    foundation: 2
+    decks, porches, sheds: 2
+  9 of 12 had water 0.5 ft or more around them in the agent's flood estimate
+  0 of 12 were not visible in street-level photos to the surveyors
+  buildings (survey overall / roof / walls / foundation / openings / attached -> agent):
+    b001: DS 4/2/4/1/0/0 (major) -> agent none; flood 7.0 ft; 4/4/2025  11:40:00 AM Building is clearly visible for assessment
+    b016: DS 3/2/1/0/1/0 (minor) -> agent none; flood 0.0 ft; 4/10/25 1:16PM rust on roof, weathering and aesthetic damage to walls, side door boarded up (possible damage)
+    b019: DS 2/0/1/0/2/0 (minor) -> agent none; flood 2.8 ft; 4/4/2025  11:17:00 AM Building can be seen well from street view for DS assessment
+    b095: DS 3/0/1/0/3/0 (minor) -> agent affected; flood 3.7 ft; 5/22/2025 17:35
+    b119: DS 4/4/1/5/0/3 (major) -> agent none; flood 0.0 ft; 4/1/2025  10:11:00 AM There is imaging of the complex, but only the front and side of building can be seen, no
+    b123: DS 5/1/5/1/0/0 (major) -> agent none; flood 6.7 ft; 5/22/2025 18:27
+    b126: DS 3/0/1/3/3/3 (minor) -> agent none; flood 6.1 ft; 4/3/2025  2:38:00 PM Building is clearly visible
+    b129: DS 5/1/3/5/3/3 (major) -> agent none [review]; flood 0.8 ft; 4/3/2025  2:54:00 PM Building is clearly visible for DS assessment
+    b134: DS 2/2/0/0/0/0 (minor) -> agent none; flood 0.0 ft; The house is in very good state, it is just missing its shingles. (04/13/2025)
+    b137: DS 4/0/4/2/3/0 (major) -> agent none; flood 5.7 ft; 4/3/2025  3:05:00 PM Building is clearly visible for DS assessment
+    b138: DS 5/0/5/1/0/0 (major) -> agent none; flood 4.7 ft; 5/6/2025  12:25:00 AM Building is clearly visible, except for one palm tree, for FFE measurements and DS asses
+    b139: DS 3/1/0/0/0/3 (minor) -> agent none; flood 9.5 ft; 12:38 PM 3/27/2025. Property appraiser map splits property into two with same effective year built but differe
+
+== StEER field ratings (0-4) on the agent's outlines: 1 buildings
+  b106 847 Third St: field 4 (fits destroyed), virtual DS4, agent major  <- differs
+  agent fits the field rating on 0/1
+
+== flooding (stated beside the category): water in the living space, by the survey's first floors
+119 matched buildings with a surveyed first floor; water reached the living space at 44
+  agent's note says inside on 34: 34 right, 0 where the survey's floor is above the water
+  of the 44 with water inside, the note says so on 34; 6 have no first-floor reading
+  agent's first-floor reading vs the survey's: median error 1.0 ft, 78 of 108 within 1 ft, mean +0.2 ft
+
+########################################################################
+# drafts: eval/cedar_key_drafts_2026-11-18.json
+########################################################################
+
+== overall DS -> FEMA (DS5 partial collapse = Major)
+122 buildings: exact 65/122 (53%); within one step 112/122 (92%); quadratic-weighted kappa 0.53
+confusion (rows = survey, cols = agent):
+              none  affec  minor  major  destr
+       none     59     35      1      0      0
+   affected      7      3      0      1      0
+      minor      2      4      0      0      0
+      major      1      5      1      0      0
+  destroyed      0      0      0      0      3
+  damaged (Minor or worse): found 4/16 (25%); agent's calls right 4/6 (67%)
+  severe (Major or worse): found 3/10 (30%); agent's calls right 3/4 (75%)
+  destroyed: found 3/3 (100%); agent's calls right 3/3 (100%)
+  agent lower than survey: 20; higher: 37
+  49 sent to human review, of which 45 disagree with the survey
+
+== same, with No visible damage and Affected merged (the survey rates the structure; Affected is mostly water around the house, which it doesn't record)
+122 buildings: exact 107/122 (88%); within one step 108/122 (89%); quadratic-weighted kappa 0.51
+confusion (rows = survey, cols = agent):
+              none  affec  minor  major  destr
+       none    104      0      1      1      0
+   affected      0      0      0      0      0
+      minor      6      0      0      0      0
+      major      6      0      1      0      0
+  destroyed      0      0      0      0      3
+  damaged (Minor or worse): found 4/16 (25%); agent's calls right 4/6 (67%)
+  severe (Major or worse): found 3/10 (30%); agent's calls right 3/4 (75%)
+  destroyed: found 3/3 (100%); agent's calls right 3/3 (100%)
+  agent lower than survey: 13; higher: 2
+  49 sent to human review, of which 45 disagree with the survey
+
+== overall DS -> FEMA (DS5 partial collapse = Destroyed)
+122 buildings: exact 65/122 (53%); within one step 112/122 (92%); quadratic-weighted kappa 0.50
+
+== roof rating only (what a photo from above can see), same mapping
+122 buildings: exact 66/122 (54%); within one step 117/122 (96%); quadratic-weighted kappa 0.43
+
+== what the agent rated lower than the survey, where the survey says Minor or worse: 13 buildings
+  8 of 13 have a roof the survey itself rates Affected or better: the damage is below the roofline
+  component(s) carrying the worst rating (a building can count twice):
+    walls / elevated floors: 5
+    windows and doors: 3
+    roof: 2
+    foundation: 2
+    decks, porches, sheds: 2
+  10 of 13 had water 0.5 ft or more around them in the agent's flood estimate
+  0 of 13 were not visible in street-level photos to the surveyors
+  buildings (survey overall / roof / walls / foundation / openings / attached -> agent):
+    b001: DS 4/2/4/1/0/0 (major) -> agent affected [review]; flood 7.0 ft; 4/4/2025  11:40:00 AM Building is clearly visible for assessment
+    b016: DS 3/2/1/0/1/0 (minor) -> agent none; flood 0.0 ft; 4/10/25 1:16PM rust on roof, weathering and aesthetic damage to walls, side door boarded up (possible damage)
+    b019: DS 2/0/1/0/2/0 (minor) -> agent affected [review]; flood 2.8 ft; 4/4/2025  11:17:00 AM Building can be seen well from street view for DS assessment
+    b095: DS 3/0/1/0/3/0 (minor) -> agent affected [review]; flood 3.7 ft; 5/22/2025 17:35
+    b106: DS 4/2/4/6/3/2 (major) -> agent affected [review]; flood 6.5 ft; 5/22/2025 15:52
+    b119: DS 4/4/1/5/0/3 (major) -> agent none; flood 0.0 ft; 4/1/2025  10:11:00 AM There is imaging of the complex, but only the front and side of building can be seen, no
+    b123: DS 5/1/5/1/0/0 (major) -> agent affected [review]; flood 6.7 ft; 5/22/2025 18:27
+    b126: DS 3/0/1/3/3/3 (minor) -> agent affected [review]; flood 6.1 ft; 4/3/2025  2:38:00 PM Building is clearly visible
+    b129: DS 5/1/3/5/3/3 (major) -> agent affected [review]; flood 0.8 ft; 4/3/2025  2:54:00 PM Building is clearly visible for DS assessment
+    b134: DS 2/2/0/0/0/0 (minor) -> agent none; flood 0.0 ft; The house is in very good state, it is just missing its shingles. (04/13/2025)
+    b137: DS 4/0/4/2/3/0 (major) -> agent minor [review]; flood 5.7 ft; 4/3/2025  3:05:00 PM Building is clearly visible for DS assessment
+    b138: DS 5/0/5/1/0/0 (major) -> agent affected [review]; flood 4.7 ft; 5/6/2025  12:25:00 AM Building is clearly visible, except for one palm tree, for FFE measurements and DS asses
+    b139: DS 3/1/0/0/0/3 (minor) -> agent affected [review]; flood 9.5 ft; 12:38 PM 3/27/2025. Property appraiser map splits property into two with same effective year built but differe
+
+== StEER field ratings (0-4) on the agent's outlines: 1 buildings
+  b106 847 Third St: field 4 (fits destroyed), virtual DS4, agent affected  <- differs
+  agent fits the field rating on 0/1
+
+== flooding (stated beside the category): water in the living space, by the survey's first floors
+119 matched buildings with a surveyed first floor; water reached the living space at 44
+  the drafts have no first-floor reading (no street photos), so the note can't say whether water got inside

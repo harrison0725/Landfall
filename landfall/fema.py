@@ -55,12 +55,10 @@ class Thresholds:
     # roofs and dark tree canopy now and then; small shares are noise.
     tarp_minor: float = 0.05
     debris_affected: float = 0.05
-    # Flood. The PDA Guide judges water depth *in the living space*: 18
-    # inches or more is Major, less is Minor (state field guides derived from
-    # it agree on the 18-inch line). We measure depth above ground, so the
-    # living-space depth needs the first-floor height, which aerial photos
-    # don't give. Many Cedar Key houses stand on pilings. Without it, water
-    # around the house only proves Affected.
+    # Flood. Water never sets the category (see flood_status): it is stated
+    # beside it. The PDA Guide's line for water in the living space is 18
+    # inches; the depth above ground needs the first-floor height to say how
+    # much got inside.
     flood_living_major_ft: float = 1.5
     flood_affected_ft: float = 0.5  # above ground, first floor unknown
 
@@ -93,29 +91,31 @@ def floor_from_measures(m: Measures, t: Thresholds = Thresholds()) -> Category:
         cat = Category.MINOR
     elif m.debris_share >= t.debris_affected:
         cat = Category.AFFECTED
-
-    living = m.flood_living_ft
-    if living is not None:
-        if living >= t.flood_living_major_ft:
-            cat = max(cat, Category.MAJOR)
-        elif living > 0:
-            cat = max(cat, Category.MINOR)
-        elif m.flood_ft > 0:
-            cat = max(cat, Category.AFFECTED)  # water under a raised house
-    elif m.flood_ft is not None and m.flood_ft >= t.flood_affected_ft:
-        cat = max(cat, Category.AFFECTED)
     return cat
 
 
-def flood_floor(m: Measures, t: Thresholds = Thresholds()) -> Category:
-    """The category the surveyed flood depth alone requires.
+def flood_status(m: Measures, t: Thresholds = Thresholds()) -> dict | None:
+    """Whether the building flooded, stated next to the category, never in it.
 
-    Unlike roof loss, flood depth is not read off a mask: it comes from
-    surveyed high-water marks, a tide gauge and lidar ground. The model can't
-    see it in the photos either way, so it is a hard floor, not something to
-    argue about.
+    Landfall's category rates damage to the building itself. Water around or
+    inside a house is reported here instead (Seokhwan's rule, Nov 18, 2026):
+    the field survey it is checked against rates the structure, and a flooded
+    house with sound walls is not a damaged one. FEMA's PDA Guide does count
+    18 inches in the living space as Major, so an assessor applying it can
+    read the depth off this.
     """
-    return floor_from_measures(Measures(0.0, 0.0, 0.0, m.flood_ft, m.aligned, m.first_floor_ft), t)
+    if m.flood_ft is None or m.flood_ft < t.flood_affected_ft:
+        return None
+    living = m.flood_living_ft
+    out = {"flooded": True, "around_ft": round(m.flood_ft, 1), "first_floor_ft": m.first_floor_ft,
+           "living_ft": None if living is None else round(max(0.0, living), 1)}
+    if living is None:
+        out["label"] = f"Flooded: water stood about {m.flood_ft:.1f} ft deep around it; first floor height unknown"
+    elif living > 0:
+        out["label"] = f"Flooded: about {living:.1f} ft of water inside the living space ({m.flood_ft:.1f} ft around it)"
+    else:
+        out["label"] = f"Flooded: water stood {m.flood_ft:.1f} ft deep around it but stayed below the living floor"
+    return out
 
 
 @dataclass
@@ -138,20 +138,10 @@ def verify(call: Category, m: Measures, t: Thresholds = Thresholds()) -> Verdict
             "Pre and post photos did not line up with confidence; roof loss is "
             "unreliable. Mark for human review instead of trusting the numbers."
         )
-    water = flood_floor(m, t)
-    if call < water:
-        problems.append(
-            f"Called {call.label}, but surveyed flood water stood {m.flood_ft:.1f} ft around this "
-            f"building, which makes it at least {water.label} under the PDA rule. This is not a photo "
-            "measurement and can't be wrong because of shadows or trees: water damage doesn't show "
-            "from the air. Keep what you see on the roof in the evidence, and raise the category."
-        )
-    elif call < floor:
+    if call < floor:
         problems.append(
             f"Called {call.label}, but the measurements alone justify at least "
-            f"{floor.label} (roof loss {m.roof_loss:.0%}"
-            + (f", flood {m.flood_ft:.1f} ft" if m.flood_ft is not None else "")
-            + ")."
+            f"{floor.label} (roof loss {m.roof_loss:.0%})."
         )
     if call - floor > 1 and m.kind != "earthquake":
         problems.append(

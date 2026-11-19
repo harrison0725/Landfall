@@ -1,5 +1,5 @@
 {
- "households_likely_displaced": 1,
+ "households_likely_displaced": 2,
  "households_possibly_displaced": 6,
  "businesses_or_lodging_hit": [],
  "buildings": [
@@ -19,11 +19,29 @@
     "drafted destroyed",
     "no property record: counted as one household"
    ],
-   "score": 11.5
+   "score": 11.0
+  },
+  {
+   "id": "b012",
+   "category": "destroyed",
+   "households": 1,
+   "likely_displaced": true,
+   "possibly_displaced": true,
+   "business_or_lodging_hit": false,
+   "land_use": null,
+   "water_inside_ft": [
+    0.0,
+    4.2
+   ],
+   "reasons": [
+    "drafted destroyed",
+    "no property record: counted as one household"
+   ],
+   "score": 10.59
   },
   {
    "id": "b003",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": false,
    "possibly_displaced": true,
@@ -37,11 +55,11 @@
     "up to 6.4 ft of water inside if the floor is low",
     "no property record: counted as one household"
    ],
-   "score": 6.5
+   "score": 5.5
   },
   {
    "id": "b021",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": false,
    "possibly_displaced": true,
@@ -55,11 +73,11 @@
     "up to 5.7 ft of water inside if the floor is low",
     "no property record: counted as one household"
    ],
-   "score": 6.36
+   "score": 5.36
   },
   {
    "id": "b008",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": false,
    "possibly_displaced": true,
@@ -73,29 +91,11 @@
     "up to 4.7 ft of water inside if the floor is low",
     "no property record: counted as one household"
    ],
-   "score": 5.83
-  },
-  {
-   "id": "b012",
-   "category": "affected",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": true,
-   "business_or_lodging_hit": false,
-   "land_use": null,
-   "water_inside_ft": [
-    0.0,
-    4.2
-   ],
-   "reasons": [
-    "up to 4.2 ft of water inside if the floor is low",
-    "no property record: counted as one household"
-   ],
-   "score": 5.58
+   "score": 4.83
   },
   {
    "id": "b019",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": false,
    "possibly_displaced": true,
@@ -109,11 +109,11 @@
     "up to 2.2 ft of water inside if the floor is low",
     "no property record: counted as one household"
    ],
-   "score": 4.59
+   "score": 3.59
   },
   {
    "id": "b016",
-   "category": "affected",
+   "category": "none",
    "households": 1,
    "likely_displaced": false,
    "possibly_displaced": false,
@@ -126,61 +126,44 @@
    "reasons": [
     "no property record: counted as one household"
    ],
-   "score": 1.74
+   "score": 0.74
+  },
+  {
+   "id": "b025",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": null,
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "no property record: counted as one household"
+   ],
+   "score": 0.5
+  },
+  {
+   "id": "b026",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": null,
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "no property record: counted as one household"
+   ],
+   "score": 0.5
   },
   {
    "id": "b004",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": null,
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "no property record: counted as one household"
-   ],
-   "score": 0.5
-  },
-  {
-   "id": "b005",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": null,
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "no property record: counted as one household"
-   ],
-   "score": 0.5
-  },
-  {
-   "id": "b006",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": null,
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "no property record: counted as one household"
-   ],
-   "score": 0.5
-  },
-  {
-   "id": "b011",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -231,40 +214,6 @@
    "score": 0.5
   },
   {
-   "id": "b015",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": null,
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "no property record: counted as one household"
-   ],
-   "score": 0.5
-  },
-  {
-   "id": "b017",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": null,
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "no property record: counted as one household"
-   ],
-   "score": 0.5
-  },
-  {
    "id": "b018",
    "category": "none",
    "households": 1,
@@ -299,23 +248,6 @@
    "score": 0.5
   },
   {
-   "id": "b022",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": null,
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "no property record: counted as one household"
-   ],
-   "score": 0.5
-  },
-  {
    "id": "b024",
    "category": "none",
    "households": 1,
@@ -333,7 +265,7 @@
    "score": 0.5
   },
   {
-   "id": "b025",
+   "id": "b006",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -350,24 +282,7 @@
    "score": 0.5
   },
   {
-   "id": "b026",
-   "category": "none",
-   "households": 1,
-   "likely_displaced": false,
-   "possibly_displaced": false,
-   "business_or_lodging_hit": false,
-   "land_use": null,
-   "water_inside_ft": [
-    0.0,
-    0.0
-   ],
-   "reasons": [
-    "no property record: counted as one household"
-   ],
-   "score": 0.5
-  },
-  {
-   "id": "b027",
+   "id": "b015",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -398,10 +313,10 @@
    "reasons": [
     "no property record: counted as one household"
    ],
-   "score": 0.5
+   "score": 0.0
   },
   {
-   "id": "b009",
+   "id": "b023",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -415,10 +330,10 @@
    "reasons": [
     "no property record: counted as one household"
    ],
-   "score": 0.5
+   "score": 0.0
   },
   {
-   "id": "b023",
+   "id": "b027",
    "category": "none",
    "households": 1,
    "likely_displaced": false,
@@ -470,6 +385,91 @@
   },
   {
    "id": "b007",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": null,
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "no property record: counted as one household"
+   ],
+   "score": 0.0
+  },
+  {
+   "id": "b022",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": null,
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "no property record: counted as one household"
+   ],
+   "score": 0.0
+  },
+  {
+   "id": "b005",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": null,
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "no property record: counted as one household"
+   ],
+   "score": 0.0
+  },
+  {
+   "id": "b009",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": null,
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "no property record: counted as one household"
+   ],
+   "score": 0.0
+  },
+  {
+   "id": "b011",
+   "category": "none",
+   "households": 1,
+   "likely_displaced": false,
+   "possibly_displaced": false,
+   "business_or_lodging_hit": false,
+   "land_use": null,
+   "water_inside_ft": [
+    0.0,
+    0.0
+   ],
+   "reasons": [
+    "no property record: counted as one household"
+   ],
+   "score": 0.0
+  },
+  {
+   "id": "b017",
    "category": "none",
    "households": 1,
    "likely_displaced": false,

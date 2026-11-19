@@ -288,6 +288,41 @@ function legend() {
 $("levels-list").innerHTML = CATS.map((c) => `<div class="level"><img src="/static/img/levels/${c}.webp" alt="" width="96" height="96" loading="lazy"><div><b><i style="--c:var(--${c})"></i>${LABEL[c]}</b><p>${MEANS[c]}</p></div></div>`).join("");
 $("levels-close").addEventListener("click", () => { $("levels").hidden = true; });
 
+// ---------------------------------------------------------------- 1-mile grid
+// Square-mile cells anchored to fixed lines of latitude and longitude, so the
+// grid stays put as the map moves; redrawn for what's on screen.
+const MILE_M = 1609.344;
+const gridLayer = L.layerGroup();
+const gridScale = L.control.scale({ position: "bottomright", metric: false, maxWidth: 140 });
+let gridOn = false;
+try { gridOn = localStorage.getItem("landfall-grid") === "1"; } catch (e) { /* storage blocked */ }
+function drawGrid() {
+  gridLayer.clearLayers();
+  if (!gridOn) return;
+  const b = map.getBounds();
+  const dLat = MILE_M / 111320;
+  const dLon = MILE_M / (111320 * Math.cos((map.getCenter().lat * Math.PI) / 180));
+  const lat0 = Math.floor(b.getSouth() / dLat), lat1 = Math.ceil(b.getNorth() / dLat);
+  const lon0 = Math.floor(b.getWest() / dLon), lon1 = Math.ceil(b.getEast() / dLon);
+  if ((lat1 - lat0) + (lon1 - lon0) > 400) return; // zoomed too far out to read
+  // a light line under a dark dashed one reads on dark photos and light street maps alike
+  const styles = [{ color: "#fff", weight: 3, opacity: 0.6, interactive: false }, { color: "#111", weight: 1.2, opacity: 0.8, dashArray: "6 5", interactive: false }];
+  const line = (pts) => styles.forEach((st) => gridLayer.addLayer(L.polyline(pts, st)));
+  for (let i = lat0; i <= lat1; i++) line([[i * dLat, lon0 * dLon], [i * dLat, lon1 * dLon]]);
+  for (let j = lon0; j <= lon1; j++) line([[lat0 * dLat, j * dLon], [lat1 * dLat, j * dLon]]);
+}
+function setGrid(on) {
+  gridOn = on;
+  $("grid").classList.toggle("on", on);
+  $("grid").setAttribute("aria-pressed", String(on));
+  if (on) { gridLayer.addTo(map); gridScale.addTo(map); } else { gridLayer.remove(); gridScale.remove(); }
+  try { localStorage.setItem("landfall-grid", on ? "1" : "0"); } catch (e) { /* storage blocked */ }
+  drawGrid();
+}
+$("grid").addEventListener("click", () => setGrid(!gridOn));
+map.on("moveend", drawGrid);
+setGrid(gridOn);
+
 // ---------------------------------------------------------------- phone: the whole screen for the map
 $("mapsize").addEventListener("click", () => {
   const big = document.querySelector(".shell").classList.toggle("bigmap");
@@ -786,7 +821,12 @@ async function openBuilding(id) {
     ["Judged by", a ? modelName(a.decided_by) : "–"],
     ["Building missing", a && a.structure_loss != null ? `${Math.round(a.structure_loss * 100)}%` : "not measured"],
     ["Debris in yard", a && a.debris_share ? `${Math.round(a.debris_share * 100)}%` : "none found"],
+    ["Flooded", a && a.flood ? a.flood.label.replace(/^Flooded: /, "yes: ") : a && a.flood_ft != null && a.flood_ft >= 0.5 ? "yes (not counted as damage)" : "no"],
     ["Flood water outside", a && a.flood_ft != null ? `${a.flood_ft.toFixed(1)} ft deep` : us ? "none measured here" : "unknown (not measured here)"],
+    ["Built", a && a.built && (a.built.year_built || a.built.block_median_year_built) ? (a.built.year_built ? String(a.built.year_built) : `around ${a.built.block_median_year_built} (typical for the block)`) + (a.built.code_era ? `, ${a.built.code_era}` : "") : us ? "unknown (no property record)" : "unknown (no property records)"],
+    ["Made of", a && a.built && a.built.material ? a.built.material + (a.built.material_source && /Inventory/.test(a.built.material_source) ? " (national inventory, often wrong)" : "") : "unknown"],
+    ...(a && a.built && a.built.fire && Object.keys(a.built.fire).length ? [["Fire features", Object.entries(a.built.fire).map(([k, v]) => `${k.replace(/_/g, " ")}: ${v}`).join("; ") + " (CAL FIRE inspection)"]] : []),
+    ["Stands on", a && a.built && a.built.foundation ? a.built.foundation + (a.built.stories ? `, ${a.built.stories} ${a.built.stories === 1 ? "story" : "stories"}` : "") + (a.built.foundation_source && /Inventory/.test(a.built.foundation_source) ? " (national inventory, often wrong)" : "") : "unknown"],
     ["Floor height", a && a.record && a.record.basis ? a.record.basis : us ? "unknown" : "unknown (no property records)"],
     ["Water inside", !us ? "unknown" : need && need.water_inside_ft[1] > 0 ? `${need.water_inside_ft[0].toFixed(1)}–${need.water_inside_ft[1].toFixed(1)} ft (estimate)` : "none"],
     ["Homes", need ? (need.households ? `${need.households}${need.likely_displaced ? ", likely can't live there now" : need.possibly_displaced ? ", may not be able to live there now" : ""}` : "none (not a home)") : "–"],
@@ -795,7 +835,7 @@ async function openBuilding(id) {
     ...(a && a.demolished ? [["Note", "gone before the disaster (demolished)"]] : []),
   ];
   $("card-body").innerHTML = `
-    <h2>Building ${esc(id)} ${cat ? `<span class="pill ${cat}" style="--c:var(--${cat})" title="FEMA category: ${FEMA[cat]}">${LABEL[cat]}</span>` : ""}${a && a.needs_human ? `<span class="pill" style="--c:var(--review)" title="A person should visit to confirm">Needs a visit</span>` : ""}</h2>
+    <h2>Building ${esc(id)} ${cat ? `<span class="pill ${cat}" style="--c:var(--${cat})" title="FEMA category: ${FEMA[cat]}">${LABEL[cat]}</span>` : ""}${a && (a.flood || (a.flood_ft || 0) >= 0.5) ? `<span class="pill" style="--c:var(--flood, #2b6cb0)" title="Flood water stood here. Flooding is stated on its own and not counted in the damage category.">Flooded</span>` : ""}${a && a.needs_human ? `<span class="pill" style="--c:var(--review)" title="A person should visit to confirm">Needs a visit</span>` : ""}</h2>
     <img src="/api/areas/${state.area}/pair/${id}.jpg" alt="Before and after photos of ${esc(id)}">
     <div class="cap"><span>Before${a && a.photos ? ": " + esc(shortSource(a.photos.before)) : ""}</span><span>After${a && a.photos ? ": " + esc(shortSource(a.photos.after)) : ""}</span></div>
     <p>${a ? esc(a.plain || a.evidence) : gone ? "This area was lost when the site restarted. Draw the box again to redo it." : "Not checked yet. The check of this area is still running, or it stopped before it reached this building; the chat shows which step it is on."}</p>

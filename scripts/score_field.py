@@ -87,7 +87,7 @@ def main() -> None:
         roof_only(matched, drafts)
         misses(matched, drafts)
         field_subset(matched, drafts)
-        with_first_floor(matched, drafts)
+        flood_report(matched, drafts)
 
     if args.json:
         args.json.write_text(json.dumps(matched, indent=1))
@@ -290,40 +290,43 @@ def field_subset(matched: dict, drafts: dict) -> None:
         print(f"  agent fits the field rating on {ok}/{len(hits)}")
 
 
-def with_first_floor(matched: dict, drafts: dict) -> None:
-    """What the flood rule would do if the first-floor height were known.
+def flood_report(matched: dict, drafts: dict) -> None:
+    """How well the agent's flood note says whether water got inside.
 
-    The agent applies the PDA flood rule with the first floor unknown, so
-    water around a house only proves Affected. Street-level photos show how
-    high the floor is. As an upper bound on what they could add, this uses
-    the survey's own first-floor heights (measured on street photos) with
-    the agent's flood depth, and raises the agent's call to the flood rule's
-    floor. It never lowers a call.
+    Flooding is stated beside the category, never counted in it, so it is
+    scored on its own: the survey's first-floor heights (measured on street
+    photos) with the agent's flood depth say whether water reached the living
+    space; the agent's note says the same from its own first-floor reading.
     """
-    import sys
+    import statistics
 
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    from landfall.fema import Measures, flood_floor
-
-    new = {}
-    raised = []
+    rows = []
     for b, a in drafts.items():
         m = matched.get(b)
         ff = m.get("first_floor_ft") if m else None
-        cat = a["category"]
-        if ff is not None and (a.get("flood_ft") or 0) >= 0.5:
-            floor = flood_floor(Measures(0, 0, 0, a["flood_ft"], True, ff)).name.lower()
-            if ORDER.index(floor) > ORDER.index(cat):
-                raised.append((b, cat, floor, a["flood_ft"], ff))
-                cat = floor
-        new[b] = {**a, "category": cat}
-    known = sum(1 for m in matched.values() if m.get("first_floor_ft") is not None)
+        if ff is None or a.get("flood_ft") is None:
+            continue
+        truth = a["flood_ft"] - ff > 0
+        note = a.get("flood") or {}
+        said = None if note.get("living_ft") is None else note["living_ft"] > 0
+        rows.append((b, truth, said, a.get("first_floor_ft"), ff))
     print()
-    print("== upper bound: the flood rule with known first-floor heights (the survey's, from street photos)")
-    print(f"first-floor height known for {known} of {len(matched)} matched buildings; {len(raised)} calls raised:")
-    for b, c0, c1, w, ff in raised:
-        print(f"  {b}: {c0} -> {c1} (water {w:.1f} ft above ground, floor {ff:.1f} ft up; survey DS{matched[b]['DS_overall']})")
-    score(matched, new, MAPPING, "overall DS -> FEMA, after raising by known first floors")
+    print("== flooding (stated beside the category): water in the living space, by the survey's first floors")
+    inside = [r for r in rows if r[1]]
+    print(f"{len(rows)} matched buildings with a surveyed first floor; water reached the living space at {len(inside)}")
+    told = [r for r in rows if r[2] is not None]
+    if not told:
+        print("  the drafts have no first-floor reading (no street photos), so the note can't say whether water got inside")
+        return
+    hit = sum(r[1] and r[2] for r in told)
+    false = sum(r[2] and not r[1] for r in told)
+    print(f"  agent's note says inside on {sum(r[2] for r in told)}: {hit} right, {false} where the survey's floor is above the water")
+    print(f"  of the {len(inside)} with water inside, the note says so on {hit}; "
+          f"{sum(r[1] and r[2] is None for r in rows)} have no first-floor reading")
+    errs = [r[3] - r[4] for r in rows if r[3] is not None]
+    if errs:
+        print(f"  agent's first-floor reading vs the survey's: median error {statistics.median(abs(e) for e in errs):.1f} ft, "
+              f"{sum(abs(e) <= 1 for e in errs)} of {len(errs)} within 1 ft, mean {statistics.mean(errs):+.1f} ft")
 
 
 if __name__ == "__main__":

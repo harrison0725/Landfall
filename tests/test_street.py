@@ -96,28 +96,30 @@ def _run(monkeypatch, reply, flood_ft, photos):
 PHOTO = {"captured": "2024-10-05", "distance_m": 14.0, "bearing": 10, "is_pano": False, "data_url": "data:image/jpeg;base64,AAAA"}
 
 
-def test_street_photos_go_to_the_model_and_their_floor_feeds_the_flood_rule(monkeypatch):
+def test_street_photos_go_to_the_model_and_their_floor_feeds_the_flood_note(monkeypatch):
     reply = {"category": "affected", "confidence": 0.8, "evidence": "roof intact", "needs_human": False,
              "first_floor_ft": 1.0, "street_evidence": "slab house, waterline on the siding"}
     a, calls = _run(monkeypatch, reply, flood_ft=4.0, photos=[PHOTO])
     user = calls[0][1]["content"]
     assert sum(p["type"] == "image_url" for p in user) == 2  # aerial pair + one street photo
     assert "Street photo 1" in json.dumps(user) and "first_floor_ft" in calls[0][0]["content"]
-    # 4 ft of water, floor 1 ft up: 3 ft in the living space -> Major, for an assessor to confirm
-    assert a.category is Category.MAJOR and a.first_floor_ft == 1.0 and a.street_photos == 1
-    assert a.needs_human
-    assert "waterline" in a.evidence and "first floor about 1.0 ft up" in a.evidence
+    # 4 ft of water, floor 1 ft up: 3 ft in the living space, stated as flooding, not damage
+    assert a.category is Category.AFFECTED and a.first_floor_ft == 1.0 and a.street_photos == 1
+    assert a.flood["living_ft"] == 3.0 and "inside the living space" in a.flood["label"]
+    assert "waterline" in a.evidence
 
 
 def test_raised_house_stays_affected(monkeypatch):
     reply = {"category": "affected", "confidence": 0.8, "evidence": "roof intact", "needs_human": False, "first_floor_ft": 9.0}
     a, _ = _run(monkeypatch, reply, flood_ft=4.0, photos=[PHOTO])
     assert a.category is Category.AFFECTED and not a.needs_human
+    assert "below the living floor" in a.flood["label"]
 
 
 def test_without_street_photos_nothing_changes(monkeypatch):
     reply = {"category": "none", "confidence": 0.8, "evidence": "roof intact", "needs_human": False, "first_floor_ft": 0.0}
     a, calls = _run(monkeypatch, reply, flood_ft=4.0, photos=None)
     assert "Street" not in calls[0][0]["content"]
-    assert a.category is Category.AFFECTED  # water around the house, floor unknown
+    assert a.category is Category.NONE  # flooding doesn't raise the category
+    assert a.flood["flooded"] and a.flood["living_ft"] is None
     assert a.first_floor_ft is None and a.street_photos == 0
