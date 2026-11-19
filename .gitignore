@@ -7,3 +7,4 @@ __pycache__/
 /data/
 landfall/native/*.so
 demo/*/nsi.json
+demo/*/cards/
