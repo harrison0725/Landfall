@@ -469,6 +469,25 @@ def wayback(lon: float, lat: float, date: str) -> dict:
     return {"tiles": photo.tiles, "captured": photo.captured, "source": photo.source, "attribution": f"{ATTRIBUTION}; photo {photo.captured}"}
 
 
+@app.get("/api/around")
+def around_photo(lon: float, lat: float, date: str) -> dict:
+    """A satellite photo for the map where no after-storm flight went: Esri's
+    newest photo of the spot, with when it was taken and whether that is
+    after the disaster. One lookup, so the map fills in right away."""
+    from .wayback import ATTRIBUTION, Photo, captured, releases
+
+    try:
+        rel = releases(ROOT / "cache")[0]
+        got = captured(rel, round(lon, 2), round(lat, 2), 17)
+    except (OSError, ValueError, KeyError, IndexError):
+        raise HTTPException(502, "the photo archive is not answering; try again in a moment") from None
+    if not got:
+        raise HTTPException(404, "no archive photo of this spot")
+    photo = Photo(rel, *got)
+    return {"tiles": photo.tiles, "captured": photo.captured, "source": photo.source, "after": photo.captured >= date[:10],
+            "attribution": f"{ATTRIBUTION}; photo {photo.captured}"}
+
+
 def _warm_catalogs() -> None:
     """Fetch every disaster's flight and acquisition lists once, so the first
     place search doesn't wait on them."""

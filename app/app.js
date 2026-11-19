@@ -163,13 +163,48 @@ function layerLabel(text) {
   document.querySelector('.seg button[data-layer="after"]').textContent = text;
 }
 function applyLayer() {
-  // the street map stays underneath: past the last after-storm photo it shows, never older photos
-  streets.addTo(map);
-  if (state.layer !== "map" && after) after.addTo(map);
+  // under the after-storm photos: a satellite photo of the places they don't
+  // reach (dated in the corner), or the street map when that's what's picked
+  const photos = state.layer !== "map";
+  if (photos && aroundLayer) { aroundLayer.addTo(map); map.removeLayer(streets); }
+  else { streets.addTo(map); if (aroundLayer) map.removeLayer(aroundLayer); }
+  $("around-note").hidden = !(photos && aroundLayer && aroundNote);
+  if (photos && after) after.addTo(map);
   else if (after) map.removeLayer(after);
   showCompare(state.layer === "compare");
   outlines.bringToFront();
+  if (photos) loadAround();
 }
+
+// ---------------------------------------------------------------- satellite photo beyond the flights
+// Esri's newest satellite photo, for the places the after-storm aerial photos
+// don't cover (Gainesville after Helene, say). Its date is looked up for the
+// spot in view and shown, saying whether it was taken after the disaster.
+let aroundLayer = null, aroundNote = "", aroundKey = "";
+function disasterDate() {
+  const s = (state.storms || []).find((x) => x.key === $("storm").value);
+  return s ? s.landfall.slice(0, 10) : "";
+}
+async function loadAround() {
+  const c = map.getCenter(), date = disasterDate();
+  const key = `${c.lng.toFixed(2)},${c.lat.toFixed(2)},${date}`;
+  if (key === aroundKey) return;
+  aroundKey = key;
+  const r = await fetch(`/api/around?lon=${c.lng.toFixed(2)}&lat=${c.lat.toFixed(2)}&date=${date || "1900-01-01"}`).catch(() => null);
+  if (key !== aroundKey) return;  // the map moved on while asking
+  if (!r || !r.ok) { aroundNote = ""; $("around-note").hidden = true; if (!aroundLayer) aroundKey = ""; return; }
+  const a = await r.json();
+  if (!aroundLayer || aroundLayer._url !== a.tiles) {
+    const old = aroundLayer;
+    aroundLayer = L.tileLayer(a.tiles, { maxZoom: 21, maxNativeZoom: 19, zIndex: 0, attribution: a.attribution });
+    if (old) map.removeLayer(old);
+  }
+  const month = new Date(a.captured + "T00:00:00Z").toLocaleDateString(undefined, { month: "short", year: "numeric", timeZone: "UTC" });
+  aroundNote = `Where the storm photos end: satellite photo from ${month}` + (date ? (a.after ? ", after the disaster" : ", from before the disaster") : "");
+  $("around-note").textContent = aroundNote;
+  applyLayer();
+}
+map.on("moveend", () => { if (state.layer !== "map") loadAround(); });
 
 // ---------------------------------------------------------------- before | after slider
 // The before photo the drafts were made from, on the same grid as the after one;
