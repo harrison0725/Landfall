@@ -215,3 +215,14 @@ ul.sources { padding-left: 18px; }
 .groups .grow i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
 .groups .grow em { font-style: normal; color: var(--muted, #666); }
 .groups .gnote { margin: 4px 0 0; color: var(--muted, #666); }
+.blk-label { font-size: 12px; line-height: 1.1; text-align: center; padding: 1px 4px; }
+.blk-label small { display: block; font-weight: 400; font-size: 9px; opacity: 0.85; }
+.sq-label { font-size: 12px; }
+.sqtable { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+.sqtable th, .sqtable td { text-align: left; padding: 3px 4px; border-bottom: 1px solid var(--line); }
+.sqtable th:not(:first-child), .sqtable td:not(:first-child) { text-align: right; }
+.sqtable tbody tr { cursor: pointer; }
+.sqtable tbody tr:hover { background: rgba(255, 159, 28, 0.12); }
+.sqdots { display: flex; gap: 6px; align-items: center; }
+.gradbar { height: 10px; border-radius: 4px; }
+.gradlab { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted, #666); }

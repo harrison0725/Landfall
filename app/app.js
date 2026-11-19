@@ -296,7 +296,7 @@ async function loadBuildings(fit) {
   state.features = {};
   outlines.clearLayers();
   outlines.addData(gj);
-  if (state.groups && !state.groups.points) { if (state.groups.area === state.area) colorGroups(); else clearGroups(); }
+  if (state.groups) { if (state.groups.area === state.area) colorGroups(); else clearGroups(); }
   // same framing for every area: all drafted buildings in view, never closer than street level
   if (fit && gj.features.length) map.fitBounds(outlines.getBounds(), { padding: [30, 30], maxZoom: 18 });
   checkBefore();
@@ -467,36 +467,145 @@ map.on("click", (e) => {
     $("input").value = `Group the buildings in ${sq.label} by age, how they were built and the green around them, and estimate each group's chance of damage in a ${kind} from past disasters with similar buildings.`;
     send();
   });
-  L.popup({ closeButton: true, autoPan: false }).setLatLng(e.latlng).setContent(box).openOn(map);
+  // kept clear of the panel on the right, which would cover it
+  L.popup({ closeButton: true, autoPan: true, autoPanPaddingTopLeft: [20, 160], autoPanPaddingBottomRight: [$("groups").hidden ? 20 : 330, 20] }).setLatLng(e.latlng).setContent(box).openOn(map);
 });
 
 const GROUP_COLORS = ["#4cc9f0", "#f72585", "#b5e48c", "#ffd166", "#9b5de5", "#06d6a0", "#ff8c42", "#f1f1f1"];
 const FACTOR_NAME = { chance: "Chance of damage", all: "All three", age: "Age (building rules)", construction: "How it was built", green: "Green around it" };
+// Each square estimated stays on the map, split into 16 blocks of about a
+// quarter mile, each shaded by its buildings' average chance of damage, so
+// blocks and squares can be compared at a glance. The panel lists every
+// square side by side; each building's dot is one click away.
+const squaresLayer = L.layerGroup().addTo(map);
+const SQ = {};  // square label -> {ev, layer, dots, stats}
+let sqShown = null;  // the square whose buildings are drawn as dots
+let sqColorBy = "chance";
+const BLOCKS = 4;
+// a smooth scale, so blocks a few points apart still look different:
+// teal at 0%, yellow at 25%, red at 50% or more
+const CHANCE_STOPS = [[0, [42, 157, 143]], [0.15, [138, 201, 38]], [0.25, [233, 196, 106]], [0.35, [244, 162, 97]], [0.5, [230, 57, 70]]];
+function chanceColor(c) {
+  if (c == null) return "#9a9a9a";
+  const v = Math.max(0, Math.min(0.5, c));
+  for (let k = 1; k < CHANCE_STOPS.length; k++) {
+    const [x1, c1] = CHANCE_STOPS[k], [x0, c0] = CHANCE_STOPS[k - 1];
+    if (v <= x1) { const t = (v - x0) / (x1 - x0); return `rgb(${c0.map((a, i) => Math.round(a + (c1[i] - a) * t)).join(",")})`; }
+  }
+  return "rgb(230,57,70)";
+}
+function factorsOf(p) {
+  return { age: p.code_era || "year built unknown", construction: (p.material || p.foundation) ? `${p.material || "unknown material"} on ${p.foundation || "unknown foundation"}` : "construction unknown", green: p.green || "green unknown" };
+}
+function mostCommon(list) { const c = {}; let best = null; for (const v of list) { c[v] = (c[v] || 0) + 1; if (!best || c[v] > c[best]) best = v; } return [best, best ? c[best] : 0]; }
+function showSquare(ev) {
+  const ll = ev.polygon.map(([x, y]) => [y, x]);
+  const bounds = L.latLngBounds(ll);
+  const [w, s, e, n] = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
+  const blocks = {};
+  for (const p of ev.points) {
+    const i = Math.min(BLOCKS - 1, Math.floor(((p.lon - w) / (e - w)) * BLOCKS)), j = Math.min(BLOCKS - 1, Math.floor(((p.lat - s) / (n - s)) * BLOCKS));
+    (blocks[`${i},${j}`] = blocks[`${i},${j}`] || { i, j, pts: [] }).pts.push(p);
+  }
+  const known = ev.points.filter((p) => p.chance_damaged != null);
+  const avg = known.length ? known.reduce((t, p) => t + p.chance_damaged, 0) / known.length : null;
+  const stats = { buildings: ev.points.length, avg, high: known.filter((p) => p.chance_damaged >= 0.25).length, top: (ev.groups || [])[0] };
+  if (SQ[ev.square]) squaresLayer.removeLayer(SQ[ev.square].layer);
+  const layer = L.layerGroup();
+  layer.addLayer(L.polygon(ll, { color: "#ff9f1c", weight: 3, fill: false, interactive: false }));
+  const cells = [];
+  for (const b of Object.values(blocks)) {
+    const bw = w + ((e - w) * b.i) / BLOCKS, bs = s + ((n - s) * b.j) / BLOCKS;
+    const bb = [[bs, bw], [bs + (n - s) / BLOCKS, bw + (e - w) / BLOCKS]];
+    const ks = b.pts.filter((p) => p.chance_damaged != null);
+    b.avg = ks.length ? ks.reduce((t, p) => t + p.chance_damaged, 0) / ks.length : null;
+    b.rect = L.rectangle(bb, { color: "#fff", weight: 1, fillOpacity: 0.5 }).addTo(layer);
+    b.tag = L.tooltip({ permanent: true, direction: "center", className: "sec-label blk-label", interactive: false }).setLatLng(L.latLngBounds(bb).getCenter());
+    layer.addLayer(b.tag);
+    cells.push(b);
+  }
+  layer.addLayer(L.tooltip({ permanent: true, direction: "top", className: "sec-label sq-label", interactive: false }).setLatLng([n, (w + e) / 2])
+    .setContent(`${esc(ev.square)}: ${stats.buildings.toLocaleString()} buildings${avg == null ? "" : `, ${Math.round(avg * 100)}% average chance`}`));
+  squaresLayer.addLayer(layer);
+  SQ[ev.square] = { ev, layer, cells, stats, bounds };
+  cellLayer.clearLayers();
+  state.groups = null;
+  paintSquares();
+  showDots(ev.square);
+  sqPanel();
+  map.fitBounds(bounds, { padding: [30, 30], maxZoom: 17 });
+}
+function paintSquares() {
+  for (const sq of Object.values(SQ)) {
+    for (const b of sq.cells) {
+      let color, text, tip;
+      const n = b.pts.length;
+      if (sqColorBy === "chance") {
+        color = chanceColor(b.avg);
+        text = b.avg == null ? "?" : `${Math.round(b.avg * 100)}%`;
+      } else {
+        const [v, c] = mostCommon(b.pts.map((p) => factorsOf(p)[sqColorBy]));
+        color = groupColor(v);
+        text = `${Math.round((100 * c) / n)}%`;
+      }
+      const [top] = mostCommon(b.pts.map((p) => p.group));
+      tip = `<b>${n} building${n === 1 ? "" : "s"}</b>${b.avg == null ? "" : `, ${Math.round(b.avg * 100)}% average chance of damage`}<br>Most common: ${esc(top || "")}`;
+      b.rect.setStyle({ fillColor: color });
+      b.rect.unbindTooltip().bindTooltip(tip, { sticky: true });
+      b.tag.setContent(`${text}<small>${n}</small>`);
+    }
+  }
+}
+const groupColorMap = {};
+function groupColor(v) {
+  if (!(v in groupColorMap)) groupColorMap[v] = GROUP_COLORS[Object.keys(groupColorMap).length % (GROUP_COLORS.length - 1)];
+  return groupColorMap[v];
+}
+function showDots(label) {
+  groupPoints.clearLayers();
+  sqShown = label;
+  const sq = SQ[label];
+  if (!sq || !$("sq-dots") || !$("sq-dots").checked) return;
+  for (const p of sq.ev.points) {
+    const f = factorsOf(p);
+    const g = (sq.ev.groups || []).find((x) => x.group === p.group) || {};
+    const range = g.chance_damaged_90pct ? ` (${Math.round(g.chance_damaged_90pct[0] * 100)} to ${Math.round(g.chance_damaged_90pct[1] * 100)}%, from ${g.look_alikes} look-alikes)` : "";
+    L.circleMarker([p.lat, p.lon], { renderer: pointRenderer, radius: 3.5, weight: 1, color: "#111", fillOpacity: 0.95, fillColor: sqColorBy === "chance" ? chanceColor(p.chance_damaged) : groupColor(f[sqColorBy]) })
+      .bindTooltip(`<b>${p.chance_damaged == null ? "No odds" : `${Math.round(p.chance_damaged * 100)}% chance of damage`}</b>${esc(range)}<br>${esc(f.age)}<br>${esc(f.construction)}<br>${esc(f.green)}${p.year_built ? `<br>Built ${p.year_built} (${esc(p.year_source || "")})` : ""}`)
+      .addTo(groupPoints);
+  }
+}
+function sqPanel() {
+  const panel = $("groups");
+  panel.hidden = false;
+  const rows = Object.entries(SQ).map(([k, sq]) => `<tr data-sq="${esc(k)}"><td>${esc(k)}</td><td>${sq.stats.buildings.toLocaleString()}</td><td>${sq.stats.avg == null ? "?" : Math.round(sq.stats.avg * 100) + "%"}</td><td>${sq.stats.buildings ? Math.round((100 * sq.stats.high) / sq.stats.buildings) + "%" : "?"}</td></tr>`).join("");
+  let legend;
+  if (sqColorBy === "chance") {
+    legend = `<div class="gradbar" style="background:linear-gradient(to right, ${[0, 0.1, 0.2, 0.3, 0.4, 0.5].map(chanceColor).join(",")})"></div><div class="gradlab"><span>0%</span><span>25%</span><span>50%+</span></div><p class="gnote">Average chance of damage of the buildings in each block.</p>`;
+  } else {
+    const vals = new Set();
+    for (const sq of Object.values(SQ)) for (const p of sq.ev.points) vals.add(factorsOf(p)[sqColorBy]);
+    legend = [...vals].map((v) => `<div class="grow"><i style="background:${groupColor(v)}"></i><span>${esc(v)}</span></div>`).join("") + `<p class="gnote">Each block shows its most common kind and what share of its buildings that is.</p>`;
+  }
+  const ev = Object.values(SQ).pop().ev;
+  panel.innerHTML = `<div class="ghead"><b>Compare squares</b><button type="button" class="linkish" id="sq-clear">Clear all</button></div>
+    <table class="sqtable"><thead><tr><th>Square</th><th>Buildings</th><th>Average chance</th><th>25%+ chance</th></tr></thead><tbody>${rows}</tbody></table>
+    <label>Shade blocks by <select id="sq-by">${["chance", "age", "construction", "green"].map((b) => `<option value="${b}"${b === sqColorBy ? " selected" : ""}>${FACTOR_NAME[b]}</option>`).join("")}</select></label>
+    <div>${legend}</div>
+    <label class="sqdots"><input type="checkbox" id="sq-dots"${sqDotsOn ? " checked" : ""}> Show each building in ${esc(sqShown || "")}</label>
+    <p class="gnote">Each square is split into 16 blocks of about a quarter mile; the number under each is its building count. Odds come from ${esc(ev.disaster || "past")} damage to similar buildings in a past disaster; not a forecast. Pick another square to add it here.</p>`;
+  $("sq-by").addEventListener("change", (e) => { sqColorBy = e.target.value; paintSquares(); showDots(sqShown); sqPanel(); });
+  $("sq-dots").addEventListener("change", (e) => { sqDotsOn = e.target.checked; showDots(sqShown); });
+  $("sq-clear").addEventListener("click", () => { for (const k of Object.keys(SQ)) delete SQ[k]; squaresLayer.clearLayers(); groupPoints.clearLayers(); $("groups").hidden = true; });
+  panel.querySelectorAll("tr[data-sq]").forEach((tr) => tr.addEventListener("click", () => { const k = tr.dataset.sq; showDots(k); sqPanel(); map.fitBounds(SQ[k].bounds, { padding: [30, 30], maxZoom: 17 }); }));
+}
+let sqDotsOn = false;
 const groupPoints = L.layerGroup().addTo(map);
 const pointRenderer = L.canvas({ padding: 0.3 });
 const CHANCE_BINS = [[0.1, "#2a9d8f", "under 10%"], [0.25, "#e9c46a", "10 to 25%"], [0.4, "#f4a261", "25 to 40%"], [1.01, "#e63946", "40% or more"]];
 function showGroups(ev) {
+  if (ev.points) return showSquare(ev);
   state.groups = ev;
-  if (ev.points) {
-    // buildings found for the square (no photos): one dot each
-    ev.factors = {};
-    ev.building_group = {};
-    ev.chance = {};
-    groupPoints.clearLayers();
-    ev.markers = {};
-    ev.points.forEach((p, i) => {
-      const id = `p${i}`;
-      ev.factors[id] = { age: p.code_era || "year built unknown", construction: (p.material || p.foundation) ? `${p.material || "unknown material"} on ${p.foundation || "unknown foundation"}` : "construction unknown", green: p.green || "green unknown" };
-      ev.building_group[id] = p.group;
-      ev.chance[id] = p.chance_damaged;
-      const g = (ev.groups || []).find((x) => x.group === p.group) || {};
-      const range = g.chance_damaged_90pct ? ` (${Math.round(g.chance_damaged_90pct[0] * 100)} to ${Math.round(g.chance_damaged_90pct[1] * 100)}%, from ${g.look_alikes} look-alikes)` : "";
-      ev.markers[id] = L.circleMarker([p.lat, p.lon], { renderer: pointRenderer, radius: 4, weight: 1, color: "#111", fillOpacity: 0.9 })
-        .bindTooltip(`<b>${p.chance_damaged == null ? "No odds" : `${Math.round(p.chance_damaged * 100)}% chance of damage`}</b>${esc(range)}<br>${esc(ev.factors[id].age)}<br>${esc(ev.factors[id].construction)}<br>${esc(ev.factors[id].green)}${p.year_built ? `<br>Built ${p.year_built} (${esc(p.year_source || "")})` : ""}`)
-        .addTo(groupPoints);
-    });
-    ev.by = ["chance", "age", "construction", "green"];
-  }
   if (ev.polygon) {
     cellLayer.clearLayers();
     cellLayer.addLayer(L.polygon(ev.polygon.map(([x, y]) => [y, x]), { color: "#ff9f1c", weight: 4, fill: false, interactive: false }));
@@ -518,28 +627,13 @@ function colorGroups() {
   const ev = state.groups;
   if (!ev) return;
   const by = $("groups-by").value;
-  if (by === "chance") {
-    const bin = (c) => (c == null ? null : CHANCE_BINS.find(([top]) => c < top));
-    const n = CHANCE_BINS.map(() => 0);
-    let none = 0;
-    for (const [id, m] of Object.entries(ev.markers)) {
-      const b = bin(ev.chance[id]);
-      if (b) n[CHANCE_BINS.indexOf(b)]++; else none++;
-      m.setStyle({ fillColor: b ? b[1] : "#9a9a9a" });
-    }
-    $("groups-list").innerHTML = CHANCE_BINS.map(([, c, t], i) => `<div class="grow"><i style="background:${c}"></i><span>${t} chance of damage</span><em>${n[i]}</em></div>`).join("")
-      + (none ? `<div class="grow"><i style="background:#9a9a9a"></i><span>No odds (no look-alikes)</span><em>${none}</em></div>` : "")
-      + `<p class="gnote">Odds from ${esc(ev.disaster || "past")} damage to similar buildings in a past disaster; not a forecast.</p>`;
-    return;
-  }
   const keyOf = (id) => (by === "all" ? ev.building_group[id] : (ev.factors[id] || {})[by]);
   const count = {};
   for (const id of Object.keys(ev.factors)) { const k = keyOf(id); if (k) count[k] = (count[k] || 0) + 1; }
   const top = Object.entries(count).sort((a, b) => b[1] - a[1]);
   const color = {};
   top.forEach(([k], i) => { color[k] = i < GROUP_COLORS.length - 1 ? GROUP_COLORS[i] : "#9a9a9a"; });
-  if (ev.markers) for (const [id, m] of Object.entries(ev.markers)) m.setStyle({ fillColor: color[keyOf(id)] || "#9a9a9a" });
-  else for (const [id, layer] of Object.entries(state.features)) {
+  for (const [id, layer] of Object.entries(state.features)) {
     const k = ev.factors[id] ? keyOf(id) : null;
     layer.setStyle(k ? { color: color[k], weight: 3, opacity: 1, dashArray: null, fillColor: color[k], fillOpacity: 0 } : { color: "#777", weight: 1, opacity: 0.6, dashArray: null, fillOpacity: 0 });
   }
@@ -550,7 +644,6 @@ function colorGroups() {
 }
 function clearGroups() {
   state.groups = null;
-  groupPoints.clearLayers();
   $("groups").hidden = true;
   cellLayer.clearLayers();
   for (const layer of Object.values(state.features)) layer.setStyle(styleFor(layer.feature));
