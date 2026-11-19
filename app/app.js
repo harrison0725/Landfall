@@ -288,6 +288,41 @@ function legend() {
 $("levels-list").innerHTML = CATS.map((c) => `<div class="level"><img src="/static/img/levels/${c}.webp" alt="" width="96" height="96" loading="lazy"><div><b><i style="--c:var(--${c})"></i>${LABEL[c]}</b><p>${MEANS[c]}</p></div></div>`).join("");
 $("levels-close").addEventListener("click", () => { $("levels").hidden = true; });
 
+// ---------------------------------------------------------------- 1-mile grid
+// Square-mile cells anchored to fixed lines of latitude and longitude, so the
+// grid stays put as the map moves; redrawn for what's on screen.
+const MILE_M = 1609.344;
+const gridLayer = L.layerGroup();
+const gridScale = L.control.scale({ position: "bottomright", metric: false, maxWidth: 140 });
+let gridOn = false;
+try { gridOn = localStorage.getItem("landfall-grid") === "1"; } catch (e) { /* storage blocked */ }
+function drawGrid() {
+  gridLayer.clearLayers();
+  if (!gridOn) return;
+  const b = map.getBounds();
+  const dLat = MILE_M / 111320;
+  const dLon = MILE_M / (111320 * Math.cos((map.getCenter().lat * Math.PI) / 180));
+  const lat0 = Math.floor(b.getSouth() / dLat), lat1 = Math.ceil(b.getNorth() / dLat);
+  const lon0 = Math.floor(b.getWest() / dLon), lon1 = Math.ceil(b.getEast() / dLon);
+  if ((lat1 - lat0) + (lon1 - lon0) > 400) return; // zoomed too far out to read
+  // a light line under a dark dashed one reads on dark photos and light street maps alike
+  const styles = [{ color: "#fff", weight: 3, opacity: 0.6, interactive: false }, { color: "#111", weight: 1.2, opacity: 0.8, dashArray: "6 5", interactive: false }];
+  const line = (pts) => styles.forEach((st) => gridLayer.addLayer(L.polyline(pts, st)));
+  for (let i = lat0; i <= lat1; i++) line([[i * dLat, lon0 * dLon], [i * dLat, lon1 * dLon]]);
+  for (let j = lon0; j <= lon1; j++) line([[lat0 * dLat, j * dLon], [lat1 * dLat, j * dLon]]);
+}
+function setGrid(on) {
+  gridOn = on;
+  $("grid").classList.toggle("on", on);
+  $("grid").setAttribute("aria-pressed", String(on));
+  if (on) { gridLayer.addTo(map); gridScale.addTo(map); } else { gridLayer.remove(); gridScale.remove(); }
+  try { localStorage.setItem("landfall-grid", on ? "1" : "0"); } catch (e) { /* storage blocked */ }
+  drawGrid();
+}
+$("grid").addEventListener("click", () => setGrid(!gridOn));
+map.on("moveend", drawGrid);
+setGrid(gridOn);
+
 // ---------------------------------------------------------------- phone: the whole screen for the map
 $("mapsize").addEventListener("click", () => {
   const big = document.querySelector(".shell").classList.toggle("bigmap");
