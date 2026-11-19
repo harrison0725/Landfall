@@ -50,10 +50,24 @@ def _seed(root: Path, demo: Path) -> None:
         if not dst.exists():
             (shutil.copytree if src.is_dir() else shutil.copy2)(src, dst)
         elif src.is_dir() and src.name != "tiles" and (src / "assessments.json").exists():
-            # a demo area already copied: add files shipped since (plain.json, say)
+            # a demo area already copied: bring it up to what the image ships
+            # (re-judged drafts, new files such as structures.json), so a
+            # persistent disk doesn't keep serving an old version
+            import filecmp
+
             for f in src.iterdir():
-                if f.is_file() and not (dst / f.name).exists():
+                if f.is_file() and (not (dst / f.name).exists() or not filecmp.cmp(f, dst / f.name, shallow=False)):
                     shutil.copy2(f, dst / f.name)
+            if (src / "crops").is_dir():
+                changed = False
+                for f in (src / "crops").iterdir():
+                    g = dst / "crops" / f.name
+                    if not g.exists() or not filecmp.cmp(f, g, shallow=False):
+                        g.parent.mkdir(exist_ok=True)
+                        shutil.copy2(f, g)
+                        changed = True
+                if changed:  # the card photos are drawn from the crops
+                    shutil.rmtree(dst / "cards", ignore_errors=True)
 
 
 try:
