@@ -207,7 +207,7 @@ ul.sources { padding-left: 18px; }
 /* picking a 1-mile grid square, and the building groups in it */
 .cellpick { display: grid; gap: 6px; min-width: 190px; }
 .cellpick small { color: var(--muted, #666); }
-.groups { position: absolute; right: 12px; top: 150px; z-index: 500; width: min(300px, calc(100% - 24px)); max-height: 55%; overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 0.8rem; display: grid; gap: 6px; }
+.groups { position: absolute; right: 12px; top: 150px; z-index: 500; width: min(300px, calc(100% - 24px)); max-height: calc(100% - 170px); overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 0.8rem; display: grid; gap: 6px; }
 .groups[hidden] { display: none; }
 .groups .ghead { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
 .groups select { margin-left: 4px; }
@@ -223,6 +223,9 @@ ul.sources { padding-left: 18px; }
 .sqtable th:not(:first-child), .sqtable td:not(:first-child) { text-align: right; }
 .sqtable tbody tr { cursor: pointer; }
 .sqtable tbody tr:hover { background: rgba(255, 159, 28, 0.12); }
+.sqscen { display: flex; flex-direction: column; gap: 6px; margin: 6px 0 2px; }
+.sqscen label { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.8rem; }
+.sqscen select { max-width: 70%; }
 .sqview { display: flex; margin: 8px 0 6px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
 .sqview button { flex: 1; padding: 6px 8px; background: transparent; color: inherit; border: 0; font: inherit; font-size: 0.8rem; cursor: pointer; }
 .sqview button + button { border-left: 1px solid var(--line); }

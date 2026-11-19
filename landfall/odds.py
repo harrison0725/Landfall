@@ -17,6 +17,11 @@ same kind and were inspected afterwards (landfall/history/*.csv). The
 share of look-alikes that were damaged is the group's odds, with a 90%
 interval; when too few look-alikes match every factor, it drops the least
 telling factor first (green, then foundation, then material) and says so.
+
+Every square also carries each building's odds for every disaster type and
+category in hazards.SCENARIOS (hurricane Category 1 to 5, tornado EF0 to EF5,
+earthquake shaking, flood depth from damage curves; storm surge and wildfire
+from the look-alikes above), so the map can switch between them.
 """
 
 from __future__ import annotations
@@ -280,39 +285,69 @@ def lookup(member: dict, past: list[dict], state: str | None, kind: str) -> dict
     }
 
 
-def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "") -> dict:
-    """Group the buildings in a square and give each group's odds."""
+def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", scenario: str | None = None) -> dict:
+    """Group the buildings in a square and give each group's odds in one
+    disaster scenario (a type and category, hazards.SCENARIOS), plus every
+    scenario's odds for each kind of building so the map can switch."""
+    from . import hazards
+
     got = buildings_in(ring, kind)
     rows, state = got["buildings"], got["state"]
+    sid = scenario if scenario in hazards.scenario_ids() else hazards.default_scenario(kind)
+    t, cid = sid.split(":")
+    classes, index = hazards.odds_table(rows, state)
+    for r, i in zip(rows, index):
+        r["cls"] = i
+        r["chance_damaged"] = classes[i]["odds"][sid][0]
     groups: dict[str, dict] = {}
     for r in rows:
         f = {k: KEY[k](r) for k in FACTORS}
         name = " · ".join(f[k] for k in FACTORS)
-        g = groups.setdefault(name, {"group": name, **f, "buildings": 0, "_member": r})
+        g = groups.setdefault(name, {"group": name, **f, "buildings": 0, "_members": []})
         g["buildings"] += 1
+        g["_members"].append(r)
         r["group"] = name
-    past = history(kind)
-    h = HISTORIES.get(kind)
+    measured = t in hazards.MEASURED
+    hkind = hazards.MEASURED.get(t)
+    past = history(hkind) if measured else []
+    h = HISTORIES.get(hkind) if measured else None
     for g in groups.values():
-        g.update(lookup(g.pop("_member"), past, state, kind) if past else {})
-        g.pop("_member", None)
-    for r in rows:
-        r["chance_damaged"] = groups[r["group"]].get("chance_damaged")
+        ms = g.pop("_members")
+        if measured:
+            g.update(lookup(ms[0], past, state, hkind) if past else {})
+        else:
+            sev = [classes[m["cls"]]["odds"][sid][1] for m in ms]
+            g["chance_damaged"] = round(sum(m["chance_damaged"] for m in ms) / len(ms), 2)
+            g["chance_badly_damaged_or_destroyed"] = round(sum(sev) / len(sev), 2)
+            g["from"] = "damage curves"
     rows_sorted = sorted(groups.values(), key=lambda g: -g["buildings"])
     known = [r["chance_damaged"] for r in rows if r["chance_damaged"] is not None]
+    sc = hazards.SCENARIOS[t]
+    cat_label = next(c[1] for c in sc["categories"] if c[0] == cid)
+    if measured:
+        source = h["source"] if h and past else f"no past {hkind} with inspected buildings in Landfall yet"
+        notes = ("These are odds from look-alike buildings in one past disaster, not a forecast of this place: how hard it hits "
+                 "(surge depth, distance from the fire) matters more than how a house was built. ")
+    else:
+        source = ("approximate damage curves by building type and age, in the form FEMA's Hazus loss model uses "
+                  "(not the official Hazus tables, not yet checked against field data)")
+        notes = (f"These are odds for a {sc['name'].lower()} at {cat_label}, {sc['note']}. ")
     return {
         "square": label or "the picked square",
         "disaster_kind": kind,
+        "scenario": sid,
+        "scenario_label": f"{sc['name']}: {cat_label}",
         "state": state,
         "buildings": len(rows),
         "expected_damaged": round(sum(known)) if known else None,
         "groups": rows_sorted,
-        "history": h["source"] if h and past else f"no past {kind} with inspected buildings in Landfall yet",
-        "damaged_means": h["damaged"] if h else None,
-        "severe_means": h["severe"] if h else None,
+        "by_category": hazards.by_category(rows, classes, index, t),
+        "history": source,
+        "damaged_means": h["damaged"] if h else ("water above the first floor" if t == "flood" else "more than light damage"),
+        "severe_means": h["severe"] if h else ("4 ft or more of water inside" if t == "flood" else "badly damaged or destroyed"),
         "points": rows,
-        "notes": "These are odds from look-alike buildings in one past disaster, not a forecast of this place: how hard a storm hits "
-        "(wind speed, surge, distance from the fire) matters more than how a house was built, and the past disaster's buildings faced their "
-        "own storm. Year built is from the county tax roll in Florida, elsewhere the block's median year. Material and foundation come from "
-        "the national structure inventory, which is often wrong. Green is from today's satellite photo. Groups matched on fewer factors say so.",
+        "classes": classes,
+        "notes": notes + "Year built is from the county tax roll in Florida, elsewhere the block's median year. Material and foundation come from "
+        "the national structure inventory, which is often wrong (unknown material is treated as wood frame). Green is from today's satellite photo. "
+        "The map can switch to any disaster type and category without asking again.",
     }
