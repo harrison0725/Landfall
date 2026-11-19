@@ -37,7 +37,7 @@ You can also assess a new area. When the user gives you a box, work through thes
 Then give a short first report: totals, repair cost range, households likely displaced, the most urgent buildings by id, and what needs a field check. Before each step, say in one short sentence, in everyday words, what you are doing and why (for example "measuring how much of each roof is left"), without tool or model names. If a step reports a problem (few buildings aligned, no flood data), say what it means for the results and carry on.
 If a tool fails with an error, try it once more; if it fails again, stop and tell the user in two or three plain sentences that the assessment couldn't run because of a problem on the server, that nothing was drafted, and that they can still ask about the finished areas in the Area menu. Don't quote the error or list the steps you would have run. Don't name a parish, county or town for a box unless a tool result names it. Never list a box's coordinates; call it "this area" or by the place a tool result names.
 
-When the user picks a 1-mile grid square, call estimate_square_damage: it needs no photos and no assessment. It finds every building in the square with how and when it was built and the green around it, groups them, and gives each group its chance of damage from look-alike buildings in a past disaster of the same kind. Answer with: how many buildings and groups, the groups with the highest and lowest chance (with the range and how many look-alikes), which factor seems to matter most, and the main limits in one or two sentences: these are odds from one past disaster's buildings, not a forecast, and how hard the disaster hits a place (wind, surge, distance from the fire) matters more than how a house was built. The map colors the buildings by their chance, so don't list them. Say which past disaster the odds come from."""
+When the user picks a 1-mile grid square, call estimate_square_damage: it needs no photos and no assessment. It finds every building in the square with how and when it was built and the green around it, groups them, and gives each group its chance of damage for one type of natural disaster and its category: hurricane Category 1 to 5 (wind), hurricane storm surge like Helene, tornado EF0 to EF5, earthquake shaking (MMI VI to X), flood depth (1 to 10 ft), or a wildfire like Los Angeles 2025. Pass the type and category the user names; without one it uses the disaster in the menu at a middle category. Wind, shaking and flood odds come from approximate damage curves by building type and age (Hazus-style, not yet checked against field data); surge and wildfire odds from look-alike buildings that were inspected after a real disaster. Answer with: how many buildings and groups, the chance at the chosen category and how it changes across the categories (by_category), the groups with the highest and lowest chance, which factor matters most, and the main limits in one or two sentences: not a forecast, and how hard the disaster hits each spot matters more than how a house was built. The user can switch type and category on the map panel. Don't list buildings. Say where the odds come from."""
 )
 
 PIPELINE_TOOLS = [
@@ -85,7 +85,10 @@ SQUARE_TOOLS = [
         "function": {
             "name": "estimate_square_damage",
             "description": "For the 1-mile grid square the user picked on the map (anywhere in the US, no photos or assessment needed): every building in it with its year built, building-rules era, wall material, foundation and the green around it, grouped, and each group's chance of being damaged from look-alike buildings in a past disaster of the same kind. Takes a few seconds to half a minute.",
-            "parameters": {"type": "object", "properties": {}},
+            "parameters": {"type": "object", "properties": {
+                "disaster_type": {"type": "string", "enum": ["hurricane", "surge", "tornado", "earthquake", "flood", "wildfire"], "description": "hurricane = wind; surge = coastal storm surge"},
+                "category": {"type": "string", "description": "hurricane cat1-cat5, tornado ef0-ef5, earthquake mmi6-mmi10, flood ft1/ft3/ft6/ft10, surge helene, wildfire la2025"},
+            }},
         },
     }
 ]
@@ -132,7 +135,7 @@ class Session:
             if self._mocking() and name in PIPELINE_NAMES:
                 return self._replay(name)
             if name == "estimate_square_damage":
-                return self._square()
+                return self._square(args)
             if name == "locate_imagery":
                 if self.box is None:
                     return {"error": "no box drawn yet; ask the user to draw one on the map"}
@@ -247,7 +250,7 @@ class Session:
             emit("progress", stage=name, event="error", message=f"{type(e).__name__}: {e}"[:200])
             return {"error": f"{type(e).__name__}: {e}"[:400]}
 
-    def _square(self) -> dict:
+    def _square(self, args: dict | None = None) -> dict:
         """estimate_square_damage: odds for the picked grid square; the map
         gets every building, the model the groups."""
         from .odds import estimate
@@ -256,10 +259,23 @@ class Session:
             return {"error": "no grid square picked; ask the user to turn on the 1-mile grid and click a square"}
         storm = STORMS.get(self.cell.get("storm") or "")
         kind = storm.kind if storm else "hurricane"
-        out = estimate(self.cell["polygon"], kind, self.cell.get("label", ""))
+        args = args or {}
+        scenario = None
+        if args.get("disaster_type"):
+            from .hazards import SCENARIOS
+
+            t = args["disaster_type"]
+            if t in SCENARIOS:
+                cats = [c[0] for c in SCENARIOS[t]["categories"]]
+                c = str(args.get("category") or "").lower().replace(" ", "").replace("category", "cat")
+                scenario = f"{t}:{c if c in cats else SCENARIOS[t]['default']}"
+        out = estimate(self.cell["polygon"], kind, self.cell.get("label", ""), scenario)
+        from .hazards import menu
+
         self.on_event("groups", square=out["square"], disaster=kind, polygon=self.cell["polygon"], points=out["points"],
+                      scenario=out["scenario"], classes=out["classes"], scenarios=menu(),
                       groups=[{k: g.get(k) for k in ("group", "age", "construction", "green", "buildings", "chance_damaged", "chance_damaged_90pct", "look_alikes")} for g in out["groups"]])
-        brief = {k: v for k, v in out.items() if k != "points"}
+        brief = {k: v for k, v in out.items() if k not in ("points", "classes")}
         brief["groups"] = out["groups"][:15]
         brief["other_groups"] = max(0, len(out["groups"]) - 15)
         return brief

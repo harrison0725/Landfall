@@ -484,18 +484,22 @@ let sqColorBy = "chance";
 // "blocks": each quarter-mile block shaded as a whole; "buildings": every
 // building in every square as its own dot, block lines kept faint for reference
 let sqView = "blocks";
+// the disaster type and category the odds are for ("hurricane:cat3"); every
+// square carries every scenario's odds, so switching needs no new request
+let sqScenario = null;
+let sqMenu = [];
 const BLOCKS = 4;
 // a smooth scale, so blocks a few points apart still look different:
-// teal at 0%, yellow at 25%, red at 50% or more
-const CHANCE_STOPS = [[0, [42, 157, 143]], [0.15, [138, 201, 38]], [0.25, [233, 196, 106]], [0.35, [244, 162, 97]], [0.5, [230, 57, 70]]];
+// teal at 0%, yellow at 30%, red at 70%, dark red at 100%
+const CHANCE_STOPS = [[0, [42, 157, 143]], [0.15, [138, 201, 38]], [0.3, [233, 196, 106]], [0.5, [244, 162, 97]], [0.7, [230, 57, 70]], [1, [128, 15, 47]]];
 function chanceColor(c) {
   if (c == null) return "#9a9a9a";
-  const v = Math.max(0, Math.min(0.5, c));
+  const v = Math.max(0, Math.min(1, c));
   for (let k = 1; k < CHANCE_STOPS.length; k++) {
     const [x1, c1] = CHANCE_STOPS[k], [x0, c0] = CHANCE_STOPS[k - 1];
     if (v <= x1) { const t = (v - x0) / (x1 - x0); return `rgb(${c0.map((a, i) => Math.round(a + (c1[i] - a) * t)).join(",")})`; }
   }
-  return "rgb(230,57,70)";
+  return "rgb(128,15,47)";
 }
 function factorsOf(p) {
   return { age: p.code_era || "year built unknown", construction: (p.material || p.foundation) ? `${p.material || "unknown material"} on ${p.foundation || "unknown foundation"}` : "construction unknown", green: p.green || "green unknown" };
@@ -510,9 +514,8 @@ function showSquare(ev) {
     const i = Math.min(BLOCKS - 1, Math.floor(((p.lon - w) / (e - w)) * BLOCKS)), j = Math.min(BLOCKS - 1, Math.floor(((p.lat - s) / (n - s)) * BLOCKS));
     (blocks[`${i},${j}`] = blocks[`${i},${j}`] || { i, j, pts: [] }).pts.push(p);
   }
-  const known = ev.points.filter((p) => p.chance_damaged != null);
-  const avg = known.length ? known.reduce((t, p) => t + p.chance_damaged, 0) / known.length : null;
-  const stats = { buildings: ev.points.length, avg, high: known.filter((p) => p.chance_damaged >= 0.25).length, top: (ev.groups || [])[0] };
+  if (ev.scenarios) sqMenu = ev.scenarios;
+  if (ev.scenario) sqScenario = ev.scenario;
   if (SQ[ev.square]) squaresLayer.removeLayer(SQ[ev.square].layer);
   const layer = L.layerGroup();
   layer.addLayer(L.polygon(ll, { color: "#ff9f1c", weight: 3, fill: false, interactive: false }));
@@ -520,17 +523,15 @@ function showSquare(ev) {
   for (const b of Object.values(blocks)) {
     const bw = w + ((e - w) * b.i) / BLOCKS, bs = s + ((n - s) * b.j) / BLOCKS;
     const bb = [[bs, bw], [bs + (n - s) / BLOCKS, bw + (e - w) / BLOCKS]];
-    const ks = b.pts.filter((p) => p.chance_damaged != null);
-    b.avg = ks.length ? ks.reduce((t, p) => t + p.chance_damaged, 0) / ks.length : null;
     b.rect = L.rectangle(bb, { color: "#fff", weight: 1, fillOpacity: 0.5 }).addTo(layer);
     b.tag = L.tooltip({ permanent: true, direction: "center", className: "sec-label blk-label", interactive: false }).setLatLng(L.latLngBounds(bb).getCenter());
     layer.addLayer(b.tag);
     cells.push(b);
   }
-  layer.addLayer(L.tooltip({ permanent: true, direction: "top", className: "sec-label sq-label", interactive: false }).setLatLng([n, (w + e) / 2])
-    .setContent(`${esc(ev.square)}: ${stats.buildings.toLocaleString()} buildings${avg == null ? "" : `, ${Math.round(avg * 100)}% average chance`}`));
+  const title = L.tooltip({ permanent: true, direction: "top", className: "sec-label sq-label", interactive: false }).setLatLng([n, (w + e) / 2]);
+  layer.addLayer(title);
   squaresLayer.addLayer(layer);
-  SQ[ev.square] = { ev, layer, cells, stats, bounds };
+  SQ[ev.square] = { ev, layer, cells, stats: {}, bounds, title };
   cellLayer.clearLayers();
   state.groups = null;
   paintSquares();
@@ -539,7 +540,30 @@ function showSquare(ev) {
   sqPanel();
   map.fitBounds(bounds, { padding: [30, 30], maxZoom: 17 });
 }
+function avgOf(pts) {
+  const ks = pts.filter((p) => p.chance_damaged != null);
+  return ks.length ? ks.reduce((t, p) => t + p.chance_damaged, 0) / ks.length : null;
+}
+// each building's chance in the chosen disaster type and category
+function applyScenario(sq) {
+  const ev = sq.ev;
+  for (const p of ev.points) {
+    const c = ev.classes && ev.classes[p.cls];
+    if (c && sqScenario && c.odds[sqScenario]) { p.chance_damaged = c.odds[sqScenario][0]; p.chance_severe = c.odds[sqScenario][1]; p.measured = (c.measured || {})[sqScenario] || null; }
+  }
+  for (const b of sq.cells) b.avg = avgOf(b.pts);
+  const known = ev.points.filter((p) => p.chance_damaged != null);
+  sq.stats = { buildings: ev.points.length, avg: avgOf(ev.points), high: known.filter((p) => p.chance_damaged >= 0.5).length };
+  sq.title.setContent(`${esc(ev.square)}: ${sq.stats.buildings.toLocaleString()} buildings${sq.stats.avg == null ? "" : `, ${Math.round(sq.stats.avg * 100)}% average chance`}`);
+}
+function scenarioParts() {
+  const [t, c] = (sqScenario || ":").split(":");
+  const type = sqMenu.find((x) => x.type === t);
+  const cat = type && type.categories.find((x) => x.id === c);
+  return { t, c, type, cat };
+}
 function paintSquares() {
+  for (const sq of Object.values(SQ)) applyScenario(sq);
   for (const sq of Object.values(SQ)) {
     for (const b of sq.cells) {
       let color, text, tip;
@@ -576,10 +600,10 @@ function showDots() {
   if (sqView !== "buildings") return;
   for (const sq of Object.values(SQ)) for (const p of sq.ev.points) {
     const f = factorsOf(p);
-    const g = (sq.ev.groups || []).find((x) => x.group === p.group) || {};
-    const range = g.chance_damaged_90pct ? ` (${Math.round(g.chance_damaged_90pct[0] * 100)} to ${Math.round(g.chance_damaged_90pct[1] * 100)}%, from ${g.look_alikes} look-alikes)` : "";
+    const m = p.measured;
+    const range = m ? ` (${Math.round(m[0] * 100)} to ${Math.round(m[1] * 100)}%, from ${m[2]} look-alikes)` : "";
     L.circleMarker([p.lat, p.lon], { renderer: pointRenderer, radius: 4.5, weight: 1, color: "#111", fillOpacity: 0.95, fillColor: sqColorBy === "chance" ? chanceColor(p.chance_damaged) : groupColor(f[sqColorBy]) })
-      .bindTooltip(`<b>${p.chance_damaged == null ? "No odds" : `${Math.round(p.chance_damaged * 100)}% chance of damage`}</b>${esc(range)}<br>${esc(f.age)}<br>${esc(f.construction)}<br>${esc(f.green)}${p.year_built ? `<br>Built ${p.year_built} (${esc(p.year_source || "")})` : ""}`)
+      .bindTooltip(`<b>${p.chance_damaged == null ? "No odds" : `${Math.round(p.chance_damaged * 100)}% chance of damage`}</b>${esc(range)}${p.chance_severe != null ? `<br>${Math.round(p.chance_severe * 100)}% chance of bad damage or worse` : ""}<br>${esc(f.age)}<br>${esc(f.construction)}<br>${esc(f.green)}${p.year_built ? `<br>Built ${p.year_built} (${esc(p.year_source || "")})` : ""}`)
       .addTo(groupPoints);
   }
 }
@@ -589,19 +613,29 @@ function sqPanel() {
   const rows = Object.entries(SQ).map(([k, sq]) => `<tr data-sq="${esc(k)}"><td>${esc(k)}</td><td>${sq.stats.buildings.toLocaleString()}</td><td>${sq.stats.avg == null ? "?" : Math.round(sq.stats.avg * 100) + "%"}</td><td>${sq.stats.buildings ? Math.round((100 * sq.stats.high) / sq.stats.buildings) + "%" : "?"}</td></tr>`).join("");
   let legend;
   if (sqColorBy === "chance") {
-    legend = `<div class="gradbar" style="background:linear-gradient(to right, ${[0, 0.1, 0.2, 0.3, 0.4, 0.5].map(chanceColor).join(",")})"></div><div class="gradlab"><span>0%</span><span>25%</span><span>50%+</span></div><p class="gnote">${sqView === "blocks" ? "Average chance of damage of the buildings in each block." : "Each building's own chance of damage. Hover a dot for its details."}</p>`;
+    legend = `<div class="gradbar" style="background:linear-gradient(to right, ${[0, 0.2, 0.4, 0.6, 0.8, 1].map(chanceColor).join(",")})"></div><div class="gradlab"><span>0%</span><span>50%</span><span>100%</span></div><p class="gnote">${sqView === "blocks" ? "Average chance of damage of the buildings in each block." : "Each building's own chance of damage. Hover a dot for its details."}</p>`;
   } else {
     const vals = new Set();
     for (const sq of Object.values(SQ)) for (const p of sq.ev.points) vals.add(factorsOf(p)[sqColorBy]);
     legend = [...vals].map((v) => `<div class="grow"><i style="background:${groupColor(v)}"></i><span>${esc(v)}</span></div>`).join("") + `<p class="gnote">${sqView === "blocks" ? "Each block shows its most common kind and what share of its buildings that is." : "Each building colored by its own kind."}</p>`;
   }
-  const ev = Object.values(SQ).pop().ev;
+  const { t: curT, c: curC, type: curType, cat: curCat } = scenarioParts();
+  const typeOpts = sqMenu.map((x) => `<option value="${esc(x.type)}"${x.type === curT ? " selected" : ""}>${esc(x.name)}</option>`).join("");
+  const catOpts = curType ? curType.categories.map((x) => `<option value="${esc(x.id)}"${x.id === curC ? " selected" : ""}>${esc(x.label)}</option>`).join("") : "";
+  const measured = curType && curType.categories.every((x) => x.intensity == null);
+  const where = !curType ? "past disasters" : measured ? `look-alike buildings inspected after a real disaster (${esc(curType.note.replace(/^measured: /, ""))})` : "approximate damage curves by building type and age (Hazus-style), not yet checked against field data";
   panel.innerHTML = `<div class="ghead"><b>Compare squares</b><button type="button" class="linkish" id="sq-clear">Clear all</button></div>
-    <table class="sqtable"><thead><tr><th>Square</th><th>Buildings</th><th>Average chance</th><th>25%+ chance</th></tr></thead><tbody>${rows}</tbody></table>
+    ${sqMenu.length ? `<div class="sqscen"><label>Disaster <select id="sq-type">${typeOpts}</select></label><label>Category <select id="sq-cat"${curType && curType.categories.length < 2 ? " disabled" : ""}>${catOpts}</select></label></div>${curType && !measured ? `<p class="gnote">${curCat && curCat.intensity != null && curCat.unit !== "ft of water above the ground" ? `About ${curCat.intensity} ${esc(curCat.unit)}. ` : ""}${esc(curType.note.charAt(0).toUpperCase() + curType.note.slice(1))}.</p>` : ""}` : ""}
+    <table class="sqtable"><thead><tr><th>Square</th><th>Buildings</th><th>Average chance</th><th>50%+ chance</th></tr></thead><tbody>${rows}</tbody></table>
     <div class="sqview" role="group" aria-label="Show">${[["blocks", "Blocks"], ["buildings", "Individual buildings"]].map(([v, t]) => `<button type="button" data-view="${v}" class="${v === sqView ? "on" : ""}" aria-pressed="${v === sqView}">${t}</button>`).join("")}</div>
     <label>${sqView === "blocks" ? "Shade blocks by" : "Color buildings by"} <select id="sq-by">${["chance", "age", "construction", "green"].map((b) => `<option value="${b}"${b === sqColorBy ? " selected" : ""}>${FACTOR_NAME[b]}</option>`).join("")}</select></label>
     <div>${legend}</div>
-    <p class="gnote">Each square is split into 16 blocks of about a quarter mile; the number under each is its building count. Odds come from ${esc(ev.disaster || "past")} damage to similar buildings in a past disaster; not a forecast. Pick another square to add it here.</p>`;
+    <p class="gnote">Each square is split into 16 blocks of about a quarter mile; the number under each is its building count. Odds${curCat ? ` for ${esc(curType.name.toLowerCase())}, ${esc(curCat.label)},` : ""} come from ${where}; rough, not a forecast. Pick another square to add it here.</p>`;
+  const rescore = () => { paintSquares(); showDots(); sqPanel(); };
+  if ($("sq-type")) {
+    $("sq-type").addEventListener("change", (e) => { const ty = sqMenu.find((x) => x.type === e.target.value); sqScenario = `${ty.type}:${ty.default}`; rescore(); });
+    $("sq-cat").addEventListener("change", (e) => { sqScenario = `${curT}:${e.target.value}`; rescore(); });
+  }
   $("sq-by").addEventListener("change", (e) => { sqColorBy = e.target.value; paintSquares(); showDots(); sqPanel(); });
   panel.querySelectorAll("button[data-view]").forEach((bt) => bt.addEventListener("click", () => { sqView = bt.dataset.view; paintSquares(); showDots(); sqPanel(); }));
   $("sq-clear").addEventListener("click", () => { for (const k of Object.keys(SQ)) delete SQ[k]; squaresLayer.clearLayers(); groupPoints.clearLayers(); $("groups").hidden = true; });

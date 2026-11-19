@@ -152,8 +152,9 @@ def _answer(name: str, r: dict) -> str:
         text = f"{r['id']} is drafted as {WORDS.get(r.get('category'), r.get('category'))}. {r.get('evidence') or ''}".strip()
     elif name == "estimate_square_damage":
         top = sorted((g for g in r["groups"] if g.get("chance_damaged") is not None), key=lambda g: -g["buildings"])[:4]
-        lines = [f"- {g['group']}: {g['buildings']} buildings, about {g['chance_damaged']:.0%} chance of damage ({g['look_alikes']} look-alikes)" for g in top]
-        text = f"{r['square']} has {r['buildings']} buildings in {len(r['groups'])} groups. The biggest, with odds from {r['history']}:\n\n" + "\n".join(lines) + "\n\nThese are odds from one past disaster, not a forecast."
+        lines = [f"- {g['group']}: {g['buildings']} buildings, about {g['chance_damaged']:.0%} chance of damage" + (f" ({g['look_alikes']} look-alikes)" if g.get("look_alikes") else "") for g in top]
+        cats = ", ".join(f"{c['category']} about {c['average_chance_damaged']:.0%}" for c in r.get("by_category", []) if c.get("average_chance_damaged") is not None)
+        text = f"{r['square']} has {r['buildings']} buildings in {len(r['groups'])} groups. For {r.get('scenario_label', 'this disaster')}, the biggest groups, with odds from {r['history']}:\n\n" + "\n".join(lines) + (f"\n\nAcross the categories: {cats}." if cats else "") + "\n\nThese are rough odds, not a forecast."
     elif name == "group_buildings":
         top = r["groups"][:4]
         lines = [f"- {g['group']}: {g['buildings']} buildings, {g['damaged_share']:.0%} damaged or worse" for g in top]
