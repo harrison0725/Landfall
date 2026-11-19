@@ -293,7 +293,7 @@ $("levels-close").addEventListener("click", () => { $("levels").hidden = true; }
 // grid stays put as the map moves; redrawn for what's on screen.
 const MILE_M = 1609.344;
 const gridLayer = L.layerGroup();
-const gridScale = L.control.scale({ position: "bottomright", metric: false, maxWidth: 140 });
+const gridScale = L.control.scale({ position: "bottomright", metric: false, maxWidth: 320 });
 let gridOn = false;
 try { gridOn = localStorage.getItem("landfall-grid") === "1"; } catch (e) { /* storage blocked */ }
 function drawGrid() {
@@ -316,10 +316,14 @@ function setGrid(on) {
   $("grid").classList.toggle("on", on);
   $("grid").setAttribute("aria-pressed", String(on));
   if (on) { gridLayer.addTo(map); gridScale.addTo(map); } else { gridLayer.remove(); gridScale.remove(); }
+  // close in, a whole screen fits inside one square mile and no line shows:
+  // step back far enough to see a few cells
+  if (on && userTurned && map.getZoom() > 15) map.setZoom(15);
   try { localStorage.setItem("landfall-grid", on ? "1" : "0"); } catch (e) { /* storage blocked */ }
   drawGrid();
 }
-$("grid").addEventListener("click", () => setGrid(!gridOn));
+let userTurned = false;
+$("grid").addEventListener("click", () => { userTurned = true; setGrid(!gridOn); });
 map.on("moveend", drawGrid);
 setGrid(gridOn);
 
