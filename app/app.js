@@ -306,7 +306,7 @@ function drawGrid() {
   const lon0 = Math.floor(b.getWest() / dLon), lon1 = Math.ceil(b.getEast() / dLon);
   if ((lat1 - lat0) + (lon1 - lon0) > 400) return; // zoomed too far out to read
   // a light line under a dark dashed one reads on dark photos and light street maps alike
-  const styles = [{ color: "#fff", weight: 3, opacity: 0.6, interactive: false }, { color: "#111", weight: 1.2, opacity: 0.8, dashArray: "6 5", interactive: false }];
+  const styles = [{ color: "#fff", weight: 4, opacity: 0.75, interactive: false }, { color: "#111", weight: 2, opacity: 0.9, dashArray: "8 6", interactive: false }];
   const line = (pts) => styles.forEach((st) => gridLayer.addLayer(L.polyline(pts, st)));
   for (let i = lat0; i <= lat1; i++) line([[i * dLat, lon0 * dLon], [i * dLat, lon1 * dLon]]);
   for (let j = lon0; j <= lon1; j++) line([[lat0 * dLat, j * dLon], [lat1 * dLat, j * dLon]]);
@@ -318,7 +318,11 @@ function setGrid(on) {
   if (on) { gridLayer.addTo(map); gridScale.addTo(map); } else { gridLayer.remove(); gridScale.remove(); }
   // close in, a whole screen fits inside one square mile and no line shows:
   // step back far enough to see a few cells
-  if (on && userTurned && map.getZoom() > 15) map.setZoom(15);
+  if (on && userTurned) {
+    // enough room for about three cells across, on a phone as on a desktop
+    const fit = map.getBoundsZoom(map.getCenter().toBounds(3 * MILE_M));
+    if (map.getZoom() > fit) map.setZoom(fit);
+  }
   try { localStorage.setItem("landfall-grid", on ? "1" : "0"); } catch (e) { /* storage blocked */ }
   drawGrid();
 }
