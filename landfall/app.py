@@ -21,6 +21,7 @@ import uuid
 from pathlib import Path
 
 import numpy as np
+import requests
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -435,6 +436,21 @@ def places(q: str) -> list[dict]:
     for r in rows:
         r["disasters"] = disasters_at(r["lon"], r["lat"], r["bbox"], ROOT / "cache")
     return rows
+
+
+@app.get("/api/sections")
+def sections(i: int, j: int) -> Response:
+    """The US land-survey square-mile sections in one 0.1-degree cell
+    (longitude index i, latitude index j): the 1-mile grid on US maps."""
+    from .sections import fetch_cell
+
+    if not (-1800 <= i < 1800 and -900 <= j < 900):
+        raise HTTPException(400, "cell out of range")
+    try:
+        data = fetch_cell(i, j, ROOT / "cache")
+    except (OSError, ValueError, requests.RequestException):
+        raise HTTPException(502, "the land survey map is not answering; try again in a moment") from None
+    return JSONResponse(data, headers={"Cache-Control": "public, max-age=604800"})
 
 
 @app.get("/api/wayback")

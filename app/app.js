@@ -289,27 +289,71 @@ $("levels-list").innerHTML = CATS.map((c) => `<div class="level"><img src="/stat
 $("levels-close").addEventListener("click", () => { $("levels").hidden = true; });
 
 // ---------------------------------------------------------------- 1-mile grid
-// Square-mile cells anchored to fixed lines of latitude and longitude, so the
-// grid stays put as the map moves; redrawn for what's on screen.
+// In the US, the square-mile sections of the Public Land Survey: the same
+// 1-mile grid printed on USGS topo maps and county maps, fetched in fixed
+// 0.1-degree cells so the lines never move as the map zooms. Where there is
+// no land survey (Texas, the original colonies, other countries), square-mile
+// cells anchored to fixed lines of latitude and longitude instead.
 const MILE_M = 1609.344;
+const SEC_CELL = 0.1;
 const gridLayer = L.layerGroup();
 const gridScale = L.control.scale({ position: "bottomright", metric: false, maxWidth: 320 });
+const secCells = new Map();  // "i_j" -> Promise of section features (empty where no survey)
 let gridOn = false;
+let gridDraw = 0;
 try { gridOn = localStorage.getItem("landfall-grid") === "1"; } catch (e) { /* storage blocked */ }
-function drawGrid() {
-  gridLayer.clearLayers();
-  if (!gridOn) return;
-  const b = map.getBounds();
+// a light line under a dark dashed one reads on dark photos and light street maps alike
+const GRID_STYLES = [{ color: "#fff", weight: 4, opacity: 0.75, fill: false, interactive: false }, { color: "#111", weight: 2, opacity: 0.9, dashArray: "8 6", fill: false, interactive: false }];
+function sectionCell(i, j) {
+  const key = `${i}_${j}`;
+  if (!secCells.has(key)) {
+    secCells.set(key, fetch(`/api/sections?i=${i}&j=${j}`).then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((d) => d.features || [])
+      .catch(() => { secCells.delete(key); return null; }));  // try again on the next move
+  }
+  return secCells.get(key);
+}
+function fixedGrid(b) {
+  // the east-west spacing comes from a whole degree of latitude, not the map's
+  // centre, so the lines stay in the same place at every zoom
   const dLat = MILE_M / 111320;
-  const dLon = MILE_M / (111320 * Math.cos((map.getCenter().lat * Math.PI) / 180));
+  const dLon = MILE_M / (111320 * Math.cos((Math.round(b.getCenter().lat) * Math.PI) / 180));
   const lat0 = Math.floor(b.getSouth() / dLat), lat1 = Math.ceil(b.getNorth() / dLat);
   const lon0 = Math.floor(b.getWest() / dLon), lon1 = Math.ceil(b.getEast() / dLon);
-  if ((lat1 - lat0) + (lon1 - lon0) > 400) return; // zoomed too far out to read
-  // a light line under a dark dashed one reads on dark photos and light street maps alike
-  const styles = [{ color: "#fff", weight: 4, opacity: 0.75, interactive: false }, { color: "#111", weight: 2, opacity: 0.9, dashArray: "8 6", interactive: false }];
-  const line = (pts) => styles.forEach((st) => gridLayer.addLayer(L.polyline(pts, st)));
+  if ((lat1 - lat0) + (lon1 - lon0) > 400) return;  // zoomed too far out to read
+  const line = (pts) => GRID_STYLES.forEach((st) => gridLayer.addLayer(L.polyline(pts, st)));
   for (let i = lat0; i <= lat1; i++) line([[i * dLat, lon0 * dLon], [i * dLat, lon1 * dLon]]);
   for (let j = lon0; j <= lon1; j++) line([[lat0 * dLat, j * dLon], [lat1 * dLat, j * dLon]]);
+}
+async function drawGrid() {
+  const token = ++gridDraw;
+  if (!gridOn) { gridLayer.clearLayers(); return; }
+  const b = map.getBounds();
+  const is = [Math.floor(b.getWest() / SEC_CELL), Math.ceil(b.getEast() / SEC_CELL)];
+  const js = [Math.floor(b.getSouth() / SEC_CELL), Math.ceil(b.getNorth() / SEC_CELL)];
+  const want = [];
+  if ((is[1] - is[0]) * (js[1] - js[0]) <= 36) {
+    for (let i = is[0]; i < is[1]; i++) for (let j = js[0]; j < js[1]; j++) want.push(sectionCell(i, j));
+  }
+  if (!want.length) { gridLayer.clearLayers(); return; }  // too far out: the lines would be a blur
+  const got = await Promise.all(want);
+  if (token !== gridDraw) return;  // the map moved again while loading
+  gridLayer.clearLayers();
+  const seen = new Set();
+  const feats = got.flat().filter((f) => f && !seen.has(f.properties.id) && seen.add(f.properties.id));
+  if (!feats.length) {
+    // no land survey here: the fixed square-mile grid
+    if (!got.some((g) => g === null)) fixedGrid(b);
+    return;
+  }
+  const labels = map.getZoom() >= 14;
+  for (const f of feats) {
+    GRID_STYLES.forEach((st) => gridLayer.addLayer(L.geoJSON(f, { style: () => st, interactive: false })));
+    if (labels && f.properties.label) {
+      const c = L.geoJSON(f).getBounds().getCenter();
+      if (b.contains(c)) gridLayer.addLayer(L.tooltip({ permanent: true, direction: "center", className: "sec-label", interactive: false }).setLatLng(c).setContent(f.properties.label));
+    }
+  }
 }
 function setGrid(on) {
   gridOn = on;
