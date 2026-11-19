@@ -147,10 +147,21 @@ def _area_dir(area: str) -> Path:
     return d
 
 
+def _versioned_page() -> str:
+    """index.html with ?v=<file stamp> on app.js and style.css, so a browser
+    that saved an older copy of either loads the new one after a deploy."""
+    page = (STATIC / "index.html").read_text(encoding="utf-8")
+    for name in ("app.js", "style.css"):
+        f = STATIC / name
+        if f.exists():
+            page = page.replace(f'"/static/{name}"', f'"/static/{name}?v={int(f.stat().st_mtime)}-{f.stat().st_size}"')
+    return page
+
+
 @app.get("/")
-def index() -> FileResponse:
+def index() -> HTMLResponse:
     # always check for a new page, so an update shows on the next load
-    return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-cache"})
+    return HTMLResponse(_versioned_page(), headers={"Cache-Control": "no-cache"})
 
 
 @app.get("/api/config")
