@@ -231,17 +231,23 @@ function styleFor(f) {
   const c = p.category ? css("--" + p.category) : "#ffffff";
   return {
     color: p.needs_human ? css("--review") : c,
-    weight: p.needs_human ? 2.5 : 1.5,
+    weight: p.needs_human ? 3 : 2.5,
+    opacity: 1,
     dashArray: p.needs_human ? "4 3" : null,
+    // outline only, so the roof itself shows through; the click still lands inside
     fillColor: c,
-    fillOpacity: p.category ? (p.category === "none" ? 0.15 : 0.55) : 0.05,
+    fillOpacity: 0,
   };
 }
 function bindFeature(f, layer) {
   state.features[f.properties.id] = layer;
   layer.on("click", () => openBuilding(f.properties.id));
   // fetch the card's photos while the pointer is on the building, before the click
-  layer.on("mouseover", () => { if (state.area) new Image().src = `/api/areas/${state.area}/pair/${f.properties.id}.jpg`; });
+  layer.on("mouseover", () => {
+    if (state.area) new Image().src = `/api/areas/${state.area}/pair/${f.properties.id}.jpg`;
+    layer.setStyle({ fillOpacity: 0.25 });  // a light tint shows which building the pointer is on
+  });
+  layer.on("mouseout", () => layer.setStyle({ fillOpacity: 0 }));
   layer.bindTooltip(() => {
     const p = f.properties;
     return `<b>Building ${p.id}</b> ${p.category ? LABEL[p.category].toLowerCase() : "not checked yet"}${p.needs_human ? " · needs a visit" : ""}`;
