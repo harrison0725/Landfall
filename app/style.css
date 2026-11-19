@@ -223,6 +223,9 @@ ul.sources { padding-left: 18px; }
 .sqtable th:not(:first-child), .sqtable td:not(:first-child) { text-align: right; }
 .sqtable tbody tr { cursor: pointer; }
 .sqtable tbody tr:hover { background: rgba(255, 159, 28, 0.12); }
-.sqdots { display: flex; gap: 6px; align-items: center; }
+.sqview { display: flex; margin: 8px 0 6px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.sqview button { flex: 1; padding: 6px 8px; background: transparent; color: inherit; border: 0; font: inherit; font-size: 0.8rem; cursor: pointer; }
+.sqview button + button { border-left: 1px solid var(--line); }
+.sqview button.on { background: #ff9f1c; color: #111; font-weight: 600; }
 .gradbar { height: 10px; border-radius: 4px; }
 .gradlab { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted, #666); }
