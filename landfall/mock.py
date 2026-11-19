@@ -102,8 +102,8 @@ def _pick(q: str) -> tuple[str, dict]:
     m = re.search(r"\b([a-z]{0,3}\d{2,4})\b", q)
     if m and re.search(r"\bb\d", q):
         return "get_building", {"building_id": m.group(1)}
-    if re.search(r"group|grid square|1-mile", q):
-        return "group_buildings", {}
+    if re.search(r"group|grid square|1-mile|chance|odds", q):
+        return "estimate_square_damage", {}
     if re.search(r"visit|first|priorit|inspect|route|field|team", q):
         return "plan_inspections", {"max_stops": 10}
     if re.search(r"cost|repair|money|\$|dollar|price|value", q):
@@ -150,6 +150,10 @@ def _answer(name: str, r: dict) -> str:
         text = f"{r['matches']} buildings match. " + ("Here are the first ones: " + ", ".join(one(x) for x in shown) + "." if shown else "")
     elif name == "get_building":
         text = f"{r['id']} is drafted as {WORDS.get(r.get('category'), r.get('category'))}. {r.get('evidence') or ''}".strip()
+    elif name == "estimate_square_damage":
+        top = sorted((g for g in r["groups"] if g.get("chance_damaged") is not None), key=lambda g: -g["buildings"])[:4]
+        lines = [f"- {g['group']}: {g['buildings']} buildings, about {g['chance_damaged']:.0%} chance of damage ({g['look_alikes']} look-alikes)" for g in top]
+        text = f"{r['square']} has {r['buildings']} buildings in {len(r['groups'])} groups. The biggest, with odds from {r['history']}:\n\n" + "\n".join(lines) + "\n\nThese are odds from one past disaster, not a forecast."
     elif name == "group_buildings":
         top = r["groups"][:4]
         lines = [f"- {g['group']}: {g['buildings']} buildings, {g['damaged_share']:.0%} damaged or worse" for g in top]

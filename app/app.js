@@ -296,7 +296,7 @@ async function loadBuildings(fit) {
   state.features = {};
   outlines.clearLayers();
   outlines.addData(gj);
-  if (state.groups) { if (state.groups.area === state.area) colorGroups(); else clearGroups(); }
+  if (state.groups && !state.groups.points) { if (state.groups.area === state.area) colorGroups(); else clearGroups(); }
   // same framing for every area: all drafted buildings in view, never closer than street level
   if (fit && gj.features.length) map.fitBounds(outlines.getBounds(), { padding: [30, 30], maxZoom: 18 });
   checkBefore();
@@ -458,28 +458,52 @@ map.on("click", (e) => {
   cellLayer.addLayer(L.polygon(sq.polygon.map(([x, y]) => [y, x]), { color: "#ff9f1c", weight: 4, fill: true, fillOpacity: 0.06, interactive: false }));
   const box = document.createElement("div");
   box.className = "cellpick";
-  box.innerHTML = `<b>${esc(sq.label)}</b><button type="button" class="send">Group the buildings here</button><small>by age, how they were built and the green around them</small>`;
+  box.innerHTML = `<b>${esc(sq.label)}</b><button type="button" class="send">Group buildings and estimate damage</button><small>Groups every building here by age, how it was built and the green around it, and gives each group its chance of damage from past disasters with buildings like them. No photos needed.</small>`;
   box.querySelector("button").addEventListener("click", () => {
     map.closePopup();
     if (state.busy) return;
     state.cell.pending = true;
-    $("input").value = `Group the buildings in ${sq.label} by age, how they were built and the green around them.`;
+    const kind = ((state.storms || []).find((x) => x.key === $("storm").value) || {}).kind || "hurricane";
+    $("input").value = `Group the buildings in ${sq.label} by age, how they were built and the green around them, and estimate each group's chance of damage in a ${kind} from past disasters with similar buildings.`;
     send();
   });
   L.popup({ closeButton: true, autoPan: false }).setLatLng(e.latlng).setContent(box).openOn(map);
 });
 
 const GROUP_COLORS = ["#4cc9f0", "#f72585", "#b5e48c", "#ffd166", "#9b5de5", "#06d6a0", "#ff8c42", "#f1f1f1"];
-const FACTOR_NAME = { all: "All three", age: "Age (building rules)", construction: "How it was built", green: "Green around it" };
+const FACTOR_NAME = { chance: "Chance of damage", all: "All three", age: "Age (building rules)", construction: "How it was built", green: "Green around it" };
+const groupPoints = L.layerGroup().addTo(map);
+const pointRenderer = L.canvas({ padding: 0.3 });
+const CHANCE_BINS = [[0.1, "#2a9d8f", "under 10%"], [0.25, "#e9c46a", "10 to 25%"], [0.4, "#f4a261", "25 to 40%"], [1.01, "#e63946", "40% or more"]];
 function showGroups(ev) {
   state.groups = ev;
+  if (ev.points) {
+    // buildings found for the square (no photos): one dot each
+    ev.factors = {};
+    ev.building_group = {};
+    ev.chance = {};
+    groupPoints.clearLayers();
+    ev.markers = {};
+    ev.points.forEach((p, i) => {
+      const id = `p${i}`;
+      ev.factors[id] = { age: p.code_era || "year built unknown", construction: (p.material || p.foundation) ? `${p.material || "unknown material"} on ${p.foundation || "unknown foundation"}` : "construction unknown", green: p.green || "green unknown" };
+      ev.building_group[id] = p.group;
+      ev.chance[id] = p.chance_damaged;
+      const g = (ev.groups || []).find((x) => x.group === p.group) || {};
+      const range = g.chance_damaged_90pct ? ` (${Math.round(g.chance_damaged_90pct[0] * 100)} to ${Math.round(g.chance_damaged_90pct[1] * 100)}%, from ${g.look_alikes} look-alikes)` : "";
+      ev.markers[id] = L.circleMarker([p.lat, p.lon], { renderer: pointRenderer, radius: 4, weight: 1, color: "#111", fillOpacity: 0.9 })
+        .bindTooltip(`<b>${p.chance_damaged == null ? "No odds" : `${Math.round(p.chance_damaged * 100)}% chance of damage`}</b>${esc(range)}<br>${esc(ev.factors[id].age)}<br>${esc(ev.factors[id].construction)}<br>${esc(ev.factors[id].green)}${p.year_built ? `<br>Built ${p.year_built} (${esc(p.year_source || "")})` : ""}`)
+        .addTo(groupPoints);
+    });
+    ev.by = ["chance", "age", "construction", "green"];
+  }
   if (ev.polygon) {
     cellLayer.clearLayers();
     cellLayer.addLayer(L.polygon(ev.polygon.map(([x, y]) => [y, x]), { color: "#ff9f1c", weight: 4, fill: false, interactive: false }));
   }
   const panel = $("groups");
   panel.hidden = false;
-  const opts = ["all", ...ev.by].map((b) => `<option value="${b}">${FACTOR_NAME[b] || b}</option>`).join("");
+  const opts = (ev.points ? ev.by : ["all", ...ev.by]).map((b) => `<option value="${b}">${FACTOR_NAME[b] || b}</option>`).join("");
   panel.innerHTML = `<div class="ghead"><b>Groups in ${esc(ev.square)}</b><button type="button" class="linkish" id="groups-close">Back to damage colors</button></div>
     <label>Color by <select id="groups-by">${opts}</select></label><div id="groups-list"></div>`;
   $("groups-by").addEventListener("change", colorGroups);
@@ -487,19 +511,35 @@ function showGroups(ev) {
   colorGroups();
   // bring the grouped buildings into view
   const ids = Object.keys(ev.factors).filter((id) => state.features[id]);
-  if (ids.length) map.fitBounds(L.featureGroup(ids.map((id) => state.features[id])).getBounds(), { padding: [40, 40], maxZoom: 18 });
+  if (ev.polygon) map.fitBounds(L.polygon(ev.polygon.map(([x, y]) => [y, x])).getBounds(), { padding: [30, 30], maxZoom: 17 });
+  else if (ids.length) map.fitBounds(L.featureGroup(ids.map((id) => state.features[id])).getBounds(), { padding: [40, 40], maxZoom: 18 });
 }
 function colorGroups() {
   const ev = state.groups;
   if (!ev) return;
   const by = $("groups-by").value;
+  if (by === "chance") {
+    const bin = (c) => (c == null ? null : CHANCE_BINS.find(([top]) => c < top));
+    const n = CHANCE_BINS.map(() => 0);
+    let none = 0;
+    for (const [id, m] of Object.entries(ev.markers)) {
+      const b = bin(ev.chance[id]);
+      if (b) n[CHANCE_BINS.indexOf(b)]++; else none++;
+      m.setStyle({ fillColor: b ? b[1] : "#9a9a9a" });
+    }
+    $("groups-list").innerHTML = CHANCE_BINS.map(([, c, t], i) => `<div class="grow"><i style="background:${c}"></i><span>${t} chance of damage</span><em>${n[i]}</em></div>`).join("")
+      + (none ? `<div class="grow"><i style="background:#9a9a9a"></i><span>No odds (no look-alikes)</span><em>${none}</em></div>` : "")
+      + `<p class="gnote">Odds from ${esc(ev.disaster || "past")} damage to similar buildings in a past disaster; not a forecast.</p>`;
+    return;
+  }
   const keyOf = (id) => (by === "all" ? ev.building_group[id] : (ev.factors[id] || {})[by]);
   const count = {};
   for (const id of Object.keys(ev.factors)) { const k = keyOf(id); if (k) count[k] = (count[k] || 0) + 1; }
   const top = Object.entries(count).sort((a, b) => b[1] - a[1]);
   const color = {};
   top.forEach(([k], i) => { color[k] = i < GROUP_COLORS.length - 1 ? GROUP_COLORS[i] : "#9a9a9a"; });
-  for (const [id, layer] of Object.entries(state.features)) {
+  if (ev.markers) for (const [id, m] of Object.entries(ev.markers)) m.setStyle({ fillColor: color[keyOf(id)] || "#9a9a9a" });
+  else for (const [id, layer] of Object.entries(state.features)) {
     const k = ev.factors[id] ? keyOf(id) : null;
     layer.setStyle(k ? { color: color[k], weight: 3, opacity: 1, dashArray: null, fillColor: color[k], fillOpacity: 0 } : { color: "#777", weight: 1, opacity: 0.6, dashArray: null, fillOpacity: 0 });
   }
@@ -510,6 +550,7 @@ function colorGroups() {
 }
 function clearGroups() {
   state.groups = null;
+  groupPoints.clearLayers();
   $("groups").hidden = true;
   cellLayer.clearLayers();
   for (const layer of Object.values(state.features)) layer.setStyle(styleFor(layer.feature));
@@ -956,7 +997,7 @@ async function send(e) {
     // no code: the server replays the nearest finished example instead (mock mode, no AI calls)
   }
   const storm = $("storm").value === EVENT ? null : $("storm").value || null;
-  const cell = state.cell && state.cell.pending ? { label: state.cell.label, polygon: state.cell.polygon } : null;
+  const cell = state.cell && state.cell.pending ? { label: state.cell.label, polygon: state.cell.polygon, storm: $("storm").value || "" } : null;
   if (state.cell) state.cell.pending = false;
   const body = { text, cell, lang: lang(), box: state.box, storm: state.box ? storm : null, access_code: code, upload: state.box && state.upload ? state.upload.id : null, event: state.box && state.upload ? state.upload.event : null };
   if (state.box) { outlines.clearLayers(); state.features = {}; }
