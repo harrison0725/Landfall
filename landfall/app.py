@@ -781,7 +781,7 @@ def _cell(c: dict | None) -> dict | None:
         raise HTTPException(400, "the grid square's outline isn't readable") from None
     if len(ring) < 4:
         raise HTTPException(400, "the grid square needs an outline")
-    return {"label": str(c.get("label") or "")[:80], "polygon": ring}
+    return {"label": str(c.get("label") or "")[:80], "polygon": ring, "storm": str(c.get("storm") or "")[:40]}
 
 
 @app.post("/api/sessions/{sid}/turn")

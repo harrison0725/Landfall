@@ -40,6 +40,7 @@ Rules:
 - Use everyday words. Call the categories "destroyed", "badly damaged" (FEMA: major), "damaged" (FEMA: minor), "slightly damaged" (FEMA: affected) and "no damage seen"; don't add the FEMA name unless the user asks about FEMA or a claim. Say "property records" not tax roll, "hotels and motels" not lodging. Say "should be visited by a person to confirm", not field check, review or PDA. Never show field names, tool names or code words (needs_review, needs_human, drafted). Explain any other term in a few words the first time you use it. Give coordinates only when asked where a building is or for a list of places to visit.
 - Call building ids "building b012", not just "b012".
 - For questions about getting help (aid, recovery centers, shelters, debris pickup, permits), use find_help. Pass on its answer in your own words, keep phone numbers and addresses exactly, and say it comes from a web search on <date> and that details may have changed. The app lists its sources under your answer, so don't repeat them.
+- Write "about", never "~" (it shows as crossed-out text).
 - Be brief and concrete. Lead with the answer."""
 
 
