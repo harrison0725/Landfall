@@ -479,8 +479,11 @@ const FACTOR_NAME = { chance: "Chance of damage", all: "All three", age: "Age (b
 // square side by side; each building's dot is one click away.
 const squaresLayer = L.layerGroup().addTo(map);
 const SQ = {};  // square label -> {ev, layer, dots, stats}
-let sqShown = null;  // the square whose buildings are drawn as dots
+let sqShown = null;  // the square last picked
 let sqColorBy = "chance";
+// "blocks": each quarter-mile block shaded as a whole; "buildings": every
+// building in every square as its own dot, block lines kept faint for reference
+let sqView = "blocks";
 const BLOCKS = 4;
 // a smooth scale, so blocks a few points apart still look different:
 // teal at 0%, yellow at 25%, red at 50% or more
@@ -531,7 +534,8 @@ function showSquare(ev) {
   cellLayer.clearLayers();
   state.groups = null;
   paintSquares();
-  showDots(ev.square);
+  sqShown = ev.square;
+  showDots();
   sqPanel();
   map.fitBounds(bounds, { padding: [30, 30], maxZoom: 17 });
 }
@@ -550,9 +554,15 @@ function paintSquares() {
       }
       const [top] = mostCommon(b.pts.map((p) => p.group));
       tip = `<b>${n} building${n === 1 ? "" : "s"}</b>${b.avg == null ? "" : `, ${Math.round(b.avg * 100)}% average chance of damage`}<br>Most common: ${esc(top || "")}`;
-      b.rect.setStyle({ fillColor: color });
-      b.rect.unbindTooltip().bindTooltip(tip, { sticky: true });
+      const blocks = sqView === "blocks";
+      b.rect.setStyle({ fillColor: color, fillOpacity: blocks ? 0.5 : 0, weight: blocks ? 1 : 0.6, opacity: blocks ? 1 : 0.5 });
+      const re = b.rect.getElement && b.rect.getElement();
+      if (re) re.style.pointerEvents = blocks ? "" : "none";  // let hovers reach the dots
+      b.rect.unbindTooltip();
+      if (blocks) b.rect.bindTooltip(tip, { sticky: true });
       b.tag.setContent(`${text}<small>${n}</small>`);
+      const el = b.tag.getElement && b.tag.getElement();
+      if (el) el.style.display = blocks ? "" : "none";
     }
   }
 }
@@ -561,16 +571,14 @@ function groupColor(v) {
   if (!(v in groupColorMap)) groupColorMap[v] = GROUP_COLORS[Object.keys(groupColorMap).length % (GROUP_COLORS.length - 1)];
   return groupColorMap[v];
 }
-function showDots(label) {
+function showDots() {
   groupPoints.clearLayers();
-  sqShown = label;
-  const sq = SQ[label];
-  if (!sq || !$("sq-dots") || !$("sq-dots").checked) return;
-  for (const p of sq.ev.points) {
+  if (sqView !== "buildings") return;
+  for (const sq of Object.values(SQ)) for (const p of sq.ev.points) {
     const f = factorsOf(p);
     const g = (sq.ev.groups || []).find((x) => x.group === p.group) || {};
     const range = g.chance_damaged_90pct ? ` (${Math.round(g.chance_damaged_90pct[0] * 100)} to ${Math.round(g.chance_damaged_90pct[1] * 100)}%, from ${g.look_alikes} look-alikes)` : "";
-    L.circleMarker([p.lat, p.lon], { renderer: pointRenderer, radius: 3.5, weight: 1, color: "#111", fillOpacity: 0.95, fillColor: sqColorBy === "chance" ? chanceColor(p.chance_damaged) : groupColor(f[sqColorBy]) })
+    L.circleMarker([p.lat, p.lon], { renderer: pointRenderer, radius: 4.5, weight: 1, color: "#111", fillOpacity: 0.95, fillColor: sqColorBy === "chance" ? chanceColor(p.chance_damaged) : groupColor(f[sqColorBy]) })
       .bindTooltip(`<b>${p.chance_damaged == null ? "No odds" : `${Math.round(p.chance_damaged * 100)}% chance of damage`}</b>${esc(range)}<br>${esc(f.age)}<br>${esc(f.construction)}<br>${esc(f.green)}${p.year_built ? `<br>Built ${p.year_built} (${esc(p.year_source || "")})` : ""}`)
       .addTo(groupPoints);
   }
@@ -581,25 +589,24 @@ function sqPanel() {
   const rows = Object.entries(SQ).map(([k, sq]) => `<tr data-sq="${esc(k)}"><td>${esc(k)}</td><td>${sq.stats.buildings.toLocaleString()}</td><td>${sq.stats.avg == null ? "?" : Math.round(sq.stats.avg * 100) + "%"}</td><td>${sq.stats.buildings ? Math.round((100 * sq.stats.high) / sq.stats.buildings) + "%" : "?"}</td></tr>`).join("");
   let legend;
   if (sqColorBy === "chance") {
-    legend = `<div class="gradbar" style="background:linear-gradient(to right, ${[0, 0.1, 0.2, 0.3, 0.4, 0.5].map(chanceColor).join(",")})"></div><div class="gradlab"><span>0%</span><span>25%</span><span>50%+</span></div><p class="gnote">Average chance of damage of the buildings in each block.</p>`;
+    legend = `<div class="gradbar" style="background:linear-gradient(to right, ${[0, 0.1, 0.2, 0.3, 0.4, 0.5].map(chanceColor).join(",")})"></div><div class="gradlab"><span>0%</span><span>25%</span><span>50%+</span></div><p class="gnote">${sqView === "blocks" ? "Average chance of damage of the buildings in each block." : "Each building's own chance of damage. Hover a dot for its details."}</p>`;
   } else {
     const vals = new Set();
     for (const sq of Object.values(SQ)) for (const p of sq.ev.points) vals.add(factorsOf(p)[sqColorBy]);
-    legend = [...vals].map((v) => `<div class="grow"><i style="background:${groupColor(v)}"></i><span>${esc(v)}</span></div>`).join("") + `<p class="gnote">Each block shows its most common kind and what share of its buildings that is.</p>`;
+    legend = [...vals].map((v) => `<div class="grow"><i style="background:${groupColor(v)}"></i><span>${esc(v)}</span></div>`).join("") + `<p class="gnote">${sqView === "blocks" ? "Each block shows its most common kind and what share of its buildings that is." : "Each building colored by its own kind."}</p>`;
   }
   const ev = Object.values(SQ).pop().ev;
   panel.innerHTML = `<div class="ghead"><b>Compare squares</b><button type="button" class="linkish" id="sq-clear">Clear all</button></div>
     <table class="sqtable"><thead><tr><th>Square</th><th>Buildings</th><th>Average chance</th><th>25%+ chance</th></tr></thead><tbody>${rows}</tbody></table>
-    <label>Shade blocks by <select id="sq-by">${["chance", "age", "construction", "green"].map((b) => `<option value="${b}"${b === sqColorBy ? " selected" : ""}>${FACTOR_NAME[b]}</option>`).join("")}</select></label>
+    <div class="sqview" role="group" aria-label="Show">${[["blocks", "Blocks"], ["buildings", "Individual buildings"]].map(([v, t]) => `<button type="button" data-view="${v}" class="${v === sqView ? "on" : ""}" aria-pressed="${v === sqView}">${t}</button>`).join("")}</div>
+    <label>${sqView === "blocks" ? "Shade blocks by" : "Color buildings by"} <select id="sq-by">${["chance", "age", "construction", "green"].map((b) => `<option value="${b}"${b === sqColorBy ? " selected" : ""}>${FACTOR_NAME[b]}</option>`).join("")}</select></label>
     <div>${legend}</div>
-    <label class="sqdots"><input type="checkbox" id="sq-dots"${sqDotsOn ? " checked" : ""}> Show each building in ${esc(sqShown || "")}</label>
     <p class="gnote">Each square is split into 16 blocks of about a quarter mile; the number under each is its building count. Odds come from ${esc(ev.disaster || "past")} damage to similar buildings in a past disaster; not a forecast. Pick another square to add it here.</p>`;
-  $("sq-by").addEventListener("change", (e) => { sqColorBy = e.target.value; paintSquares(); showDots(sqShown); sqPanel(); });
-  $("sq-dots").addEventListener("change", (e) => { sqDotsOn = e.target.checked; showDots(sqShown); });
+  $("sq-by").addEventListener("change", (e) => { sqColorBy = e.target.value; paintSquares(); showDots(); sqPanel(); });
+  panel.querySelectorAll("button[data-view]").forEach((bt) => bt.addEventListener("click", () => { sqView = bt.dataset.view; paintSquares(); showDots(); sqPanel(); }));
   $("sq-clear").addEventListener("click", () => { for (const k of Object.keys(SQ)) delete SQ[k]; squaresLayer.clearLayers(); groupPoints.clearLayers(); $("groups").hidden = true; });
-  panel.querySelectorAll("tr[data-sq]").forEach((tr) => tr.addEventListener("click", () => { const k = tr.dataset.sq; showDots(k); sqPanel(); map.fitBounds(SQ[k].bounds, { padding: [30, 30], maxZoom: 17 }); }));
+  panel.querySelectorAll("tr[data-sq]").forEach((tr) => tr.addEventListener("click", () => { const k = tr.dataset.sq; sqShown = k; sqPanel(); map.fitBounds(SQ[k].bounds, { padding: [30, 30], maxZoom: 17 }); }));
 }
-let sqDotsOn = false;
 const groupPoints = L.layerGroup().addTo(map);
 const pointRenderer = L.canvas({ padding: 0.3 });
 const CHANCE_BINS = [[0.1, "#2a9d8f", "under 10%"], [0.25, "#e9c46a", "10 to 25%"], [0.4, "#f4a261", "25 to 40%"], [1.01, "#e63946", "40% or more"]];
