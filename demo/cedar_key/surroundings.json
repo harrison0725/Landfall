@@ -1,0 +1,1052 @@
+{
+ "b000": {
+  "trees": 0.372,
+  "lawn": 0.11,
+  "paved_bare_other": 0.518,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b001": {
+  "trees": 0.153,
+  "lawn": 0.321,
+  "paved_bare_other": 0.526,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b002": {
+  "trees": 0.075,
+  "lawn": 0.332,
+  "paved_bare_other": 0.593,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b003": {
+  "trees": 0.246,
+  "lawn": 0.111,
+  "paved_bare_other": 0.643,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b004": {
+  "trees": 0.205,
+  "lawn": 0.174,
+  "paved_bare_other": 0.621,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b005": {
+  "trees": 0.222,
+  "lawn": 0.079,
+  "paved_bare_other": 0.699,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b006": {
+  "trees": 0.198,
+  "lawn": 0.116,
+  "paved_bare_other": 0.686,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b007": {
+  "trees": 0.353,
+  "lawn": 0.13,
+  "paved_bare_other": 0.517,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b008": {
+  "trees": 0.333,
+  "lawn": 0.116,
+  "paved_bare_other": 0.551,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b009": {
+  "trees": 0.051,
+  "lawn": 0.096,
+  "paved_bare_other": 0.853,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b010": {
+  "trees": 0.29,
+  "lawn": 0.05,
+  "paved_bare_other": 0.66,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b011": {
+  "trees": 0.209,
+  "lawn": 0.152,
+  "paved_bare_other": 0.639,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b012": {
+  "trees": 0.265,
+  "lawn": 0.118,
+  "paved_bare_other": 0.617,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b013": {
+  "trees": 0.41,
+  "lawn": 0.235,
+  "paved_bare_other": 0.355,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b014": {
+  "trees": 0.203,
+  "lawn": 0.246,
+  "paved_bare_other": 0.551,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b015": {
+  "trees": 0.132,
+  "lawn": 0.163,
+  "paved_bare_other": 0.705,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b016": {
+  "trees": 0.302,
+  "lawn": 0.196,
+  "paved_bare_other": 0.502,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b017": {
+  "trees": 0.327,
+  "lawn": 0.076,
+  "paved_bare_other": 0.597,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b018": {
+  "trees": 0.05,
+  "lawn": 0.134,
+  "paved_bare_other": 0.816,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b019": {
+  "trees": 0.171,
+  "lawn": 0.153,
+  "paved_bare_other": 0.676,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b020": {
+  "trees": 0.361,
+  "lawn": 0.149,
+  "paved_bare_other": 0.49,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b021": {
+  "trees": 0.156,
+  "lawn": 0.21,
+  "paved_bare_other": 0.634,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b022": {
+  "trees": 0.098,
+  "lawn": 0.173,
+  "paved_bare_other": 0.729,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b023": {
+  "trees": 0.172,
+  "lawn": 0.085,
+  "paved_bare_other": 0.743,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b024": {
+  "trees": 0.138,
+  "lawn": 0.143,
+  "paved_bare_other": 0.719,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b025": {
+  "trees": 0.031,
+  "lawn": 0.039,
+  "paved_bare_other": 0.93,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b026": {
+  "trees": 0.144,
+  "lawn": 0.088,
+  "paved_bare_other": 0.768,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b027": {
+  "trees": 0.082,
+  "lawn": 0.056,
+  "paved_bare_other": 0.862,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b028": {
+  "trees": 0.156,
+  "lawn": 0.192,
+  "paved_bare_other": 0.652,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b029": {
+  "trees": 0.033,
+  "lawn": 0.193,
+  "paved_bare_other": 0.774,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b030": {
+  "trees": 0.093,
+  "lawn": 0.049,
+  "paved_bare_other": 0.858,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b031": {
+  "trees": 0.004,
+  "lawn": 0.012,
+  "paved_bare_other": 0.984,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b032": {
+  "trees": 0.139,
+  "lawn": 0.143,
+  "paved_bare_other": 0.718,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b033": {
+  "trees": 0.161,
+  "lawn": 0.134,
+  "paved_bare_other": 0.705,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b034": {
+  "trees": 0.286,
+  "lawn": 0.144,
+  "paved_bare_other": 0.57,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b035": {
+  "trees": 0.105,
+  "lawn": 0.129,
+  "paved_bare_other": 0.766,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b036": {
+  "trees": 0.028,
+  "lawn": 0.086,
+  "paved_bare_other": 0.886,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b037": {
+  "trees": 0.083,
+  "lawn": 0.149,
+  "paved_bare_other": 0.768,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b038": {
+  "trees": 0.132,
+  "lawn": 0.181,
+  "paved_bare_other": 0.687,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b039": {
+  "trees": 0.138,
+  "lawn": 0.134,
+  "paved_bare_other": 0.728,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b040": {
+  "trees": 0.046,
+  "lawn": 0.083,
+  "paved_bare_other": 0.871,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b041": {
+  "trees": 0.188,
+  "lawn": 0.202,
+  "paved_bare_other": 0.61,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b042": {
+  "trees": 0.187,
+  "lawn": 0.097,
+  "paved_bare_other": 0.716,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b043": {
+  "trees": 0.125,
+  "lawn": 0.055,
+  "paved_bare_other": 0.82,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b044": {
+  "trees": 0.24,
+  "lawn": 0.163,
+  "paved_bare_other": 0.597,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b045": {
+  "trees": 0.2,
+  "lawn": 0.108,
+  "paved_bare_other": 0.692,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b046": {
+  "trees": 0.16,
+  "lawn": 0.225,
+  "paved_bare_other": 0.615,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b047": {
+  "trees": 0.229,
+  "lawn": 0.335,
+  "paved_bare_other": 0.436,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b048": {
+  "trees": 0.071,
+  "lawn": 0.231,
+  "paved_bare_other": 0.698,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b049": {
+  "trees": 0.224,
+  "lawn": 0.083,
+  "paved_bare_other": 0.693,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b050": {
+  "trees": 0.19,
+  "lawn": 0.178,
+  "paved_bare_other": 0.632,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b051": {
+  "trees": 0.094,
+  "lawn": 0.114,
+  "paved_bare_other": 0.792,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b052": {
+  "trees": 0.289,
+  "lawn": 0.095,
+  "paved_bare_other": 0.616,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b053": {
+  "trees": 0.021,
+  "lawn": 0.081,
+  "paved_bare_other": 0.898,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b054": {
+  "trees": 0.122,
+  "lawn": 0.152,
+  "paved_bare_other": 0.726,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b055": {
+  "trees": 0.213,
+  "lawn": 0.051,
+  "paved_bare_other": 0.736,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b056": {
+  "trees": 0.223,
+  "lawn": 0.191,
+  "paved_bare_other": 0.586,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b057": {
+  "trees": 0.144,
+  "lawn": 0.097,
+  "paved_bare_other": 0.759,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b058": {
+  "trees": 0.139,
+  "lawn": 0.085,
+  "paved_bare_other": 0.776,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b059": {
+  "trees": 0.172,
+  "lawn": 0.299,
+  "paved_bare_other": 0.529,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b060": {
+  "trees": 0.358,
+  "lawn": 0.192,
+  "paved_bare_other": 0.45,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b061": {
+  "trees": 0.135,
+  "lawn": 0.141,
+  "paved_bare_other": 0.724,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b062": {
+  "trees": 0.336,
+  "lawn": 0.105,
+  "paved_bare_other": 0.559,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b063": {
+  "trees": 0.117,
+  "lawn": 0.132,
+  "paved_bare_other": 0.751,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b064": {
+  "trees": 0.171,
+  "lawn": 0.199,
+  "paved_bare_other": 0.63,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b065": {
+  "trees": 0.376,
+  "lawn": 0.22,
+  "paved_bare_other": 0.404,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b066": {
+  "trees": 0.081,
+  "lawn": 0.094,
+  "paved_bare_other": 0.825,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b067": {
+  "trees": 0.002,
+  "lawn": 0.003,
+  "paved_bare_other": 0.995,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b068": {
+  "trees": 0.268,
+  "lawn": 0.108,
+  "paved_bare_other": 0.624,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b069": {
+  "trees": 0.083,
+  "lawn": 0.051,
+  "paved_bare_other": 0.866,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b070": {
+  "trees": 0.338,
+  "lawn": 0.16,
+  "paved_bare_other": 0.502,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b071": {
+  "trees": 0.227,
+  "lawn": 0.158,
+  "paved_bare_other": 0.615,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b072": {
+  "trees": 0.103,
+  "lawn": 0.076,
+  "paved_bare_other": 0.821,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b073": {
+  "trees": 0.439,
+  "lawn": 0.09,
+  "paved_bare_other": 0.471,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b074": {
+  "trees": 0.252,
+  "lawn": 0.135,
+  "paved_bare_other": 0.613,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b075": {
+  "trees": 0.23,
+  "lawn": 0.209,
+  "paved_bare_other": 0.561,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b076": {
+  "trees": 0.07,
+  "lawn": 0.123,
+  "paved_bare_other": 0.807,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b077": {
+  "trees": 0.128,
+  "lawn": 0.16,
+  "paved_bare_other": 0.712,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b078": {
+  "trees": 0.246,
+  "lawn": 0.12,
+  "paved_bare_other": 0.634,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b079": {
+  "trees": 0.105,
+  "lawn": 0.159,
+  "paved_bare_other": 0.736,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b080": {
+  "trees": 0.132,
+  "lawn": 0.083,
+  "paved_bare_other": 0.785,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b081": {
+  "trees": 0.099,
+  "lawn": 0.175,
+  "paved_bare_other": 0.726,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b082": {
+  "trees": 0.212,
+  "lawn": 0.097,
+  "paved_bare_other": 0.691,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b083": {
+  "trees": 0.194,
+  "lawn": 0.09,
+  "paved_bare_other": 0.716,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b084": {
+  "trees": 0.079,
+  "lawn": 0.038,
+  "paved_bare_other": 0.883,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b085": {
+  "trees": 0.093,
+  "lawn": 0.073,
+  "paved_bare_other": 0.834,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b086": {
+  "trees": 0.435,
+  "lawn": 0.023,
+  "paved_bare_other": 0.542,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b087": {
+  "trees": 0.477,
+  "lawn": 0.096,
+  "paved_bare_other": 0.427,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b088": {
+  "trees": 0.194,
+  "lawn": 0.107,
+  "paved_bare_other": 0.699,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b089": {
+  "trees": 0.099,
+  "lawn": 0.068,
+  "paved_bare_other": 0.833,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b090": {
+  "trees": 0.024,
+  "lawn": 0.059,
+  "paved_bare_other": 0.917,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b091": {
+  "trees": 0.03,
+  "lawn": 0.085,
+  "paved_bare_other": 0.885,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b092": {
+  "trees": 0.356,
+  "lawn": 0.15,
+  "paved_bare_other": 0.494,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b093": {
+  "trees": 0.287,
+  "lawn": 0.087,
+  "paved_bare_other": 0.626,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b094": {
+  "trees": 0.124,
+  "lawn": 0.065,
+  "paved_bare_other": 0.811,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b095": {
+  "trees": 0.092,
+  "lawn": 0.102,
+  "paved_bare_other": 0.806,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b096": {
+  "trees": 0.238,
+  "lawn": 0.285,
+  "paved_bare_other": 0.477,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b097": {
+  "trees": 0.026,
+  "lawn": 0.078,
+  "paved_bare_other": 0.896,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b098": {
+  "trees": 0.115,
+  "lawn": 0.132,
+  "paved_bare_other": 0.753,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b099": {
+  "trees": 0.171,
+  "lawn": 0.12,
+  "paved_bare_other": 0.709,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b100": {
+  "trees": 0.283,
+  "lawn": 0.185,
+  "paved_bare_other": 0.532,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b101": {
+  "trees": 0.221,
+  "lawn": 0.15,
+  "paved_bare_other": 0.629,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b102": {
+  "trees": 0.198,
+  "lawn": 0.246,
+  "paved_bare_other": 0.556,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b103": {
+  "trees": 0.148,
+  "lawn": 0.062,
+  "paved_bare_other": 0.79,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b104": {
+  "trees": 0.1,
+  "lawn": 0.104,
+  "paved_bare_other": 0.796,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b105": {
+  "trees": 0.205,
+  "lawn": 0.097,
+  "paved_bare_other": 0.698,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b106": {
+  "trees": 0.083,
+  "lawn": 0.065,
+  "paved_bare_other": 0.852,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b107": {
+  "trees": 0.154,
+  "lawn": 0.208,
+  "paved_bare_other": 0.638,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b108": {
+  "trees": 0.179,
+  "lawn": 0.214,
+  "paved_bare_other": 0.607,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b109": {
+  "trees": 0.109,
+  "lawn": 0.078,
+  "paved_bare_other": 0.813,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b110": {
+  "trees": 0.11,
+  "lawn": 0.095,
+  "paved_bare_other": 0.795,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b111": {
+  "trees": 0.354,
+  "lawn": 0.118,
+  "paved_bare_other": 0.528,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b112": {
+  "trees": 0.413,
+  "lawn": 0.156,
+  "paved_bare_other": 0.431,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b113": {
+  "trees": 0.059,
+  "lawn": 0.044,
+  "paved_bare_other": 0.897,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b114": {
+  "trees": 0.047,
+  "lawn": 0.11,
+  "paved_bare_other": 0.843,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b115": {
+  "trees": 0.05,
+  "lawn": 0.08,
+  "paved_bare_other": 0.87,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b116": {
+  "trees": 0.141,
+  "lawn": 0.162,
+  "paved_bare_other": 0.697,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b117": {
+  "trees": 0.199,
+  "lawn": 0.213,
+  "paved_bare_other": 0.588,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b118": {
+  "trees": 0.336,
+  "lawn": 0.201,
+  "paved_bare_other": 0.463,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b119": {
+  "trees": 0.034,
+  "lawn": 0.106,
+  "paved_bare_other": 0.86,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b120": {
+  "trees": 0.167,
+  "lawn": 0.153,
+  "paved_bare_other": 0.68,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b121": {
+  "trees": 0.155,
+  "lawn": 0.167,
+  "paved_bare_other": 0.678,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b122": {
+  "trees": 0.128,
+  "lawn": 0.116,
+  "paved_bare_other": 0.756,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b123": {
+  "trees": 0.156,
+  "lawn": 0.055,
+  "paved_bare_other": 0.789,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b124": {
+  "trees": 0.063,
+  "lawn": 0.08,
+  "paved_bare_other": 0.857,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b125": {
+  "trees": 0.097,
+  "lawn": 0.26,
+  "paved_bare_other": 0.643,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b126": {
+  "trees": 0.123,
+  "lawn": 0.142,
+  "paved_bare_other": 0.735,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b127": {
+  "trees": 0.101,
+  "lawn": 0.101,
+  "paved_bare_other": 0.798,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b128": {
+  "trees": 0.433,
+  "lawn": 0.04,
+  "paved_bare_other": 0.527,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b129": {
+  "trees": 0.23,
+  "lawn": 0.135,
+  "paved_bare_other": 0.635,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b130": {
+  "trees": 0.16,
+  "lawn": 0.049,
+  "paved_bare_other": 0.791,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b131": {
+  "trees": 0.147,
+  "lawn": 0.095,
+  "paved_bare_other": 0.758,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b132": {
+  "trees": 0.209,
+  "lawn": 0.098,
+  "paved_bare_other": 0.693,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b133": {
+  "trees": 0.06,
+  "lawn": 0.021,
+  "paved_bare_other": 0.919,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b134": {
+  "trees": 0.058,
+  "lawn": 0.188,
+  "paved_bare_other": 0.754,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b135": {
+  "trees": 0.044,
+  "lawn": 0.047,
+  "paved_bare_other": 0.909,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b136": {
+  "trees": 0.271,
+  "lawn": 0.075,
+  "paved_bare_other": 0.654,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b137": {
+  "trees": 0.095,
+  "lawn": 0.049,
+  "paved_bare_other": 0.856,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b138": {
+  "trees": 0.147,
+  "lawn": 0.077,
+  "paved_bare_other": 0.776,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b139": {
+  "trees": 0.129,
+  "lawn": 0.126,
+  "paved_bare_other": 0.745,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b140": {
+  "trees": 0.058,
+  "lawn": 0.063,
+  "paved_bare_other": 0.879,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ },
+ "b141": {
+  "trees": 0.169,
+  "lawn": 0.057,
+  "paved_bare_other": 0.774,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b142": {
+  "trees": 0.207,
+  "lawn": 0.107,
+  "paved_bare_other": 0.686,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b143": {
+  "trees": 0.241,
+  "lawn": 0.136,
+  "paved_bare_other": 0.623,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b144": {
+  "trees": 0.047,
+  "lawn": 0.241,
+  "paved_bare_other": 0.712,
+  "shade": 0.0,
+  "label": "mostly lawn or grass"
+ },
+ "b145": {
+  "trees": 0.37,
+  "lawn": 0.124,
+  "paved_bare_other": 0.506,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b146": {
+  "trees": 0.221,
+  "lawn": 0.159,
+  "paved_bare_other": 0.62,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b147": {
+  "trees": 0.174,
+  "lawn": 0.172,
+  "paved_bare_other": 0.654,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b148": {
+  "trees": 0.187,
+  "lawn": 0.082,
+  "paved_bare_other": 0.731,
+  "shade": 0.0,
+  "label": "mostly trees"
+ },
+ "b149": {
+  "trees": 0.017,
+  "lawn": 0.095,
+  "paved_bare_other": 0.888,
+  "shade": 0.0,
+  "label": "little green (pavement, sand or bare ground)"
+ }
+}

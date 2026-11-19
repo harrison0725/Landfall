@@ -34,6 +34,7 @@ Rules:
 - Name buildings by id and say why each one matters (how badly damaged, how deep the water got, whether a person should visit).
 - Flooding is not counted as damage: the category rates the building itself, and each building says separately whether it flooded and how deep. When flooding matters to the answer, say both.
 - How each building was built (what it's made of, what it stands on, stories, year built and which building rules applied then) is in get_building under built, and damage_by_construction compares damage across those. Say where a fact comes from when it matters: property records and street photos are usually right, the national structure inventory often is not.
+- When the user picks a 1-mile grid square, group_buildings groups the buildings in it by age, construction and the green around them. Lead with the biggest groups and the clearest difference in damage between them, say which factor seems to matter most, and warn that small groups prove little. The map colors the buildings by group, so you needn't list every id.
 - When you give coordinates, copy them exactly as the tools give them ("lat, lon").
 - Outside the US, also give the international grade (Copernicus EMS: no visible damage, possibly damaged, damaged, destroyed) that the tools report, and say flood depth and repair cost are unknown when the tools say so.
 - Use everyday words. Call the categories "destroyed", "badly damaged" (FEMA: major), "damaged" (FEMA: minor), "slightly damaged" (FEMA: affected) and "no damage seen"; don't add the FEMA name unless the user asks about FEMA or a claim. Say "property records" not tax roll, "hotels and motels" not lodging. Say "should be visited by a person to confirm", not field check, review or PDA. Never show field names, tool names or code words (needs_review, needs_human, drafted). Explain any other term in a few words the first time you use it. Give coordinates only when asked where a building is or for a list of places to visit.
@@ -49,6 +50,7 @@ class Area:
     meta: dict
     costs: dict | None = None
     needs: dict | None = None
+    cell: dict | None = None  # the 1-mile grid square the user picked: {label, polygon [[lon, lat], ...]}
 
     @classmethod
     def load(cls, root: Path, name: str) -> Area:
@@ -65,6 +67,9 @@ class Area:
         from .structures import merge
 
         structures = json.loads((d / "structures.json").read_text()) if (d / "structures.json").exists() else {}
+        from .surroundings import load as load_surroundings
+
+        green = load_surroundings(d)
         buildings = {}
         for bid, a in drafts.items():
             p = feats.get(bid, {})
@@ -88,6 +93,7 @@ class Area:
                 "objections": [o for t in a.get("trace", []) for o in t.get("verifier", [])],
                 "flood": a.get("flood"),
                 "built": merge(structures.get(bid), a.get("built_from_street")),
+                "surroundings": green.get(bid),
             }
             if bid in cost_of:
                 c = cost_of[bid]
@@ -195,6 +201,58 @@ class Area:
             row["buildings"] += 1
         return {"by": by, "groups": table, "note": "Counts of first estimates; flooding is counted apart, not as damage."}
 
+    def group_buildings(self, by: list[str] | None = None) -> dict:
+        """Group the buildings in the grid square the user picked (or the
+        whole area) by age, how they were built and the green around them,
+        with the damage in each group."""
+        by = [b for b in (by or ["age", "construction", "green"]) if b in GROUP_BY] or list(GROUP_BY)
+        inside = self.in_cell()
+        groups: dict[str, dict] = {}
+        of: dict[str, str] = {}
+        for x in inside:
+            key = " · ".join(GROUP_BY[b](x) for b in by)
+            g = groups.setdefault(key, {"group": key, "buildings": 0, "damage": {c: 0 for c in ORDER}, "flooded": 0, "ids": []})
+            g["buildings"] += 1
+            g["damage"][x["category"] if x["category"] in ORDER else "none"] += 1
+            g["flooded"] += bool(x.get("flood"))
+            g["ids"].append(x["id"])
+            of[x["id"]] = key
+        rows = sorted(groups.values(), key=lambda g: -g["buildings"])
+        for g in rows:
+            hit = g["damage"]["minor"] + g["damage"]["major"] + g["damage"]["destroyed"]
+            g["damaged_share"] = round(hit / g["buildings"], 2)
+        each = {b: {} for b in by}
+        for x in inside:
+            for b in by:
+                k = GROUP_BY[b](x)
+                row = each[b].setdefault(k, {"buildings": 0, "damaged": 0})
+                row["buildings"] += 1
+                row["damaged"] += x["category"] in ("minor", "major", "destroyed")
+        return {
+            "square": (self.cell or {}).get("label") or "the whole area (no grid square picked)",
+            "buildings": len(inside),
+            "grouped_by": by,
+            "groups": rows,
+            "by_each_factor": each,
+            "building_group": of,
+            "notes": "Age is the building-rules era from the year built (property records). Construction is wall material and foundation "
+            "(street photos where seen, else the national structure inventory, which is often wrong). Green is what surrounds the building "
+            "in the before photo: mostly trees, mostly lawn or grass, or little green. damaged_share counts damaged, badly damaged and "
+            "destroyed; slightly damaged is not counted. Flooding is counted apart. Small groups say little on their own. "
+            "'Year built unknown' is often a house the current property records dropped BECAUSE the storm destroyed it, so it is not an age "
+            "effect: say so if those buildings stand out.",
+        }
+
+    def in_cell(self) -> list[dict]:
+        """Buildings inside the picked grid square, else all of them."""
+        poly = (self.cell or {}).get("polygon")
+        if not poly:
+            return list(self.buildings.values())
+        from shapely.geometry import Point, shape
+
+        geom = shape({"type": "Polygon", "coordinates": [poly]} if isinstance(poly[0][0], (int, float)) else {"type": "Polygon", "coordinates": poly})
+        return [x for x in self.buildings.values() if x["lon"] is not None and geom.covers(Point(x["lon"], x["lat"]))]
+
     def plan_inspections(self, max_stops: int = 15, include_flood_only: bool = True) -> dict:
         """Which buildings a field team should visit, in walking order.
 
@@ -301,6 +359,7 @@ class Area:
             "get_building": self.get_building,
             "plan_inspections": self.plan_inspections,
             "damage_by_construction": self.damage_by_construction,
+            "group_buildings": self.group_buildings,
             "pda_totals": self.pda_totals,
             "repair_costs": self.repair_costs,
             "urgent_needs": self.urgent_needs,
@@ -360,6 +419,17 @@ TOOLS = [
     {
         "type": "function",
         "function": {
+            "name": "group_buildings",
+            "description": "Group the buildings inside the 1-mile grid square the user picked on the map (or the whole area if none) by age (building-rules era from year built), construction (wall material and foundation) and the green around them (mostly trees, mostly lawn or grass, little green), with the damage counts in each group and for each factor alone. The map colors the buildings by these groups.",
+            "parameters": {
+                "type": "object",
+                "properties": {"by": {"type": "array", "items": {"type": "string", "enum": ["age", "construction", "green"]}, "description": "which factors to group by; all three if left out"}},
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "plan_inspections",
             "description": "Pick the buildings a field team should visit (severe drafts, unsure drafts, deep water) and order them as a walking route. Returns stops with coordinates and the walking distance.",
             "parameters": {
@@ -403,6 +473,28 @@ TOOLS = [
         },
     },
 ]
+
+
+def _age(x: dict) -> str:
+    b = x.get("built") or {}
+    if b.get("code_era"):
+        return str(b["code_era"])
+    return f"built in the {b['year_built'] // 10 * 10}s" if b.get("year_built") else "year built unknown"
+
+
+def _construction(x: dict) -> str:
+    b = x.get("built") or {}
+    m, f = b.get("material"), b.get("foundation")
+    if not m and not f:
+        return "construction unknown"
+    return f"{m or 'unknown material'} on {f or 'unknown foundation'}"
+
+
+def _green(x: dict) -> str:
+    return (x.get("surroundings") or {}).get("label") or "green unknown"
+
+
+GROUP_BY = {"age": _age, "construction": _construction, "green": _green}
 
 
 def _sort_key(by: str):

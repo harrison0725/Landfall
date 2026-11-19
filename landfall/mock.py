@@ -102,6 +102,8 @@ def _pick(q: str) -> tuple[str, dict]:
     m = re.search(r"\b([a-z]{0,3}\d{2,4})\b", q)
     if m and re.search(r"\bb\d", q):
         return "get_building", {"building_id": m.group(1)}
+    if re.search(r"group|grid square|1-mile", q):
+        return "group_buildings", {}
     if re.search(r"visit|first|priorit|inspect|route|field|team", q):
         return "plan_inspections", {"max_stops": 10}
     if re.search(r"cost|repair|money|\$|dollar|price|value", q):
@@ -148,6 +150,10 @@ def _answer(name: str, r: dict) -> str:
         text = f"{r['matches']} buildings match. " + ("Here are the first ones: " + ", ".join(one(x) for x in shown) + "." if shown else "")
     elif name == "get_building":
         text = f"{r['id']} is drafted as {WORDS.get(r.get('category'), r.get('category'))}. {r.get('evidence') or ''}".strip()
+    elif name == "group_buildings":
+        top = r["groups"][:4]
+        lines = [f"- {g['group']}: {g['buildings']} buildings, {g['damaged_share']:.0%} damaged or worse" for g in top]
+        text = f"In {r['square']}, {r['buildings']} buildings fall into {len(r['groups'])} groups by age, construction and the green around them. The biggest:\n\n" + "\n".join(lines) + "\n\nThe map colors the buildings by group."
     elif name == "pda_totals":
         text = "Draft counts for the FEMA assessment: " + ", ".join(f"{v['count']} {WORDS[k]}" for k, v in r.items() if k in WORDS) + "."
     else:
