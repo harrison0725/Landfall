@@ -149,7 +149,8 @@ def _area_dir(area: str) -> Path:
 
 @app.get("/")
 def index() -> FileResponse:
-    return FileResponse(STATIC / "index.html")
+    # always check for a new page, so an update shows on the next load
+    return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-cache"})
 
 
 @app.get("/api/config")
@@ -846,7 +847,18 @@ async def transcribe(request: Request) -> dict:
     return {"text": run(wav, rate)}
 
 
-app.mount("/static", StaticFiles(directory=STATIC), name="static")
+class _Fresh(StaticFiles):
+    """Static files the browser rechecks on every load (a quick ETag check),
+    so a new app.js shows right after a deploy instead of a cached old one."""
+
+    async def get_response(self, path, scope):
+        r = await super().get_response(path, scope)
+        if path.endswith((".js", ".css", ".html")):
+            r.headers["Cache-Control"] = "no-cache"
+        return r
+
+
+app.mount("/static", _Fresh(directory=STATIC), name="static")
 
 
 def _bytes(img) -> bytes:  # pragma: no cover - helper for debugging
