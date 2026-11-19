@@ -117,6 +117,7 @@ class Turn(BaseModel):
     upload: str | None = None  # id from /api/uploads: photos to assess instead of NOAA or Maxar
     lang: str | None = None  # "es" or "ht": the agent answers in Spanish or Haitian Creole
     event: dict | None = None  # with an upload, a disaster not in the catalog: {kind, date, name}
+    cell: dict | None = None  # a 1-mile grid square the user picked: {label, polygon [[lon, lat], ...]}
 
 
 RECENT: dict[str, list[float]] = {}
@@ -768,6 +769,21 @@ def new_session(body: NewSession) -> dict:
     return {"id": sid, "area": body.area}
 
 
+def _cell(c: dict | None) -> dict | None:
+    """A picked grid square, checked: a short label and one ring of at most
+    2,000 points."""
+    if not c:
+        return None
+    ring = c.get("polygon")
+    try:
+        ring = [[float(x), float(y)] for x, y in ring][:2000]
+    except (TypeError, ValueError):
+        raise HTTPException(400, "the grid square's outline isn't readable") from None
+    if len(ring) < 4:
+        raise HTTPException(400, "the grid square needs an outline")
+    return {"label": str(c.get("label") or "")[:80], "polygon": ring}
+
+
 @app.post("/api/sessions/{sid}/turn")
 def turn(sid: str, body: Turn, request: Request) -> dict:
     live = LIVE.get(sid)
@@ -794,7 +810,7 @@ def turn(sid: str, body: Turn, request: Request) -> dict:
             ask = body.text
             if body.lang in LANGS:
                 ask += f"\n\n[Answer in {LANGS[body.lang]}, in everyday words. Keep building ids, numbers, phone numbers, web addresses and the names of agencies as they are.]"
-            text = live.session.turn(ask, box=box, storm=body.storm, upload=body.upload if box else None, event=event)
+            text = live.session.turn(ask, box=box, storm=body.storm, upload=body.upload if box else None, event=event, cell=_cell(body.cell))
             live.emit("message", text=text, area=live.session.area)
         except Exception as e:
             live.emit("error", text=f"{type(e).__name__}: {e}"[:500])

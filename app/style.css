@@ -203,3 +203,14 @@ ul.sources { padding-left: 18px; }
 /* the date of the satellite photo shown beyond the after-storm aerial photos */
 .around-note { position: absolute; left: 50%; transform: translateX(-50%); bottom: 22px; z-index: 500; background: rgba(17, 17, 17, 0.78); color: #fff; border-radius: 6px; padding: 4px 10px; font-size: 0.75rem; max-width: calc(100% - 32px); text-align: center; pointer-events: none; }
 .around-note[hidden] { display: none; }
+
+/* picking a 1-mile grid square, and the building groups in it */
+.cellpick { display: grid; gap: 6px; min-width: 190px; }
+.cellpick small { color: var(--muted, #666); }
+.groups { position: absolute; right: 12px; top: 150px; z-index: 500; width: min(300px, calc(100% - 24px)); max-height: 55%; overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 0.8rem; display: grid; gap: 6px; }
+.groups[hidden] { display: none; }
+.groups .ghead { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.groups select { margin-left: 4px; }
+.groups .grow { display: grid; grid-template-columns: 14px 1fr auto; gap: 6px; align-items: center; }
+.groups .grow i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.groups .grow em { font-style: normal; color: var(--muted, #666); }

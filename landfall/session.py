@@ -17,7 +17,7 @@ import threading
 from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
 
-from .area import ORDER, TOOLS as AREA_TOOLS, Area, run_tools
+from .area import GROUP_BY, ORDER, TOOLS as AREA_TOOLS, Area, run_tools
 from .area import SYSTEM as AREA_SYSTEM
 from .pipeline import STAGES, AreaSpec, _trail, event_name, is_town, records, spec_for
 from .storms import STORMS
@@ -100,6 +100,7 @@ class Session:
         # tools that replay a finished example. None follows mock.enabled().
         self.mock: bool | None = None
         self.ahead: dict[str, Future] = {}
+        self.cell: dict | None = None  # the 1-mile grid square the user picked, for group_buildings
 
     # ---- tools ---------------------------------------------------------
 
@@ -218,7 +219,14 @@ class Session:
                 return {"done": True, "summary": [e for e in events if e["event"] not in ("building",)]}
             if not self.area or not (self.root / self.area / "assessments.json").exists():
                 return {"error": "no drafts yet for this area; run the assessment first"}
-            return Area.load(self.root, self.area).call(name, args)
+            area = Area.load(self.root, self.area)
+            area.cell = self.cell
+            out = area.call(name, args)
+            if name == "group_buildings" and "groups" in out:
+                # the map colors the buildings by these groups
+                emit("groups", area=self.area, square=out["square"], by=out["grouped_by"], polygon=(self.cell or {}).get("polygon"),
+                     building_group=out["building_group"], factors={x["id"]: {b: f(x) for b, f in GROUP_BY.items()} for x in area.in_cell()})
+            return out
         except Exception as e:  # report to the model; it can explain or retry
             traceback.print_exc()  # and to the server log, since the model is told not to quote it
             emit("progress", stage=name, event="error", message=f"{type(e).__name__}: {e}"[:200])
@@ -283,12 +291,17 @@ class Session:
     # ---- turns ---------------------------------------------------------
 
     def turn(
-        self, text: str, box: tuple[float, float, float, float] | None = None, storm: str | None = None, upload: str | None = None, event: dict | None = None
+        self, text: str, box: tuple[float, float, float, float] | None = None, storm: str | None = None, upload: str | None = None, event: dict | None = None,
+        cell: dict | None = None,
     ) -> str:
         with self.lock:
+            if cell is not None:
+                self.cell = cell
+                text = f"{text}\n\n[The user picked the 1-mile grid square {cell.get('label') or 'on the map'}; group_buildings works on the buildings inside it.]"
             if box is not None:
                 self.box = tuple(round(v, 6) for v in box)
                 self.area = None
+                self.cell = None
                 self.ahead = {}
                 self.upload = upload
                 self.event = event if upload else None

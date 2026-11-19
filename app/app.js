@@ -296,6 +296,7 @@ async function loadBuildings(fit) {
   state.features = {};
   outlines.clearLayers();
   outlines.addData(gj);
+  if (state.groups) { if (state.groups.area === state.area) colorGroups(); else clearGroups(); }
   // same framing for every area: all drafted buildings in view, never closer than street level
   if (fit && gj.features.length) map.fitBounds(outlines.getBounds(), { padding: [30, 30], maxZoom: 18 });
   checkBefore();
@@ -342,6 +343,7 @@ const gridScale = L.control.scale({ position: "bottomright", metric: false, maxW
 const secCells = new Map();  // "i_j" -> Promise of section features (empty where no survey)
 let gridOn = false;
 let gridDraw = 0;
+let gridFeats = [];  // the land-survey sections on screen, for picking one
 try { gridOn = localStorage.getItem("landfall-grid") === "1"; } catch (e) { /* storage blocked */ }
 // a light line under a dark dashed one reads on dark photos and light street maps alike
 const GRID_STYLES = [{ color: "#fff", weight: 4, opacity: 0.75, fill: false, interactive: false }, { color: "#111", weight: 2, opacity: 0.9, dashArray: "8 6", fill: false, interactive: false }];
@@ -382,6 +384,7 @@ async function drawGrid() {
   gridLayer.clearLayers();
   const seen = new Set();
   const feats = got.flat().filter((f) => f && !seen.has(f.properties.id) && seen.add(f.properties.id));
+  gridFeats = feats;
   if (!feats.length) {
     // no land survey here: the fixed square-mile grid
     if (!got.some((g) => g === null)) fixedGrid(b);
@@ -415,6 +418,102 @@ let userTurned = false;
 $("grid").addEventListener("click", () => { userTurned = true; setGrid(!gridOn); });
 map.on("moveend", drawGrid);
 setGrid(gridOn);
+
+// ---------------------------------------------------------------- picking a grid square, grouping its buildings
+// With the grid on, a click on the map (not on a building) picks the square
+// under it; "Group the buildings here" asks the agent to group the buildings
+// in it by age, how they were built and the green around them.
+const cellLayer = L.layerGroup().addTo(map);
+function inRing(pt, ring) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i], [xj, yj] = ring[j];
+    if ((yi > pt[1]) !== (yj > pt[1]) && pt[0] < ((xj - xi) * (pt[1] - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+function squareAt(ll) {
+  const pt = [ll.lng, ll.lat];
+  for (const f of gridFeats) {
+    const g = f.geometry;
+    const polys = g.type === "Polygon" ? [g.coordinates] : g.type === "MultiPolygon" ? g.coordinates : [];
+    for (const poly of polys) if (inRing(pt, poly[0]) && !poly.slice(1).some((h) => inRing(pt, h))) return { label: f.properties.label || "this square", polygon: poly[0] };
+  }
+  if (gridFeats.length) return null;
+  // no land survey here: the fixed square-mile cell under the click
+  const dLat = MILE_M / 111320;
+  const dLon = MILE_M / (111320 * Math.cos((Math.round(map.getCenter().lat) * Math.PI) / 180));
+  const i = Math.floor(ll.lat / dLat), j = Math.floor(ll.lng / dLon);
+  const [s, n, w, e] = [i * dLat, (i + 1) * dLat, j * dLon, (j + 1) * dLon];
+  return { label: `the square mile at ${((s + n) / 2).toFixed(4)}, ${((w + e) / 2).toFixed(4)}`, polygon: [[w, s], [e, s], [e, n], [w, n], [w, s]] };
+}
+map.on("click", (e) => {
+  if (!gridOn || state.drawing) return;
+  const t = e.originalEvent && e.originalEvent.target;
+  if (t && t.closest && t.closest(".leaflet-interactive, .leaflet-popup, .leaflet-control")) return;
+  const sq = squareAt(e.latlng);
+  cellLayer.clearLayers();
+  if (!sq) return;
+  state.cell = { ...sq, pending: false };
+  cellLayer.addLayer(L.polygon(sq.polygon.map(([x, y]) => [y, x]), { color: "#ff9f1c", weight: 4, fill: true, fillOpacity: 0.06, interactive: false }));
+  const box = document.createElement("div");
+  box.className = "cellpick";
+  box.innerHTML = `<b>${esc(sq.label)}</b><button type="button" class="send">Group the buildings here</button><small>by age, how they were built and the green around them</small>`;
+  box.querySelector("button").addEventListener("click", () => {
+    map.closePopup();
+    if (state.busy) return;
+    state.cell.pending = true;
+    $("input").value = `Group the buildings in ${sq.label} by age, how they were built and the green around them.`;
+    send();
+  });
+  L.popup({ closeButton: true, autoPan: false }).setLatLng(e.latlng).setContent(box).openOn(map);
+});
+
+const GROUP_COLORS = ["#4cc9f0", "#f72585", "#b5e48c", "#ffd166", "#9b5de5", "#06d6a0", "#ff8c42", "#f1f1f1"];
+const FACTOR_NAME = { all: "All three", age: "Age (building rules)", construction: "How it was built", green: "Green around it" };
+function showGroups(ev) {
+  state.groups = ev;
+  if (ev.polygon) {
+    cellLayer.clearLayers();
+    cellLayer.addLayer(L.polygon(ev.polygon.map(([x, y]) => [y, x]), { color: "#ff9f1c", weight: 4, fill: false, interactive: false }));
+  }
+  const panel = $("groups");
+  panel.hidden = false;
+  const opts = ["all", ...ev.by].map((b) => `<option value="${b}">${FACTOR_NAME[b] || b}</option>`).join("");
+  panel.innerHTML = `<div class="ghead"><b>Groups in ${esc(ev.square)}</b><button type="button" class="linkish" id="groups-close">Back to damage colors</button></div>
+    <label>Color by <select id="groups-by">${opts}</select></label><div id="groups-list"></div>`;
+  $("groups-by").addEventListener("change", colorGroups);
+  $("groups-close").addEventListener("click", clearGroups);
+  colorGroups();
+  // bring the grouped buildings into view
+  const ids = Object.keys(ev.factors).filter((id) => state.features[id]);
+  if (ids.length) map.fitBounds(L.featureGroup(ids.map((id) => state.features[id])).getBounds(), { padding: [40, 40], maxZoom: 18 });
+}
+function colorGroups() {
+  const ev = state.groups;
+  if (!ev) return;
+  const by = $("groups-by").value;
+  const keyOf = (id) => (by === "all" ? ev.building_group[id] : (ev.factors[id] || {})[by]);
+  const count = {};
+  for (const id of Object.keys(ev.factors)) { const k = keyOf(id); if (k) count[k] = (count[k] || 0) + 1; }
+  const top = Object.entries(count).sort((a, b) => b[1] - a[1]);
+  const color = {};
+  top.forEach(([k], i) => { color[k] = i < GROUP_COLORS.length - 1 ? GROUP_COLORS[i] : "#9a9a9a"; });
+  for (const [id, layer] of Object.entries(state.features)) {
+    const k = ev.factors[id] ? keyOf(id) : null;
+    layer.setStyle(k ? { color: color[k], weight: 3, opacity: 1, dashArray: null, fillColor: color[k], fillOpacity: 0 } : { color: "#777", weight: 1, opacity: 0.6, dashArray: null, fillOpacity: 0 });
+  }
+  const shown = top.slice(0, GROUP_COLORS.length - 1);
+  const rest = top.slice(GROUP_COLORS.length - 1).reduce((n, [, c]) => n + c, 0);
+  $("groups-list").innerHTML = shown.map(([k, n]) => `<div class="grow"><i style="background:${color[k]}"></i><span>${esc(k)}</span><em>${n}</em></div>`).join("")
+    + (rest ? `<div class="grow"><i style="background:#9a9a9a"></i><span>Smaller groups</span><em>${rest}</em></div>` : "");
+}
+function clearGroups() {
+  state.groups = null;
+  $("groups").hidden = true;
+  cellLayer.clearLayers();
+  for (const layer of Object.values(state.features)) layer.setStyle(styleFor(layer.feature));
+}
 
 // ---------------------------------------------------------------- phone: the whole screen for the map
 $("mapsize").addEventListener("click", () => {
@@ -776,6 +875,9 @@ function handle(ev) {
       if (ev.name === "find_help" && ev.result && ev.result.sources) state.sources = (state.sources || []).concat(ev.result.sources);
       endStep(ev.result);
       break;
+    case "groups":
+      showGroups(ev);
+      break;
     case "area":
       state.area = ev.name;
       state.flight = ev.flight;
@@ -854,7 +956,9 @@ async function send(e) {
     // no code: the server replays the nearest finished example instead (mock mode, no AI calls)
   }
   const storm = $("storm").value === EVENT ? null : $("storm").value || null;
-  const body = { text, lang: lang(), box: state.box, storm: state.box ? storm : null, access_code: code, upload: state.box && state.upload ? state.upload.id : null, event: state.box && state.upload ? state.upload.event : null };
+  const cell = state.cell && state.cell.pending ? { label: state.cell.label, polygon: state.cell.polygon } : null;
+  if (state.cell) state.cell.pending = false;
+  const body = { text, cell, lang: lang(), box: state.box, storm: state.box ? storm : null, access_code: code, upload: state.box && state.upload ? state.upload.id : null, event: state.box && state.upload ? state.upload.event : null };
   if (state.box) { outlines.clearLayers(); state.features = {}; }
   if (state.box && state.upload && !state.findUpload) {
     // the photos are used once; the map shows the area's own copy when it's ready
