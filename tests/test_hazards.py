@@ -28,10 +28,29 @@ def test_hazus_values_come_through_unchanged():
     # Hazus Earthquake v6.1, wood light frame, pre-code: moderate 0.29 g, extensive 0.51 g (beta 0.4)
     m = hazards._table("hazus_quake.json")["models"]["W1.PC"]
     assert m["ls2"] == [0.29, 0.4] and m["ls3"] == [0.51, 0.4]
-    d, s = hazards.quake(0.29, {"material": "wood frame", "year_built": 1930}, "CA")
+    d, s, _ = hazards.quake(0.29, {"material": "wood frame", "year_built": 1930}, "CA")
     assert abs(d - 0.5) < 1e-9 and s < 0.5
     # Hazus Flood FIA one-story home: half the building's value at 14 ft above the floor
     assert hazards._table("flood_floors.json")["half_value_ft_above_floor"]["one_floor"] == 14.0
+
+
+def test_rulesets_pick_stronger_roofs_for_newer_homes_in_high_wind_zones():
+    # Florida coast (ASCE 7-10 design wind 150 mph, flood zone AE): after 2000
+    # the SimCenter rulesets give 8d @ 6"/6" deck nails, straps and shutters
+    old = wood_old() | {"v_ult": 150, "flood_zone": "AE"}
+    new = old | {"year_built": 2005}
+    assert all("6d.tnail" in m for m, _ in hazards.wind_configs("wood", 1960, 1, 150, "AE", "35"))
+    assert all(".8s.strap.std.0." in m for m, _ in hazards.wind_configs("wood", 2005, 1, 150, "AE", "35"))
+    assert hazards.wind(146, new, "FL")[0] < hazards.wind(146, old, "FL")[0] - 0.1
+    assert abs(sum(w for _, w in hazards.wind_configs("masonry", 1990, 1, 150, "AE", "35")) - 1) < 1e-9
+
+
+def test_tornado_odds_follow_the_ef_scale():
+    # EF scale DI 2: roof deck uplift is expected at 97 mph, so half the houses
+    d, s = hazards.tornado(97, wood_old())
+    assert abs(d - 0.5) < 1e-9 and s < 0.05
+    mobile = wood_old() | {"material": "manufactured (mobile) home"}
+    assert hazards.tornado(98, mobile)[0] > hazards.tornado(98, wood_old())[0]
 
 
 def test_odds_rise_with_category():
@@ -40,8 +59,10 @@ def test_odds_rise_with_category():
         d = [hazards.modeled(t, x, wood_old(), "FL")[0] for x in xs]
         assert d == sorted(d) and d[0] < d[-1], t
         for x in xs:
-            dmg, sev = hazards.modeled(t, x, wood_old(), "FL")
+            dmg, sev, loss, wet = hazards.modeled(t, x, wood_old(), "FL")
             assert 0 <= sev <= dmg <= 1
+            assert (loss is None) == (t == "tornado") and (loss is None or 0 <= loss <= 1)
+            assert (wet is None) == (t in ("tornado", "earthquake"))
 
 
 def test_newer_rules_and_elevation_help():
@@ -57,7 +78,7 @@ def test_hazus_wind_against_helene_at_cedar_key():
     Hazus gives older one-story wood homes under 1% moderate damage there; the
     PRJ-6245 survey found about 2% of buildings with no surge damage to walls
     or foundation had roof damage state 2 or worse. Both say wind did little."""
-    d, _ = hazards.wind(84, wood_old() | {"green": None}, "FL")
+    d, _, _ = hazards.wind(84, wood_old() | {"green": None}, "FL")
     assert d < 0.01
     rows = list(csv.DictReader((Path(__file__).resolve().parents[1] / "eval" / "field" / "cedar_key_buildings.csv").open()))
 
@@ -81,3 +102,53 @@ def test_table_shares_classes_and_covers_all_scenarios():
     assert classes[0]["odds"]["surge:helene"][0] is not None and classes[0]["measured"]["surge:helene"][2] > 0
     cats = hazards.by_category(bs, classes, index, "hurricane")
     assert cats[0]["category"] == "Category 1" and cats[0]["average_chance_damaged"] < cats[-1]["average_chance_damaged"]
+
+
+def test_wind_weakens_inland_kaplan_demaria():
+    # at the coast only the sea-to-land drop (R = 0.9); about 4 hours in, about a third less
+    assert hazards.inland_gust(146, 0) == round(((146 / 1.22 / 1.15078) * 0.9) * 1.15078 * 1.22)
+    g50 = hazards.inland_gust(146, 50)
+    assert 95 < g50 < 110 and hazards.inland_gust(146, 200) < g50
+    # Cedar Key is on the Gulf; Gainesville is about 50 miles inland
+    assert hazards.coast_miles(-83.035, 29.135) < 2
+    assert 35 < hazards.coast_miles(-82.33, 29.65) < 65
+
+
+def test_surge_and_wind_combine_by_the_hazus_table():
+    b = wood_old()
+    wd, ws, wl = hazards.wind(126, b, "FL")
+    d, s, loss, wet = hazards.hurricane(126, 7, b, "FL")  # 7 ft of water at a slab house
+    assert d > wd and s >= ws and loss > wl and wet > 0.5
+    assert hazards.combine_losses(0.0, 0.3) == 0.3 and hazards.combine_losses(1.0, 0.5) == 1.0
+    # Hazus table: 0.2 wind + 0.2 flood is 0.36, not 0.4
+    assert abs(hazards.combine_losses(0.2, 0.2) - 0.36) < 1e-9
+    assert hazards.hurricane(126, 0, b, "FL") == (wd, ws, wl, 0.0)
+
+
+def test_expected_repair_cost_follows_hazus():
+    # earthquake: all-complete damage costs the whole house (LF.RES1 complete = 1.0)
+    assert hazards.quake(20, wood_old(), "CA")[2] > 0.99
+    # flood: FIA one-story curve, 14 ft above a slab floor is half the value
+    assert abs(hazards.flood_at([14.0], wood_old() | {"foundation": "slab"})[2] - 0.5) < 0.06
+    assert hazards.flood(1, wood_old() | {"foundation": "piles"})[2] < hazards.flood(1, wood_old())[2]
+
+
+def test_flooding_alone_is_not_damage():
+    """Water inside is reported as flooding; damage is the walls, floors and
+    foundation, at the rates measured after Helene (Harry, Nov 18)."""
+    t = hazards._table("flood_floors.json")["water_damage"]
+    assert t["other"]["damaged"] == sorted(t["other"]["damaged"]) and t["V"]["damaged"][-1] > t["other"]["damaged"][-1]
+    d, s, loss, wet = hazards.flood(3, wood_old())  # slab house, 3 ft of water: inside
+    assert wet > 0.9 and d < 0.5 and loss > 0.1
+    beach = wood_old() | {"flood_zone": "VE", "foundation": "piles"}
+    assert hazards.flood_at([6], beach, surge=True)[0] > hazards.flood_at([6], beach)[0]  # waves
+
+
+def test_surge_depth_in_feet_stays_inside_the_live_band():
+    # Cedar Key downtown: the national data has a depth in whole feet
+    raw = hazards.surge_depth("cat3", -83.035, 29.135, None)
+    assert raw > 0
+    assert 9 <= hazards.surge_depth("cat3", -83.035, 29.135, 4) <= 40
+    assert hazards.surge_depth("cat3", -83.035, 29.135, 1) in (1, 2, 3)
+    assert hazards.surge_depth("cat3", -83.035, 29.135, 0) == 0
+    assert hazards.surge_depth("cat1", -82.33, 29.65, None) == 0  # Gainesville

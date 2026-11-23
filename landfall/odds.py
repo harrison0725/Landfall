@@ -193,10 +193,24 @@ def buildings_in(ring: list[list[float]], kind: str = "hurricane") -> dict:
             "foundation": FOUNDATION.get(p.get("found_type")),
             "stories": p.get("num_story"),
             "occupancy": p.get("occtype"),
+            "flood_zone": p.get("firmzone"),
         })
     for r, g in zip(rows, green_at([(r["lon"], r["lat"]) for r in rows])):
         r["green"] = g
-    return {"state": state, "buildings": rows}
+    from . import hazards
+
+    v = hazards.design_wind(round((bbox[0] + bbox[2]) / 2, 3), round((bbox[1] + bbox[3]) / 2, 3)) if rows else None
+    for r in rows:
+        r["v_ult"] = v  # ASCE 7 design wind speed at the square's center
+    place = hazards.site(bbox)
+    if rows and place["surge_checked"]:
+        bands = hazards.surge_bands(bbox, [(r["lon"], r["lat"]) for r in rows])
+        place["surge_map_read"] = bands is not None  # without the live map, the 160 m depth data alone
+        cats = list(hazards.SURGE_LAYERS)
+        for k, r in enumerate(rows):
+            # water above the ground in Category 1..5, whole feet (0: dry)
+            r["surge"] = [hazards.surge_depth(c, r["lon"], r["lat"], bands[k][i] if bands else None) for i, c in enumerate(cats)]
+    return {"state": state, "buildings": rows, "site": place}
 
 
 # ---------------------------------------------------------------- the history
@@ -295,7 +309,8 @@ def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", 
     rows, state = got["buildings"], got["state"]
     sid = scenario if scenario in hazards.scenario_ids() else hazards.default_scenario(kind)
     t, cid = sid.split(":")
-    classes, index = hazards.odds_table(rows, state)
+    place = got.get("site") or {}
+    classes, index = hazards.odds_table(rows, state, place)
     for r, i in zip(rows, index):
         r["cls"] = i
         r["chance_damaged"] = classes[i]["odds"][sid][0]
@@ -319,6 +334,12 @@ def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", 
             sev = [classes[m["cls"]]["odds"][sid][1] for m in ms]
             g["chance_damaged"] = round(sum(m["chance_damaged"] for m in ms) / len(ms), 2)
             g["chance_badly_damaged_or_destroyed"] = round(sum(sev) / len(sev), 2)
+            loss = [classes[m["cls"]]["odds"][sid][2] for m in ms]
+            if loss and loss[0] is not None:
+                g["expected_repair_cost_share_of_value"] = round(sum(loss) / len(loss), 3)
+            wet = [classes[m["cls"]]["odds"][sid][3] for m in ms]
+            if wet and wet[0] is not None:
+                g["chance_water_above_first_floor"] = round(sum(wet) / len(wet), 2)
             g["from"] = "damage curves"
     rows_sorted = sorted(groups.values(), key=lambda g: -g["buildings"])
     known = [r["chance_damaged"] for r in rows if r["chance_damaged"] is not None]
@@ -331,6 +352,24 @@ def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", 
     else:
         source = hazards.SOURCES[t]
         notes = (f"These are odds for a {sc['name'].lower()} at {cat_label}, {sc['note']}. ")
+        if t == "hurricane" and place:
+            gust = place["gusts"][cid]
+            sb = sorted(r["surge"][list(hazards.SURGE_LAYERS).index(cid)] for r in rows if r.get("surge"))
+            sb = [b for b in sb if b]
+            wet = len(sb)
+            inside = sum(classes[i]["odds"][sid][3] or 0 for i in index)
+            notes += (f"The square is {place['coast_miles']} miles from the nearest coast, so a {cat_label} storm's winds are down to about "
+                      f"{gust} mph gusts here (Kaplan and DeMaria inland decay, at {place['forward_mph']:.0f} mph forward speed"
+                      + (f"; {place['gusts_slow'][cid]} to {place['gusts_fast'][cid]} mph if it moves at {place['slow_mph']:.0f} to {place['fast_mph']:.0f} mph, "
+                         "which inland can change the odds a lot" if place['gusts_slow'][cid] != place['gusts_fast'][cid] else "") + "). ")
+            if not place.get("surge_checked"):
+                notes += "It is too far inland for storm surge. "
+            else:
+                notes += (f"In the National Hurricane Center's worst case for a {cat_label} storm at high tide, {wet} of {len(rows)} "
+                          f"buildings have surge water" + (f" (typically {sb[len(sb) // 2]} ft deep), and about {round(inside)} would have water "
+                          "above the first floor. Water inside is flooding, which isn't counted as damage. " if sb else ". "))
+                if place.get("surge_map_read") is False:
+                    notes += "The live 10 m surge map couldn't be read, so the 160 m depth data alone says which buildings get wet. "
     return {
         "square": label or "the picked square",
         "disaster_kind": kind,
@@ -341,9 +380,12 @@ def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", 
         "expected_damaged": round(sum(known)) if known else None,
         "groups": rows_sorted,
         "by_category": hazards.by_category(rows, classes, index, t),
+        "site": place,
+        "expected_repair_cost_share_of_value": (round(sum(classes[i]["odds"][sid][2] for i in index) / len(index), 3)
+                                                if index and classes[index[0]]["odds"][sid][2] is not None else None),
         "history": source,
-        "damaged_means": h["damaged"] if h else ("water above the first floor" if t == "flood" else "more than light damage"),
-        "severe_means": h["severe"] if h else ("4 ft or more of water inside" if t == "flood" else "badly damaged or destroyed"),
+        "damaged_means": h["damaged"] if h else "more than light damage to the building itself (flooding inside is given separately)",
+        "severe_means": h["severe"] if h else "badly damaged or destroyed",
         "points": rows,
         "classes": classes,
         "notes": notes + "Year built is from the county tax roll in Florida, elsewhere the block's median year. Material and foundation come from "
