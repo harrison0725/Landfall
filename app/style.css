@@ -277,3 +277,6 @@ ul.sources { padding-left: 18px; }
 .tfact { display: grid; grid-template-columns: 78px 1fr; gap: 0 8px; }
 .tfact span { color: var(--muted); }
 .tfact em { font-style: normal; font-weight: 400; font-size: 10.5px; color: var(--muted); }
+.groups .grow small, .tfact small { display: block; font-weight: 400; font-size: 10.5px; line-height: 1.3; color: var(--muted); }
+.groups .grow { align-items: start; }
+.groups .grow i { margin-top: 3px; }

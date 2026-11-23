@@ -472,7 +472,7 @@ map.on("click", (e) => {
 });
 
 const GROUP_COLORS = ["#4cc9f0", "#f72585", "#b5e48c", "#ffd166", "#9b5de5", "#06d6a0", "#ff8c42", "#f1f1f1"];
-const FACTOR_NAME = { chance: "Damage", severe: "Bad damage", loss: "Repair cost", flooded: "Water inside", all: "All three", age: "Age (building rules)", construction: "How it was built", green: "Green around it" };
+const FACTOR_NAME = { chance: "Damage", severe: "Bad damage", loss: "Repair cost", flooded: "Water inside", all: "All three", age: "Building code era", construction: "How it was built", green: "Green around it" };
 // Each square estimated stays on the map, split into 16 blocks of about a
 // quarter mile, each shaded by its buildings' average chance of damage, so
 // blocks and squares can be compared at a glance. The panel lists every
@@ -626,6 +626,43 @@ function useOf(p) {
   const o = (p.occupancy || "").toUpperCase();
   return USE[o.slice(0, 4)] || USE[o.slice(0, 3)] || "Building";
 }
+// plain-language meanings of the terms on the map, for people who don't know them
+const TERMS = {
+  era: {
+    "before flood-elevation rules (pre-1975)": "Built before the federal flood program (1970s) required raised floors in flood zones; usually built at ground level.",
+    "after flood-elevation rules, before the Florida Building Code (1975-2001)": "Floors raised in flood zones, but built before Florida's stronger statewide code that followed Hurricane Andrew.",
+    "after flood-elevation rules (1975 or later)": "Built after the federal flood program required raised floors in flood zones.",
+    "Florida Building Code (2002 or later)": "Built under Florida's statewide code from after Hurricane Andrew: stronger roof ties and nailing, and protected windows near the coast.",
+    "before California's wildfire building rules (pre-2008)": "Built before California required fire-resistant roofs, vents and siding near wildlands.",
+    "California wildfire building rules (2008 or later)": "Built with California's fire-resistant roofs, ember-proof vents and siding rules.",
+    "before modern seismic codes (pre-1976)": "Built before codes required buildings to resist earthquake shaking.",
+    "modern seismic code (1976-1996)": "Built after earthquake design became required (1976 code).",
+    "post-Northridge seismic code (1997 or later)": "Built under the stronger earthquake rules written after the 1994 Northridge quake.",
+    "before Myanmar's national building code (pre-2012)": "Built before Myanmar had a national building code.",
+    "Myanmar national building code (2012 or later)": "Built under Myanmar's national building code (2012).",
+    "year built unknown": "No year built on record, so the building code it followed is unknown.",
+  },
+  foundation: {
+    slab: "Sits on a concrete pad on the ground.", crawlspace: "Raised a little, with a short crawl space under the floor.",
+    piers: "Raised on short posts or blocks.", piles: "Raised high on posts driven deep into the ground.",
+    "solid wall": "Raised on solid walls around a ground-level space.", fill: "Built on a raised mound of packed soil.", basement: "Has a basement below ground.",
+  },
+  material: {
+    "wood frame": "Walls framed with wood.", masonry: "Walls of brick or concrete block.", concrete: "Walls of poured concrete.",
+    steel: "Steel frame.", "manufactured (mobile) home": "A factory-built home, set on site.",
+  },
+  green: {
+    "mostly trees": "Mostly trees around it, which can block wind or fall on it.",
+    "some trees or lawn": "Some trees or lawn around it.",
+    "little green (pavement, sand, water or bare ground)": "Little around it to slow the wind.",
+  },
+  zone: (z) => (/^V/i.test(z) ? "FEMA's highest flood risk: coastal flooding with waves." : /^A/i.test(z) ? "FEMA high flood risk: about a 1% chance of flooding each year." : /^X/i.test(z) ? "FEMA moderate or low flood risk." : ""),
+};
+function meaning(kind, v) {
+  if (!v) return "";
+  const m = TERMS[kind];
+  return (typeof m === "function" ? m(v) : m[v]) || "";
+}
 // a hover card for one building: what could happen, then what we know about it
 function buildingCard(p) {
   const { t, c, type, cat } = scenarioParts();
@@ -638,25 +675,25 @@ function buildingCard(p) {
   let odds;
   if (p.chance_damaged == null) odds = `<p class="tnote">No odds for this disaster here yet.</p>`;
   else {
-    odds = row("Damage", p.chance_damaged) + (p.chance_severe != null ? row("Bad damage", p.chance_severe) : "")
+    odds = `<p class="tnote">Damage: more than light damage. Bad damage: major damage to the roof, walls or foundation, or destroyed.</p>` + row("Damage", p.chance_damaged) + (p.chance_severe != null ? row("Bad damage", p.chance_severe) : "")
       + (p.flooded != null && (p.flooded > 0 || ft) ? row("Water inside", p.flooded) : "");
     if (m) odds += `<p class="tnote">From ${m[2]} similar buildings in a past disaster; the true chance is likely between ${Math.round(m[0] * 100)}% and ${Math.round(m[1] * 100)}%.</p>`;
     if (p.repair != null) odds += `<div class="tmoney">Likely repairs: <b>${p.value ? money(p.dollars) : pctOf(p.repair) + " of its value"}</b>${p.value ? ` <span>of ${money(p.value)} to rebuild</span>` : ""}</div>`;
     if (ft) odds += `<p class="tnote">Storm surge here: about ${ft} ft of water above the ground (worst case for this strength).</p>`;
     if (p.flooded != null && p.flooded > 0) odds += `<p class="tnote">Water inside is flooding; it isn't counted as damage.</p>`;
   }
-  const fact = (k, v, src) => (v ? `<div class="tfact"><span>${k}</span><b>${esc(String(v))}${src ? ` <em>· ${esc(src)}</em>` : ""}</b></div>` : "");
+  const fact = (k, v, src, why) => (v ? `<div class="tfact"><span>${k}</span><b>${esc(String(v))}${src ? ` <em>· ${esc(src)}</em>` : ""}${why ? `<small>${esc(why)}</small>` : ""}</b></div>` : "");
   return `<div class="tcard">
     <div class="ttitle">${esc(title)}${stories ? ` · ${stories}` : ""}</div>
     <div class="tsub">If ${cat ? `a ${esc(cat.label)} ${esc(type.name.toLowerCase().replace(/ \(.*\)/, ""))}` : "this disaster"} hits</div>
     ${odds}
     <div class="tsub">About this building</div>
     ${fact("Built", p.year_built ? `${p.year_built}` : "year unknown", (p.year_source || "").replace("structure inventory (median year for the block)", "block's median year"))}
-    ${fact("Building rules", p.code_era)}
-    ${fact("Walls", p.material || "unknown")}
-    ${fact("Foundation", p.foundation || "unknown")}
-    ${fact("Around it", p.green)}
-    ${fact("Flood zone", p.flood_zone && p.flood_zone !== "NaN" ? p.flood_zone : "")}
+    ${fact("Building code era", p.code_era || "unknown", "", meaning("era", p.code_era || "year built unknown"))}
+    ${fact("Walls", p.material || "unknown", "", meaning("material", p.material))}
+    ${fact("Foundation", p.foundation || "unknown", "", meaning("foundation", p.foundation))}
+    ${fact("Around it", p.green, "", meaning("green", p.green))}
+    ${fact("Flood zone", p.flood_zone && p.flood_zone !== "NaN" ? p.flood_zone : "", "", meaning("zone", p.flood_zone))}
     <p class="tnote">Walls, foundation and flood zone from the national structure inventory; green around it from today's satellite photo.</p>
   </div>`;
 }
@@ -755,7 +792,9 @@ function sqPanel() {
   } else {
     const vals = new Set();
     for (const [, sq] of sqs) for (const p of sq.ev.points) vals.add(factorsOf(p)[sqColorBy]);
-    legend = [...vals].map((v) => `<div class="grow"><i style="background:${groupColor(v)}"></i><span>${esc(v)}</span></div>`).join("") + `<p class="gnote">${sqView === "blocks" ? "Each block shows its most common kind and what share of its buildings that is." : "Each building colored by its own kind."}</p>`;
+    const why = (v) => (sqColorBy === "age" ? meaning("era", v) : sqColorBy === "green" ? meaning("green", v)
+      : v.split(" on ").map((x, k) => meaning(k ? "foundation" : "material", x)).filter(Boolean).join(" "));
+    legend = [...vals].map((v) => `<div class="grow"><i style="background:${groupColor(v)}"></i><span>${esc(v)}${why(v) ? `<small>${esc(why(v))}</small>` : ""}</span></div>`).join("") + `<p class="gnote">${sqView === "blocks" ? "Each block shows its most common kind and what share of its buildings that is." : "Each building colored by its own kind."}</p>`;
   }
   const noValue = sqs.reduce((t, [, sq]) => t + sq.stats.noValue, 0);
   panel.innerHTML = `<div class="ghead"><b>Compare squares</b><button type="button" class="linkish" id="sq-clear">Clear all</button></div>
