@@ -34,6 +34,25 @@ def test_hazus_values_come_through_unchanged():
     assert hazards._table("flood_floors.json")["half_value_ft_above_floor"]["one_floor"] == 14.0
 
 
+def test_rulesets_pick_stronger_roofs_for_newer_homes_in_high_wind_zones():
+    # Florida coast (ASCE 7-10 design wind 150 mph, flood zone AE): after 2000
+    # the SimCenter rulesets give 8d @ 6"/6" deck nails, straps and shutters
+    old = wood_old() | {"v_ult": 150, "flood_zone": "AE"}
+    new = old | {"year_built": 2005}
+    assert all("6d.tnail" in m for m, _ in hazards.wind_configs("wood", 1960, 1, 150, "AE", "35"))
+    assert all(".8s.strap.std.0." in m for m, _ in hazards.wind_configs("wood", 2005, 1, 150, "AE", "35"))
+    assert hazards.wind(146, new, "FL")[0] < hazards.wind(146, old, "FL")[0] - 0.1
+    assert abs(sum(w for _, w in hazards.wind_configs("masonry", 1990, 1, 150, "AE", "35")) - 1) < 1e-9
+
+
+def test_tornado_odds_follow_the_ef_scale():
+    # EF scale DI 2: roof deck uplift is expected at 97 mph, so half the houses
+    d, s = hazards.tornado(97, wood_old())
+    assert abs(d - 0.5) < 1e-9 and s < 0.05
+    mobile = wood_old() | {"material": "manufactured (mobile) home"}
+    assert hazards.tornado(98, mobile)[0] > hazards.tornado(98, wood_old())[0]
+
+
 def test_odds_rise_with_category():
     for t in ("hurricane", "tornado", "earthquake", "flood"):
         xs = [c[2] for c in hazards.SCENARIOS[t]["categories"]]

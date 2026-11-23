@@ -193,9 +193,15 @@ def buildings_in(ring: list[list[float]], kind: str = "hurricane") -> dict:
             "foundation": FOUNDATION.get(p.get("found_type")),
             "stories": p.get("num_story"),
             "occupancy": p.get("occtype"),
+            "flood_zone": p.get("firmzone"),
         })
     for r, g in zip(rows, green_at([(r["lon"], r["lat"]) for r in rows])):
         r["green"] = g
+    from .hazards import design_wind
+
+    v = design_wind(round((bbox[0] + bbox[2]) / 2, 3), round((bbox[1] + bbox[3]) / 2, 3)) if rows else None
+    for r in rows:
+        r["v_ult"] = v  # ASCE 7 design wind speed at the square's center
     return {"state": state, "buildings": rows}
 
 

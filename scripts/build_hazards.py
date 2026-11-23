@@ -16,10 +16,9 @@ Sources (all public):
   of the building's value (FEMA's "substantial damage").
 
 Hazus wind curves need roof and opening details Landfall can't see from a
-satellite photo (roof shape, deck nailing, roof-to-wall connection,
-shutters, garage, secondary water barrier). Each era gets the details its
-building rules required (ASSUMED below, from Florida code history) and the
-rest are averaged with equal weight.
+satellite photo (deck nailing, roof-to-wall connection, shutters, garage,
+secondary water barrier). hazards.py assigns them with the NHERI SimCenter
+rulesets from year built and the site's ASCE 7 design wind speed.
 
 Run: pip install simcenter-dlml && python scripts/build_hazards.py
 """
@@ -27,14 +26,12 @@ Run: pip install simcenter-dlml && python scripts/build_hazards.py
 from __future__ import annotations
 
 import csv
-import itertools
 import json
 import statistics
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "landfall" / "history"
-SPEEDS = list(range(50, 255, 5))  # mph gust grid the table is stored on
 
 
 def dlml_dir() -> Path:
@@ -58,69 +55,38 @@ def multilinear(spec: str, x: float) -> float:
 
 # ---------------------------------------------------------------- wind
 
-# What each era's building rules required. ASSUMED from Florida code history:
-# before the post-Andrew changes (1994) roofs were typically toe-nailed with
-# 6d deck nails; from 1994 straps and 8d nails were common; the Florida
-# Building Code (March 2002) required 8d nails at 6 in. spacing and straps,
-# with shutters in the wind-borne debris region (taken as half the homes).
-# Outside Florida "modern" (2000 or later, International Residential Code)
-# is 8d nails and straps without shutters.
-ERA_RULES = {
-    "old": {"deck": ["6d"], "rwc": ["tnail"], "shutters": ["0"]},
-    "mid": {"deck": ["8d"], "rwc": ["strap"], "shutters": ["0"]},
-    "modern_fl": {"deck": ["8s"], "rwc": ["strap"], "shutters": ["0", "1"]},
-    "modern": {"deck": ["8d"], "rwc": ["strap"], "shutters": ["0"]},
-    "unknown": {},
-}
-# position of each field in the model id, per family (from the DLML mapping)
-FIELDS = {
-    "W.SF": ["h", "shape", "swr", "deck", "rwc", "garage", "shutters", "terrain"],
-    "M.SF": ["h", "shape", "rwc", "system", "deck", "shutters", "swr", "garage", "reinf", "cover", "terrain"],
-}
-TERRAIN = {"open": "3", "light suburban": "15", "suburban": "35", "light trees": "70", "trees": "100"}
+# Hazus wind models are picked per building by the NHERI SimCenter asset
+# representation rulesets (landfall/hazards.py, ported from
+# github.com/NHERI-SimCenter/AssetRepresentationRulesets). They only reach
+# these configurations, so only these are stored: single-family wood and
+# masonry (wood-truss roof, reinforced), manufactured homes, on suburban or
+# light-tree terrain, at the gust speeds Landfall's categories use.
+TERRAIN = {"suburban": "35", "light trees": "70"}
 
 
 def wind_table() -> dict:
+    from landfall.hazards import SCENARIOS
+
+    speeds = sorted({c[2] for c in SCENARIOS["hurricane"]["categories"]} | {84})
     d = dlml_dir() / "hurricane" / "building" / "portfolio" / "Hazus v5.1 original" / "fragility.csv"
-    rows = list(csv.DictReader(d.open()))
-    by_family: dict[str, list[tuple[list[str], dict]]] = {}
-    for r in rows:
+    models = {}
+    for r in csv.DictReader(d.open()):
         t = r["ID"].split(".")
-        fam = "MH" if t[0] == "MH" else ".".join(t[:2])
-        by_family.setdefault(fam, []).append((t, r))
-
-    def curves(models: list[dict]) -> dict:
-        """Average chance of damage state 2+ and 3+ at each gust speed."""
-        out = {"damaged": [], "severe": []}
-        for v in SPEEDS:
-            out["damaged"].append(round(statistics.fmean(multilinear(m["LS2-Theta_0"], v) for m in models), 4))
-            out["severe"].append(round(statistics.fmean(multilinear(m["LS3-Theta_0"], v) for m in models), 4))
-        return out
-
-    table = {}
-    for mat, fam in (("wood", "W.SF"), ("masonry", "M.SF")):
-        pos = {f: i + 2 for i, f in enumerate(FIELDS[fam])}
-        for h, era, (tname, tcode) in itertools.product(("1", "2"), ERA_RULES, TERRAIN.items()):
-            rule = ERA_RULES[era]
-            ms = [r for t, r in by_family[fam]
-                  if t[pos["h"]] == h and t[pos["terrain"]] == tcode
-                  and (fam != "M.SF" or t[pos["system"]] == "trs")  # wood-truss roof on block walls
-                  and all(t[pos[f]] in allowed for f, allowed in rule.items())]
-            assert ms, (fam, h, era, tname)
-            table[f"{mat}|{h}|{era}|{tname}"] = curves(ms) | {"models": len(ms)}
-    # manufactured homes: by HUD standard (pre-1976, 1976, 1994 Wind Zone II
-    # in Florida's coastal counties, Zone I elsewhere); tie-downs averaged, no shutters
-    for era, cls in (("phud", "PHUD"), ("hud76", "76HUD"), ("hud94_1", "94HUDI"), ("hud94_2", "94HUDII"), ("unknown", None)):
+        keep = (
+            (t[:2] == ["W", "SF"] and t[-1] in TERRAIN.values())
+            or (t[:2] == ["M", "SF"] and t[5] == "trs" and t[10] in ("1", "null") and t[-1] in TERRAIN.values())
+            or (t[0] == "MH" and t[-1] in TERRAIN.values())
+        )
+        if keep:
+            models[r["ID"]] = [[round(multilinear(r[f"LS{k}-Theta_0"], v), 4) for v in speeds] for k in (2, 3)]
+    # engineered low-rise concrete and steel residential buildings: no
+    # ruleset in hand, so every roof, window and debris option is averaged
+    rows = list(csv.DictReader(d.open()))
+    for mat, fam in (("concrete", "C.ERB.L"), ("steel", "S.ERB.L")):
         for tname, tcode in TERRAIN.items():
-            ms = [r for t, r in by_family["MH"] if (cls is None or t[1] == cls) and t[2] == "0" and t[-1] == tcode]
-            table[f"manufactured|1|{era}|{tname}"] = curves(ms) | {"models": len(ms)}
-    # engineered low-rise concrete and steel residential buildings: all
-    # roof cover, window and debris options averaged
-    for mat, fam in (("concrete", "C.ERB"), ("steel", "S.ERB")):
-        for tname, tcode in TERRAIN.items():
-            ms = [r for t, r in by_family[fam] if t[2] == "L" and t[-1] == tcode]
-            table[f"{mat}|1|any|{tname}"] = curves(ms) | {"models": len(ms)}
-    return {"speeds_mph": SPEEDS, "curves": table,
+            ms = [r for r in rows if r["ID"].startswith(fam + ".") and r["ID"].endswith("." + tcode)]
+            models[f"{mat}|{tname}"] = [[round(statistics.fmean(multilinear(m[f"LS{k}-Theta_0"], v) for m in ms), 4) for v in speeds] for k in (2, 3)]
+    return {"speeds_mph": speeds, "models": models,
             "source": "Hazus Hurricane Model v5.1 building fragilities (NHERI SimCenter DLML, 'Hazus v5.1 original')",
             "damaged": "Hazus damage state 2 (moderate) or worse: major roof cover loss, some windows broken",
             "severe": "Hazus damage state 3 (severe) or worse: major roof sheathing or window loss, or destroyed"}

@@ -5,14 +5,16 @@ real inspected buildings (storm surge like Helene at Cedar Key, and a
 wind-driven urban wildfire like Los Angeles in 2025).
 
 Where each number comes from (tables built by scripts/build_hazards.py):
-- Wind: FEMA's Hazus Hurricane Model v5.1 building fragility curves (as
-  published by the NHERI SimCenter Damage and Loss Model Library), by wall
-  material, stories, building-rules era and land cover. Hazus needs roof
-  details a satellite photo can't show; each era gets what its rules required
-  (an assumption, written in the build script) and the rest are averaged.
-  Tornadoes use the same curves at EF-scale gusts: Hazus has no tornado
-  model, and tornado winds load buildings harder than hurricane winds of the
-  same speed, so tornado odds are likely too low.
+- Hurricane wind: FEMA's Hazus Hurricane Model v5.1 building fragility
+  curves (as published by the NHERI SimCenter Damage and Loss Model
+  Library). The roof and opening details Hazus needs (deck nailing,
+  roof-to-wall connection, shutters, water barrier) come from the NHERI
+  SimCenter asset representation rulesets, which assign them from year built
+  and the site's ASCE 7 design wind speed (read from ASCE's hazard map).
+- Tornado: the Enhanced Fujita scale's own damage indicators (NWS Storm
+  Prediction Center): the wind speeds that do each degree of damage to a
+  house or a manufactured home. They don't vary with age, so tornado odds
+  don't either.
 - Earthquake: the Hazus Earthquake Model v6.1 fragility curves in equivalent
   peak ground acceleration, by building type and seismic design level, with
   the design level from year built and state following the Hazus guidance.
@@ -80,7 +82,7 @@ SCENARIOS: dict[str, dict] = {
             ("ef3", "EF3", 150), ("ef4", "EF4", 183), ("ef5", "EF5", 215),
         ],
         "default": "ef2",
-        "note": "if the tornado's path crosses the building (most buildings in a square are not in it); Hazus hurricane curves, likely too low for tornadoes",
+        "note": "if the tornado's path crosses the building (most buildings in a square are not in it); the EF scale doesn't tell houses apart by age",
     },
     "earthquake": {
         "name": "Earthquake",
@@ -113,8 +115,8 @@ MEASURED = {"surge": "hurricane", "wildfire": "wildfire"}
 # which scenario a square opens on, by the disaster picked in the menu
 OPEN_ON = {"hurricane": "hurricane", "wildfire": "wildfire", "flood": "flood", "earthquake": "earthquake", "tornado": "tornado"}
 SOURCES = {
-    "hurricane": "FEMA Hazus Hurricane Model v5.1 building damage curves (via the NHERI SimCenter Damage and Loss Model Library), with roof details assumed from each era's building rules",
-    "tornado": "FEMA Hazus Hurricane Model v5.1 building damage curves at tornado wind speeds (Hazus has no tornado model, so likely too low)",
+    "hurricane": "FEMA Hazus Hurricane Model v5.1 building damage curves (via the NHERI SimCenter Damage and Loss Model Library), with roof details from the SimCenter rulesets by year built and the ASCE 7 design wind speed here",
+    "tornado": "the Enhanced Fujita scale's damage indicators for houses and manufactured homes (NWS Storm Prediction Center)",
     "earthquake": "FEMA Hazus Earthquake Model v6.1 building damage curves (via the NHERI SimCenter Damage and Loss Model Library), shaking converted with USGS ShakeMap (Worden et al., 2012)",
     "flood": "first-floor heights of surveyed Cedar Key buildings (DesignSafe PRJ-6245) and FEMA Hazus Flood FIA depth-damage curves",
 }
@@ -148,34 +150,160 @@ def _phi(x: float) -> float:
 # ---------------------------------------------------------------- wind (Hazus hurricane)
 
 WIND_MATERIAL = {"wood frame": "wood", "masonry": "masonry", "concrete": "concrete", "steel": "steel", "manufactured (mobile) home": "manufactured"}
+ASCE_WIND = "https://gis.asce.org/arcgis/rest/services/ASCE/wind2010_A/ImageServer/identify"
+NOW_YEAR = 2026  # the rulesets treat garages on homes under 30 years old as standard
 
 
-def wind_era(year: int | None, state: str | None, material: str = "wood") -> str:
-    if material in ("concrete", "steel"):
-        return "any"
-    if not year:
-        return "unknown"
-    if material == "manufactured":  # HUD standards, 1976 and 1994
-        return "phud" if year < 1976 else "hud76" if year < 1994 else "hud94_2" if state == "FL" else "hud94_1"
-    if state == "FL":  # post-Andrew changes (1994), Florida Building Code (2002)
-        return "old" if year < 1994 else "mid" if year < 2002 else "modern_fl"
-    return "old" if year < 2000 else "modern"  # International Residential Code era
+@lru_cache(maxsize=256)
+def design_wind(lon: float, lat: float) -> float | None:
+    """ASCE 7-10 Risk Category II ultimate design wind speed (mph) at a
+    place, from ASCE's own hazard map service; None where it has no value
+    (offshore, or the service is down)."""
+    import requests
+
+    try:
+        r = requests.get(ASCE_WIND, params={
+            "geometry": json.dumps({"x": lon, "y": lat, "spatialReference": {"wkid": 4326}}),
+            "geometryType": "esriGeometryPoint", "returnGeometry": "false", "f": "json"}, timeout=20)
+        v = r.json().get("value")
+        return round(float(v)) if v not in (None, "NoData") else None
+    except Exception:  # noqa: BLE001 - without it the rulesets average over speeds
+        return None
 
 
-def wind_key(b: dict, state: str | None) -> str:
+def _code_speed(year: int, v: float) -> float:
+    """The design wind speed in the terms of the code in force: from 2016
+    (IRC 2015) codes use ASCE 7-10 ultimate speeds; earlier codes used ASCE
+    7-05 basic speeds, about V_ult x sqrt(0.6) (ASCE 7-10, section C26.5.1).
+    The rulesets' thresholds before 2016 are in those older terms."""
+    return v if year >= 2016 else v * math.sqrt(0.6)
+
+
+def _hpr(year: int, v: float) -> bool:
+    """Hurricane-prone region (IRC 2015 from 2016, earlier IRC before)."""
+    return _code_speed(year, v) > (115 if year >= 2016 else 90)
+
+
+def _wbd(year: int, v: float, flood_zone: str | None) -> bool:
+    """Wind-borne debris region: within the hurricane-prone region, a coastal
+    flood zone with a high design speed, or a higher design speed anywhere."""
+    near, anywhere = (130, 140) if year >= 2016 else (110, 120)
+    coastal = flood_zone == "coastal" or (flood_zone or "").upper().startswith(("A", "V"))
+    c = _code_speed(year, v)
+    return _hpr(year, v) and ((coastal and c >= near) or c >= anywhere)
+
+
+def _either(p: float, yes, no) -> list[tuple]:
+    return [(yes, p), (no, 1 - p)] if 0 < p < 1 else [(yes if p >= 1 else no, 1.0)]
+
+
+def wind_configs(mat: str, year: int, stories: int, v: float, flood_zone: str | None, terrain: str) -> list[tuple[str, float]]:
+    """The Hazus wind models a building may be, with weights, by the NHERI
+    SimCenter asset representation rulesets (WSF: Lake Charles testbed;
+    MSF and MH: Atlantic County testbed, github.com/NHERI-SimCenter/
+    AssetRepresentationRulesets). Their coin flips become weights; facts
+    Landfall can't see take the rulesets' defaults (garage unknown, deck
+    sheathing unknown, wood-truss roof on masonry), and roof shape is half
+    gable, half hip."""
+    h = "2" if stories >= 2 else "1"
+    wbd = _wbd(year, v, flood_zone)
+    c = _code_speed(year, v)
+    out: list[tuple[str, float]] = []
+    if mat == "manufactured":
+        if year <= 1994:
+            tag = "PHUD" if year <= 1976 else "76HUD"
+            for sh, p1 in _either(0.45 if wbd else 0.0, 1, 0):
+                for td, p2 in _either(0.45, 1, 0):
+                    out.append((f"MH.{tag}.{sh}.{td}.{terrain}", p1 * p2))
+        else:  # HUD wind zone by design speed (an approximation of the HUD zone map)
+            zone = "III" if v >= 150 else "II" if v >= 130 else "I"
+            out.append((f"MH.94HUD{zone}.{int(c >= 100)}.{int(c >= 70)}.{terrain}", 1.0))
+        return out
+    shutter_p = (1.0 if wbd else 0.0) if year > 2000 else (0.45 if wbd else 0.0)
+    rda = ("8s" if c > (130 if year >= 2016 else 100) else "8d")
+    for shape in ("gab", "hip"):
+        if mat == "masonry":
+            rwc = "strap" if _hpr(year, v) else "tnail"
+            for sh, p1 in _either(shutter_p if year < 2000 else (1.0 if wbd else 0.0), 1, 0):
+                for swr, p2 in _either(0.6, 1, 0):
+                    out.append((f"M.SF.{h}.{shape}.{rwc}.trs.{rda}.{sh}.{swr}.no.1.null.{terrain}", 0.5 * p1 * p2))
+            continue
+        swr_p = 0.6 if year > 2000 else 0.0
+        deck = rda if year > 2000 else "6d"
+        rwc = ("strap" if _hpr(year, v) else "tnail") if year > 2015 else ("strap" if c > 110 else "tnail") if year > 1992 else "tnail"
+        # garage unknown: the ruleset assigns a standard garage, which Hazus ties to no shutters
+        for swr, p2 in _either(swr_p, 1, 0):
+            out.append((f"W.SF.{h}.{shape}.{swr}.{deck}.{rwc}.std.0.{terrain}", 0.5 * p2))
+    return out
+
+
+def wind_key(b: dict, state: str | None) -> tuple:
     mat = WIND_MATERIAL.get(b.get("material") or "", "wood")  # unknown walls: wood frame, the most common
-    st = b.get("stories")
-    h = "2" if mat in ("wood", "masonry") and st and st >= 2 else "1"
-    land = "light trees" if (b.get("green") or "").startswith("mostly trees") else "suburban"
-    return f"{mat}|{h}|{wind_era(b.get('year_built'), state, mat)}|{land}"
+    land = "70" if (b.get("green") or "").startswith("mostly trees") else "35"
+    y = b.get("year_built")
+    # the rulesets only look at which side of these years a building falls
+    y = None if not y else next((cut for cut in (1976, 1992, 1994, 2000, 2015) if y <= cut), 2016)
+    fz = "coastal" if (b.get("flood_zone") or "").upper().startswith(("A", "V")) else None
+    return (mat, y, min(int(b.get("stories") or 1), 2), b.get("v_ult"), fz, land)
+
+
+@lru_cache(maxsize=4096)
+def _wind_odds(key: tuple) -> tuple[tuple[float, ...], tuple[float, ...]]:
+    """Chance of damage state 2+ and 3+ at each stored gust speed."""
+    mat, year, stories, v, fz, land = key
+    t = _table("hazus_wind.json")
+    models = t["models"]
+    if mat in ("concrete", "steel"):
+        m = models[f"{mat}|{'light trees' if land == '70' else 'suburban'}"]
+        return tuple(m[0]), tuple(m[1])
+    years = [year] if year else [1960, 1990, 2010]  # unknown: an even mix of eras
+    speeds = [v] if v else [110, 130, 150]  # unknown design wind: an even mix
+    acc = [[0.0] * len(t["speeds_mph"]) for _ in range(2)]
+    total = 0.0
+    for y in years:
+        for vv in speeds:
+            for mid, w in wind_configs(mat, y, stories, vv, fz, land):
+                m = models.get(mid)
+                if m is None:
+                    continue
+                total += w
+                for k in range(2):
+                    for i, p in enumerate(m[k]):
+                        acc[k][i] += w * p
+    return tuple(x / total for x in acc[0]), tuple(x / total for x in acc[1])
 
 
 def wind(gust: float, b: dict, state: str | None) -> tuple[float, float]:
-    t = _table("hazus_wind.json")
-    c, xs = t["curves"][wind_key(b, state)], t["speeds_mph"]
+    xs = _table("hazus_wind.json")["speeds_mph"]
+    d, s = _wind_odds(wind_key(b, state))
     i = min(max(bisect.bisect_right(xs, gust) - 1, 0), len(xs) - 2)
     f = min(max((gust - xs[i]) / (xs[i + 1] - xs[i]), 0.0), 1.0)
-    return tuple(c[k][i] + f * (c[k][i + 1] - c[k][i]) for k in ("damaged", "severe"))
+    return d[i] + f * (d[i + 1] - d[i]), s[i] + f * (s[i + 1] - s[i])
+
+
+# ---------------------------------------------------------------- tornado (Enhanced Fujita scale)
+
+# Wind speeds for degrees of damage in the Enhanced Fujita scale's damage
+# indicators (NWS Storm Prediction Center; Texas Tech, 2006): expected, lower
+# and upper bound, mph. Damaged = roof deck uplift and over 20% of the roof
+# cover gone (houses) or sliding off the piers (manufactured homes); severe =
+# large sections of the roof structure removed / roof and walls destroyed.
+EF_DAMAGE = {
+    "house": {"damaged": (97, 81, 116), "severe": (122, 104, 142)},  # DI 2, one- and two-family residences
+    "manufactured": {"damaged": (87, 72, 103), "severe": (105, 87, 123)},  # DI 3, single-wide manufactured homes
+}
+
+
+def tornado(gust: float, b: dict) -> tuple[float, float]:
+    """Treats each bound as the 5th and 95th percentile of the speed that
+    does that damage."""
+    kind = "manufactured" if "manufactured" in (b.get("material") or "") else "house"
+
+    def p(exp: float, lo: float, hi: float) -> float:
+        beta = math.log(hi / lo) / (2 * 1.645)
+        return _phi(math.log(gust / exp) / beta)
+
+    return p(*EF_DAMAGE[kind]["damaged"]), p(*EF_DAMAGE[kind]["severe"])
 
 
 # ---------------------------------------------------------------- earthquake (Hazus)
@@ -230,8 +358,10 @@ def flood(depth_ft: float, b: dict) -> tuple[float, float]:
 
 def modeled(t: str, intensity: float, b: dict, state: str | None) -> tuple[float, float]:
     """(chance damaged, chance badly damaged) for one building in one scenario."""
-    if t in ("hurricane", "tornado"):
+    if t == "hurricane":
         return wind(intensity, b, state)
+    if t == "tornado":
+        return tornado(intensity, b)
     if t == "earthquake":
         return quake(intensity, b, state)
     if t == "flood":
@@ -244,7 +374,7 @@ def class_key(b: dict, state: str | None) -> tuple:
     from .structures import code_era
 
     y = b.get("year_built")
-    return (wind_key(b, state), quake_model(b, state), b.get("foundation"), (b.get("stories") or 1) >= 2,
+    return (wind_key(b, state), "manufactured" in (b.get("material") or ""), quake_model(b, state), b.get("foundation"), (b.get("stories") or 1) >= 2,
             b.get("material"), b.get("green"), code_era(y, state, "hurricane"), code_era(y, state, "wildfire"))
 
 
