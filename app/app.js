@@ -620,22 +620,76 @@ function groupColor(v) {
   if (!(v in groupColorMap)) groupColorMap[v] = GROUP_COLORS[Object.keys(groupColorMap).length % (GROUP_COLORS.length - 1)];
   return groupColorMap[v];
 }
+// what a building is used for, from the structure inventory's occupancy code
+const USE = { RES1: "House", RES2: "Manufactured home", RES3: "Apartment building", RES4: "Hotel", RES5: "Group housing", RES6: "Nursing home", COM: "Business", IND: "Industrial building", AGR: "Farm building", REL: "Church", GOV: "Government building", EDU: "School" };
+function useOf(p) {
+  const o = (p.occupancy || "").toUpperCase();
+  return USE[o.slice(0, 4)] || USE[o.slice(0, 3)] || "Building";
+}
+// a hover card for one building: what could happen, then what we know about it
+function buildingCard(p) {
+  const { t, c, type, cat } = scenarioParts();
+  const bar = (v) => `<span class="tbar"><i style="width:${Math.max(2, Math.round((v || 0) * 100))}%;background:${chanceColor(v)}"></i></span>`;
+  const row = (label, v, extra = "") => `<div class="trow"><span>${label}</span>${bar(v)}<b>${pctOf(v)}</b>${extra}</div>`;
+  const m = p.measured;
+  const stories = p.stories ? `${p.stories} stor${p.stories === 1 ? "y" : "ies"}` : "";
+  const title = [p.material ? p.material.charAt(0).toUpperCase() + p.material.slice(1) : null, useOf(p).toLowerCase()].filter(Boolean).join(" ");
+  const ft = t === "hurricane" && p.surge ? p.surge[["cat1", "cat2", "cat3", "cat4", "cat5"].indexOf(c)] : 0;
+  let odds;
+  if (p.chance_damaged == null) odds = `<p class="tnote">No odds for this disaster here yet.</p>`;
+  else {
+    odds = row("Damage", p.chance_damaged) + (p.chance_severe != null ? row("Bad damage", p.chance_severe) : "")
+      + (p.flooded != null && (p.flooded > 0 || ft) ? row("Water inside", p.flooded) : "");
+    if (m) odds += `<p class="tnote">From ${m[2]} similar buildings in a past disaster; the true chance is likely between ${Math.round(m[0] * 100)}% and ${Math.round(m[1] * 100)}%.</p>`;
+    if (p.repair != null) odds += `<div class="tmoney">Likely repairs: <b>${p.value ? money(p.dollars) : pctOf(p.repair) + " of its value"}</b>${p.value ? ` <span>of ${money(p.value)} to rebuild</span>` : ""}</div>`;
+    if (ft) odds += `<p class="tnote">Storm surge here: about ${ft} ft of water above the ground (worst case for this strength).</p>`;
+    if (p.flooded != null && p.flooded > 0) odds += `<p class="tnote">Water inside is flooding; it isn't counted as damage.</p>`;
+  }
+  const fact = (k, v, src) => (v ? `<div class="tfact"><span>${k}</span><b>${esc(String(v))}${src ? ` <em>· ${esc(src)}</em>` : ""}</b></div>` : "");
+  return `<div class="tcard">
+    <div class="ttitle">${esc(title)}${stories ? ` · ${stories}` : ""}</div>
+    <div class="tsub">If ${cat ? `a ${esc(cat.label)} ${esc(type.name.toLowerCase().replace(/ \(.*\)/, ""))}` : "this disaster"} hits</div>
+    ${odds}
+    <div class="tsub">About this building</div>
+    ${fact("Built", p.year_built ? `${p.year_built}` : "year unknown", (p.year_source || "").replace("structure inventory (median year for the block)", "block's median year"))}
+    ${fact("Building rules", p.code_era)}
+    ${fact("Walls", p.material || "unknown")}
+    ${fact("Foundation", p.foundation || "unknown")}
+    ${fact("Around it", p.green)}
+    ${fact("Flood zone", p.flood_zone && p.flood_zone !== "NaN" ? p.flood_zone : "")}
+    <p class="tnote">Walls, foundation and flood zone from the national structure inventory; green around it from today's satellite photo.</p>
+  </div>`;
+}
+// the building card floats above everything (map controls and panels too),
+// beside the pointer, flipped and clamped so it always stays on screen
+const bldCard = document.createElement("div");
+bldCard.className = "bldcard";
+bldCard.hidden = true;
+document.body.appendChild(bldCard);
+function placeCard(ev) {
+  if (bldCard.hidden || !ev) return;
+  const w = bldCard.offsetWidth, h = bldCard.offsetHeight, gap = 16;
+  let x = ev.clientX + gap, y = ev.clientY - h / 2;
+  if (x + w > window.innerWidth - 8) x = ev.clientX - gap - w;
+  y = Math.max(8, Math.min(y, window.innerHeight - h - 8));
+  bldCard.style.left = `${Math.max(8, x)}px`;
+  bldCard.style.top = `${y}px`;
+}
+function showCard(html, ev) { bldCard.innerHTML = html; bldCard.hidden = false; placeCard(ev); }
+function hideCard() { bldCard.hidden = true; }
 function showDots() {
+  hideCard();
   groupPoints.clearLayers();
   if (sqView !== "buildings") return;
   for (const sq of Object.values(SQ)) for (const p of sq.ev.points) {
     const f = factorsOf(p);
-    const m = p.measured;
-    const range = m ? ` (${Math.round(m[0] * 100)} to ${Math.round(m[1] * 100)}%, from ${m[2]} look-alikes)` : "";
-    L.circleMarker([p.lat, p.lon], { renderer: pointRenderer, radius: 4.5, weight: 1, color: "#111", fillOpacity: 0.95, fillColor: isMetric(sqColorBy) ? chanceColor(metricOf(p)) : groupColor(f[sqColorBy]) })
-      .bindTooltip(`<b>${p.chance_damaged == null ? "No odds" : `${pctOf(p.chance_damaged)} chance of damage`}</b>${esc(range)}${p.chance_severe != null ? `<br>${pctOf(p.chance_severe)} chance of bad damage or worse` : ""}${p.repair != null ? `<br>Expected repairs: ${p.value ? `${money(p.dollars)} of ${money(p.value)} to rebuild` : `${pctOf(p.repair)} of its value (no value on record)`}` : ""}${surgeNote(p)}<br>${esc(f.age)}<br>${esc(f.construction)}<br>${esc(f.green)}${p.year_built ? `<br>Built ${p.year_built} (${esc(p.year_source || "")})` : ""}`)
-      .addTo(groupPoints);
+    const fill = isMetric(sqColorBy) ? chanceColor(metricOf(p)) : groupColor(f[sqColorBy]);
+    const dot = L.circleMarker([p.lat, p.lon], { renderer: pointRenderer, radius: 4.5, weight: 1, color: "#111", fillOpacity: 0.95, fillColor: fill });
+    dot.on("mouseover", (e) => { dot.setStyle({ radius: 8, weight: 2.5, color: "#fff" }).bringToFront(); showCard(buildingCard(p), e.originalEvent); });
+    dot.on("mousemove", (e) => placeCard(e.originalEvent));
+    dot.on("mouseout", () => { dot.setStyle({ radius: 4.5, weight: 1, color: "#111" }); hideCard(); });
+    dot.addTo(groupPoints);
   }
-}
-function surgeNote(p) {
-  const { t, c } = scenarioParts();
-  const ft = t === "hurricane" && p.surge ? p.surge[["cat1", "cat2", "cat3", "cat4", "cat5"].indexOf(c)] : 0;
-  return (ft ? `<br>Storm surge here (worst case): about ${ft} ft above the ground` : "") + (p.flooded ? `<br>${pctOf(p.flooded)} chance of water inside (flooding, not counted as damage)` : "");
 }
 function sqPanel() {
   const panel = $("groups");

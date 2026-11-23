@@ -260,3 +260,20 @@ ul.sources { padding-left: 18px; }
 .sqtable tbody tr { cursor: default; }
 .sqtable tbody th { font-weight: 400; text-align: left; }
 .gradlab { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted, #666); }
+
+/* hover card for one building in "Each building" view */
+.bldcard { position: fixed; z-index: 3000; pointer-events: none; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--ink); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); }
+.bldcard[hidden] { display: none; }
+.tcard { width: 260px; padding: 10px 12px; display: grid; gap: 5px; font: 12px/1.35 var(--sans, system-ui, sans-serif); }
+.ttitle { font-weight: 700; font-size: 13px; }
+.tsub { margin-top: 4px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+.trow { display: grid; grid-template-columns: 78px 1fr 58px; gap: 8px; align-items: center; }
+.trow b { text-align: right; font-variant-numeric: tabular-nums; }
+.tbar { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.tbar i { display: block; height: 100%; border-radius: 4px; }
+.tmoney b { color: var(--accent); font-size: 13px; }
+.tmoney span, .tnote { color: var(--muted); }
+.tnote { margin: 0; font-size: 11px; }
+.tfact { display: grid; grid-template-columns: 78px 1fr; gap: 0 8px; }
+.tfact span { color: var(--muted); }
+.tfact em { font-style: normal; font-weight: 400; font-size: 10.5px; color: var(--muted); }
