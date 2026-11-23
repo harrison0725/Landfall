@@ -194,6 +194,8 @@ def buildings_in(ring: list[list[float]], kind: str = "hurricane") -> dict:
             "stories": p.get("num_story"),
             "occupancy": p.get("occtype"),
             "flood_zone": p.get("firmzone"),
+            # what it would cost to rebuild the structure (not the land or contents), national structure inventory
+            "value": round(p["val_struct"]) if p.get("val_struct") else None,
         })
     for r, g in zip(rows, green_at([(r["lon"], r["lat"]) for r in rows])):
         r["green"] = g
@@ -337,6 +339,7 @@ def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", 
             loss = [classes[m["cls"]]["odds"][sid][2] for m in ms]
             if loss and loss[0] is not None:
                 g["expected_repair_cost_share_of_value"] = round(sum(loss) / len(loss), 3)
+                g["expected_repair_dollars"] = round(sum(x * (m.get("value") or 0) for x, m in zip(loss, ms)))
             wet = [classes[m["cls"]]["odds"][sid][3] for m in ms]
             if wet and wet[0] is not None:
                 g["chance_water_above_first_floor"] = round(sum(wet) / len(wet), 2)
@@ -381,6 +384,9 @@ def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", 
         "groups": rows_sorted,
         "by_category": hazards.by_category(rows, classes, index, t),
         "site": place,
+        "expected_repair_dollars": (round(sum((classes[i]["odds"][sid][2] or 0) * (r.get("value") or 0) for r, i in zip(rows, index)))
+                                    if index and classes[index[0]]["odds"][sid][2] is not None else None),
+        "rebuild_value_dollars": round(sum(r.get("value") or 0 for r in rows)),
         "expected_repair_cost_share_of_value": (round(sum(classes[i]["odds"][sid][2] for i in index) / len(index), 3)
                                                 if index and classes[index[0]]["odds"][sid][2] is not None else None),
         "history": source,
@@ -388,7 +394,8 @@ def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", 
         "severe_means": h["severe"] if h else "badly damaged or destroyed",
         "points": rows,
         "classes": classes,
-        "notes": notes + "Year built is from the county tax roll in Florida, elsewhere the block's median year. Material and foundation come from "
+        "notes": notes + "Repair dollars are the expected repair share times each building's rebuild cost from the national structure inventory "
+        "(the structure only, not land or belongings). Year built is from the county tax roll in Florida, elsewhere the block's median year. Material and foundation come from "
         "the national structure inventory, which is often wrong (unknown material is treated as wood frame). Green is from today's satellite photo. "
         "The map can switch to any disaster type and category without asking again.",
     }

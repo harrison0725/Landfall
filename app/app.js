@@ -472,7 +472,7 @@ map.on("click", (e) => {
 });
 
 const GROUP_COLORS = ["#4cc9f0", "#f72585", "#b5e48c", "#ffd166", "#9b5de5", "#06d6a0", "#ff8c42", "#f1f1f1"];
-const FACTOR_NAME = { chance: "Chance of damage", severe: "Chance of bad damage", loss: "Repair cost (% of value)", flooded: "Chance of water inside", all: "All three", age: "Age (building rules)", construction: "How it was built", green: "Green around it" };
+const FACTOR_NAME = { chance: "Damage", severe: "Bad damage", loss: "Repair cost", flooded: "Water inside", all: "All three", age: "Age (building rules)", construction: "How it was built", green: "Green around it" };
 // Each square estimated stays on the map, split into 16 blocks of about a
 // quarter mile, each shaded by its buildings' average chance of damage, so
 // blocks and squares can be compared at a glance. The panel lists every
@@ -553,11 +553,28 @@ function applyScenario(sq) {
   const ev = sq.ev;
   for (const p of ev.points) {
     const c = ev.classes && ev.classes[p.cls];
-    if (c && sqScenario && c.odds[sqScenario]) { p.chance_damaged = c.odds[sqScenario][0]; p.chance_severe = c.odds[sqScenario][1]; p.repair = c.odds[sqScenario][2] ?? null; p.flooded = c.odds[sqScenario][3] ?? null; p.measured = (c.measured || {})[sqScenario] || null; }
+    if (c && sqScenario && c.odds[sqScenario]) { p.chance_damaged = c.odds[sqScenario][0]; p.chance_severe = c.odds[sqScenario][1]; p.repair = c.odds[sqScenario][2] ?? null; p.flooded = c.odds[sqScenario][3] ?? null; p.dollars = p.repair != null && p.value ? p.repair * p.value : null; p.measured = (c.measured || {})[sqScenario] || null; }
   }
   for (const b of sq.cells) { b.avg = avgOf(b.pts); b.val = avgOf(b.pts, METRIC[sqColorBy] || "chance_damaged"); }
-  sq.stats = { buildings: ev.points.length, avg: avgOf(ev.points), severe: avgOf(ev.points, "chance_severe"), repair: avgOf(ev.points, "repair") };
-  sq.title.setContent(`${esc(ev.square)}: ${sq.stats.buildings.toLocaleString()} buildings${sq.stats.avg == null ? "" : `, ${Math.round(sq.stats.avg * 100)}% average chance`}`);
+  const sum = (pts, f) => pts.reduce((t, p) => t + (f(p) || 0), 0);
+  for (const b of sq.cells) b.dollars = sum(b.pts, (p) => p.dollars);
+  const hasRepair = ev.points.some((p) => p.repair != null);
+  sq.stats = {
+    buildings: ev.points.length, avg: avgOf(ev.points), severe: avgOf(ev.points, "chance_severe"), repair: avgOf(ev.points, "repair"),
+    damaged: sum(ev.points, (p) => p.chance_damaged), bad: sum(ev.points, (p) => p.chance_severe),
+    wet: ev.points.some((p) => p.flooded != null) ? sum(ev.points, (p) => p.flooded) : null,
+    dollars: hasRepair ? sum(ev.points, (p) => p.dollars) : null, value: sum(ev.points, (p) => p.value),
+    noValue: ev.points.filter((p) => !p.value).length,
+  };
+  sq.title.setContent(`${esc(ev.square)}: ${sq.stats.avg == null ? `${sq.stats.buildings.toLocaleString()} buildings` : `about ${Math.round(sq.stats.damaged).toLocaleString()} of ${sq.stats.buildings.toLocaleString()} damaged`}${sq.stats.dollars != null ? `, ${money(sq.stats.dollars)} repairs` : ""}`);
+}
+// $48.2M, $950K, $12K
+function money(v) {
+  if (v == null) return "–";
+  if (v >= 1e9) return `$${(v / 1e9).toFixed(1)}B`;
+  if (v >= 1e6) return `$${(v / 1e6).toFixed(v >= 1e7 ? 0 : 1)}M`;
+  if (v >= 1e3) return `$${Math.round(v / 1e3)}K`;
+  return `$${Math.round(v)}`;
 }
 const pct = (v) => (v == null ? "–" : Math.round(v * 100) + "%");
 function scenarioParts() {
@@ -574,7 +591,7 @@ function paintSquares() {
       const n = b.pts.length;
       if (isMetric(sqColorBy)) {
         color = chanceColor(b.val);
-        text = b.val == null ? "?" : `${Math.round(b.val * 100)}%`;
+        text = b.val == null ? "–" : sqColorBy === "loss" ? money(b.dollars) : `${Math.round(b.val * 100)}%`;
       } else {
         const [v, c] = mostCommon(b.pts.map((p) => factorsOf(p)[sqColorBy]));
         color = groupColor(v);
@@ -582,7 +599,8 @@ function paintSquares() {
       }
       const [top] = mostCommon(b.pts.map((p) => p.group));
       const br = avgOf(b.pts, "repair"), bs = avgOf(b.pts, "chance_severe");
-      tip = `<b>${n} building${n === 1 ? "" : "s"}</b>${b.avg == null ? "" : `, ${Math.round(b.avg * 100)}% average chance of damage`}${bs == null ? "" : `<br>${Math.round(bs * 100)}% chance of bad damage`}${br == null ? "" : `<br>Expected repairs: ${Math.round(br * 100)}% of building value`}<br>Most common: ${esc(top || "")}`;
+      const dmg = b.pts.reduce((t, p) => t + (p.chance_damaged || 0), 0);
+      tip = `<b>${n} building${n === 1 ? "" : "s"} in this block</b>${b.avg == null ? "" : `<br>About ${Math.round(dmg)} likely damaged (${Math.round(b.avg * 100)}% average chance)`}${bs == null ? "" : `<br>${Math.round(bs * 100)}% chance of bad damage or worse`}${br == null ? "" : `<br>Expected repairs: ${money(b.dollars)} (${Math.round(br * 100)}% of what it would cost to rebuild)`}<br>Most common: ${esc(top || "")}`;
       const blocks = sqView === "blocks";
       b.rect.setStyle({ fillColor: color, fillOpacity: blocks ? 0.5 : 0, weight: blocks ? 1 : 0.6, opacity: blocks ? 1 : 0.5 });
       const re = b.rect.getElement && b.rect.getElement();
@@ -608,7 +626,7 @@ function showDots() {
     const m = p.measured;
     const range = m ? ` (${Math.round(m[0] * 100)} to ${Math.round(m[1] * 100)}%, from ${m[2]} look-alikes)` : "";
     L.circleMarker([p.lat, p.lon], { renderer: pointRenderer, radius: 4.5, weight: 1, color: "#111", fillOpacity: 0.95, fillColor: isMetric(sqColorBy) ? chanceColor(metricOf(p)) : groupColor(f[sqColorBy]) })
-      .bindTooltip(`<b>${p.chance_damaged == null ? "No odds" : `${Math.round(p.chance_damaged * 100)}% chance of damage`}</b>${esc(range)}${p.chance_severe != null ? `<br>${Math.round(p.chance_severe * 100)}% chance of bad damage or worse` : ""}${p.repair != null ? `<br>Expected repairs: ${Math.round(p.repair * 100)}% of its value` : ""}${surgeNote(p)}<br>${esc(f.age)}<br>${esc(f.construction)}<br>${esc(f.green)}${p.year_built ? `<br>Built ${p.year_built} (${esc(p.year_source || "")})` : ""}`)
+      .bindTooltip(`<b>${p.chance_damaged == null ? "No odds" : `${Math.round(p.chance_damaged * 100)}% chance of damage`}</b>${esc(range)}${p.chance_severe != null ? `<br>${Math.round(p.chance_severe * 100)}% chance of bad damage or worse` : ""}${p.repair != null ? `<br>Expected repairs: ${p.value ? `${money(p.dollars)} of ${money(p.value)} to rebuild` : `${Math.round(p.repair * 100)}% of its value (no value on record)`}` : ""}${surgeNote(p)}<br>${esc(f.age)}<br>${esc(f.construction)}<br>${esc(f.green)}${p.year_built ? `<br>Built ${p.year_built} (${esc(p.year_source || "")})` : ""}`)
       .addTo(groupPoints);
   }
 }
@@ -617,53 +635,92 @@ function surgeNote(p) {
   const ft = t === "hurricane" && p.surge ? p.surge[["cat1", "cat2", "cat3", "cat4", "cat5"].indexOf(c)] : 0;
   return (ft ? `<br>Storm surge here (worst case): about ${ft} ft above the ground` : "") + (p.flooded ? `<br>${Math.round(p.flooded * 100)}% chance of water inside (flooding, not counted as damage)` : "");
 }
-// how hard a hurricane of the chosen category hits each square
-function siteNote() {
-  const { t, c, cat } = scenarioParts();
-  if (t !== "hurricane") return "";
-  const lines = Object.entries(SQ).filter(([, sq]) => sq.ev.site).map(([k, sq]) => {
-    const st = sq.ev.site;
-    const wet = sq.ev.points.filter((p) => p.surge && p.surge[["cat1", "cat2", "cat3", "cat4", "cat5"].indexOf(c)]).length;
-    const inside = Math.round(sq.ev.points.reduce((a, p) => a + (p.flooded || 0), 0));
-    const surge = !st.surge_checked ? "too far inland for storm surge" : `${wet.toLocaleString()} building${wet === 1 ? "" : "s"} in the worst-case surge, about ${inside.toLocaleString()} with water inside`;
-    return `${esc(k)}: ${st.coast_miles} mi from the coast, about ${st.gusts[c]} mph gusts here (${cat ? cat.intensity : "?"} at landfall${st.gusts_slow && st.gusts_slow[c] !== st.gusts_fast[c] ? `; ${st.gusts_slow[c]} to ${st.gusts_fast[c]} mph if the storm moves at ${st.slow_mph} to ${st.fast_mph} mph instead of ${st.forward_mph}` : ""}); ${surge}.`;
-  });
-  return lines.length ? `<p class="gnote">${lines.join("<br>")}</p>` : "";
-}
 function sqPanel() {
   const panel = $("groups");
   panel.hidden = false;
-  const rows = Object.entries(SQ).map(([k, sq]) => `<tr data-sq="${esc(k)}"><td>${esc(k)}</td><td>${sq.stats.buildings.toLocaleString()}</td><td>${pct(sq.stats.avg)}</td><td>${pct(sq.stats.severe)}</td><td>${pct(sq.stats.repair)}</td></tr>`).join("");
-  let legend;
-  if (isMetric(sqColorBy)) {
-    const what = { chance: "chance of damage", severe: "chance of bad damage or worse", loss: "expected repair cost (share of building value)", flooded: "chance of water above the first floor (flooding, not counted as damage)" }[sqColorBy];
-    legend = `<div class="gradbar" style="background:linear-gradient(to right, ${[0, 0.2, 0.4, 0.6, 0.8, 1].map(chanceColor).join(",")})"></div><div class="gradlab"><span>0%</span><span>50%</span><span>100%</span></div><p class="gnote">${sqView === "blocks" ? `Average ${what} of the buildings in each block.` : `Each building's own ${what}. Hover a dot for its details.`}${sqColorBy === "loss" ? " Tornadoes and the measured scenarios have no repair cost data (shown gray)." : sqColorBy === "flooded" ? " Only hurricanes and floods have it (others gray)." : ""}</p>`;
-  } else {
-    const vals = new Set();
-    for (const sq of Object.values(SQ)) for (const p of sq.ev.points) vals.add(factorsOf(p)[sqColorBy]);
-    legend = [...vals].map((v) => `<div class="grow"><i style="background:${groupColor(v)}"></i><span>${esc(v)}</span></div>`).join("") + `<p class="gnote">${sqView === "blocks" ? "Each block shows its most common kind and what share of its buildings that is." : "Each building colored by its own kind."}</p>`;
-  }
   const { t: curT, c: curC, type: curType, cat: curCat } = scenarioParts();
   const typeOpts = sqMenu.map((x) => `<option value="${esc(x.type)}"${x.type === curT ? " selected" : ""}>${esc(x.name)}</option>`).join("");
   const catOpts = curType ? curType.categories.map((x) => `<option value="${esc(x.id)}"${x.id === curC ? " selected" : ""}>${esc(x.label)}</option>`).join("") : "";
   const measured = curType && curType.categories.every((x) => x.intensity == null);
   const where = !curType ? "past disasters" : measured ? `look-alike buildings inspected after a real disaster (${esc(curType.note.replace(/^measured: /, ""))})` : esc(curType.source || "damage curves");
+  const strength = curType && !measured && curCat && curCat.intensity != null && curCat.unit !== "ft of water above the ground" ? `About ${curCat.intensity} ${esc(curCat.unit)}${curT === "hurricane" ? " at landfall" : ""}. ` : "";
+  const sqs = Object.entries(SQ);
+  const n0 = (v) => Math.round(v).toLocaleString();
+  // one card per square: plain counts and dollars
+  const card = ([k, sq]) => {
+    const st = sq.stats;
+    const share = (v) => (st.buildings ? ` <em>${Math.round((100 * v) / st.buildings)}%</em>` : "");
+    const lines = st.avg == null
+      ? `<p class="gnote">No odds for this disaster here yet.</p>`
+      : `<div class="sqfacts">
+          <div class="fact"><b>${n0(st.damaged)}</b><span>likely damaged${share(st.damaged)}</span></div>
+          <div class="fact"><b>${n0(st.bad)}</b><span>badly damaged or destroyed${share(st.bad)}</span></div>
+          <div class="fact money"><b>${money(st.dollars)}</b><span>${st.dollars == null ? "repair cost not available for this disaster" : `expected repairs, out of ${money(st.value)} to rebuild everything`}</span></div>
+          ${st.wet != null ? `<div class="fact"><b>${n0(st.wet)}</b><span>likely water inside${share(st.wet)} <small>(flooding, not counted as damage)</small></span></div>` : ""}
+        </div>`;
+    const ss = sq.ev.site;
+    const ci = ["cat1", "cat2", "cat3", "cat4", "cat5"].indexOf(curC);
+    const wet = ss && curT === "hurricane" ? sq.ev.points.map((p) => (p.surge ? p.surge[ci] : 0)).filter((x) => x).sort((a, b) => a - b) : [];
+    const here = ss && curT === "hurricane"
+      ? `<p class="gnote">${ss.coast_miles} mi from the coast: about ${ss.gusts[curC]} mph gusts here${ss.gusts_slow && ss.gusts_slow[curC] !== ss.gusts_fast[curC] ? ` (${ss.gusts_slow[curC]} to ${ss.gusts_fast[curC]} mph, depending on how fast the storm moves)` : ""}. ${!ss.surge_checked ? "Too far inland for storm surge." : wet.length ? `Storm surge reaches ${wet.length.toLocaleString()} buildings, typically ${wet[wet.length >> 1]} ft deep (worst case).` : "No storm surge here."}</p>`
+      : "";
+    return `<div class="sqcard${k === sqShown ? " on" : ""}" data-sq="${esc(k)}" role="button" tabindex="0" title="Zoom to this square">
+      <div class="sqhead"><b>${esc(k)}</b><span>${st.buildings.toLocaleString()} buildings</span></div>${lines}${here}</div>`;
+  };
+  // side by side, when there is more than one square
+  let compare = "";
+  if (sqs.length > 1) {
+    const rowsDef = [["Likely damaged", (st) => st.damaged, (v) => n0(v)], ["Badly damaged", (st) => st.bad, (v) => n0(v)], ["Repairs", (st) => st.dollars, money], ["Water inside", (st) => st.wet, (v) => n0(v)], ["Share damaged", (st) => st.avg, pct]];
+    const body = rowsDef.map(([name, f, fmt]) => {
+      const vals = sqs.map(([, sq]) => f(sq.stats));
+      if (vals.every((v) => v == null)) return "";
+      const top = Math.max(...vals.filter((v) => v != null));
+      return `<tr><th>${name}</th>${vals.map((v) => `<td${v != null && v === top && vals.filter((x) => x != null).length > 1 ? ' class="top"' : ""}>${v == null ? "–" : fmt(v)}</td>`).join("")}</tr>`;
+    }).join("");
+    compare = `<details class="sqblock" open><summary>Side by side</summary><table class="sqtable"><thead><tr><th></th>${sqs.map(([k]) => `<th>${esc(k)}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table><p class="gnote">Bold is the hardest-hit square.</p></details>`;
+  }
+  // map colors
+  const chips = (list) => list.map((b) => `<button type="button" data-by="${b}" class="${b === sqColorBy ? "on" : ""}" aria-pressed="${b === sqColorBy}">${FACTOR_NAME[b]}</button>`).join("");
+  let legend;
+  if (isMetric(sqColorBy)) {
+    const what = { chance: "chance of damage", severe: "chance of bad damage or worse", loss: "expected repair cost, as a share of what it would cost to rebuild", flooded: "chance of water inside (flooding, not counted as damage)" }[sqColorBy];
+    const unit = sqView === "blocks" ? (sqColorBy === "loss" ? "Each block shows its expected repair dollars and is shaded by the share of its rebuild cost." : `Each block shows the average ${what} of its buildings; the small number is how many buildings it has.`) : `Each dot is one building, colored by its ${what}. Hover a dot for details.`;
+    legend = `<div class="gradbar" style="background:linear-gradient(to right, ${[0, 0.2, 0.4, 0.6, 0.8, 1].map(chanceColor).join(",")})"></div><div class="gradlab"><span>0% · unlikely</span><span>50%</span><span>100% · certain</span></div><p class="gnote">${unit}${sqColorBy === "loss" && !sqs.some(([, sq]) => sq.stats.dollars != null) ? " This disaster has no repair cost data (gray)." : ""}</p>`;
+  } else {
+    const vals = new Set();
+    for (const [, sq] of sqs) for (const p of sq.ev.points) vals.add(factorsOf(p)[sqColorBy]);
+    legend = [...vals].map((v) => `<div class="grow"><i style="background:${groupColor(v)}"></i><span>${esc(v)}</span></div>`).join("") + `<p class="gnote">${sqView === "blocks" ? "Each block shows its most common kind and what share of its buildings that is." : "Each building colored by its own kind."}</p>`;
+  }
+  const noValue = sqs.reduce((t, [, sq]) => t + sq.stats.noValue, 0);
   panel.innerHTML = `<div class="ghead"><b>Compare squares</b><button type="button" class="linkish" id="sq-clear">Clear all</button></div>
-    ${sqMenu.length ? `<div class="sqscen"><label>Disaster <select id="sq-type">${typeOpts}</select></label><label>Category <select id="sq-cat"${curType && curType.categories.length < 2 ? " disabled" : ""}>${catOpts}</select></label></div>${curType && !measured ? `<p class="gnote">${curCat && curCat.intensity != null && curCat.unit !== "ft of water above the ground" ? `About ${curCat.intensity} ${esc(curCat.unit)}${curT === "hurricane" ? " at landfall" : ""}. ` : ""}${esc(curType.note.charAt(0).toUpperCase() + curType.note.slice(1))}.</p>` : ""}` : ""}
-    <table class="sqtable"><thead><tr><th>Square</th><th>Buildings</th><th title="Average chance of damage">Damaged</th><th title="Average chance of bad damage or worse">Bad damage</th><th title="Expected repair cost as a share of building value">Repairs</th></tr></thead><tbody>${rows}</tbody></table>${siteNote()}
-    <div class="sqview" role="group" aria-label="Show">${[["blocks", "Blocks"], ["buildings", "Individual buildings"]].map(([v, t]) => `<button type="button" data-view="${v}" class="${v === sqView ? "on" : ""}" aria-pressed="${v === sqView}">${t}</button>`).join("")}</div>
-    <label>${sqView === "blocks" ? "Shade blocks by" : "Color buildings by"} <select id="sq-by">${["chance", "severe", "loss", "flooded", "age", "construction", "green"].map((b) => `<option value="${b}"${b === sqColorBy ? " selected" : ""}>${FACTOR_NAME[b]}</option>`).join("")}</select></label>
-    <div>${legend}</div>
-    <p class="gnote">Each square is split into 16 blocks of about a quarter mile; the number under each is its building count. Odds${curCat ? ` for ${esc(curType.name.toLowerCase())}, ${esc(curCat.label)},` : ""} come from ${where}; rough, not a forecast. Pick another square to add it here.</p>`;
+    <p class="gnote">What a disaster could do to the buildings in the squares you picked, from how and when they were built. Rough estimates, not a forecast. Pick another square on the map to add it.</p>
+    ${sqMenu.length ? `<section class="sqblock"><h4><span class="step">1</span>Pick a disaster</h4><div class="sqscen"><label>Type <select id="sq-type">${typeOpts}</select></label><label>Strength <select id="sq-cat"${curType && curType.categories.length < 2 ? " disabled" : ""}>${catOpts}</select></label></div>${curType ? `<p class="gnote">${strength}${esc(curType.note.charAt(0).toUpperCase() + curType.note.slice(1))}.</p>` : ""}</section>` : ""}
+    <section class="sqblock"><h4><span class="step">2</span>What to expect</h4>${sqs.map(card).join("")}</section>
+    ${compare}
+    <section class="sqblock"><h4><span class="step">3</span>Color the map by</h4>
+      <div class="chips" role="group" aria-label="Odds">${chips(["chance", "severe", "loss", "flooded"])}</div>
+      <div class="chips quiet" role="group" aria-label="Building facts">${chips(["age", "construction", "green"])}</div>
+      <div class="sqview" role="group" aria-label="Show">${[["blocks", "Blocks"], ["buildings", "Each building"]].map(([v, t]) => `<button type="button" data-view="${v}" class="${v === sqView ? "on" : ""}" aria-pressed="${v === sqView}">${t}</button>`).join("")}</div>
+      <div>${legend}</div>
+    </section>
+    <details class="sqblock"><summary>Where these numbers come from</summary>
+      <p class="gnote">Odds${curCat ? ` for ${esc(curType.name.toLowerCase())}, ${esc(curCat.label)},` : ""} come from ${where}.</p>
+      <p class="gnote">"Likely damaged" adds up each building's chance, so 0.5 + 0.5 counts as one building. Repair dollars are each building's expected repair share times its rebuild cost from the national structure inventory (the structure only, not land or belongings)${noValue ? `; ${noValue.toLocaleString()} buildings have no cost on record and count as $0` : ""}.</p>
+      <p class="gnote">Year built is from the county tax roll in Florida, elsewhere the block's median year. Material and foundation come from the national structure inventory, which is often wrong. Each square is split into 16 blocks of about a quarter mile.</p>
+    </details>`;
   const rescore = () => { paintSquares(); showDots(); sqPanel(); };
   if ($("sq-type")) {
     $("sq-type").addEventListener("change", (e) => { const ty = sqMenu.find((x) => x.type === e.target.value); sqScenario = `${ty.type}:${ty.default}`; rescore(); });
     $("sq-cat").addEventListener("change", (e) => { sqScenario = `${curT}:${e.target.value}`; rescore(); });
   }
-  $("sq-by").addEventListener("change", (e) => { sqColorBy = e.target.value; paintSquares(); showDots(); sqPanel(); });
-  panel.querySelectorAll("button[data-view]").forEach((bt) => bt.addEventListener("click", () => { sqView = bt.dataset.view; paintSquares(); showDots(); sqPanel(); }));
+  panel.querySelectorAll("button[data-by]").forEach((bt) => bt.addEventListener("click", () => { sqColorBy = bt.dataset.by; rescore(); }));
+  panel.querySelectorAll("button[data-view]").forEach((bt) => bt.addEventListener("click", () => { sqView = bt.dataset.view; rescore(); }));
   $("sq-clear").addEventListener("click", () => { for (const k of Object.keys(SQ)) delete SQ[k]; squaresLayer.clearLayers(); groupPoints.clearLayers(); $("groups").hidden = true; });
-  panel.querySelectorAll("tr[data-sq]").forEach((tr) => tr.addEventListener("click", () => { const k = tr.dataset.sq; sqShown = k; sqPanel(); map.fitBounds(SQ[k].bounds, { padding: [30, 30], maxZoom: 17 }); }));
+  const zoomTo = (k) => { sqShown = k; sqPanel(); map.fitBounds(SQ[k].bounds, { padding: [30, 30], maxZoom: 17 }); };
+  panel.querySelectorAll(".sqcard[data-sq]").forEach((el) => {
+    el.addEventListener("click", () => zoomTo(el.dataset.sq));
+    el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); zoomTo(el.dataset.sq); } });
+  });
 }
 const groupPoints = L.layerGroup().addTo(map);
 const pointRenderer = L.canvas({ padding: 0.3 });

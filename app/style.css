@@ -231,4 +231,29 @@ ul.sources { padding-left: 18px; }
 .sqview button + button { border-left: 1px solid var(--line); }
 .sqview button.on { background: #ff9f1c; color: #111; font-weight: 600; }
 .gradbar { height: 10px; border-radius: 4px; }
+/* compare squares: numbered steps, one card per square */
+.groups { width: min(340px, calc(100% - 24px)); max-height: calc(100% - 240px); }
+.sqblock { border-top: 1px solid var(--line); padding-top: 8px; display: grid; gap: 6px; }
+.sqblock h4 { margin: 0; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+.sqblock .step { width: 18px; height: 18px; border-radius: 50%; background: #ff9f1c; color: #111; display: inline-grid; place-items: center; font-size: 0.72rem; font-weight: 700; }
+.sqblock summary { cursor: pointer; font-weight: 600; font-size: 0.82rem; }
+.sqcard { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; cursor: pointer; display: grid; gap: 6px; background: var(--soft); }
+.sqcard:hover, .sqcard:focus-visible { border-color: #ff9f1c; outline: none; }
+.sqcard.on { border-color: #ff9f1c; box-shadow: inset 3px 0 0 #ff9f1c; }
+.sqhead { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.sqhead span { color: var(--muted); font-size: 0.75rem; }
+.sqfacts { display: grid; gap: 4px; }
+.fact { display: grid; grid-template-columns: 64px 1fr; gap: 8px; align-items: baseline; }
+.fact b { font-size: 1.05rem; text-align: right; font-variant-numeric: tabular-nums; }
+.fact.money b { color: var(--accent); }
+.fact span { line-height: 1.3; }
+.fact em { font-style: normal; color: var(--muted); }
+.fact small { color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chips button { padding: 4px 9px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: inherit; font: inherit; font-size: 0.78rem; cursor: pointer; }
+.chips button.on { background: #ff9f1c; border-color: #ff9f1c; color: #111; font-weight: 600; }
+.chips.quiet button:not(.on) { color: var(--muted); }
+.sqtable td.top { font-weight: 700; }
+.sqtable tbody tr { cursor: default; }
+.sqtable tbody th { font-weight: 400; text-align: left; }
 .gradlab { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted, #666); }
