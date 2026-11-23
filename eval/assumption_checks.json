@@ -1,0 +1,664 @@
+{
+ "speed": {
+  "table": {
+   "cat1|0|8": {
+    "gust": 94,
+    "old": 0.004,
+    "new": 0.001
+   },
+   "cat1|0|12": {
+    "gust": 94,
+    "old": 0.004,
+    "new": 0.001
+   },
+   "cat1|0|18": {
+    "gust": 94,
+    "old": 0.004,
+    "new": 0.001
+   },
+   "cat1|0|24": {
+    "gust": 94,
+    "old": 0.004,
+    "new": 0.001
+   },
+   "cat1|10|8": {
+    "gust": 87,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat1|10|12": {
+    "gust": 89,
+    "old": 0.001,
+    "new": 0.0
+   },
+   "cat1|10|18": {
+    "gust": 91,
+    "old": 0.001,
+    "new": 0.0
+   },
+   "cat1|10|24": {
+    "gust": 91,
+    "old": 0.001,
+    "new": 0.0
+   },
+   "cat1|25|8": {
+    "gust": 79,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat1|25|12": {
+    "gust": 84,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat1|25|18": {
+    "gust": 87,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat1|25|24": {
+    "gust": 88,
+    "old": 0.001,
+    "new": 0.0
+   },
+   "cat1|50|8": {
+    "gust": 68,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat1|50|12": {
+    "gust": 75,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat1|50|18": {
+    "gust": 81,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat1|50|24": {
+    "gust": 84,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat1|100|8": {
+    "gust": 55,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat1|100|12": {
+    "gust": 63,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat1|100|18": {
+    "gust": 71,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat1|100|24": {
+    "gust": 75,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat2|0|8": {
+    "gust": 113,
+    "old": 0.092,
+    "new": 0.032
+   },
+   "cat2|0|12": {
+    "gust": 113,
+    "old": 0.092,
+    "new": 0.032
+   },
+   "cat2|0|18": {
+    "gust": 113,
+    "old": 0.092,
+    "new": 0.032
+   },
+   "cat2|0|24": {
+    "gust": 113,
+    "old": 0.092,
+    "new": 0.032
+   },
+   "cat2|10|8": {
+    "gust": 105,
+    "old": 0.031,
+    "new": 0.008
+   },
+   "cat2|10|12": {
+    "gust": 108,
+    "old": 0.044,
+    "new": 0.011
+   },
+   "cat2|10|18": {
+    "gust": 109,
+    "old": 0.049,
+    "new": 0.013
+   },
+   "cat2|10|24": {
+    "gust": 110,
+    "old": 0.053,
+    "new": 0.014
+   },
+   "cat2|25|8": {
+    "gust": 94,
+    "old": 0.004,
+    "new": 0.001
+   },
+   "cat2|25|12": {
+    "gust": 100,
+    "old": 0.008,
+    "new": 0.001
+   },
+   "cat2|25|18": {
+    "gust": 104,
+    "old": 0.026,
+    "new": 0.006
+   },
+   "cat2|25|24": {
+    "gust": 106,
+    "old": 0.035,
+    "new": 0.009
+   },
+   "cat2|50|8": {
+    "gust": 79,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat2|50|12": {
+    "gust": 89,
+    "old": 0.001,
+    "new": 0.0
+   },
+   "cat2|50|18": {
+    "gust": 96,
+    "old": 0.005,
+    "new": 0.001
+   },
+   "cat2|50|24": {
+    "gust": 100,
+    "old": 0.008,
+    "new": 0.001
+   },
+   "cat2|100|8": {
+    "gust": 61,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat2|100|12": {
+    "gust": 72,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat2|100|18": {
+    "gust": 82,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat2|100|24": {
+    "gust": 89,
+    "old": 0.001,
+    "new": 0.0
+   },
+   "cat3|0|8": {
+    "gust": 131,
+    "old": 0.448,
+    "new": 0.285
+   },
+   "cat3|0|12": {
+    "gust": 131,
+    "old": 0.448,
+    "new": 0.285
+   },
+   "cat3|0|18": {
+    "gust": 131,
+    "old": 0.448,
+    "new": 0.285
+   },
+   "cat3|0|24": {
+    "gust": 131,
+    "old": 0.448,
+    "new": 0.285
+   },
+   "cat3|10|8": {
+    "gust": 121,
+    "old": 0.207,
+    "new": 0.093
+   },
+   "cat3|10|12": {
+    "gust": 124,
+    "old": 0.279,
+    "new": 0.148
+   },
+   "cat3|10|18": {
+    "gust": 127,
+    "old": 0.35,
+    "new": 0.203
+   },
+   "cat3|10|24": {
+    "gust": 128,
+    "old": 0.374,
+    "new": 0.221
+   },
+   "cat3|25|8": {
+    "gust": 107,
+    "old": 0.04,
+    "new": 0.01
+   },
+   "cat3|25|12": {
+    "gust": 115,
+    "old": 0.118,
+    "new": 0.044
+   },
+   "cat3|25|18": {
+    "gust": 120,
+    "old": 0.183,
+    "new": 0.074
+   },
+   "cat3|25|24": {
+    "gust": 123,
+    "old": 0.255,
+    "new": 0.13
+   },
+   "cat3|50|8": {
+    "gust": 89,
+    "old": 0.001,
+    "new": 0.0
+   },
+   "cat3|50|12": {
+    "gust": 101,
+    "old": 0.013,
+    "new": 0.003
+   },
+   "cat3|50|18": {
+    "gust": 110,
+    "old": 0.053,
+    "new": 0.014
+   },
+   "cat3|50|24": {
+    "gust": 115,
+    "old": 0.118,
+    "new": 0.044
+   },
+   "cat3|100|8": {
+    "gust": 66,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat3|100|12": {
+    "gust": 80,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat3|100|18": {
+    "gust": 93,
+    "old": 0.003,
+    "new": 0.0
+   },
+   "cat3|100|24": {
+    "gust": 101,
+    "old": 0.013,
+    "new": 0.003
+   },
+   "cat4|0|8": {
+    "gust": 157,
+    "old": 0.936,
+    "new": 0.867
+   },
+   "cat4|0|12": {
+    "gust": 157,
+    "old": 0.936,
+    "new": 0.867
+   },
+   "cat4|0|18": {
+    "gust": 157,
+    "old": 0.936,
+    "new": 0.867
+   },
+   "cat4|0|24": {
+    "gust": 157,
+    "old": 0.936,
+    "new": 0.867
+   },
+   "cat4|10|8": {
+    "gust": 143,
+    "old": 0.743,
+    "new": 0.592
+   },
+   "cat4|10|12": {
+    "gust": 148,
+    "old": 0.835,
+    "new": 0.704
+   },
+   "cat4|10|18": {
+    "gust": 150,
+    "old": 0.872,
+    "new": 0.748
+   },
+   "cat4|10|24": {
+    "gust": 152,
+    "old": 0.89,
+    "new": 0.782
+   },
+   "cat4|25|8": {
+    "gust": 126,
+    "old": 0.326,
+    "new": 0.185
+   },
+   "cat4|25|12": {
+    "gust": 135,
+    "old": 0.555,
+    "new": 0.391
+   },
+   "cat4|25|18": {
+    "gust": 142,
+    "old": 0.725,
+    "new": 0.57
+   },
+   "cat4|25|24": {
+    "gust": 145,
+    "old": 0.78,
+    "new": 0.637
+   },
+   "cat4|50|8": {
+    "gust": 103,
+    "old": 0.022,
+    "new": 0.005
+   },
+   "cat4|50|12": {
+    "gust": 118,
+    "old": 0.157,
+    "new": 0.062
+   },
+   "cat4|50|18": {
+    "gust": 129,
+    "old": 0.398,
+    "new": 0.24
+   },
+   "cat4|50|24": {
+    "gust": 135,
+    "old": 0.555,
+    "new": 0.391
+   },
+   "cat4|100|8": {
+    "gust": 74,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat4|100|12": {
+    "gust": 91,
+    "old": 0.001,
+    "new": 0.0
+   },
+   "cat4|100|18": {
+    "gust": 108,
+    "old": 0.044,
+    "new": 0.011
+   },
+   "cat4|100|24": {
+    "gust": 118,
+    "old": 0.157,
+    "new": 0.062
+   },
+   "cat5|0|8": {
+    "gust": 181,
+    "old": 0.999,
+    "new": 0.994
+   },
+   "cat5|0|12": {
+    "gust": 181,
+    "old": 0.999,
+    "new": 0.994
+   },
+   "cat5|0|18": {
+    "gust": 181,
+    "old": 0.999,
+    "new": 0.994
+   },
+   "cat5|0|24": {
+    "gust": 181,
+    "old": 0.999,
+    "new": 0.994
+   },
+   "cat5|10|8": {
+    "gust": 165,
+    "old": 0.977,
+    "new": 0.943
+   },
+   "cat5|10|12": {
+    "gust": 170,
+    "old": 0.99,
+    "new": 0.968
+   },
+   "cat5|10|18": {
+    "gust": 174,
+    "old": 0.994,
+    "new": 0.978
+   },
+   "cat5|10|24": {
+    "gust": 175,
+    "old": 0.995,
+    "new": 0.981
+   },
+   "cat5|25|8": {
+    "gust": 144,
+    "old": 0.761,
+    "new": 0.614
+   },
+   "cat5|25|12": {
+    "gust": 155,
+    "old": 0.917,
+    "new": 0.833
+   },
+   "cat5|25|18": {
+    "gust": 163,
+    "old": 0.971,
+    "new": 0.932
+   },
+   "cat5|25|24": {
+    "gust": 167,
+    "old": 0.982,
+    "new": 0.953
+   },
+   "cat5|50|8": {
+    "gust": 117,
+    "old": 0.144,
+    "new": 0.056
+   },
+   "cat5|50|12": {
+    "gust": 134,
+    "old": 0.528,
+    "new": 0.365
+   },
+   "cat5|50|18": {
+    "gust": 148,
+    "old": 0.835,
+    "new": 0.704
+   },
+   "cat5|50|24": {
+    "gust": 155,
+    "old": 0.917,
+    "new": 0.833
+   },
+   "cat5|100|8": {
+    "gust": 81,
+    "old": 0.0,
+    "new": 0.0
+   },
+   "cat5|100|12": {
+    "gust": 102,
+    "old": 0.017,
+    "new": 0.004
+   },
+   "cat5|100|18": {
+    "gust": 122,
+    "old": 0.231,
+    "new": 0.111
+   },
+   "cat5|100|24": {
+    "gust": 134,
+    "old": 0.528,
+    "new": 0.365
+   }
+  },
+  "largest_swing_old_wood": [
+   0.773,
+   "cat5",
+   50
+  ]
+ },
+ "helene": {
+  "groups": {
+   "all": {
+    "buildings": 771,
+    "predicted_damaged": 133,
+    "observed_damaged": 139,
+    "predicted_severe": 78,
+    "observed_severe": 82,
+    "predicted_water_inside": 318,
+    "observed_water_inside": 312,
+    "brier": 0.136,
+    "brier_same_rate_for_all": 0.148
+   },
+   "zone: A or other": {
+    "buildings": 551,
+    "predicted_damaged": 63,
+    "observed_damaged": 73,
+    "predicted_severe": 31,
+    "observed_severe": 36,
+    "predicted_water_inside": 219,
+    "observed_water_inside": 223,
+    "brier": 0.107,
+    "brier_same_rate_for_all": 0.115
+   },
+   "zone: V": {
+    "buildings": 220,
+    "predicted_damaged": 70,
+    "observed_damaged": 66,
+    "predicted_severe": 47,
+    "observed_severe": 46,
+    "predicted_water_inside": 99,
+    "observed_water_inside": 89,
+    "brier": 0.208,
+    "brier_same_rate_for_all": 0.21
+   },
+   "foundation: crawlspace": {
+    "buildings": 131,
+    "predicted_damaged": 17,
+    "observed_damaged": 25,
+    "predicted_severe": 9,
+    "observed_severe": 18,
+    "predicted_water_inside": 50,
+    "observed_water_inside": 55,
+    "brier": 0.136,
+    "brier_same_rate_for_all": 0.154
+   },
+   "foundation: piers": {
+    "buildings": 149,
+    "predicted_damaged": 22,
+    "observed_damaged": 37,
+    "predicted_severe": 12,
+    "observed_severe": 21,
+    "predicted_water_inside": 45,
+    "observed_water_inside": 39,
+    "brier": 0.181,
+    "brier_same_rate_for_all": 0.187
+   },
+   "foundation: piles": {
+    "buildings": 185,
+    "predicted_damaged": 29,
+    "observed_damaged": 21,
+    "predicted_severe": 17,
+    "observed_severe": 10,
+    "predicted_water_inside": 27,
+    "observed_water_inside": 21,
+    "brier": 0.103,
+    "brier_same_rate_for_all": 0.101
+   },
+   "foundation: slab": {
+    "buildings": 249,
+    "predicted_damaged": 55,
+    "observed_damaged": 48,
+    "predicted_severe": 34,
+    "observed_severe": 30,
+    "predicted_water_inside": 164,
+    "observed_water_inside": 165,
+    "brier": 0.135,
+    "brier_same_rate_for_all": 0.156
+   },
+   "foundation: solid wall": {
+    "buildings": 36,
+    "predicted_damaged": 6,
+    "observed_damaged": 5,
+    "predicted_severe": 3,
+    "observed_severe": 2,
+    "predicted_water_inside": 22,
+    "observed_water_inside": 22,
+    "brier": 0.115,
+    "brier_same_rate_for_all": 0.12
+   },
+   "era: Florida Building Code (2002 or later)": {
+    "buildings": 85,
+    "predicted_damaged": 12,
+    "observed_damaged": 13,
+    "predicted_severe": 7,
+    "observed_severe": 7,
+    "predicted_water_inside": 23,
+    "observed_water_inside": 8,
+    "brier": 0.103,
+    "brier_same_rate_for_all": 0.13
+   },
+   "era: after flood-elevation rules, before the Florida Building Code (1975-2001)": {
+    "buildings": 285,
+    "predicted_damaged": 47,
+    "observed_damaged": 34,
+    "predicted_severe": 27,
+    "observed_severe": 14,
+    "predicted_water_inside": 84,
+    "observed_water_inside": 67,
+    "brier": 0.11,
+    "brier_same_rate_for_all": 0.105
+   },
+   "era: before flood-elevation rules (pre-1975)": {
+    "buildings": 312,
+    "predicted_damaged": 49,
+    "observed_damaged": 48,
+    "predicted_severe": 27,
+    "observed_severe": 24,
+    "predicted_water_inside": 160,
+    "observed_water_inside": 179,
+    "brier": 0.121,
+    "brier_same_rate_for_all": 0.13
+   },
+   "era: year built unknown (dropped from the tax roll)": {
+    "buildings": 89,
+    "predicted_damaged": 25,
+    "observed_damaged": 44,
+    "predicted_severe": 16,
+    "observed_severe": 37,
+    "predicted_water_inside": 50,
+    "observed_water_inside": 58,
+    "brier": 0.303,
+    "brier_same_rate_for_all": 0.25
+   }
+  },
+  "vs_nhc_maps": {
+   "Category 1": {
+    "median_ft_worst_case_minus_helene": 0.0
+   },
+   "Category 2": {
+    "median_ft_worst_case_minus_helene": 3.0
+   },
+   "Category 3": {
+    "median_ft_worst_case_minus_helene": 7.0
+   },
+   "Category 4": {
+    "median_ft_worst_case_minus_helene": 13.2
+   },
+   "Category 5": {
+    "median_ft_worst_case_minus_helene": 13.9
+   }
+  }
+ }
+}

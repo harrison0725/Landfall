@@ -146,8 +146,68 @@ def flood_table() -> dict:
                 if not name.endswith("_v"):
                     half[name] = next(x for x, p in zip(xs, ps) if p >= 0.5)
     return {"first_floor_ft": floors, "half_value_ft_above_floor": half, "fia_structure_loss": curves,
+            "water_damage": water_damage(),
+            "source_water_damage": "Hurricane Helene (2024) at Cedar Key, DesignSafe PRJ-6245: share of surveyed buildings with wall/floor or "
+                                   "foundation damage state 2+ (damaged) and 4+ (severe), by water above the first floor (surface 10.9 ft NAVD88 "
+                                   "from USGS high-water marks and NOAA gauge 8727520), V zones apart from the rest",
             "source_floors": "first-floor heights of surveyed Cedar Key buildings, DesignSafe PRJ-6245 (Helene, 2024)",
             "source_half": "Hazus Flood v6.1 FIA depth-damage curves for single-family homes (A zone, no basement)"}
+
+
+HELENE_SURFACE_FT = 10.9  # NAVD88: USGS high-water mark 10.96 ft and NOAA Cedar Key gauge peak 10.84 ft
+WATER_BINS = [(-99.0, 0.0), (0.0, 3.0), (3.0, 6.0), (6.0, 99.0)]  # ft of water above the first floor
+
+
+def _increasing(rates: list[float], ns: list[int]) -> list[float]:
+    """Pool neighbours that go down (pool-adjacent-violators), so deeper
+    water never gives lower odds just from a small sample."""
+    blocks = [[r * n, n, 1] for r, n in zip(rates, ns)]
+    i = 0
+    while i < len(blocks) - 1:
+        a, b = blocks[i], blocks[i + 1]
+        if a[0] / max(a[1], 1) > b[0] / max(b[1], 1):
+            blocks[i:i + 2] = [[a[0] + b[0], a[1] + b[1], a[2] + b[2]]]
+            i = max(i - 1, 0)
+        else:
+            i += 1
+    out = []
+    for tot, n, k in blocks:
+        out += [round(tot / max(n, 1), 3)] * k
+    return out
+
+
+def water_damage(rows: list[dict] | None = None) -> dict:
+    """Measured damage to the building itself (walls, floors, foundation;
+    not the roof, not water inside) by how deep the water was above the
+    first floor, from the Helene survey at Cedar Key."""
+    import math
+
+    def num(x):
+        try:
+            v = float(x)
+            return None if math.isnan(v) else v
+        except (TypeError, ValueError):
+            return None
+
+    out = {}
+    if rows is None:
+        rows = list(csv.DictReader((ROOT / "eval" / "field" / "cedar_key_buildings.csv").open()))
+    for zone in ("V", "other"):
+        ns, dmg, sev = [], [], []
+        for lo, hi in WATER_BINS:
+            hits = []
+            for r in rows:
+                ffe = num(r["FFE_NAVD88_ft"])
+                ds = [v for v in (num(r["DS_walls/floors"]), num(r["DS_foundation"])) if v is not None]
+                if ffe is None or not ds or ((r["firmzone"] or "").upper().startswith("V")) != (zone == "V"):
+                    continue
+                if lo <= HELENE_SURFACE_FT - ffe < hi:
+                    hits.append(max(ds))
+            ns.append(len(hits))
+            dmg.append(sum(d >= 2 for d in hits) / max(len(hits), 1))
+            sev.append(sum(d >= 4 for d in hits) / max(len(hits), 1))
+        out[zone] = {"bins_ft": WATER_BINS, "buildings": ns, "damaged": _increasing(dmg, ns), "severe": _increasing(sev, ns)}
+    return out
 
 
 def coast_table() -> dict:

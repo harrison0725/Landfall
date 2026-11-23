@@ -59,9 +59,10 @@ def test_odds_rise_with_category():
         d = [hazards.modeled(t, x, wood_old(), "FL")[0] for x in xs]
         assert d == sorted(d) and d[0] < d[-1], t
         for x in xs:
-            dmg, sev, loss = hazards.modeled(t, x, wood_old(), "FL")
+            dmg, sev, loss, wet = hazards.modeled(t, x, wood_old(), "FL")
             assert 0 <= sev <= dmg <= 1
             assert (loss is None) == (t == "tornado") and (loss is None or 0 <= loss <= 1)
+            assert (wet is None) == (t in ("tornado", "earthquake"))
 
 
 def test_newer_rules_and_elevation_help():
@@ -116,12 +117,12 @@ def test_wind_weakens_inland_kaplan_demaria():
 def test_surge_and_wind_combine_by_the_hazus_table():
     b = wood_old()
     wd, ws, wl = hazards.wind(126, b, "FL")
-    d, s, loss = hazards.hurricane(126, 3, b, "FL")  # 6 to 9 ft of water on a slab house
-    assert d > wd and s >= ws and loss > wl
+    d, s, loss, wet = hazards.hurricane(126, 7, b, "FL")  # 7 ft of water at a slab house
+    assert d > wd and s >= ws and loss > wl and wet > 0.5
     assert hazards.combine_losses(0.0, 0.3) == 0.3 and hazards.combine_losses(1.0, 0.5) == 1.0
     # Hazus table: 0.2 wind + 0.2 flood is 0.36, not 0.4
     assert abs(hazards.combine_losses(0.2, 0.2) - 0.36) < 1e-9
-    assert hazards.hurricane(126, 0, b, "FL") == (wd, ws, wl)
+    assert hazards.hurricane(126, 0, b, "FL") == (wd, ws, wl, 0.0)
 
 
 def test_expected_repair_cost_follows_hazus():
@@ -130,3 +131,24 @@ def test_expected_repair_cost_follows_hazus():
     # flood: FIA one-story curve, 14 ft above a slab floor is half the value
     assert abs(hazards.flood_at([14.0], wood_old() | {"foundation": "slab"})[2] - 0.5) < 0.06
     assert hazards.flood(1, wood_old() | {"foundation": "piles"})[2] < hazards.flood(1, wood_old())[2]
+
+
+def test_flooding_alone_is_not_damage():
+    """Water inside is reported as flooding; damage is the walls, floors and
+    foundation, at the rates measured after Helene (Harry, Nov 18)."""
+    t = hazards._table("flood_floors.json")["water_damage"]
+    assert t["other"]["damaged"] == sorted(t["other"]["damaged"]) and t["V"]["damaged"][-1] > t["other"]["damaged"][-1]
+    d, s, loss, wet = hazards.flood(3, wood_old())  # slab house, 3 ft of water: inside
+    assert wet > 0.9 and d < 0.5 and loss > 0.1
+    beach = wood_old() | {"flood_zone": "VE", "foundation": "piles"}
+    assert hazards.flood_at([6], beach, surge=True)[0] > hazards.flood_at([6], beach)[0]  # waves
+
+
+def test_surge_depth_in_feet_stays_inside_the_live_band():
+    # Cedar Key downtown: the national data has a depth in whole feet
+    raw = hazards.surge_depth("cat3", -83.035, 29.135, None)
+    assert raw > 0
+    assert 9 <= hazards.surge_depth("cat3", -83.035, 29.135, 4) <= 40
+    assert hazards.surge_depth("cat3", -83.035, 29.135, 1) in (1, 2, 3)
+    assert hazards.surge_depth("cat3", -83.035, 29.135, 0) == 0
+    assert hazards.surge_depth("cat1", -82.33, 29.65, None) == 0  # Gainesville

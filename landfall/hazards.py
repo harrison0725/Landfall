@@ -16,9 +16,11 @@ Where each number comes from (tables built by scripts/build_hazards.py):
   (J. Applied Meteorology 34: 2499-2512), from the square's distance to the
   nearest Gulf or Atlantic coast (Natural Earth coastline).
 - Hurricane storm surge: NOAA National Hurricane Center Storm Surge Risk
-  Maps (SLOSH "maximum of maximums" at high tide, one map per category), the
-  water depth above the ground at each building, combined with wind by the
-  Hazus hurricane rule for wind plus flood losses.
+  Maps (SLOSH "maximum of maximums" at high tide, one map per category): the
+  live 10 m map for whether and in which band water reaches each building,
+  and the national data (history/surge, built by scripts/build_surge.py) for
+  its depth in feet. Combined with wind by the Hazus hurricane rule for
+  wind plus flood losses.
 - Tornado: the Enhanced Fujita scale's own damage indicators (NWS Storm
   Prediction Center): the wind speeds that do each degree of damage to a
   house or a manufactured home. They don't vary with age, so tornado odds
@@ -28,19 +30,20 @@ Where each number comes from (tables built by scripts/build_hazards.py):
   the design level from year built and state following the Hazus guidance.
   Shaking levels are turned into ground acceleration with the USGS ShakeMap
   conversion (Worden et al., 2012).
-- Flood: the share of surveyed Cedar Key buildings (DesignSafe PRJ-6245)
-  with the same foundation whose first floor is below the water, and for
-  "severe", the depth above the floor where the Hazus Flood FIA depth-damage
-  curve reaches half the building's value (FEMA's substantial damage).
+- Water (flood and surge): first-floor heights of surveyed Cedar Key
+  buildings (DesignSafe PRJ-6245) with the same foundation give how deep the
+  water is above the floor; damage to the building itself (walls, floors,
+  foundation) at that depth is the share measured in the same survey after
+  Helene, V zones apart. Flooding (water above the first floor) is given as
+  its own number and is not counted as damage.
 - Expected repair cost: Hazus Hurricane v5.1 loss functions (wind), the
   Hazus Earthquake v6.1 repair cost ratios for houses (LF.RES1) and the
   Hazus Flood FIA depth-damage curves (A or V zone). The EF scale has no
   repair costs, so tornadoes have none.
 
 "Damaged" means Hazus damage state 2 (moderate) or worse; "severe" means
-damage state 3 or worse (wind) or extensive or worse (earthquake). For
-floods, "damaged" means water above the first floor (flooding, which
-Landfall states beside the damage category rather than counting it).
+damage state 3 or worse (wind) or extensive or worse (earthquake); for
+water, survey damage state 2+ and 4+ of walls, floors or foundation.
 """
 
 from __future__ import annotations
@@ -50,6 +53,8 @@ import json
 import math
 from functools import lru_cache
 from pathlib import Path
+
+import numpy as np
 
 HISTORY = Path(__file__).resolve().parent / "history"
 
@@ -112,7 +117,7 @@ SCENARIOS: dict[str, dict] = {
         "unit": "ft of water above the ground",
         "categories": [("ft1", "1 ft of water", 1.0), ("ft3", "3 ft", 3.0), ("ft6", "6 ft", 6.0), ("ft10", "10 ft", 10.0)],
         "default": "ft3",
-        "note": "damaged here means water above the first floor (flooding); severe means repairs over half the building's value",
+        "note": "damage means harm to the walls, floors or foundation as measured after Helene (A zones, where waves were small); water inside is shown as flooding, not damage",
     },
     "wildfire": {
         "name": "Wildfire",
@@ -127,10 +132,10 @@ MEASURED = {"surge": "hurricane", "wildfire": "wildfire"}
 # which scenario a square opens on, by the disaster picked in the menu
 OPEN_ON = {"hurricane": "hurricane", "wildfire": "wildfire", "flood": "flood", "earthquake": "earthquake", "tornado": "tornado"}
 SOURCES = {
-    "hurricane": "FEMA Hazus Hurricane Model v5.1 building damage and repair cost curves (via the NHERI SimCenter Damage and Loss Model Library), with roof details from the SimCenter rulesets by year built and the ASCE 7 design wind speed here; wind weakening inland from Kaplan and DeMaria (1995); storm surge from the National Hurricane Center's Storm Surge Risk Maps, with Hazus's rule for combining wind and flood losses",
+    "hurricane": "FEMA Hazus Hurricane Model v5.1 building damage and repair cost curves (via the NHERI SimCenter Damage and Loss Model Library), with roof details from the SimCenter rulesets by year built and the ASCE 7 design wind speed here; wind weakening inland from Kaplan and DeMaria (1995); storm surge depth from the National Hurricane Center's Storm Surge Risk Maps, water damage measured after Helene (DesignSafe PRJ-6245), with Hazus's rule for combining wind and flood losses",
     "tornado": "the Enhanced Fujita scale's damage indicators for houses and manufactured homes (NWS Storm Prediction Center)",
     "earthquake": "FEMA Hazus Earthquake Model v6.1 building damage curves (via the NHERI SimCenter Damage and Loss Model Library), shaking converted with USGS ShakeMap (Worden et al., 2012)",
-    "flood": "first-floor heights of surveyed Cedar Key buildings (DesignSafe PRJ-6245) and FEMA Hazus Flood FIA depth-damage curves",
+    "flood": "first-floor heights and measured wall, floor and foundation damage of surveyed Cedar Key buildings after Helene (DesignSafe PRJ-6245), and FEMA Hazus Flood FIA depth-damage curves for repair cost",
     "earthquake_loss": "Hazus v6.1 repair cost ratios for houses",
 }
 
@@ -177,6 +182,7 @@ def _interp(xs: list[float], ps: list[float], x: float) -> float:
 # t hours after landfall. R is the drop from sea to land at the coast.
 KD_VB_KT, KD_R, KD_ALPHA = 26.7, 0.9, 0.095
 FORWARD_MPH = 12.0  # assumed forward speed of the storm over land (a typical US landfall)
+SLOW_MPH, FAST_MPH = 8.0, 24.0  # the range shown beside it
 MPH_PER_KT = 1.15078
 
 
@@ -262,12 +268,39 @@ def surge_bands(bbox: tuple[float, float, float, float], points: list[tuple[floa
     return [tuple(v) for v in zip(*per_cat)]
 
 
-def surge_depths(band: int) -> list[float]:
-    """Depths (ft above the ground) spread evenly over a band."""
+BAND_FT = {1: (1, 3), 2: (3, 6), 3: (6, 9), 4: (9, 40)}  # the map's bands, in the data's whole feet
+
+
+@lru_cache(maxsize=5)
+def _surge_data(cid: str):
+    p = HISTORY / "surge" / f"{cid}.npz"
+    return np.load(p) if p.exists() else None
+
+
+def surge_depth(cid: str, lon: float, lat: float, band: int | None) -> int:
+    """Water above the ground (whole ft) at a point in a Category 1 to 5
+    storm. band is the live 10 m map's band there (None if unread): it says
+    whether water reaches the building; the 160 m depth data says how deep,
+    kept inside that band."""
+    d = _surge_data(cid)
+    depth = 0
+    if d is not None:
+        res = float(d["res"][0])
+        key = f"t{math.floor(lon)}_{math.floor(lat)}"
+        if key in d.files:
+            a = d[key]
+            n = a.shape[0]
+            r = min(n - 1, int((math.floor(lat) + 1 - lat) / res))
+            c = min(n - 1, int((lon - math.floor(lon)) / res))
+            win = a[max(r - 1, 0):r + 2, max(c - 1, 0):c + 2]
+            win = win[(win > 0) & (win < 99)]  # 99: behind a levee
+            depth = int(a[r, c]) if 0 < a[r, c] < 99 else (int(win.max()) if band and win.size else 0)
+    if band is None:
+        return depth
     if not band:
-        return []
-    lo = 3.0 * (band - 1)
-    return [lo + 0.5, lo + 1.5, lo + 2.5]
+        return 0
+    lo, hi = BAND_FT[band]
+    return min(max(depth, lo), hi) if depth else (lo + hi) // 2 if band < 4 else 10
 
 
 def site(bbox: tuple[float, float, float, float]) -> dict:
@@ -279,7 +312,19 @@ def site(bbox: tuple[float, float, float, float]) -> dict:
     except Exception:  # noqa: BLE001
         mi = 0.0
     gusts = {cid: inland_gust(g, mi) for cid, _l, g in SCENARIOS["hurricane"]["categories"]}
-    return {"coast_miles": mi, "gusts": gusts, "forward_mph": FORWARD_MPH,
+    # the same storm moving slowly (8 mph, like Ian 2022) or fast (24 mph, like Helene 2024):
+    # inland this changes the odds a lot (eval/assumption_checks.md), so the panel shows it
+    global FORWARD_MPH
+    base = FORWARD_MPH
+    try:
+        FORWARD_MPH = SLOW_MPH
+        slow = {cid: inland_gust(g, mi) for cid, _l, g in SCENARIOS["hurricane"]["categories"]}
+        FORWARD_MPH = FAST_MPH
+        fast = {cid: inland_gust(g, mi) for cid, _l, g in SCENARIOS["hurricane"]["categories"]}
+    finally:
+        FORWARD_MPH = base
+    return {"coast_miles": mi, "gusts": gusts, "forward_mph": FORWARD_MPH, "gusts_slow": slow, "gusts_fast": fast,
+            "slow_mph": SLOW_MPH, "fast_mph": FAST_MPH,
             "surge_checked": mi <= SURGE_INLAND_MI}
 
 
@@ -426,17 +471,17 @@ def combine_losses(wind_loss: float, flood_loss: float) -> float:
     return ((1 - a) * (1 - c) * t[i][j] + a * (1 - c) * t[i + 1][j] + (1 - a) * c * t[i][j + 1] + a * c * t[i + 1][j + 1])
 
 
-def hurricane(gust: float, band: int, b: dict, state: str | None) -> tuple[float, float, float]:
-    """Wind and storm surge together. Damaged: wind damage state 2+ or
-    water above the first floor; severe: wind damage state 3+ or repairs
-    from water over half the value. Treated as independent, which is
-    roughly right because roofs fail from wind and floors from water."""
+def hurricane(gust: float, depth: float, b: dict, state: str | None) -> tuple[float, float, float, float]:
+    """Wind and storm surge together. Damaged: wind damage state 2+, or
+    walls, floors or foundation damaged by the water (as measured after
+    Helene); severe likewise. Treated as independent, which is roughly
+    right because roofs fail from wind and walls and foundations from water.
+    The last number is the chance of water above the first floor."""
     wd, ws, wl = wind(gust, b, state)
-    depths = surge_depths(band)
-    if not depths:
-        return wd, ws, wl
-    fd, fs, fl = flood_at(depths, b)
-    return 1 - (1 - wd) * (1 - fd), 1 - (1 - ws) * (1 - fs), combine_losses(wl, fl)
+    if not depth:
+        return wd, ws, wl, 0.0
+    fd, fs, fl, wet = flood_at([depth], b, surge=True)
+    return 1 - (1 - wd) * (1 - fd), 1 - (1 - ws) * (1 - fs), combine_losses(wl, fl), wet
 
 
 # ---------------------------------------------------------------- tornado (Enhanced Fujita scale)
@@ -497,7 +542,7 @@ def quake_model(b: dict, state: str | None) -> str:
     return f"W1.{lvl}"
 
 
-def quake(pga: float, b: dict, state: str | None) -> tuple[float, float, float]:
+def quake(pga: float, b: dict, state: str | None) -> tuple[float, float, float]:  # noqa: D103
     t = _table("hazus_quake.json")
     m = t["models"][quake_model(b, state)]
     p = [_phi(math.log(pga / m[f"ls{k}"][0]) / m[f"ls{k}"][1]) for k in range(1, 5)] + [0.0]
@@ -509,40 +554,53 @@ def quake(pga: float, b: dict, state: str | None) -> tuple[float, float, float]:
 # ---------------------------------------------------------------- flood
 
 
-def flood_at(depths: list[float], b: dict) -> tuple[float, float, float]:
+def flood_at(depths: list[float], b: dict, surge: bool = False) -> tuple[float, float, float, float]:
     """Averaged over the water depths (ft above the ground) and over the
-    first-floor heights surveyed for this kind of foundation: water above
-    the floor, repairs over half the value, and expected repair cost /
-    value from the FIA curve (V zone curve in a coastal V zone)."""
+    first-floor heights surveyed for this kind of foundation:
+    (chance damaged, chance severe, expected repair cost / value, chance of
+    water above the first floor). Damage is to walls, floors or foundation
+    at that much water above the floor, as measured after Helene; surge in
+    a V zone uses the V zone rates (waves), everything else the rest.
+    Repair cost is the FIA curve (V zone curve in a V zone), which includes
+    repairs inside."""
     t = _table("flood_floors.json")
     floors = t["first_floor_ft"].get(b.get("foundation") or "", t["first_floor_ft"]["any"])
     two = (b.get("stories") or 1) >= 2
-    half = t["half_value_ft_above_floor"]["two_floors" if two else "one_floor"]
     v = (b.get("flood_zone") or "").upper().startswith("V")
     xs, ps = t["fia_structure_loss"][("two_floors" if two else "one_floor") + ("_v" if v else "")]
-    share = lambda d: bisect.bisect_left(floors, d) / len(floors)  # noqa: E731 - floors below the water
-    n = len(depths)
-    d = sum(share(x) for x in depths) / n
-    s = sum(share(x - half) for x in depths) / n
+    wd = t["water_damage"]["V" if (v and surge) else "other"]
+    tops = [hi for _lo, hi in wd["bins_ft"]]
+
+    def rate(kind: str, above: float) -> float:
+        return wd[kind][min(bisect.bisect_right(tops, above), len(tops) - 1)]
+
     step = max(1, len(floors) // 60)  # every few surveyed floors is plenty for an average
     fs = floors[::step]
-    loss = sum(_interp(xs, ps, x - f) for x in depths for f in fs) / (n * len(fs))
-    return d, s, loss
+    n = len(depths) * len(fs)
+    d = s = loss = wet = 0.0
+    for x in depths:
+        for f in fs:
+            d += rate("damaged", x - f)
+            s += rate("severe", x - f)
+            loss += _interp(xs, ps, x - f)
+            wet += x > f
+    return d / n, s / n, loss / n, wet / n
 
 
-def flood(depth_ft: float, b: dict) -> tuple[float, float, float]:
+def flood(depth_ft: float, b: dict) -> tuple[float, float, float, float]:
     return flood_at([depth_ft], b)
 
 
-def modeled(t: str, intensity: float, b: dict, state: str | None, band: int = 0) -> tuple[float, float, float | None]:
-    """(chance damaged, chance badly damaged, expected repair cost / value)
-    for one building in one scenario."""
+def modeled(t: str, intensity: float, b: dict, state: str | None, depth: float = 0) -> tuple:
+    """(chance damaged, chance badly damaged, expected repair cost / value,
+    chance of water above the first floor) for one building in one
+    scenario; None where a number doesn't apply."""
     if t == "hurricane":
-        return hurricane(intensity, band, b, state)
+        return hurricane(intensity, depth, b, state)
     if t == "tornado":
-        return (*tornado(intensity, b), None)
+        return (*tornado(intensity, b), None, None)
     if t == "earthquake":
-        return quake(intensity, b, state)
+        return (*quake(intensity, b, state), None)
     if t == "flood":
         return flood(intensity, b)
     raise ValueError(t)
@@ -588,19 +646,19 @@ def odds_table(buildings: list[dict], state: str | None, place: dict | None = No
                     kind = MEASURED[t]
                     past = history(kind)
                     if not past:
-                        odds[sid] = [None, None, None]
+                        odds[sid] = [None, None, None, None]
                         continue
                     r = lookup(b, past, state, kind)
-                    odds[sid] = [r["chance_damaged"], r["chance_badly_damaged_or_destroyed"], None]
+                    odds[sid] = [r["chance_damaged"], r["chance_badly_damaged_or_destroyed"], None, None]
                     extra[sid] = [*r["chance_damaged_90pct"], r["look_alikes"]]  # 90% range and how many look-alikes
                 else:
-                    band = 0
+                    depth = 0
                     if t == "hurricane":
                         x = (place or {}).get("gusts", {}).get(cid, x)
                         surge = b.get("surge") or ()
-                        band = surge[list(SURGE_LAYERS).index(cid)] if surge else 0
-                    d, sv, loss = modeled(t, x, b, state, band)
-                    odds[sid] = [round(d, 2), round(sv, 2), None if loss is None else round(loss, 3)]
+                        depth = surge[list(SURGE_LAYERS).index(cid)] if surge else 0
+                    d, sv, loss, wet = modeled(t, x, b, state, depth)
+                    odds[sid] = [round(d, 2), round(sv, 2), None if loss is None else round(loss, 3), None if wet is None else round(wet, 2)]
         classes.append({"odds": odds, "measured": extra})
     return classes, index
 
@@ -620,5 +678,6 @@ def by_category(buildings: list[dict], classes: list[dict], index: list[int], t:
             "average_chance_badly_damaged_or_destroyed": round(sum(v[1] for v in vals) / len(vals), 2),
             "expected_damaged": round(sum(v[0] for v in vals)),
             "average_repair_cost_share_of_value": round(sum(v[2] for v in vals) / len(vals), 3) if vals[0][2] is not None else None,
+            "average_chance_flooded": round(sum(v[3] for v in vals) / len(vals), 2) if vals[0][3] is not None else None,
         })
     return out
