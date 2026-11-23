@@ -528,6 +528,10 @@ function showSquare(ev) {
     const bw = w + ((e - w) * b.i) / BLOCKS, bs = s + ((n - s) * b.j) / BLOCKS;
     const bb = [[bs, bw], [bs + (n - s) / BLOCKS, bw + (e - w) / BLOCKS]];
     b.rect = L.rectangle(bb, { color: "#fff", weight: 1, fillOpacity: 0.5 }).addTo(layer);
+    b.square = ev.square;
+    b.rect.on("mouseover", (e) => { if (sqView !== "blocks") return; b.rect.setStyle({ weight: 3, color: "#ff9f1c" }); showCard(blockCard(b), e.originalEvent); });
+    b.rect.on("mousemove", (e) => placeCard(e.originalEvent));
+    b.rect.on("mouseout", () => { b.rect.setStyle({ weight: sqView === "blocks" ? 1 : 0.6, color: "#fff" }); hideCard(); });
     b.tag = L.tooltip({ permanent: true, direction: "center", className: "sec-label blk-label", interactive: false }).setLatLng(L.latLngBounds(bb).getCenter());
     layer.addLayer(b.tag);
     cells.push(b);
@@ -589,7 +593,7 @@ function paintSquares() {
   for (const sq of Object.values(SQ)) applyScenario(sq);
   for (const sq of Object.values(SQ)) {
     for (const b of sq.cells) {
-      let color, text, tip;
+      let color, text;
       const n = b.pts.length;
       if (isMetric(sqColorBy)) {
         color = chanceColor(b.val);
@@ -599,16 +603,10 @@ function paintSquares() {
         color = groupColor(v);
         text = `${Math.round((100 * c) / n)}%`;
       }
-      const [top] = mostCommon(b.pts.map((p) => p.group));
-      const br = avgOf(b.pts, "repair"), bs = avgOf(b.pts, "chance_severe");
-      const dmg = b.pts.reduce((t, p) => t + (p.chance_damaged || 0), 0);
-      tip = `<b>${n} building${n === 1 ? "" : "s"} in this block</b>${b.avg == null ? "" : `<br>About ${dmg < 0.05 ? "none" : dmg < 1 ? "under 1" : Math.round(dmg)} likely damaged (${pctOf(b.avg)} average chance)`}${bs == null ? "" : `<br>${pctOf(bs)} chance of bad damage or worse`}${br == null ? "" : `<br>Expected repairs: ${money(b.dollars)} (${pctOf(br)} of what it would cost to rebuild)`}<br>Most common: ${esc(top || "")}`;
       const blocks = sqView === "blocks";
       b.rect.setStyle({ fillColor: color, fillOpacity: blocks ? 0.5 : 0, weight: blocks ? 1 : 0.6, opacity: blocks ? 1 : 0.5 });
       const re = b.rect.getElement && b.rect.getElement();
       if (re) re.style.pointerEvents = blocks ? "" : "none";  // let hovers reach the dots
-      b.rect.unbindTooltip();
-      if (blocks) b.rect.bindTooltip(tip, { sticky: true });
       b.tag.setContent(`${text}<small>${n}</small>`);
       const el = b.tag.getElement && b.tag.getElement();
       if (el) el.style.display = blocks ? "" : "none";
@@ -662,6 +660,52 @@ function meaning(kind, v) {
   if (!v) return "";
   const m = TERMS[kind];
   return (typeof m === "function" ? m(v) : m[v]) || "";
+}
+// a hover card for one quarter-mile block: what could happen there, then
+// what its buildings are like
+function blockCard(b) {
+  const { t, c, type, cat } = scenarioParts();
+  const pts = b.pts, n = pts.length;
+  const sum = (f) => pts.reduce((a, p) => a + (f(p) || 0), 0);
+  const bar = (v) => `<span class="tbar"><i style="width:${Math.max(2, Math.round((v || 0) * 100))}%;background:${chanceColor(v)}"></i></span>`;
+  const row = (label, v) => `<div class="trow"><span>${label}</span>${bar(v)}<b>${pctOf(v)}</b></div>`;
+  const howMany = (v, what) => (v < 0.05 ? `None of the ${n} buildings are expected to ${what}.` : v < 1 ? `Fewer than one of the ${n} buildings is expected to ${what}.` : `About <b>${Math.round(v)}</b> of the ${n} buildings will likely ${what}.`);
+  let odds;
+  if (b.avg == null) odds = `<p class="tnote">No odds for this disaster here yet.</p>`;
+  else {
+    const bs = avgOf(pts, "chance_severe"), wet = avgOf(pts, "flooded"), rep = avgOf(pts, "repair");
+    odds = `<p class="tline">${howMany(sum((p) => p.chance_damaged), "be damaged")}</p>`
+      + `<p class="tnote">Average chance for each building:</p>`
+      + row("Damage", b.avg) + (bs != null ? row("Bad damage", bs) : "") + (wet != null && wet > 0 ? row("Water inside", wet) : "");
+    if (rep != null) {
+      const val = sum((p) => p.value);
+      odds += `<div class="tmoney">Likely repairs: <b>${b.dollars < 500 ? "$0" : money(b.dollars)}</b>${val ? ` <span>of ${money(val)} to rebuild them all</span>` : ""}</div>`;
+    }
+    if (t === "hurricane") {
+      const ci = ["cat1", "cat2", "cat3", "cat4", "cat5"].indexOf(c);
+      const ft = pts.map((p) => (p.surge ? p.surge[ci] : 0)).filter((x) => x).sort((a, b2) => a - b2);
+      if (ft.length) odds += `<p class="tnote">Storm surge reaches ${ft.length} of the ${n} buildings, typically ${ft[ft.length >> 1]} ft deep (worst case for this strength). Water inside is flooding, not damage.</p>`;
+    }
+  }
+  // the most common kinds of building here, with what they mean
+  const kinds = [["Building code era", "age", "era"], ["How they're built", "construction", null], ["Green around them", "green", "green"]].map(([label, key, kind]) => {
+    const counts = {};
+    for (const p of pts) { const v = factorsOf(p)[key]; counts[v] = (counts[v] || 0) + 1; }
+    const top = Object.entries(counts).sort((x, y) => y[1] - x[1]).slice(0, 2);
+    const lines = top.map(([v, k], idx) => {
+      const why = idx > 0 ? "" : kind ? meaning(kind, v) : v.split(" on ").map((x, i) => meaning(i ? "foundation" : "material", x)).filter(Boolean).join(" ");
+      return `<div class="tkind"><b>${Math.round((100 * k) / n)}%</b><span>${esc(v)}${why ? `<small>${esc(why)}</small>` : ""}</span></div>`;
+    }).join("");
+    return `<div class="tkhead">${label}</div>${lines}`;
+  }).join("");
+  return `<div class="tcard wide">
+    <div class="ttitle">Block in ${esc(b.square)} · ${n} building${n === 1 ? "" : "s"}</div>
+    <div class="tsub">If ${cat ? `a ${esc(cat.label)} ${esc(type.name.toLowerCase().replace(/ \(.*\)/, ""))}` : "this disaster"} hits</div>
+    ${odds}
+    <div class="tsub">What the buildings are like</div>
+    ${kinds}
+    <p class="tnote">A block is about a quarter mile on each side. Switch to "Each building" to see every building.</p>
+  </div>`;
 }
 // a hover card for one building: what could happen, then what we know about it
 function buildingCard(p) {
