@@ -4,38 +4,65 @@ extreme, flood water 1 to 10 feet deep, plus two scenarios measured from
 real inspected buildings (storm surge like Helene at Cedar Key, and a
 wind-driven urban wildfire like Los Angeles in 2025).
 
-Wind, shaking and flood use damage curves: for each kind of building, the
-wind speed (or ground shaking, or water depth) at which half of such
-buildings are damaged, and how quickly the chance rises around it (a
-lognormal curve, the form FEMA's Hazus loss model uses). The values here are
-approximate, set to the ranges in Hazus and post-storm studies. They are not
-the official Hazus tables, and they have not yet been checked against this
-project's own field data, so treat the numbers as rough.
+Where each number comes from (tables built by scripts/build_hazards.py):
+- Wind: FEMA's Hazus Hurricane Model v5.1 building fragility curves (as
+  published by the NHERI SimCenter Damage and Loss Model Library), by wall
+  material, stories, building-rules era and land cover. Hazus needs roof
+  details a satellite photo can't show; each era gets what its rules required
+  (an assumption, written in the build script) and the rest are averaged.
+  Tornadoes use the same curves at EF-scale gusts: Hazus has no tornado
+  model, and tornado winds load buildings harder than hurricane winds of the
+  same speed, so tornado odds are likely too low.
+- Earthquake: the Hazus Earthquake Model v6.1 fragility curves in equivalent
+  peak ground acceleration, by building type and seismic design level, with
+  the design level from year built and state following the Hazus guidance.
+  Shaking levels are turned into ground acceleration with the USGS ShakeMap
+  conversion (Worden et al., 2012).
+- Flood: the share of surveyed Cedar Key buildings (DesignSafe PRJ-6245)
+  with the same foundation whose first floor is below the water, and for
+  "severe", the depth above the floor where the Hazus Flood FIA depth-damage
+  curve reaches half the building's value (FEMA's substantial damage).
 
-"Damaged" means more than light damage (for wind, more than a few shingles:
-roof cover torn, windows or doors broken); "severe" means badly damaged or
-destroyed. For floods, "damaged" means water above the first floor (shown as
-flooding, not counted as damage to the structure elsewhere in Landfall) and
-"severe" means 4 feet or more of water inside.
+"Damaged" means Hazus damage state 2 (moderate) or worse; "severe" means
+damage state 3 or worse (wind) or extensive or worse (earthquake). For
+floods, "damaged" means water above the first floor (flooding, which
+Landfall states beside the damage category rather than counting it).
 """
 
 from __future__ import annotations
 
+import bisect
+import json
 import math
+from functools import lru_cache
+from pathlib import Path
 
-# 3-second gusts at about 10 m over open ground, roughly 1.2 times the
-# 1-minute sustained wind in the middle of each Saffir-Simpson category
-# (tornado EF numbers are already 3-second gusts)
+HISTORY = Path(__file__).resolve().parent / "history"
+
+
+def _gust(sustained_mph: float) -> int:
+    """Peak 3-second gust over open ground for a 1-minute sustained wind
+    (gust factor 1.22, from the Durst curve used in ASCE 7)."""
+    return round(sustained_mph * 1.22)
+
+
+def _pga_for_mmi(mmi: float) -> float:
+    """Peak ground acceleration (g) for a shaking intensity, inverting the
+    USGS ShakeMap conversion for MMI V and up (Worden et al., 2012)."""
+    return round(10 ** ((mmi + 1.60) / 3.70) / 980.665, 2)
+
+
 SCENARIOS: dict[str, dict] = {
     "hurricane": {
         "name": "Hurricane (wind)",
         "unit": "mph gust",
+        # the middle of each Saffir-Simpson category's 1-minute wind (Category 5: 165 mph)
         "categories": [
-            ("cat1", "Category 1", 100), ("cat2", "Category 2", 125), ("cat3", "Category 3", 145),
-            ("cat4", "Category 4", 170), ("cat5", "Category 5", 195),
+            ("cat1", "Category 1", _gust(85)), ("cat2", "Category 2", _gust(103)), ("cat3", "Category 3", _gust(120)),
+            ("cat4", "Category 4", _gust(143)), ("cat5", "Category 5", _gust(165)),
         ],
         "default": "cat3",
-        "note": "wind only; storm surge near the coast adds water damage (see the storm-surge choice)",
+        "note": "wind only, at the storm's peak strength; most of a town sees less, and storm surge near the coast is separate (see storm surge)",
     },
     "surge": {
         "name": "Hurricane storm surge (coast)",
@@ -47,20 +74,21 @@ SCENARIOS: dict[str, dict] = {
     "tornado": {
         "name": "Tornado",
         "unit": "mph gust",
+        # the middle of each Enhanced Fujita 3-second gust range (EF5: 215 mph)
         "categories": [
             ("ef0", "EF0", 75), ("ef1", "EF1", 98), ("ef2", "EF2", 123),
             ("ef3", "EF3", 150), ("ef4", "EF4", 183), ("ef5", "EF5", 215),
         ],
         "default": "ef2",
-        "note": "if the tornado's path crosses the building; most buildings in a square are not in the path",
+        "note": "if the tornado's path crosses the building (most buildings in a square are not in it); Hazus hurricane curves, likely too low for tornadoes",
     },
     "earthquake": {
         "name": "Earthquake",
         "unit": "g peak ground acceleration",
-        # Modified Mercalli shaking and a typical peak ground acceleration for it
         "categories": [
-            ("mmi6", "Strong shaking (MMI VI)", 0.12), ("mmi7", "Very strong (MMI VII)", 0.22),
-            ("mmi8", "Severe (MMI VIII)", 0.40), ("mmi9", "Violent (MMI IX)", 0.75), ("mmi10", "Extreme (MMI X)", 1.20),
+            ("mmi6", "Strong shaking (MMI VI)", _pga_for_mmi(6)), ("mmi7", "Very strong (MMI VII)", _pga_for_mmi(7)),
+            ("mmi8", "Severe (MMI VIII)", _pga_for_mmi(8)), ("mmi9", "Violent (MMI IX)", _pga_for_mmi(9)),
+            ("mmi10", "Extreme (MMI X)", _pga_for_mmi(10)),
         ],
         "default": "mmi8",
         "note": "shaking at the building, which depends on distance from the fault and the ground, not only the magnitude",
@@ -70,7 +98,7 @@ SCENARIOS: dict[str, dict] = {
         "unit": "ft of water above the ground",
         "categories": [("ft1", "1 ft of water", 1.0), ("ft3", "3 ft", 3.0), ("ft6", "6 ft", 6.0), ("ft10", "10 ft", 10.0)],
         "default": "ft3",
-        "note": "damaged here means water above the first floor (flooding); severe means 4 ft or more inside",
+        "note": "damaged here means water above the first floor (flooding); severe means repairs over half the building's value",
     },
     "wildfire": {
         "name": "Wildfire",
@@ -84,8 +112,12 @@ SCENARIOS: dict[str, dict] = {
 MEASURED = {"surge": "hurricane", "wildfire": "wildfire"}
 # which scenario a square opens on, by the disaster picked in the menu
 OPEN_ON = {"hurricane": "hurricane", "wildfire": "wildfire", "flood": "flood", "earthquake": "earthquake", "tornado": "tornado"}
-
-BETA_WIND, BETA_QUAKE, BETA_FLOOD = 0.22, 0.64, 0.5
+SOURCES = {
+    "hurricane": "FEMA Hazus Hurricane Model v5.1 building damage curves (via the NHERI SimCenter Damage and Loss Model Library), with roof details assumed from each era's building rules",
+    "tornado": "FEMA Hazus Hurricane Model v5.1 building damage curves at tornado wind speeds (Hazus has no tornado model, so likely too low)",
+    "earthquake": "FEMA Hazus Earthquake Model v6.1 building damage curves (via the NHERI SimCenter Damage and Loss Model Library), shaking converted with USGS ShakeMap (Worden et al., 2012)",
+    "flood": "first-floor heights of surveyed Cedar Key buildings (DesignSafe PRJ-6245) and FEMA Hazus Flood FIA depth-damage curves",
+}
 
 
 def scenario_ids() -> list[str]:
@@ -99,104 +131,111 @@ def default_scenario(kind: str) -> str:
 
 def menu() -> list[dict]:
     """The disaster types and their categories, for the map panel."""
-    return [{"type": t, "name": s["name"], "note": s["note"], "default": s["default"],
+    return [{"type": t, "name": s["name"], "note": s["note"], "default": s["default"], "source": SOURCES.get(t),
              "categories": [{"id": c[0], "label": c[1], "intensity": c[2], "unit": s["unit"]} for c in s["categories"]]}
             for t, s in SCENARIOS.items()]
+
+
+@lru_cache(maxsize=4)
+def _table(name: str) -> dict:
+    return json.loads((HISTORY / name).read_text())
 
 
 def _phi(x: float) -> float:
     return 0.5 * (1 + math.erf(x / math.sqrt(2)))
 
 
-def _curve(x: float, median: float, beta: float) -> float:
-    if x <= 0:
-        return 0.0
-    return _phi(math.log(x / median) / beta)
+# ---------------------------------------------------------------- wind (Hazus hurricane)
+
+WIND_MATERIAL = {"wood frame": "wood", "masonry": "masonry", "concrete": "concrete", "steel": "steel", "manufactured (mobile) home": "manufactured"}
 
 
-# ---------------------------------------------------------------- building eras by hazard
-
-
-def wind_era(year: int | None, state: str | None) -> str:
+def wind_era(year: int | None, state: str | None, material: str = "wood") -> str:
+    if material in ("concrete", "steel"):
+        return "any"
     if not year:
         return "unknown"
-    if state == "FL":  # code changes after Andrew (1994), Florida Building Code (2002)
-        return "old" if year < 1994 else "mid" if year < 2002 else "modern"
+    if material == "manufactured":  # HUD standards, 1976 and 1994
+        return "phud" if year < 1976 else "hud76" if year < 1994 else "hud94_2" if state == "FL" else "hud94_1"
+    if state == "FL":  # post-Andrew changes (1994), Florida Building Code (2002)
+        return "old" if year < 1994 else "mid" if year < 2002 else "modern_fl"
     return "old" if year < 2000 else "modern"  # International Residential Code era
 
 
-def quake_era(year: int | None, state: str | None) -> str:
-    if not year:
-        return "unknown"
-    if state is None:  # abroad (Myanmar)
-        return "old" if year < 2012 else "mid"
-    return "old" if year < 1976 else "mid" if year < 1997 else "modern"
+def wind_key(b: dict, state: str | None) -> str:
+    mat = WIND_MATERIAL.get(b.get("material") or "", "wood")  # unknown walls: wood frame, the most common
+    st = b.get("stories")
+    h = "2" if mat in ("wood", "masonry") and st and st >= 2 else "1"
+    land = "light trees" if (b.get("green") or "").startswith("mostly trees") else "suburban"
+    return f"{mat}|{h}|{wind_era(b.get('year_built'), state, mat)}|{land}"
 
 
-def flood_era(year: int | None) -> str:
-    if not year:
-        return "unknown"
-    return "old" if year < 1975 else "modern"
+def wind(gust: float, b: dict, state: str | None) -> tuple[float, float]:
+    t = _table("hazus_wind.json")
+    c, xs = t["curves"][wind_key(b, state)], t["speeds_mph"]
+    i = min(max(bisect.bisect_right(xs, gust) - 1, 0), len(xs) - 2)
+    f = min(max((gust - xs[i]) / (xs[i + 1] - xs[i]), 0.0), 1.0)
+    return tuple(c[k][i] + f * (c[k][i + 1] - c[k][i]) for k in ("damaged", "severe"))
 
 
-# ---------------------------------------------------------------- damage curves
+# ---------------------------------------------------------------- earthquake (Hazus)
+
+# seismic design level by region and year built, after the Hazus guidance
+# (high: the western states of UBC zones 3-4; moderate: New Madrid and Charleston)
+HIGH_SEISMIC = {"CA", "AK", "WA", "OR", "NV", "UT", "HI", "ID", "MT", "WY"}
+MODERATE_SEISMIC = {"SC", "TN", "MO", "AR", "KY"}
 
 
-def wind_medians(material: str | None, era: str, green: str | None, stories: float | None) -> tuple[float, float]:
-    """Gust (mph) at which half of such buildings are damaged / badly damaged."""
-    m = (material or "").lower()
+def design_level(year: int | None, state: str | None) -> str:
+    if state is None:  # abroad: Myanmar's first seismic code, 2012
+        return "LC" if year and year >= 2012 else "PC"
+    y = year or 1960  # unknown: the middle era
+    if state in HIGH_SEISMIC:
+        return "PC" if y < 1941 else "MC" if y < 1976 else "HC"
+    if state in MODERATE_SEISMIC:
+        return "PC" if y < 1941 else "LC" if y < 1976 else "MC"
+    return "PC" if y < 1941 else "LC"
+
+
+def quake_model(b: dict, state: str | None) -> str:
+    lvl = design_level(b.get("year_built"), state)
+    m = (b.get("material") or "").lower()
     if "manufactured" in m:
-        dmg, sev = 95.0, 125.0
-        up = {"old": (0, 0), "mid": (15, 18), "modern": (15, 18), "unknown": (7, 9)}[era]  # HUD wind zones, 1994
-    else:
-        dmg, sev = 130.0, 175.0  # one-story wood frame, older code
-        if "masonry" in m or "concrete" in m or "steel" in m:
-            dmg, sev = dmg + 8, sev + 12
-        up = {"old": (0, 0), "mid": (10, 12), "modern": (25, 30), "unknown": (8, 10)}[era]
-    dmg, sev = dmg + up[0], sev + up[1]
-    if green and green.startswith("mostly trees"):
-        dmg, sev = dmg - 5, sev - 3  # falling trees and limbs
-    if stories and stories >= 2:
-        dmg, sev = dmg - 3, sev - 3  # taller walls and roofs catch more wind
-    return dmg, sev
+        return f"MH.{lvl}"
+    if "masonry" in m:  # assumed unreinforced when built before any seismic code
+        return "URM.L.PC" if lvl == "PC" else f"RM1.L.{lvl}"
+    if "concrete" in m:
+        return f"C2.L.{lvl}"
+    if "steel" in m:
+        return f"S1.L.{lvl}"
+    return f"W1.{lvl}"
 
 
-def quake_medians(material: str | None, era: str) -> tuple[float, float]:
-    """Peak ground acceleration (g) at which half of such buildings are
-    damaged (moderate) / badly damaged (extensive or worse)."""
-    m = (material or "").lower()
-    if "manufactured" in m:
-        return 0.20, 0.40  # slides off its piers
-    if "masonry" in m:  # older masonry is often unreinforced
-        return {"old": (0.22, 0.36), "mid": (0.35, 0.60), "modern": (0.50, 0.90), "unknown": (0.28, 0.46)}[era]
-    if "concrete" in m or "steel" in m:
-        return {"old": (0.25, 0.45), "mid": (0.40, 0.75), "modern": (0.55, 1.05), "unknown": (0.32, 0.60)}[era]
-    return {"old": (0.45, 0.85), "mid": (0.60, 1.10), "modern": (0.75, 1.40), "unknown": (0.52, 0.95)}[era]  # wood frame
+def quake(pga: float, b: dict, state: str | None) -> tuple[float, float]:
+    m = _table("hazus_quake.json")["models"][quake_model(b, state)]
+    p = lambda ls: _phi(math.log(pga / m[ls][0]) / m[ls][1])  # noqa: E731
+    return p("ls2"), p("ls3")
 
 
-FLOOR_FT = {"slab": 1.0, "fill": 1.5, "crawlspace": 3.0, "basement": 2.0, "solid wall": 4.0, "piers": 6.0, "piles": 8.0}
+# ---------------------------------------------------------------- flood
 
 
-def first_floor_ft(foundation: str | None, era: str) -> float:
-    """Typical height of the first floor above the ground."""
-    h = FLOOR_FT.get((foundation or "").lower(), 2.0)
-    if era == "modern":
-        h += 1.0  # built after flood-elevation rules (only binding in flood zones)
-    return h
+def flood(depth_ft: float, b: dict) -> tuple[float, float]:
+    t = _table("flood_floors.json")
+    floors = t["first_floor_ft"].get(b.get("foundation") or "", t["first_floor_ft"]["any"])
+    half = t["half_value_ft_above_floor"]["two_floors" if (b.get("stories") or 1) >= 2 else "one_floor"]
+    share = lambda d: bisect.bisect_left(floors, d) / len(floors)  # noqa: E731 - floors below the water
+    return share(depth_ft), share(depth_ft - half)
 
 
 def modeled(t: str, intensity: float, b: dict, state: str | None) -> tuple[float, float]:
     """(chance damaged, chance badly damaged) for one building in one scenario."""
-    y = b.get("year_built")
     if t in ("hurricane", "tornado"):
-        d, s = wind_medians(b.get("material"), wind_era(y, state), b.get("green"), b.get("stories"))
-        return _curve(intensity, d, BETA_WIND), _curve(intensity, s, BETA_WIND)
+        return wind(intensity, b, state)
     if t == "earthquake":
-        d, s = quake_medians(b.get("material"), quake_era(y, state))
-        return _curve(intensity, d, BETA_QUAKE), _curve(intensity, s, BETA_QUAKE)
+        return quake(intensity, b, state)
     if t == "flood":
-        ff = first_floor_ft(b.get("foundation"), flood_era(y))
-        return _curve(intensity, ff, BETA_FLOOD), _curve(intensity, ff + 4.0, BETA_FLOOD)
+        return flood(intensity, b)
     raise ValueError(t)
 
 
@@ -205,10 +244,8 @@ def class_key(b: dict, state: str | None) -> tuple:
     from .structures import code_era
 
     y = b.get("year_built")
-    st = b.get("stories")
-    return (b.get("material"), b.get("foundation"), b.get("green"), bool(st and st >= 2),
-            wind_era(y, state), quake_era(y, state), flood_era(y),
-            code_era(y, state, "hurricane"), code_era(y, state, "wildfire"))
+    return (wind_key(b, state), quake_model(b, state), b.get("foundation"), (b.get("stories") or 1) >= 2,
+            b.get("material"), b.get("green"), code_era(y, state, "hurricane"), code_era(y, state, "wildfire"))
 
 
 def odds_table(buildings: list[dict], state: str | None) -> tuple[list[dict], list[int]]:

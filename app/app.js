@@ -623,7 +623,7 @@ function sqPanel() {
   const typeOpts = sqMenu.map((x) => `<option value="${esc(x.type)}"${x.type === curT ? " selected" : ""}>${esc(x.name)}</option>`).join("");
   const catOpts = curType ? curType.categories.map((x) => `<option value="${esc(x.id)}"${x.id === curC ? " selected" : ""}>${esc(x.label)}</option>`).join("") : "";
   const measured = curType && curType.categories.every((x) => x.intensity == null);
-  const where = !curType ? "past disasters" : measured ? `look-alike buildings inspected after a real disaster (${esc(curType.note.replace(/^measured: /, ""))})` : "approximate damage curves by building type and age (Hazus-style), not yet checked against field data";
+  const where = !curType ? "past disasters" : measured ? `look-alike buildings inspected after a real disaster (${esc(curType.note.replace(/^measured: /, ""))})` : esc(curType.source || "damage curves");
   panel.innerHTML = `<div class="ghead"><b>Compare squares</b><button type="button" class="linkish" id="sq-clear">Clear all</button></div>
     ${sqMenu.length ? `<div class="sqscen"><label>Disaster <select id="sq-type">${typeOpts}</select></label><label>Category <select id="sq-cat"${curType && curType.categories.length < 2 ? " disabled" : ""}>${catOpts}</select></label></div>${curType && !measured ? `<p class="gnote">${curCat && curCat.intensity != null && curCat.unit !== "ft of water above the ground" ? `About ${curCat.intensity} ${esc(curCat.unit)}. ` : ""}${esc(curType.note.charAt(0).toUpperCase() + curType.note.slice(1))}.</p>` : ""}` : ""}
     <table class="sqtable"><thead><tr><th>Square</th><th>Buildings</th><th>Average chance</th><th>50%+ chance</th></tr></thead><tbody>${rows}</tbody></table>

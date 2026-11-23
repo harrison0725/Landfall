@@ -21,4 +21,4 @@ build-backend = "setuptools.build_meta"
 packages = ["landfall"]
 
 [tool.setuptools.package-data]
-landfall = ["data/*.json", "history/*.csv"]
+landfall = ["data/*.json", "history/*.csv", "history/*.json"]
