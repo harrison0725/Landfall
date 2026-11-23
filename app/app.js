@@ -656,7 +656,7 @@ function sqPanel() {
     const share = (v) => {
       if (!st.buildings || v < 0.05) return "";
       const p = (100 * v) / st.buildings;
-      return ` <em>(${p < 1 ? "under 1%" : `${Math.round(p)}%`})</em>`;
+      return ` <em>(${p < 1 ? "under 1%" : `${Math.round(p)}%`} chance each, on average)</em>`;
     };
     const lines = st.avg == null
       ? `<p class="gnote">No odds for this disaster here yet.</p>`
