@@ -67,8 +67,11 @@ TERRAIN = {"suburban": "35", "light trees": "70"}
 def wind_table() -> dict:
     from landfall.hazards import SCENARIOS
 
-    speeds = sorted({c[2] for c in SCENARIOS["hurricane"]["categories"]} | {84})
+    speeds = list(range(50, 230, 10))  # gust grid, mph; interpolated in between
     d = dlml_dir() / "hurricane" / "building" / "portfolio" / "Hazus v5.1 original" / "fragility.csv"
+    losses = {}
+    for r in csv.DictReader((d.parent / "loss_repair.csv").open()):
+        losses[r["ID"].removesuffix("-Cost")] = r["LossFunction-Theta_0"]
     models = {}
     for r in csv.DictReader(d.open()):
         t = r["ID"].split(".")
@@ -77,16 +80,22 @@ def wind_table() -> dict:
             or (t[:2] == ["M", "SF"] and t[5] == "trs" and t[10] in ("1", "null") and t[-1] in TERRAIN.values())
             or (t[0] == "MH" and t[-1] in TERRAIN.values())
         )
-        if keep:
-            models[r["ID"]] = [[round(multilinear(r[f"LS{k}-Theta_0"], v), 4) for v in speeds] for k in (2, 3)]
+        if keep:  # chance of damage state 2+, 3+, and expected repair cost / building value
+            lf = losses[r["ID"]]
+            lf = "|".join(reversed(lf.split("|")))  # loss functions list ratios first, speeds second
+            models[r["ID"]] = [[round(multilinear(r[f"LS{k}-Theta_0"], v), 4) for v in speeds] for k in (2, 3)] + [
+                [round(multilinear(lf, v), 4) for v in speeds]]
     # engineered low-rise concrete and steel residential buildings: no
     # ruleset in hand, so every roof, window and debris option is averaged
     rows = list(csv.DictReader(d.open()))
     for mat, fam in (("concrete", "C.ERB.L"), ("steel", "S.ERB.L")):
         for tname, tcode in TERRAIN.items():
             ms = [r for r in rows if r["ID"].startswith(fam + ".") and r["ID"].endswith("." + tcode)]
-            models[f"{mat}|{tname}"] = [[round(statistics.fmean(multilinear(m[f"LS{k}-Theta_0"], v) for m in ms), 4) for v in speeds] for k in (2, 3)]
-    return {"speeds_mph": speeds, "models": models,
+            models[f"{mat}|{tname}"] = [[round(statistics.fmean(multilinear(m[f"LS{k}-Theta_0"], v) for m in ms), 4) for v in speeds] for k in (2, 3)] + [
+                [round(statistics.fmean(multilinear("|".join(reversed(losses[m["ID"]].split("|"))), v) for m in ms), 4) for v in speeds]]
+    combine = [list(map(float, line.split(","))) for line in (d.parent / "combine_wind_flood.csv").read_text().split()]
+    return {"speeds_mph": speeds, "models": models, "combine_wind_flood": combine,
+            "combine_source": "Hazus Hurricane v5.1 combined wind and flood loss table (rows wind loss 0-1, columns flood loss 0-1, step 0.1)",
             "source": "Hazus Hurricane Model v5.1 building fragilities (NHERI SimCenter DLML, 'Hazus v5.1 original')",
             "damaged": "Hazus damage state 2 (moderate) or worse: major roof cover loss, some windows broken",
             "severe": "Hazus damage state 3 (severe) or worse: major roof sheathing or window loss, or destroyed"}
@@ -103,7 +112,12 @@ def quake_table() -> dict:
             continue
         out[r["ID"][3:]] = {  # e.g. W1.PC: [median g, beta] for slight, moderate, extensive, complete
             f"ls{k}": [float(r[f"LS{k}-Theta_0"]), float(r[f"LS{k}-Theta_1"])] for k in range(1, 5)}
-    return {"models": out,
+    cons = {}
+    for r in csv.DictReader((d.parent / "consequence_repair.csv").open()):
+        if r["ID"] == "LF.RES1-Cost":
+            cons = [float(r[f"DS{k}-Theta_0"]) for k in range(1, 5)]
+    return {"models": out, "loss_ratio_by_damage_state": cons,
+            "loss_source": "Hazus v6.1 repair cost ratios for single-family homes (LF.RES1): slight, moderate, extensive, complete",
             "source": "Hazus Earthquake Model v6.1 building fragilities in equivalent peak ground acceleration (NHERI SimCenter DLML, LF models)",
             "damaged": "Hazus moderate structural damage or worse", "severe": "Hazus extensive structural damage or worse"}
 
@@ -122,18 +136,40 @@ def flood_table() -> dict:
     floors["any"] = sorted(x for v in floors.values() for x in v)
     floors = {k: sorted(v) for k, v in floors.items()}
     d = dlml_dir() / "flood" / "building" / "portfolio" / "Hazus v6.1" / "loss_repair.csv"
-    half = {}
+    half, curves = {}, {}
     for r in csv.DictReader(d.open()):
-        for key, name in (("structural.105.", "one_floor"), ("structural.107.", "two_floors")):
+        for key, name in (("structural.105.", "one_floor"), ("structural.107.", "two_floors"),
+                          ("structural.113.", "one_floor_v"), ("structural.115.", "two_floors_v")):
             if r["ID"].startswith(key):
                 ps, xs = (list(map(float, p.split(","))) for p in r["LossFunction-Theta_0"].split("|"))
-                half[name] = next(x for x, p in zip(xs, ps) if p >= 0.5)
-    return {"first_floor_ft": floors, "half_value_ft_above_floor": half,
+                curves[name] = [xs, ps]  # ft of water above the first floor -> share of building value
+                if not name.endswith("_v"):
+                    half[name] = next(x for x, p in zip(xs, ps) if p >= 0.5)
+    return {"first_floor_ft": floors, "half_value_ft_above_floor": half, "fia_structure_loss": curves,
             "source_floors": "first-floor heights of surveyed Cedar Key buildings, DesignSafe PRJ-6245 (Helene, 2024)",
             "source_half": "Hazus Flood v6.1 FIA depth-damage curves for single-family homes (A zone, no basement)"}
 
 
+def coast_table() -> dict:
+    """US Gulf and Atlantic coastline (Natural Earth 1:10m, public domain),
+    simplified to about 500 m, for the distance a hurricane travels inland."""
+    import requests
+    from shapely.geometry import box, shape
+
+    url = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_coastline.geojson"
+    clip = box(-98, 17, -65, 46)
+    lines = []
+    for f in requests.get(url, timeout=120).json()["features"]:
+        g = shape(f["geometry"]).intersection(clip)
+        if g.is_empty:
+            continue
+        for line in getattr(g.simplify(0.005), "geoms", [g.simplify(0.005)]):
+            if line.geom_type == "LineString" and len(line.coords) > 1:
+                lines.append([[round(x, 3), round(y, 3)] for x, y in line.coords])
+    return {"lines": lines, "source": "Natural Earth 1:10m coastline (public domain), Gulf and Atlantic, simplified to ~500 m"}
+
+
 if __name__ == "__main__":
-    for name, fn in (("hazus_wind.json", wind_table), ("hazus_quake.json", quake_table), ("flood_floors.json", flood_table)):
+    for name, fn in (("hazus_wind.json", wind_table), ("hazus_quake.json", quake_table), ("flood_floors.json", flood_table), ("coast.json", coast_table)):
         (OUT / name).write_text(json.dumps(fn(), separators=(",", ":")))
         print(name, (OUT / name).stat().st_size, "bytes")
