@@ -653,19 +653,22 @@ function sqPanel() {
   // one card per square: plain counts and dollars
   const card = ([k, sq]) => {
     const st = sq.stats;
-    const share = (v) => {
-      if (!st.buildings || v < 0.05) return "";
-      const p = (100 * v) / st.buildings;
-      return ` <em>(${p < 1 ? "under 1%" : `${Math.round(p)}%`} chance each, on average)</em>`;
-    };
+    // each line is one plain sentence: the average chance per building, then
+    // how many buildings that adds up to
+    const N = st.buildings.toLocaleString();
+    const chanceOf = (v) => { const p = (100 * v) / Math.max(st.buildings, 1); return p < 1 ? "less than a 1%" : `a ${Math.round(p)}%`; };
+    const howMany = (v, what) => (v < 0.05 ? `so none of the ${N} buildings are expected to ${what}`
+      : v < 1 ? `so fewer than one of the ${N} buildings is expected to ${what}`
+      : `so about <b>${n0(v)}</b> of the ${N} buildings will likely ${what}`);
+    const sentence = (v, chance, what) => (v < 0.05 ? `<b>None</b> of the ${N} buildings are expected to ${what}.` : `Each building has ${chanceOf(v)} chance of ${chance} on average, ${howMany(v, what)}.`);
     const lines = st.avg == null
       ? `<p class="gnote">No odds for this disaster here yet.</p>`
-      : `<div class="sqfacts">
-          <div class="fact"><b>${count(st.damaged)}</b><span>${st.damaged < 0.05 ? "buildings likely damaged" : `of ${st.buildings.toLocaleString()} buildings likely damaged`}${share(st.damaged)}</span></div>
-          <div class="fact"><b>${count(st.bad)}</b><span>likely badly damaged or destroyed${share(st.bad)}</span></div>
-          <div class="fact money"><b>${st.dollars == null ? "–" : st.dollars < 500 ? "$0" : money(st.dollars)}</b><span>${st.dollars == null ? "repair cost not available for this disaster" : `expected repairs, out of ${money(st.value)} to rebuild everything`}</span></div>
-          ${st.wet != null ? `<div class="fact"><b>${count(st.wet)}</b><span>${st.wet < 0.05 ? "expected to get water inside" : `likely to get water inside${share(st.wet)}`} <small>(flooding, not counted as damage)</small></span></div>` : ""}
-        </div>`;
+      : `<ul class="sqfacts">
+          <li>${sentence(st.damaged, "damage", "be damaged")}</li>
+          <li>${sentence(st.bad, "bad damage", "be badly damaged or destroyed")}</li>
+          <li>${st.dollars == null ? "Repair costs aren't available for this disaster." : `Repairs would likely cost about <b class="money">${st.dollars < 500 ? "$0" : money(st.dollars)}</b>, out of ${money(st.value)} to rebuild every building.`}</li>
+          ${st.wet != null ? `<li>${sentence(st.wet, "water getting inside", "get water inside")} <small>Flooding inside isn't counted as damage.</small></li>` : ""}
+        </ul>`;
     const ss = sq.ev.site;
     const ci = ["cat1", "cat2", "cat3", "cat4", "cat5"].indexOf(curC);
     const wet = ss && curT === "hurricane" ? sq.ev.points.map((p) => (p.surge ? p.surge[ci] : 0)).filter((x) => x).sort((a, b) => a - b) : [];
