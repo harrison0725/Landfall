@@ -329,8 +329,7 @@ def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", 
         notes = ("These are odds from look-alike buildings in one past disaster, not a forecast of this place: how hard it hits "
                  "(surge depth, distance from the fire) matters more than how a house was built. ")
     else:
-        source = ("approximate damage curves by building type and age, in the form FEMA's Hazus loss model uses "
-                  "(not the official Hazus tables, not yet checked against field data)")
+        source = hazards.SOURCES[t]
         notes = (f"These are odds for a {sc['name'].lower()} at {cat_label}, {sc['note']}. ")
     return {
         "square": label or "the picked square",
