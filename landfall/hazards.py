@@ -679,5 +679,7 @@ def by_category(buildings: list[dict], classes: list[dict], index: list[int], t:
             "expected_damaged": round(sum(v[0] for v in vals)),
             "average_repair_cost_share_of_value": round(sum(v[2] for v in vals) / len(vals), 3) if vals[0][2] is not None else None,
             "average_chance_flooded": round(sum(v[3] for v in vals) / len(vals), 2) if vals[0][3] is not None else None,
+            "expected_repair_dollars": round(sum(classes[i]["odds"][sid][2] * (b.get("value") or 0) for b, i in zip(buildings, index)))
+            if vals[0][2] is not None else None,
         })
     return out
