@@ -301,6 +301,15 @@ def lookup(member: dict, past: list[dict], state: str | None, kind: str) -> dict
     }
 
 
+def range_sd() -> dict:
+    """Model spread (log scale) for the 'likely between' ranges, by disaster type."""
+    from . import hazards
+
+    cal = hazards.calibration()
+    hurricane = (cal or {}).get("range_sd_log", 0.3)
+    return {"hurricane": hurricane, "other": max(0.5, hurricane)}
+
+
 def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", scenario: str | None = None) -> dict:
     """Group the buildings in a square and give each group's odds in one
     disaster scenario (a type and category, hazards.SCENARIOS), plus every
@@ -387,6 +396,9 @@ def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", 
         "expected_repair_dollars": (round(sum((classes[i]["odds"][sid][2] or 0) * (r.get("value") or 0) for r, i in zip(rows, index)))
                                     if index and classes[index[0]]["odds"][sid][2] is not None else None),
         "rebuild_value_dollars": round(sum(r.get("value") or 0 for r in rows)),
+        "range_sd_log": range_sd(),
+        "range_means": "90% 'likely between' range for counts: chance from building to building plus how far off Landfall was at 7 surveyed "
+                       "hurricane places (eval/research); other disasters are untested, so their range is wider",
         "expected_repair_cost_share_of_value": (round(sum(classes[i]["odds"][sid][2] for i in index) / len(index), 3)
                                                 if index and classes[index[0]]["odds"][sid][2] is not None else None),
         "history": source,

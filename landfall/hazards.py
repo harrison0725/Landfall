@@ -455,10 +455,49 @@ def _wind_odds(key: tuple) -> tuple[tuple[float, ...], ...]:
     return tuple(tuple(x / total for x in row) for row in acc)
 
 
+CAL_FROM_MPH = 70.0  # the surveys behind the calibration start here; below, it fades to Hazus
+CAL_ZERO_MPH = 40.0
+
+
+def _recal(params: list[float], p: float, year: int | None) -> float:
+    """Hazus odds adjusted to what surveys found (landfall/history/
+    calibration.json; scripts/research_eval.py): logit(p) = a + b logit(p) +
+    c [built 2002+] + d [built 1976-2001]."""
+    a, b, c, d = params
+    q = min(max(p, 1e-4), 1 - 1e-4)
+    y = year or 0
+    z = a + b * math.log(q / (1 - q)) + c * (y >= 2002) + d * (1976 <= y < 2002)
+    return 1 / (1 + math.exp(-z))
+
+
+USE_CALIBRATION = True  # scripts/research_eval.py turns it off to score Landfall as it was
+
+
+def calibration() -> dict | None:
+    if not USE_CALIBRATION:
+        return None
+    try:
+        return _table("calibration.json")
+    except FileNotFoundError:
+        return None
+
+
 def wind(gust: float, b: dict, state: str | None) -> tuple[float, float, float]:
-    """(chance damaged, chance severe, expected repair cost / value)."""
+    """(chance damaged, chance severe, expected repair cost / value).
+    Hazus wind odds, recalibrated against roof damage surveyed after six
+    hurricanes: Hazus says almost no damage below about 110 mph gusts, while
+    surveys found 10-45% of roofs damaged there, and it is too sure at
+    the top end. Repair cost stays Hazus's."""
     xs = _table("hazus_wind.json")["speeds_mph"]
-    return tuple(_interp(xs, list(row), gust) for row in _wind_odds(wind_key(b, state)))
+    d, s, loss = (_interp(xs, list(row), gust) for row in _wind_odds(wind_key(b, state)))
+    cal = calibration()
+    if cal and gust > CAL_ZERO_MPH:
+        y = b.get("year_built")
+        cd, cs = _recal(cal["wind"]["damaged"], d, y), _recal(cal["wind"]["severe"], s, y)
+        fade = min(1.0, (gust - CAL_ZERO_MPH) / (CAL_FROM_MPH - CAL_ZERO_MPH))
+        d, s = d + fade * (cd - d), s + fade * (cs - s)
+        s = min(s, d)
+    return d, s, loss
 
 
 def combine_losses(wind_loss: float, flood_loss: float) -> float:
@@ -564,14 +603,20 @@ def flood_at(depths: list[float], b: dict, surge: bool = False) -> tuple[float, 
     Repair cost is the FIA curve (V zone curve in a V zone), which includes
     repairs inside."""
     t = _table("flood_floors.json")
-    floors = t["first_floor_ft"].get(b.get("foundation") or "", t["first_floor_ft"]["any"])
+    cal = calibration()
+    all_floors = cal["first_floor_ft"] if cal else t["first_floor_ft"]
+    floors = all_floors.get(b.get("foundation") or "") or all_floors["any"]
     two = (b.get("stories") or 1) >= 2
     v = (b.get("flood_zone") or "").upper().startswith("V")
     xs, ps = t["fia_structure_loss"][("two_floors" if two else "one_floor") + ("_v" if v else "")]
     wd = t["water_damage"]["V" if (v and surge) else "other"]
     tops = [hi for _lo, hi in wd["bins_ft"]]
 
-    def rate(kind: str, above: float) -> float:
+    def rate(kind: str, above: float, depth: float) -> float:
+        if cal:  # logistic in ft above the floor, ft above the ground (waves) and V zone, from three surveyed towns
+            c = cal["water"][kind]
+            z = c[0] + c[1] * min(max(above, -10.0), 20.0) + c[2] * min(max(depth, 0.0), 25.0) + c[3] * (v and surge)
+            return 1 / (1 + math.exp(-z))
         return wd[kind][min(bisect.bisect_right(tops, above), len(tops) - 1)]
 
     step = max(1, len(floors) // 60)  # every few surveyed floors is plenty for an average
@@ -580,8 +625,8 @@ def flood_at(depths: list[float], b: dict, surge: bool = False) -> tuple[float, 
     d = s = loss = wet = 0.0
     for x in depths:
         for f in fs:
-            d += rate("damaged", x - f)
-            s += rate("severe", x - f)
+            d += rate("damaged", x - f, x)
+            s += rate("severe", x - f, x)
             loss += _interp(xs, ps, x - f)
             wet += x > f
     return d / n, s / n, loss / n, wet / n

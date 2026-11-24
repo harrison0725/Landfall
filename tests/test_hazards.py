@@ -5,6 +5,17 @@ from pathlib import Path
 from landfall import hazards
 
 
+class uncalibrated:
+    """Landfall without landfall/history/calibration.json (Cedar Key floors
+    and water rates only), for tests of the underlying tables."""
+
+    def __enter__(self):
+        hazards.USE_CALIBRATION = False
+
+    def __exit__(self, *a):
+        hazards.USE_CALIBRATION = True
+
+
 def wood_old():
     return {"year_built": 1960, "material": "wood frame", "foundation": "slab", "green": "some trees or lawn", "stories": 1}
 
@@ -75,11 +86,19 @@ def test_newer_rules_and_elevation_help():
 
 def test_hazus_wind_against_helene_at_cedar_key():
     """NOAA station CKYF1 at Cedar Key measured a 84 mph peak gust in Helene.
-    Hazus gives older one-story wood homes under 1% moderate damage there; the
-    PRJ-6245 survey found about 2% of buildings with no surge damage to walls
-    or foundation had roof damage state 2 or worse. Both say wind did little."""
-    d, _, _ = hazards.wind(84, wood_old() | {"green": None}, "FL")
+    Raw Hazus gives older one-story wood homes under 1% moderate damage there;
+    the PRJ-6245 survey found about 2% of buildings with no surge damage to
+    walls or foundation had roof damage state 2 or worse. The calibration to
+    six storms' surveys (eval/research) raises it, because other storms found
+    10-20% of roofs damaged at 70-100 mph; Cedar Key is its known low miss."""
+    hazards.USE_CALIBRATION = False
+    try:
+        d, _, _ = hazards.wind(84, wood_old() | {"green": None}, "FL")
+    finally:
+        hazards.USE_CALIBRATION = True
     assert d < 0.01
+    d, _, _ = hazards.wind(84, wood_old() | {"green": None}, "FL")
+    assert 0.02 < d < 0.15
     rows = list(csv.DictReader((Path(__file__).resolve().parents[1] / "eval" / "field" / "cedar_key_buildings.csv").open()))
 
     def f(x):
@@ -129,7 +148,8 @@ def test_expected_repair_cost_follows_hazus():
     # earthquake: all-complete damage costs the whole house (LF.RES1 complete = 1.0)
     assert hazards.quake(20, wood_old(), "CA")[2] > 0.99
     # flood: FIA one-story curve, 14 ft above a slab floor is half the value
-    assert abs(hazards.flood_at([14.0], wood_old() | {"foundation": "slab"})[2] - 0.5) < 0.06
+    with uncalibrated():
+        assert abs(hazards.flood_at([14.0], wood_old() | {"foundation": "slab"})[2] - 0.5) < 0.06
     assert hazards.flood(1, wood_old() | {"foundation": "piles"})[2] < hazards.flood(1, wood_old())[2]
 
 
@@ -138,8 +158,11 @@ def test_flooding_alone_is_not_damage():
     foundation, at the rates measured after Helene (Harry, Nov 18)."""
     t = hazards._table("flood_floors.json")["water_damage"]
     assert t["other"]["damaged"] == sorted(t["other"]["damaged"]) and t["V"]["damaged"][-1] > t["other"]["damaged"][-1]
-    d, s, loss, wet = hazards.flood(3, wood_old())  # slab house, 3 ft of water: inside
+    with uncalibrated():
+        d, s, loss, wet = hazards.flood(3, wood_old())  # slab house, 3 ft of water: inside
     assert wet > 0.9 and d < 0.5 and loss > 0.1
+    d, s, loss, wet = hazards.flood(3, wood_old())  # calibrated: floors of houses listed as slab vary more
+    assert wet > d and d < 0.5
     beach = wood_old() | {"flood_zone": "VE", "foundation": "piles"}
     assert hazards.flood_at([6], beach, surge=True)[0] > hazards.flood_at([6], beach)[0]  # waves
 
@@ -152,3 +175,21 @@ def test_surge_depth_in_feet_stays_inside_the_live_band():
     assert hazards.surge_depth("cat3", -83.035, 29.135, 1) in (1, 2, 3)
     assert hazards.surge_depth("cat3", -83.035, 29.135, 0) == 0
     assert hazards.surge_depth("cat1", -82.33, 29.65, None) == 0  # Gainesville
+
+
+def test_calibration_keeps_order_and_fades_out():
+    """Calibrated wind odds still rise with wind, are lower for houses built
+    under the Florida Building Code (2002+), and are zero below 40 mph."""
+    old, new = wood_old() | {"green": None}, wood_old() | {"green": None, "year_built": 2010}
+    ds = [hazards.wind(g, old, "FL")[0] for g in (30, 60, 90, 120, 150, 180)]
+    assert ds == sorted(ds) and ds[0] == 0.0
+    assert hazards.wind(120, new, "FL")[0] < hazards.wind(120, old, "FL")[0]
+    assert hazards.wind(120, old, "FL")[1] <= hazards.wind(120, old, "FL")[0]
+
+
+def test_water_damage_grows_with_depth_and_waves():
+    slab = {"foundation": "slab", "flood_zone": "AE", "stories": 1}
+    v = {"foundation": "piles", "flood_zone": "VE", "stories": 1}
+    a = [hazards.flood_at([x], slab, surge=True)[0] for x in (2, 5, 8, 12)]
+    assert a == sorted(a)
+    assert hazards.flood_at([8], v, surge=True)[0] > hazards.flood_at([8], v | {"flood_zone": "AE"}, surge=True)[0]

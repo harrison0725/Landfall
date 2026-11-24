@@ -1,0 +1,434 @@
+{
+ "matched_buildings": 122,
+ "how_built": {
+  "street AI": {
+   "assessors": {
+    "walls": {
+     "buildings": 114,
+     "right": 98,
+     "accuracy": 0.86,
+     "ci95": [
+      0.784,
+      0.912
+     ],
+     "kappa": 0.565,
+     "most_common_mixups": [
+      [
+       "wood",
+       "masonry",
+       5
+      ],
+      [
+       "masonry",
+       "wood",
+       4
+      ],
+      [
+       "masonry",
+       "concrete",
+       3
+      ]
+     ]
+    },
+    "foundation height": {
+     "buildings": 114,
+     "right": 65,
+     "accuracy": 0.57,
+     "ci95": [
+      0.478,
+      0.657
+     ],
+     "kappa": 0.302,
+     "most_common_mixups": [
+      [
+       "at grade",
+       "short",
+       14
+      ],
+      [
+       "at grade",
+       "tall",
+       10
+      ],
+      [
+       "short",
+       "at grade",
+       9
+      ]
+     ]
+    },
+    "stories": {
+     "buildings": 114,
+     "right": 96,
+     "accuracy": 0.842,
+     "ci95": [
+      0.764,
+      0.898
+     ],
+     "kappa": 0.542,
+     "most_common_mixups": [
+      [
+       1,
+       2,
+       12
+      ],
+      [
+       2,
+       1,
+       5
+      ],
+      [
+       3,
+       2,
+       1
+      ]
+     ]
+    }
+   },
+   "UF 2021": {
+    "walls": {
+     "buildings": 104,
+     "right": 93,
+     "accuracy": 0.894,
+     "ci95": [
+      0.82,
+      0.94
+     ],
+     "kappa": 0.689,
+     "most_common_mixups": [
+      [
+       "wood",
+       "masonry",
+       8
+      ],
+      [
+       "masonry",
+       "wood",
+       3
+      ]
+     ]
+    },
+    "foundation height": {
+     "buildings": 105,
+     "right": 63,
+     "accuracy": 0.6,
+     "ci95": [
+      0.504,
+      0.689
+     ],
+     "kappa": 0.324,
+     "most_common_mixups": [
+      [
+       "at grade",
+       "short",
+       31
+      ],
+      [
+       "tall",
+       "short",
+       10
+      ],
+      [
+       "short",
+       "at grade",
+       1
+      ]
+     ]
+    },
+    "stories": {
+     "buildings": 98,
+     "right": 88,
+     "accuracy": 0.898,
+     "ci95": [
+      0.822,
+      0.944
+     ],
+     "kappa": 0.652,
+     "most_common_mixups": [
+      [
+       1,
+       2,
+       7
+      ],
+      [
+       2,
+       1,
+       2
+      ],
+      [
+       1,
+       3,
+       1
+      ]
+     ]
+    }
+   }
+  },
+  "structure inventory": {
+   "assessors": {
+    "walls": {
+     "buildings": 118,
+     "right": 19,
+     "accuracy": 0.161,
+     "ci95": [
+      0.106,
+      0.238
+     ],
+     "kappa": -0.06,
+     "most_common_mixups": [
+      [
+       "masonry",
+       "wood",
+       82
+      ],
+      [
+       "concrete",
+       "masonry",
+       7
+      ],
+      [
+       "masonry",
+       "concrete",
+       5
+      ]
+     ]
+    },
+    "foundation height": {
+     "buildings": 118,
+     "right": 38,
+     "accuracy": 0.322,
+     "ci95": [
+      0.244,
+      0.411
+     ],
+     "kappa": 0.002,
+     "most_common_mixups": [
+      [
+       "tall",
+       "short",
+       22
+      ],
+      [
+       "tall",
+       "at grade",
+       16
+      ],
+      [
+       "at grade",
+       "short",
+       15
+      ]
+     ]
+    },
+    "stories": {
+     "buildings": 117,
+     "right": 85,
+     "accuracy": 0.726,
+     "ci95": [
+      0.639,
+      0.799
+     ],
+     "kappa": 0.266,
+     "most_common_mixups": [
+      [
+       1,
+       2,
+       16
+      ],
+      [
+       2,
+       1,
+       14
+      ],
+      [
+       3,
+       1,
+       1
+      ]
+     ]
+    }
+   },
+   "UF 2021": {
+    "walls": {
+     "buildings": 107,
+     "right": 20,
+     "accuracy": 0.187,
+     "ci95": [
+      0.124,
+      0.271
+     ],
+     "kappa": -0.094,
+     "most_common_mixups": [
+      [
+       "masonry",
+       "wood",
+       75
+      ],
+      [
+       "concrete",
+       "masonry",
+       7
+      ],
+      [
+       "wood",
+       "masonry",
+       3
+      ]
+     ]
+    },
+    "foundation height": {
+     "buildings": 107,
+     "right": 28,
+     "accuracy": 0.262,
+     "ci95": [
+      0.188,
+      0.352
+     ],
+     "kappa": 0.014,
+     "most_common_mixups": [
+      [
+       "tall",
+       "short",
+       33
+      ],
+      [
+       "at grade",
+       "short",
+       32
+      ],
+      [
+       "tall",
+       "at grade",
+       9
+      ]
+     ]
+    },
+    "stories": {
+     "buildings": 100,
+     "right": 71,
+     "accuracy": 0.71,
+     "ci95": [
+      0.615,
+      0.79
+     ],
+     "kappa": 0.198,
+     "most_common_mixups": [
+      [
+       2,
+       1,
+       15
+      ],
+      [
+       1,
+       2,
+       11
+      ],
+      [
+       3,
+       1,
+       1
+      ]
+     ]
+    }
+   }
+  },
+  "first_floor_ft_error": {
+   "assessors": {
+    "buildings": 111,
+    "median_abs_ft": 0.88,
+    "within_1ft": 0.703,
+    "mean_bias_ft": 0.2
+   },
+   "UF 2021": {
+    "buildings": 101,
+    "median_abs_ft": 0.95,
+    "within_1ft": 0.525,
+    "mean_bias_ft": -0.89
+   }
+  }
+ },
+ "hidden_from_above": {
+  "Cedar Key": {
+   "damaged": 138,
+   "damaged_roof_intact": 80,
+   "share_hidden_from_above": 0.58,
+   "ci95": [
+    0.496,
+    0.659
+   ],
+   "badly_damaged": 81,
+   "badly_damaged_roof_intact": 37,
+   "share_bad_hidden_from_above": 0.457
+  },
+  "Fort Myers Beach": {
+   "damaged": 1645,
+   "damaged_roof_intact": 399,
+   "share_hidden_from_above": 0.243,
+   "ci95": [
+    0.222,
+    0.264
+   ],
+   "badly_damaged": 1082,
+   "badly_damaged_roof_intact": 173,
+   "share_bad_hidden_from_above": 0.16
+  },
+  "Horseshoe Beach": {
+   "damaged": 226,
+   "damaged_roof_intact": 65,
+   "share_hidden_from_above": 0.288,
+   "ci95": [
+    0.233,
+    0.35
+   ],
+   "badly_damaged": 165,
+   "badly_damaged_roof_intact": 23,
+   "share_bad_hidden_from_above": 0.139
+  }
+ },
+ "agent_caught_damage": {
+  "aerial photos only": {
+   "roof damaged": {
+    "caught": 3,
+    "of": 8,
+    "ci95": [
+     0.137,
+     0.694
+    ]
+   },
+   "roof intact (walls, floors or foundation only)": {
+    "caught": 1,
+    "of": 5,
+    "ci95": [
+     0.036,
+     0.624
+    ]
+   },
+   "false_alarms": {
+    "said_damaged": 2,
+    "of_undamaged": 109
+   }
+  },
+  "aerial + street photos": {
+   "roof damaged": {
+    "caught": 4,
+    "of": 8,
+    "ci95": [
+     0.215,
+     0.785
+    ]
+   },
+   "roof intact (walls, floors or foundation only)": {
+    "caught": 0,
+    "of": 5,
+    "ci95": [
+     -0.0,
+     0.434
+    ]
+   },
+   "false_alarms": {
+    "said_damaged": 1,
+    "of_undamaged": 109
+   }
+  }
+ }
+}
