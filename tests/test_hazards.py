@@ -193,3 +193,23 @@ def test_water_damage_grows_with_depth_and_waves():
     a = [hazards.flood_at([x], slab, surge=True)[0] for x in (2, 5, 8, 12)]
     assert a == sorted(a)
     assert hazards.flood_at([8], v, surge=True)[0] > hazards.flood_at([8], v | {"flood_zone": "AE"}, surge=True)[0]
+
+
+def test_repair_cost_follows_calibrated_odds():
+    """Repair cost goes with the recalibrated chance of damage: more than raw
+    Hazus where surveys found more damage (100 mph), still rising with wind,
+    and lower for houses built 2002 or later."""
+    old, new = wood_old() | {"green": None}, wood_old() | {"green": None, "year_built": 2010}
+    with uncalibrated():
+        raw = hazards.wind(100, old, "FL")[2]
+    assert hazards.wind(100, old, "FL")[2] > raw
+    losses = [hazards.wind(g, old, "FL")[2] for g in (60, 90, 120, 150, 180)]
+    assert losses == sorted(losses) and losses[-1] <= 1.0
+    assert hazards.wind(130, new, "FL")[2] < hazards.wind(130, old, "FL")[2]
+
+
+def test_newer_buildings_take_less_water_damage():
+    """All three surveyed towns: at the same water, buildings from 2002 or
+    later were damaged less often than older ones."""
+    b = {"foundation": "slab", "flood_zone": "AE", "stories": 1}
+    assert hazards.flood_at([6], b | {"year_built": 2010}, surge=True)[0] < hazards.flood_at([6], b | {"year_built": 1960}, surge=True)[0]

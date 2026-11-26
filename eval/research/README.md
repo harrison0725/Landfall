@@ -41,12 +41,12 @@ The storm's hazard at each building:
   * Fort Myers Beach: the survey's own fit to USGS and StEER high-water marks.
   * Horseshoe Beach: no USGS mark exists. We used NHC's report of 8 to 12 ft above the ground, which makes Horseshoe Beach the least certain place.
 
-**Year built for destroyed houses (the missing 2024 tax roll).** The 2026 Levy County roll dropped 89 Cedar Key buildings, and 37 of them were badly damaged. The 2024 roll isn't online: the Florida Department of Revenue's data portal needs a login, and the historical parcel services only cover Collier County. Two other sources filled 43 of the 89:
+**Year built for destroyed houses (the missing 2024 tax roll).** The 2026 Levy County roll dropped 89 Cedar Key buildings, and 37 of them were badly damaged. The 2024 roll isn't online: the Florida Department of Revenue's data portal needs a login, and the historical parcel services only cover Collier County. Two other sources filled 33 of the 89:
 
-* the county's effective year built from the survey's property records (27 buildings);
+* the county's effective year built from the survey's property records (17 buildings; 10 more said year 0 and are left unknown);
 * the University of Florida Envision Heritage survey of Cedar Key, done in 2021 before the storm (16 more).
 
-With these, Cedar Key has a year for 94% of buildings (was 88%), including 79% of the badly damaged ones. The remaining 46 need a records request to the Levy County Property Appraiser for the 2024 roll.
+With these, Cedar Key has a year for 93% of buildings (was 88%), including 73% of the badly damaged ones. The remaining 56 need a records request to the Levy County Property Appraiser for the 2024 roll.
 
 ## 1. Unseen storms: Landfall today vs learned from other storms
 
@@ -55,7 +55,7 @@ There are two versions:
 * **v1** is Landfall as it was: raw Hazus wind odds, plus water-damage rates and first-floor heights measured only at Cedar Key.
 * **v2** learns from the other places in two ways:
   * The Hazus wind odds are recalibrated against roof damage on buildings that only saw wind: `logit p = a + b·logit(Hazus) + c·[built 2002+] + d·[built 1976-2001]`.
-  * Water damage becomes a logistic model in three things: water depth above the first floor, water depth above the ground (deeper water carries bigger waves) and V zone. First-floor heights are pooled from all surveyed towns.
+  * Water damage becomes a logistic model in five things: water depth above the first floor, water depth above the ground (deeper water carries bigger waves), V zone, and build era (2002 or later; 1976-2001). First-floor heights are pooled from all surveyed towns.
 
 **Every place is predicted with v2 numbers fit without that place.** Cedar Key in v1 uses its own survey split in two halves.
 
@@ -63,9 +63,9 @@ There are two versions:
 
 | Place | Buildings | Gust mph | Water ft | Found | v1 | v2 | Log loss v1 → v2 | AUC v1 → v2 |
 |---|---|---|---|---|---|---|---|---|
-| Horseshoe Beach (Helene) | 313 | 99 | 10.0 | 226 | 92 | 173 | 1.08 → 0.69 | 0.46 → 0.56 |
-| Cedar Key (Helene) | 771 | 85 | 4.5 | 139 | 135 | 229 | 0.46 → 0.50 | 0.69 → 0.68 |
-| Fort Myers Beach (Ian) | 3,407 | 101 | 8.9 | 1,652 | 1,070 | 2,319 | 0.73 → 0.75 | 0.64 → 0.65 |
+| Horseshoe Beach (Helene) | 313 | 99 | 10.0 | 226 | 92 | 163 | 1.08 → 0.62 | 0.46 → 0.73 |
+| Cedar Key (Helene) | 771 | 85 | 4.5 | 139 | 135 | 243 | 0.46 → 0.50 | 0.69 → 0.71 |
+| Fort Myers Beach (Ian) | 3,407 | 101 | 8.9 | 1,652 | 1,070 | 2,321 | 0.73 → 0.74 | 0.64 → 0.68 |
 | Harvey | 1,133 | 131 | – | 538 | 403 | 468 | 0.73 → 0.63 | 0.72 → 0.70 |
 | Irma | 836 | 111 | – | 297 | 86 | 290 | 0.97 → 0.63 | 0.69 → 0.67 |
 | Michael | 547 | 132 | – | 300 | 310 | 300 | 0.90 → 0.69 | 0.57 → 0.59 |
@@ -73,11 +73,12 @@ There are two versions:
 
 Lower log loss is better. AUC is how well a version ranks the buildings that were damaged above the ones that weren't: 0.5 is a coin flip, 1.0 is perfect.
 
-* **Overall: v2 is better calibrated.** Mean log loss over the seven places went from 0.77 to 0.64. v1 did worse than giving every building the same rate (0.70); v2 does better than that rate.
-* **Ranking barely changed.** AUC within places stayed about the same (0.66).
+* **Overall: v2 is better calibrated.** Mean log loss over the seven places went from 0.77 to 0.63. v1 did worse than giving every building the same rate (0.70); v2 does better than that rate.
+* **Ranking improved a little.** AUC within places went from 0.66 to 0.685, mostly at Horseshoe Beach (0.46 to 0.73), once water damage knew when each building was built.
 * **Wind was the biggest error in v1.** Below about 120 mph gusts, Hazus gives almost no roof damage, but surveys found 10-45% of roofs damaged at 70-120 mph. At 140+ mph, Hazus is too sure (80-90% vs 29-64% found). Irma shows it best: v1 predicted 86 damaged where 297 were found; v2 predicts 290.
 * **Water damage does not travel well between towns.** At the same water depth above the floor, Horseshoe Beach (near Helene's landfall) was damaged far more often than Cedar Key or Fort Myers Beach. Cedar Key and Fort Myers Beach agree with each other, which is notable because they are different storms. As a result, v2 overshoots Cedar Key and Fort Myers Beach and undershoots Horseshoe Beach. Water depth above the ground matters beyond depth above the floor: about +0.26 log-odds per foot, as waves suggest. Horseshoe Beach's water level is also the least certain.
-* **Badly damaged:** v1 found 48 of 165 at Horseshoe Beach, 545 of 1,089 at Fort Myers Beach and 14 of 105 for Irma. v2 gives 117, 1,708 and 105.
+* **Newer buildings came through the same water far better.** At the same water depth, buildings from 2002 or later had 0.24 times the odds of wall, floor or foundation damage of those built before 1976 (95% CI 0.12-0.46, standard errors clustered by town), and 1976-2001 buildings 0.46 times (0.38-0.55). The effect points the same way inside each of the three towns (weakest at Cedar Key). Adding it lowered held-out water log loss from 0.669 to 0.657, but did not fix the town-to-town miss in counts.
+* **Badly damaged:** v1 found 48 of 165 at Horseshoe Beach, 545 of 1,089 at Fort Myers Beach and 14 of 105 for Irma. v2 gives 98, 1,664 and 105.
 
 ## 2. Wind (roof) calibration
 
@@ -88,29 +89,30 @@ This step uses only roof damage, on 3,992 buildings that saw wind alone: WiSPD h
 
 In the app, the calibration fades to raw Hazus below 70 mph, because no surveyed storm had lower gusts.
 
-* **Hazus repair costs are not recalibrated yet.** So Cedar Key in a Category 3 storm now shows about 598 of 688 buildings damaged but the same repair cost ($65M). Calibrating repair cost is the next step.
+* **Repair cost follows the calibrated odds.** For each building, Landfall finds the gust at which raw Hazus gives the calibrated chance of damage, and uses Hazus's repair cost at that gust. Where surveys found more damage than Hazus (below about 130 mph), repair cost goes up; at the top end, where Hazus was too sure, it goes down. Water repair cost is still the FIA depth curve. No survey here has repair dollars, so this is not checked against real costs.
+* **App numbers in a Category 3:** Gainesville (wind only) goes from 87 to 447 damaged and from $25M to $116M in repairs. Cedar Key (mostly surge) goes from 371 to 578 damaged and from $64M to $69M.
 * **Cedar Key's own dry roofs are a known miss.** 9 of 342 had roof damage, while v2 says about 42. Other storms found 10-20% of roofs damaged at 70-100 mph; Cedar Key found 3%.
 
 ## 3. Ranges
 
 The ranges combine two sources of uncertainty:
 
-* Model spread: how far off v2 was at the *other* places, as the root-mean-square of log(predicted / found) = 0.29, or about ±30%.
+* Model spread: how far off v2 was at the *other* places, as the root-mean-square of log(predicted / found) = 0.31. Six or seven places give only a rough spread, so ranges treat a new place as a Student's t prediction (sd × √(1 + 1/n), t with n degrees of freedom) instead of a normal one. That widens them by about a third.
 * The wind field's uncertainty (±10% gust), each survey's water uncertainty, and building-to-building chance.
 
-**The 90% ranges held the true count in 6 of 7 places.** Cedar Key was the miss: 148 to 348 predicted, 139 found.
+**The 90% ranges now hold the true count in all 7 places.** Before the small-sample correction, Cedar Key was a miss (148 to 348 predicted, 139 found). It is still the place v2 is most off (1.75 times too many), so the ranges are wide rather than the prediction good.
 
 | Place | Predicted | 90% range | Found |
 |---|---|---|---|
-| Horseshoe Beach | 173 | 105-266 | 226 |
-| Cedar Key | 229 | 148-348 | **139** |
-| Fort Myers Beach | 2,319 | 1,457-3,372 | 1,652 |
-| Harvey | 468 | 218-863 | 538 |
-| Irma | 290 | 126-621 | 297 |
-| Michael | 300 | 135-477 | 300 |
-| Laura | 192 | 83-316 | 136 |
+| Horseshoe Beach | 163 | 84-275 | 226 |
+| Cedar Key | 243 | 131-454 | 139 |
+| Fort Myers Beach | 2,321 | 1,180-3,381 | 1,652 |
+| Harvey | 468 | 211-846 | 538 |
+| Irma | 290 | 102-608 | 297 |
+| Michael | 300 | 127-512 | 300 |
+| Laura | 192 | 88-372 | 136 |
 
-The app now says, for example: "about 598 (likely between 373 and 688) of the 688 buildings will likely be damaged." Its range uses the 0.29 model spread plus chance. A chosen scenario has no hazard uncertainty, because the category is given. Other disasters (tornado, earthquake, flood) are untested, so their ranges use a wider 0.5.
+The app now says, for example: "about 578 (likely between 308 and 688) of the 688 buildings will likely be damaged." Its range uses a model spread of 0.38 (0.31 widened the same way for seven places, so that its ±1.645 spread is a t 90% range) plus chance. A chosen scenario has no hazard uncertainty, because the category is given. Other disasters (tornado, earthquake, flood) are untested, so their ranges use a wider 0.5.
 
 ## 4. Does how and when a building was built matter?
 
@@ -118,23 +120,23 @@ The app now says, for example: "about 598 (likely between 373 and 688) of the 68
 
 | Model | AUC within place | Mean log loss |
 |---|---|---|
-| Landfall v2 | **0.662** | **0.643** |
-| v2 without year built | 0.653 | 0.653 |
-| v2 without flood zone | 0.624 | 0.641 |
-| v2 without walls | 0.658 | 0.645 |
-| v2, nothing known about the building | 0.616 | 0.654 |
+| Landfall v2 | **0.685** | **0.632** |
+| v2 without year built | 0.662 | 0.667 |
+| v2 without flood zone | 0.655 | 0.634 |
+| v2 without walls | 0.684 | 0.633 |
+| v2, nothing known about the building | 0.615 | 0.657 |
 | Landfall v1 | 0.660 | 0.774 |
 | Same rate for all | 0.500 | 0.696 |
-| Year built only | 0.611 | 0.713 |
+| Year built only | 0.495 | 0.705 |
 | Distance to coast only | 0.543 | 0.688 |
 | Wind and water only | 0.623 | 0.656 |
-| Boosted trees, everything | 0.650 | 0.702 |
+| Boosted trees, everything | 0.638 | 0.703 |
 
-Without any building facts, ranking falls from 0.662 to 0.616. Year built and flood zone carry most of that. Hiding foundation or stories changes almost nothing, partly because the National Structure Inventory's foundation is wrong most of the time (see section 5).
+Without any building facts, ranking falls from 0.685 to 0.615. Year built carries the most (0.685 to 0.662), then flood zone. Year built alone ranks no better than chance: it matters through how it changes the effect of wind and water, not by itself. Hiding foundation or stories changes almost nothing, partly because the National Structure Inventory's foundation is wrong most of the time (see section 5).
 
-In a data-driven model, shuffling **year built drops AUC by 0.069, more than shuffling wind (0.052)**. Next come flood zone (0.028) and walls (0.012).
+In a data-driven model, shuffling **year built drops AUC by 0.065, more than shuffling wind (0.051)**. Next come flood zone (0.020) and walls (0.010).
 
-**Year built at the same wind.** This uses roof damage on wind-only buildings, with storm and place held fixed (3,954 buildings).
+**Year built at the same wind.** This uses roof damage on wind-only buildings, with storm and place held fixed (3,952 buildings).
 
 | Wind | Built before 1976 | 1976-2001 | 2002 or later (Florida Building Code era) |
 |---|---|---|---|
@@ -145,7 +147,7 @@ In a data-driven model, shuffling **year built drops AUC by 0.069, more than shu
 
 Compared with houses built before 1976, houses built in 2002 or later had **0.58 times the odds of roof damage (95% CI 0.34-0.99, p = 0.045**, standard errors clustered by place). The result holds when any one place is dropped (0.48-0.72). It is strong within Fort Myers Beach (0.18) and Harvey (0.64), but absent within Irma (1.2) and Michael (0.9).
 
-Houses built from 1976 to 2001 did no better than older ones. Beyond what Hazus already assumes, they did *worse* (odds ratio 2.0, CI 1.3-3.1). That would fit the known weak 1980s-90s roof practice before Hurricane Andrew's code changes took hold. This is worth asking Prof. Prevatt about.
+Houses built from 1976 to 2001 did no better than older ones. Beyond what Hazus already assumes, they did *worse* (odds ratio 2.0, CI 1.3-3.2). That would fit the known weak 1980s-90s roof practice before Hurricane Andrew's code changes took hold. This is worth asking Prof. Prevatt about.
 
 ## 5. How well the AI reads buildings, and what aerial photos miss
 
@@ -180,11 +182,12 @@ The agent's own aerial-only drafts caught 3 of 8 damaged buildings whose roofs w
 * **Seven places is few:** cluster-robust intervals with 7 clusters are rough, so we also report each place's own estimate and the drop-one-place spread.
 * **"Wind only" uses the survey's own record of surge (WiSPD)** or a dry first floor (virtual surveys). Both could mislabel some houses.
 * **Horseshoe Beach's water level is an estimate:** NHC's 8-12 ft above ground.
+* **13 appraiser records said year built 0.** They are now treated as unknown. Before that fix, "year built only" looked like it ranked buildings (0.61); it does not (0.50).
 
 ## Next steps
 
-1. Request the 2024 Levy County roll for the 46 Cedar Key buildings still missing a build year.
-2. Calibrate repair cost the way wind damage was calibrated.
+1. Request the 2024 Levy County roll for the 56 Cedar Key buildings still missing a build year.
+2. Check repair costs against real claim or permit dollars (for example NFIP claims or county permit values).
 3. Add a wave-exposure measure (distance to open water, or wave height from a surge model such as ADCIRC/CERA) so water damage carries over between towns.
 4. Ask Prof. Prevatt whether lining up roof DS2+ with Hazus DS2 is right, and about the 1976-2001 result.
 5. Add Idalia 2023 when a building-level survey is published. Only StEER's preliminary report is on DesignSafe so far.

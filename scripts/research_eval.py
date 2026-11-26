@@ -55,6 +55,7 @@ DS_PLACES = ("Helene 2024, Cedar Key", "Helene 2024, Horseshoe Beach", "Ian 2022
 
 def load() -> pd.DataFrame:
     t = pd.read_csv(OUT / "buildings.csv", low_memory=False)
+    t["year_built"] = t["year_built"].where(t["year_built"] > 1800)  # a few appraiser records say 0
     t["place"] = np.where(t["event"].str.startswith(("Helene", "Ian")), t["event"] + ", " + t["town"].astype(str), t["event"])
     t["fold"] = t["id"].str[1:].str.extract(r"(\d+)")[0].astype(float).fillna(0) % 2
     # roof damage as the wind part of each survey: DS surveys rate the roof
@@ -150,13 +151,16 @@ def fit_water(t: pd.DataFrame) -> dict:
     """Chance of walls/floors or foundation damage (DS2+; DS4+ for badly
     damaged) from the water: logistic in water above the first floor, water
     above the ground (deeper water carries bigger waves, which the survey
-    towns show matters beyond the depth over the floor) and V zone."""
+    towns show matters beyond the depth over the floor), V zone, and when it
+    was built (2002 or later; 1976-2001): newer buildings came through the
+    same water far better in all three towns."""
     import statsmodels.api as sm
 
     d = t[t["above_floor_ft"].notna() & t[["obs_walls", "obs_foundation"]].notna().any(axis=1) & t["water_ft"].notna()]
+    new, mid = _era(d["year_built"])
     X = sm.add_constant(np.c_[d["above_floor_ft"].clip(-10, 20), d["water_ft"].clip(0, 25),
-                              d["flood_zone"].fillna("").str.upper().str.startswith("V").astype(float)], has_constant="add")
-    out = {"model": "logistic: const, ft above first floor (clipped -10..20), ft above ground (0..25), V zone"}
+                              d["flood_zone"].fillna("").str.upper().str.startswith("V").astype(float), new, mid], has_constant="add")
+    out = {"model": "logistic: const, ft above first floor (clipped -10..20), ft above ground (0..25), V zone, built 2002 or later, built 1976-2001"}
     for key, col in (("damaged", "obs_water_d"), ("severe", "obs_water_s")):
         out[key] = [round(float(v), 4) for v in sm.Logit(d[col].astype(float), X).fit(disp=0).params]
     out["buildings"] = int(len(d))
@@ -170,9 +174,12 @@ def flood_logistic(depth: float, b: dict, model: dict, floors: dict) -> tuple[fl
     v = float((b.get("flood_zone") or "").upper().startswith("V"))
     above = np.clip(depth - fl, -10, 20)
     agl = min(max(depth, 0.0), 25.0)
+    y = b.get("year_built") or 0
+    era = (y >= 2002, 1976 <= y < 2002)
 
     def p(c):
-        return float(np.mean(1 / (1 + np.exp(-(c[0] + c[1] * above + c[2] * agl + c[3] * v)))))
+        z = c[0] + c[1] * above + c[2] * agl + c[3] * v + sum(k * e for k, e in zip(c[4:], era))
+        return float(np.mean(1 / (1 + np.exp(-z))))
 
     return p(model["damaged"]), p(model["severe"]), float(np.mean(depth > fl))
 
@@ -303,14 +310,20 @@ def by_place(t: pd.DataFrame, p: pd.DataFrame) -> dict:
 
 def ranges(t: pd.DataFrame, p: pd.DataFrame, fits: dict, hz) -> dict:
     """90% ranges for the count of damaged buildings in each place: the spread
-    of held-out predicted/found ratios at the OTHER places (log scale), the
+    of held-out predicted/found ratios at the OTHER places (log scale, as a
+    Student's t prediction for a new place), the
     wind field's uncertainty (gust x e^N(0, 0.10); NIST/ARA fits explain ~70%
     of station variance), the water's (each survey's own +-), and chance."""
     places = list(dict.fromkeys(t["place"]))
     logr = {pl: math.log(max(p.loc[t["place"] == pl, "p_d"].sum(), 1) / max(t.loc[t["place"] == pl, "obs_damaged"].sum(), 1)) for pl in places}
     out = {}
     for pl in places:
-        sd = float(np.sqrt(np.mean([v * v for q, v in logr.items() if q != pl])))
+        others = [v for q, v in logr.items() if q != pl]
+        # a spread measured on only 6 places is itself uncertain: predict a new
+        # place with Student's t (6 degrees of freedom) and sd * sqrt(1 + 1/6)
+        n_o = len(others)
+        sd = float(np.sqrt(np.mean([v * v for v in others])))
+        scale = sd * math.sqrt(1 + 1 / n_o)
         m = (t["place"] == pl).to_numpy()
         g = t[m]
         sims = []
@@ -319,14 +332,18 @@ def ranges(t: pd.DataFrame, p: pd.DataFrame, fits: dict, hz) -> dict:
             sh = RNG.normal(0, float(g["water_sd_ft"].mean())) if g["water_sd_ft"].notna().any() else 0.0
             q = run(g, "v2", fits, k=k, shift=sh)["p_d"].to_numpy(float)
             for _ in range(10):
-                pp = np.clip(q * math.exp(RNG.normal(0, sd)), 0, 1)
+                pp = np.clip(q * math.exp(scale * RNG.standard_t(n_o)), 0, 1)
                 sims.append(int((RNG.random(len(pp)) < pp).sum()))
         lo, hi = int(np.percentile(sims, 5)), int(np.percentile(sims, 95))
         found = int(g["obs_damaged"].sum())
         out[pl] = {"predicted": round(float(p.loc[m, "p_d"].sum())), "range_90": [lo, hi], "found": found, "inside": bool(lo <= found <= hi),
                    "model_sd_log_from_other_places": round(sd, 3), "buildings": int(m.sum())}
+    from scipy.stats import t as student_t
+
+    n = len(logr)
+    sd_all = float(np.sqrt(np.mean([v * v for v in logr.values()])))
     return {"places": out, "log_ratio_held_out": {k: round(v, 3) for k, v in logr.items()},
-            "model_sd_log_all": round(float(np.sqrt(np.mean([v * v for v in logr.values()]))), 3)}
+            "model_sd_log_all": round(sd_all, 3), "app_sd_log": round(sd_all * math.sqrt(1 + 1 / n) * float(student_t.ppf(0.95, n)) / 1.645, 3)}
 
 
 # ------------------------------------------------------------------ baselines, drop-one, build year
@@ -455,9 +472,10 @@ def write_calibration(full: "Fits", res: dict) -> None:
         "water": full.rates | {"source": "Helene 2024 (Cedar Key, Horseshoe Beach; PRJ-6245) and Ian 2022 (Fort Myers Beach; PRJ-5700): "
                                          "walls/floors or foundation damage state 2+ (damaged) and 4+ (badly damaged)"},
         "first_floor_ft": full.floors,
-        "range_sd_log": res["ranges"]["model_sd_log_all"],
+        "range_sd_log": res["ranges"]["app_sd_log"],
         "range_source": "root-mean-square of log(predicted / found) damaged counts over 7 surveyed places, each predicted "
-                        "with numbers fit without it (eval/research/results.json)",
+                        "with numbers fit without it (eval/research/results.json), widened for a new place: x sqrt(1 + 1/7) "
+                        "x t(0.95, 7 df) / 1.645, so the app's 1.645 sd range is a Student's t 90% prediction range",
     }
     (ROOT / "landfall" / "history" / "calibration.json").write_text(json.dumps(cal, separators=(",", ":")))
 

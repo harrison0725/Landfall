@@ -145,7 +145,7 @@ def helene() -> pd.DataFrame:
     out = pd.DataFrame({
         "event": "Helene 2024", "town": a["town"], "id": "H" + a["FID"].astype(str), "lon": a["x"], "lat": a["y"], "state": "FL",
         "material": a["bldgtype"].str.strip().map(MATERIAL), "foundation": a["found_type"].str.strip().map(FOUNDATION),
-        "stories": num(a["num_story"]).fillna(1).clip(1, 3).astype(int), "year_built": a["year_built"], "year_source": a["year_source"],
+        "stories": num(a["num_story"]).fillna(1).clip(1, 3).astype(int), "year_built": a["year_built"].where(a["year_built"] > 1800), "year_source": np.where(a["year_built"] > 1800, a["year_source"], ""),
         "flood_zone": a["firmzone"].where(a["firmzone"].isin(["AE", "VE", "X", "A", "AO", "V"]), None),
         "ground_ft": num(a["grd_el_ft"]), "first_floor_navd_ft": num(a["FFE_NAVD88_ft"]), "value": num(a["val_struct"]),
         "obs_roof": ds_num(a["DS_roof"]), "obs_walls": ds_num(a["DS_walls/floors"]), "obs_foundation": ds_num(a["DS_foundation"]),

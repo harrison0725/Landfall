@@ -358,28 +358,28 @@
    "damaged": {
     "buildings": 313,
     "found": 226,
-    "predicted": 173.2,
-    "ratio": 0.77,
+    "predicted": 163.1,
+    "ratio": 0.72,
     "ratio_90": [
-     0.72,
-     0.82
+     0.69,
+     0.76
     ],
-    "auc": 0.558,
-    "logloss": 0.6912,
-    "brier": 0.2459
+    "auc": 0.734,
+    "logloss": 0.6227,
+    "brier": 0.2181
    },
    "badly_damaged": {
     "buildings": 313,
     "found": 165,
-    "predicted": 117.4,
-    "ratio": 0.71,
+    "predicted": 98.2,
+    "ratio": 0.6,
     "ratio_90": [
-     0.64,
-     0.79
+     0.55,
+     0.65
     ],
-    "auc": 0.533,
-    "logloss": 0.8569,
-    "brier": 0.3193
+    "auc": 0.764,
+    "logloss": 0.686,
+    "brier": 0.2486
    },
    "roof_damaged_wind_only": {
     "buildings": 127,
@@ -414,28 +414,28 @@
    "damaged": {
     "buildings": 771,
     "found": 139,
-    "predicted": 229.1,
-    "ratio": 1.65,
+    "predicted": 243.2,
+    "ratio": 1.75,
     "ratio_90": [
-     1.46,
-     1.9
+     1.55,
+     2.0
     ],
-    "auc": 0.682,
-    "logloss": 0.4993,
-    "brier": 0.1647
+    "auc": 0.705,
+    "logloss": 0.5025,
+    "brier": 0.1657
    },
    "badly_damaged": {
     "buildings": 771,
     "found": 82,
-    "predicted": 137.4,
-    "ratio": 1.68,
+    "predicted": 144.7,
+    "ratio": 1.76,
     "ratio_90": [
-     1.43,
-     1.99
+     1.51,
+     2.09
     ],
-    "auc": 0.742,
-    "logloss": 0.338,
-    "brier": 0.101
+    "auc": 0.753,
+    "logloss": 0.3326,
+    "brier": 0.0981
    },
    "roof_damaged_wind_only": {
     "buildings": 342,
@@ -470,28 +470,28 @@
    "damaged": {
     "buildings": 3407,
     "found": 1652,
-    "predicted": 2319.2,
+    "predicted": 2320.6,
     "ratio": 1.4,
     "ratio_90": [
-     1.36,
+     1.37,
      1.44
     ],
-    "auc": 0.647,
-    "logloss": 0.7539,
-    "brier": 0.2743
+    "auc": 0.676,
+    "logloss": 0.7415,
+    "brier": 0.2669
    },
    "badly_damaged": {
     "buildings": 3407,
     "found": 1089,
-    "predicted": 1707.9,
-    "ratio": 1.57,
+    "predicted": 1664.0,
+    "ratio": 1.53,
     "ratio_90": [
-     1.51,
-     1.64
+     1.47,
+     1.59
     ],
-    "auc": 0.634,
-    "logloss": 0.6834,
-    "brier": 0.2435
+    "auc": 0.713,
+    "logloss": 0.6504,
+    "brier": 0.227
    },
    "roof_damaged_wind_only": {
     "buildings": 814,
@@ -707,18 +707,22 @@
    -0.3198320899299915
   ],
   "water": {
-   "model": "logistic: const, ft above first floor (clipped -10..20), ft above ground (0..25), V zone",
+   "model": "logistic: const, ft above first floor (clipped -10..20), ft above ground (0..25), V zone, built 2002 or later, built 1976-2001",
    "damaged": [
-    -3.3637,
-    0.0616,
-    0.2639,
-    1.8338
+    -2.9526,
+    0.0077,
+    0.2758,
+    1.8794,
+    -1.4413,
+    -0.7749
    ],
    "severe": [
-    -4.3155,
-    0.1227,
-    0.2733,
-    1.8936
+    -3.6023,
+    0.0454,
+    0.2762,
+    1.9895,
+    -2.2229,
+    -1.386
    ],
    "buildings": 3943
   },
@@ -737,93 +741,94 @@
  "ranges": {
   "places": {
    "Helene 2024, Horseshoe Beach": {
-    "predicted": 173,
+    "predicted": 163,
     "range_90": [
-     105,
-     266
+     84,
+     275
     ],
     "found": 226,
     "inside": true,
-    "model_sd_log_from_other_places": 0.289,
+    "model_sd_log_from_other_places": 0.307,
     "buildings": 313
    },
    "Helene 2024, Cedar Key": {
-    "predicted": 229,
+    "predicted": 243,
     "range_90": [
-     148,
-     348
+     131,
+     454
     ],
     "found": 139,
-    "inside": false,
-    "model_sd_log_from_other_places": 0.232,
+    "inside": true,
+    "model_sd_log_from_other_places": 0.245,
     "buildings": 771
    },
    "Ian 2022, Fort Myers Beach": {
-    "predicted": 2319,
+    "predicted": 2321,
     "range_90": [
-     1457,
-     3372
+     1180,
+     3381
     ],
     "found": 1652,
     "inside": true,
-    "model_sd_log_from_other_places": 0.276,
+    "model_sd_log_from_other_places": 0.305,
     "buildings": 3407
    },
    "Harvey 2017": {
     "predicted": 468,
     "range_90": [
-     218,
-     863
+     211,
+     846
     ],
     "found": 538,
     "inside": true,
-    "model_sd_log_from_other_places": 0.304,
+    "model_sd_log_from_other_places": 0.33,
     "buildings": 1133
    },
    "Irma 2017": {
     "predicted": 290,
     "range_90": [
-     126,
-     621
+     102,
+     608
     ],
     "found": 297,
     "inside": true,
-    "model_sd_log_from_other_places": 0.309,
+    "model_sd_log_from_other_places": 0.335,
     "buildings": 836
    },
    "Michael 2018": {
     "predicted": 300,
     "range_90": [
-     135,
-     477
+     127,
+     512
     ],
     "found": 300,
     "inside": true,
-    "model_sd_log_from_other_places": 0.309,
+    "model_sd_log_from_other_places": 0.335,
     "buildings": 547
    },
    "Laura 2020": {
     "predicted": 192,
     "range_90": [
-     83,
-     316
+     88,
+     372
     ],
     "found": 136,
     "inside": true,
-    "model_sd_log_from_other_places": 0.275,
+    "model_sd_log_from_other_places": 0.304,
     "buildings": 424
    }
   },
   "log_ratio_held_out": {
-   "Helene 2024, Horseshoe Beach": -0.266,
-   "Helene 2024, Cedar Key": 0.5,
-   "Ian 2022, Fort Myers Beach": 0.339,
+   "Helene 2024, Horseshoe Beach": -0.326,
+   "Helene 2024, Cedar Key": 0.559,
+   "Ian 2022, Fort Myers Beach": 0.34,
    "Harvey 2017": -0.138,
    "Irma 2017": -0.025,
    "Michael 2018": -0.0,
    "Laura 2020": 0.343
   },
-  "model_sd_log_all": 0.286
+  "model_sd_log_all": 0.31,
+  "app_sd_log": 0.382
  },
  "baselines": {
   "models": {
@@ -870,23 +875,23 @@
     }
    },
    "Landfall v2 (learned from other places)": {
-    "auc_within_place": 0.662,
-    "logloss_mean_of_places": 0.6426,
-    "count_error_median": 0.261,
+    "auc_within_place": 0.685,
+    "logloss_mean_of_places": 0.6315,
+    "count_error_median": 0.329,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.558,
-      "logloss": 0.6912,
-      "ratio": 0.77
+      "auc": 0.734,
+      "logloss": 0.6227,
+      "ratio": 0.72
      },
      "Helene 2024, Cedar Key": {
-      "auc": 0.682,
-      "logloss": 0.4993,
-      "ratio": 1.65
+      "auc": 0.705,
+      "logloss": 0.5025,
+      "ratio": 1.75
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.647,
-      "logloss": 0.7539,
+      "auc": 0.676,
+      "logloss": 0.7415,
       "ratio": 1.4
      },
      "Harvey 2017": {
@@ -912,23 +917,23 @@
     }
    },
    "v2 without walls": {
-    "auc_within_place": 0.658,
-    "logloss_mean_of_places": 0.6448,
-    "count_error_median": 0.274,
+    "auc_within_place": 0.684,
+    "logloss_mean_of_places": 0.6333,
+    "count_error_median": 0.342,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.548,
-      "logloss": 0.7002,
-      "ratio": 0.76
+      "auc": 0.73,
+      "logloss": 0.6314,
+      "ratio": 0.71
      },
      "Helene 2024, Cedar Key": {
-      "auc": 0.674,
-      "logloss": 0.501,
-      "ratio": 1.63
+      "auc": 0.7,
+      "logloss": 0.5031,
+      "ratio": 1.74
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.641,
-      "logloss": 0.7586,
+      "auc": 0.675,
+      "logloss": 0.7451,
       "ratio": 1.41
      },
      "Harvey 2017": {
@@ -954,23 +959,23 @@
     }
    },
    "v2 without foundation": {
-    "auc_within_place": 0.663,
-    "logloss_mean_of_places": 0.6419,
-    "count_error_median": 0.261,
+    "auc_within_place": 0.685,
+    "logloss_mean_of_places": 0.6319,
+    "count_error_median": 0.329,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.573,
-      "logloss": 0.6849,
-      "ratio": 0.77
+      "auc": 0.733,
+      "logloss": 0.6231,
+      "ratio": 0.72
      },
      "Helene 2024, Cedar Key": {
-      "auc": 0.683,
-      "logloss": 0.4963,
-      "ratio": 1.64
+      "auc": 0.705,
+      "logloss": 0.5022,
+      "ratio": 1.75
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.647,
-      "logloss": 0.7587,
+      "auc": 0.675,
+      "logloss": 0.7445,
       "ratio": 1.41
      },
      "Harvey 2017": {
@@ -996,23 +1001,23 @@
     }
    },
    "v2 without stories": {
-    "auc_within_place": 0.663,
-    "logloss_mean_of_places": 0.6441,
-    "count_error_median": 0.274,
+    "auc_within_place": 0.684,
+    "logloss_mean_of_places": 0.6329,
+    "count_error_median": 0.322,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.549,
-      "logloss": 0.7004,
-      "ratio": 0.76
+      "auc": 0.73,
+      "logloss": 0.6306,
+      "ratio": 0.71
      },
      "Helene 2024, Cedar Key": {
-      "auc": 0.693,
-      "logloss": 0.491,
-      "ratio": 1.59
+      "auc": 0.714,
+      "logloss": 0.4935,
+      "ratio": 1.69
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.645,
-      "logloss": 0.7463,
+      "auc": 0.67,
+      "logloss": 0.7352,
       "ratio": 1.38
      },
      "Harvey 2017": {
@@ -1038,24 +1043,24 @@
     }
    },
    "v2 without year built": {
-    "auc_within_place": 0.653,
-    "logloss_mean_of_places": 0.653,
-    "count_error_median": 0.261,
+    "auc_within_place": 0.662,
+    "logloss_mean_of_places": 0.6667,
+    "count_error_median": 0.186,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.54,
-      "logloss": 0.6972,
-      "ratio": 0.77
+      "auc": 0.558,
+      "logloss": 0.6636,
+      "ratio": 0.83
      },
      "Helene 2024, Cedar Key": {
-      "auc": 0.686,
-      "logloss": 0.4953,
-      "ratio": 1.62
+      "auc": 0.695,
+      "logloss": 0.5551,
+      "ratio": 1.99
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.642,
-      "logloss": 0.7489,
-      "ratio": 1.39
+      "auc": 0.658,
+      "logloss": 0.8183,
+      "ratio": 1.52
      },
      "Harvey 2017": {
       "auc": 0.703,
@@ -1080,24 +1085,24 @@
     }
    },
    "v2 without flood zone": {
-    "auc_within_place": 0.624,
-    "logloss_mean_of_places": 0.6412,
-    "count_error_median": 0.157,
+    "auc_within_place": 0.655,
+    "logloss_mean_of_places": 0.6341,
+    "count_error_median": 0.223,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.537,
-      "logloss": 0.7175,
-      "ratio": 0.66
+      "auc": 0.786,
+      "logloss": 0.6798,
+      "ratio": 0.62
      },
      "Helene 2024, Cedar Key": {
-      "auc": 0.639,
-      "logloss": 0.4549,
-      "ratio": 1.17
+      "auc": 0.668,
+      "logloss": 0.4525,
+      "ratio": 1.25
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.577,
-      "logloss": 0.7625,
-      "ratio": 1.36
+      "auc": 0.615,
+      "logloss": 0.7527,
+      "ratio": 1.35
      },
      "Harvey 2017": {
       "auc": 0.703,
@@ -1122,24 +1127,24 @@
     }
    },
    "v2, nothing known about the building": {
-    "auc_within_place": 0.616,
-    "logloss_mean_of_places": 0.6544,
-    "count_error_median": 0.139,
+    "auc_within_place": 0.615,
+    "logloss_mean_of_places": 0.6569,
+    "count_error_median": 0.262,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
       "auc": 0.507,
-      "logloss": 0.7382,
-      "ratio": 0.65
+      "logloss": 0.6914,
+      "ratio": 0.71
      },
      "Helene 2024, Cedar Key": {
       "auc": 0.667,
-      "logloss": 0.4471,
-      "ratio": 1.02
+      "logloss": 0.4503,
+      "ratio": 1.3
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.558,
-      "logloss": 0.7582,
-      "ratio": 1.34
+      "auc": 0.557,
+      "logloss": 0.8196,
+      "ratio": 1.46
      },
      "Harvey 2017": {
       "auc": 0.728,
@@ -1206,44 +1211,44 @@
     }
    },
    "Year built only (fit on other places)": {
-    "auc_within_place": 0.611,
-    "logloss_mean_of_places": 0.7128,
-    "count_error_median": 0.248,
+    "auc_within_place": 0.495,
+    "logloss_mean_of_places": 0.7052,
+    "count_error_median": 0.223,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.763,
-      "logloss": 0.7579,
-      "ratio": 0.6
+      "auc": 0.761,
+      "logloss": 0.7651,
+      "ratio": 0.57
      },
      "Helene 2024, Cedar Key": {
-      "auc": 0.551,
-      "logloss": 0.7923,
-      "ratio": 2.91
+      "auc": 0.536,
+      "logloss": 0.7423,
+      "ratio": 2.87
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.625,
-      "logloss": 0.7041,
+      "auc": 0.375,
+      "logloss": 0.7062,
       "ratio": 0.84
      },
      "Harvey 2017": {
       "auc": 0.614,
-      "logloss": 0.6933,
-      "ratio": 0.91
+      "logloss": 0.6881,
+      "ratio": 0.86
      },
      "Irma 2017": {
       "auc": 0.485,
-      "logloss": 0.6709,
-      "ratio": 1.27
+      "logloss": 0.682,
+      "ratio": 1.25
      },
      "Michael 2018": {
       "auc": 0.592,
-      "logloss": 0.7169,
-      "ratio": 0.78
+      "logloss": 0.7408,
+      "ratio": 0.71
      },
      "Laura 2020": {
       "auc": 0.758,
-      "logloss": 0.6541,
-      "ratio": 1.37
+      "logloss": 0.6121,
+      "ratio": 1.17
      }
     }
    },
@@ -1332,111 +1337,111 @@
     }
    },
    "Wind, water + building facts, logistic (fit on other places)": {
-    "auc_within_place": 0.621,
-    "logloss_mean_of_places": 0.7503,
-    "count_error_median": 0.385,
+    "auc_within_place": 0.641,
+    "logloss_mean_of_places": 0.7372,
+    "count_error_median": 0.386,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.53,
-      "logloss": 0.9537,
-      "ratio": 0.49
+      "auc": 0.673,
+      "logloss": 0.9416,
+      "ratio": 0.46
      },
      "Helene 2024, Cedar Key": {
-      "auc": 0.668,
-      "logloss": 0.7617,
-      "ratio": 1.96
+      "auc": 0.655,
+      "logloss": 0.7308,
+      "ratio": 1.92
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.557,
-      "logloss": 0.8361,
-      "ratio": 1.47
+      "auc": 0.607,
+      "logloss": 0.8259,
+      "ratio": 1.49
      },
      "Harvey 2017": {
-      "auc": 0.744,
-      "logloss": 0.628,
-      "ratio": 0.87
+      "auc": 0.736,
+      "logloss": 0.6121,
+      "ratio": 0.91
      },
      "Irma 2017": {
-      "auc": 0.677,
-      "logloss": 0.6671,
-      "ratio": 0.69
+      "auc": 0.588,
+      "logloss": 0.6998,
+      "ratio": 0.68
      },
      "Michael 2018": {
-      "auc": 0.54,
-      "logloss": 0.7327,
-      "ratio": 1.07
+      "auc": 0.563,
+      "logloss": 0.7475,
+      "ratio": 1.11
      },
      "Laura 2020": {
-      "auc": 0.787,
-      "logloss": 0.6729,
-      "ratio": 1.59
+      "auc": 0.814,
+      "logloss": 0.603,
+      "ratio": 1.38
      }
     }
    },
    "Boosted trees, everything (fit on other places)": {
-    "auc_within_place": 0.65,
-    "logloss_mean_of_places": 0.7024,
-    "count_error_median": 0.083,
+    "auc_within_place": 0.638,
+    "logloss_mean_of_places": 0.7032,
+    "count_error_median": 0.128,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.656,
-      "logloss": 0.9508,
-      "ratio": 0.46
+      "auc": 0.672,
+      "logloss": 0.9266,
+      "ratio": 0.47
      },
      "Helene 2024, Cedar Key": {
-      "auc": 0.659,
-      "logloss": 0.5404,
-      "ratio": 1.96
+      "auc": 0.661,
+      "logloss": 0.5578,
+      "ratio": 2.09
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.684,
-      "logloss": 0.6556,
-      "ratio": 1.01
+      "auc": 0.658,
+      "logloss": 0.6711,
+      "ratio": 0.94
      },
      "Harvey 2017": {
-      "auc": 0.656,
-      "logloss": 0.6495,
+      "auc": 0.643,
+      "logloss": 0.654,
       "ratio": 1.06
      },
      "Irma 2017": {
-      "auc": 0.545,
-      "logloss": 0.6877,
-      "ratio": 0.92
+      "auc": 0.549,
+      "logloss": 0.6985,
+      "ratio": 0.84
      },
      "Michael 2018": {
-      "auc": 0.558,
-      "logloss": 0.8422,
-      "ratio": 0.93
+      "auc": 0.553,
+      "logloss": 0.8327,
+      "ratio": 0.88
      },
      "Laura 2020": {
-      "auc": 0.674,
-      "logloss": 0.5904,
-      "ratio": 1.11
+      "auc": 0.683,
+      "logloss": 0.582,
+      "ratio": 1.01
      }
     }
    }
   },
   "permutation_importance_auc_drop": {
-   "wind": 0.052,
-   "water": 0.003,
-   "year built": 0.069,
+   "wind": 0.051,
+   "water": 0.007,
+   "year built": 0.065,
    "stories": 0.003,
-   "distance to coast": -0.004,
+   "distance to coast": -0.006,
    "design wind": -0.005,
-   "walls": 0.012,
-   "foundation": -0.001,
-   "flood zone": 0.028
+   "walls": 0.01,
+   "foundation": 0.001,
+   "flood zone": 0.02
   }
  },
  "year_effect": {
   "by_wind_band": {
    "70-100 mph": {
     "before 1976": {
-     "buildings": 202,
-     "found": 0.104,
+     "buildings": 200,
+     "found": 0.1,
      "found_90": [
-      0.069,
-      0.139
+      0.065,
+      0.135
      ],
      "hazus": 0.005
     },
@@ -1545,44 +1550,44 @@
      0.34,
      0.99
     ],
-    "p": 0.0446
+    "p": 0.047
    },
    "built_1976_2001": {
-    "odds_ratio": 1.36,
+    "odds_ratio": 1.37,
     "ci95": [
      0.81,
-     2.3
+     2.31
     ],
-    "p": 0.2488
+    "p": 0.2408
    }
   },
   "beyond_hazus_odds_ratios": {
    "built_2002_or_later": {
-    "odds_ratio": 0.66,
+    "odds_ratio": 0.67,
     "ci95": [
-     0.19,
-     2.26
+     0.2,
+     2.27
     ],
-    "p": 0.5096
+    "p": 0.5175
    },
    "built_1976_2001": {
-    "odds_ratio": 2.0,
+    "odds_ratio": 2.02,
     "ci95": [
-     1.28,
-     3.11
+     1.29,
+     3.16
     ],
     "p": 0.0021
    }
   },
-  "buildings": 3954,
+  "buildings": 3952,
   "by_place": {
    "Harvey 2017": 1087,
    "Ian 2022, Fort Myers Beach": 796,
    "Irma 2017": 752,
    "Michael 2018": 445,
    "Laura 2020": 423,
-   "Helene 2024, Cedar Key": 341,
-   "Helene 2024, Horseshoe Beach": 110
+   "Helene 2024, Cedar Key": 340,
+   "Helene 2024, Horseshoe Beach": 109
   }
  }
 }
