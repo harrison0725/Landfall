@@ -1,0 +1,122 @@
+{
+ "wind": {
+  "houses": 720,
+  "median_ratio": 0.806,
+  "sd_log": 0.173,
+  "by_storm": {
+   "Harvey 2017": {
+    "measured_median_mph": 133,
+    "vortex_median_mph": 148,
+    "ratio": 0.85
+   },
+   "Helene 2024": {
+    "measured_median_mph": 85,
+    "vortex_median_mph": 112,
+    "ratio": 0.76
+   },
+   "Ian 2022": {
+    "measured_median_mph": 101,
+    "vortex_median_mph": 177,
+    "ratio": 0.57
+   },
+   "Irma 2017": {
+    "measured_median_mph": 111,
+    "vortex_median_mph": 138,
+    "ratio": 0.82
+   },
+   "Laura 2020": {
+    "measured_median_mph": 133,
+    "vortex_median_mph": 143,
+    "ratio": 0.93
+   },
+   "Michael 2018": {
+    "measured_median_mph": 132,
+    "vortex_median_mph": 167,
+    "ratio": 0.82
+   }
+  }
+ },
+ "surge": {
+  "station": "NOAA 8727520 Cedar Key",
+  "storms_with_gauge_data": 55,
+  "storms_that_could_push_surge": 35,
+  "fit": {
+   "a": -0.1216,
+   "b": 0.005
+  },
+  "residual_sd_ft": 1.39,
+  "correlation": 0.74,
+  "highest": [
+   {
+    "storm": "Helene",
+    "year": 2024,
+    "closest_nm": 52,
+    "surge_kt": 120,
+    "peak_ft_above_mhhw": 9.27
+   },
+   {
+    "storm": "Idalia",
+    "year": 2023,
+    "closest_nm": 49,
+    "surge_kt": 115,
+    "peak_ft_above_mhhw": 6.73
+   },
+   {
+    "storm": "Hermine",
+    "year": 2016,
+    "closest_nm": 77,
+    "surge_kt": 70,
+    "peak_ft_above_mhhw": 5.91
+   },
+   {
+    "storm": "Elena",
+    "year": 1985,
+    "closest_nm": 45,
+    "surge_kt": 110,
+    "peak_ft_above_mhhw": 5.41
+   },
+   {
+    "storm": "Josephine",
+    "year": 1996,
+    "closest_nm": 68,
+    "surge_kt": 60,
+    "peak_ft_above_mhhw": 5.15
+   },
+   {
+    "storm": "Debby",
+    "year": 2024,
+    "closest_nm": 38,
+    "surge_kt": 70,
+    "peak_ft_above_mhhw": 4.6
+   },
+   {
+    "storm": "Agnes",
+    "year": 1972,
+    "closest_nm": 140,
+    "surge_kt": 0,
+    "peak_ft_above_mhhw": 4.15
+   },
+   {
+    "storm": "Michael",
+    "year": 2018,
+    "closest_nm": 139,
+    "surge_kt": 0,
+    "peak_ft_above_mhhw": 4.09
+   },
+   {
+    "storm": "Alma",
+    "year": 1966,
+    "closest_nm": 67,
+    "surge_kt": 90,
+    "peak_ft_above_mhhw": 4.0
+   },
+   {
+    "storm": "Allison",
+    "year": 1995,
+    "closest_nm": 84,
+    "surge_kt": 60,
+    "peak_ft_above_mhhw": 3.66
+   }
+  ]
+ }
+}
