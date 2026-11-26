@@ -552,6 +552,17 @@ function avgOf(pts, key = "chance_damaged") {
   const ks = pts.filter((p) => p[key] != null);
   return ks.length ? ks.reduce((t, p) => t + p[key], 0) / ks.length : null;
 }
+// 90% "likely between" range for an expected count: chance from building to
+// building plus how far off Landfall was at surveyed hurricane places
+// (eval/research; range_sd_log from the server)
+function likelyRange(pts, key, sd) {
+  const mu = pts.reduce((t, p) => t + (p[key] || 0), 0);
+  if (mu < 1) return null;
+  const v = pts.reduce((t, p) => t + (p[key] || 0) * (1 - (p[key] || 0)), 0);
+  const s = Math.sqrt(sd * sd + v / (mu * mu));
+  const lo = Math.floor(mu * Math.exp(-1.645 * s)), hi = Math.min(pts.length, Math.ceil(mu * Math.exp(1.645 * s)));
+  return [lo, hi];
+}
 // each building's chance in the chosen disaster type and category
 function applyScenario(sq) {
   const ev = sq.ev;
@@ -570,6 +581,11 @@ function applyScenario(sq) {
     dollars: hasRepair ? sum(ev.points, (p) => p.dollars) : null, value: sum(ev.points, (p) => p.value),
     noValue: ev.points.filter((p) => !p.value).length,
   };
+  const rsd = ev.range_sd_log ? (String(sqScenario).startsWith("hurricane") ? ev.range_sd_log.hurricane : ev.range_sd_log.other) : null;
+  if (rsd != null) {
+    sq.stats.damagedRange = likelyRange(ev.points, "chance_damaged", rsd);
+    sq.stats.badRange = likelyRange(ev.points, "chance_severe", rsd);
+  }
   sq.title.setContent(`${esc(ev.square)}: ${sq.stats.avg == null ? `${sq.stats.buildings.toLocaleString()} buildings` : `about ${Math.round(sq.stats.damaged).toLocaleString()} of ${sq.stats.buildings.toLocaleString()} damaged`}${sq.stats.dollars != null ? `, ${money(sq.stats.dollars)} repairs` : ""}`);
 }
 // $48.2M, $950K, $12K
@@ -792,15 +808,16 @@ function sqPanel() {
     // how many buildings that adds up to
     const N = st.buildings.toLocaleString();
     const chanceOf = (v) => { const p = (100 * v) / Math.max(st.buildings, 1); return p < 1 ? "less than a 1%" : `a ${Math.round(p)}%`; };
-    const howMany = (v, what) => (v < 0.05 ? `so none of the ${N} buildings are expected to ${what}`
+    const between = (r) => (r && r[1] > r[0] ? ` (likely between ${r[0].toLocaleString()} and ${r[1].toLocaleString()})` : "");
+    const howMany = (v, what, r) => (v < 0.05 ? `so none of the ${N} buildings are expected to ${what}`
       : v < 1 ? `so fewer than one of the ${N} buildings is expected to ${what}`
-      : `so about <b>${n0(v)}</b> of the ${N} buildings will likely ${what}`);
-    const sentence = (v, chance, what) => (v < 0.05 ? `<b>None</b> of the ${N} buildings are expected to ${what}.` : `Each building has ${chanceOf(v)} chance of ${chance} on average, ${howMany(v, what)}.`);
+      : `so about <b>${n0(v)}</b>${between(r)} of the ${N} buildings will likely ${what}`);
+    const sentence = (v, chance, what, r) => (v < 0.05 ? `<b>None</b> of the ${N} buildings are expected to ${what}.` : `Each building has ${chanceOf(v)} chance of ${chance} on average, ${howMany(v, what, r)}.`);
     const lines = st.avg == null
       ? `<p class="gnote">No odds for this disaster here yet.</p>`
       : `<ul class="sqfacts">
-          <li>${sentence(st.damaged, "damage", "be damaged")}</li>
-          <li>${sentence(st.bad, "bad damage", "be badly damaged or destroyed")}</li>
+          <li>${sentence(st.damaged, "damage", "be damaged", st.damagedRange)}</li>
+          <li>${sentence(st.bad, "bad damage", "be badly damaged or destroyed", st.badRange)}</li>
           <li>${st.dollars == null ? "Repair costs aren't available for this disaster." : `Repairs would likely cost about <b class="money">${st.dollars < 500 ? "$0" : money(st.dollars)}</b>, out of ${money(st.value)} to rebuild every building.`}</li>
           ${st.wet != null ? `<li>${sentence(st.wet, "water getting inside", "get water inside")} <small>Flooding inside isn't counted as damage.</small></li>` : ""}
         </ul>`;
