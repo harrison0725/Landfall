@@ -455,8 +455,11 @@ def _wind_odds(key: tuple) -> tuple[tuple[float, ...], ...]:
     return tuple(tuple(x / total for x in row) for row in acc)
 
 
-CAL_FROM_MPH = 70.0  # the surveys behind the calibration start here; below, it fades to Hazus
-CAL_ZERO_MPH = 40.0
+# Below 100 mph the calibration fades to Hazus, gone at 70 mph: the surveys' lowest wind band
+# (80-90 mph) found 0-3% of roofs damaged (Cedar Key 9 of 342, Harvey 0 of 42), below the fitted
+# curve's 7-12%, and storms this weak are common, so an overestimate here adds up over the years
+CAL_FROM_MPH = 100.0
+CAL_ZERO_MPH = 70.0
 
 
 def _recal(params: list[float], p: float, year: int | None) -> float:

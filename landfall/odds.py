@@ -354,6 +354,16 @@ def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", 
                 g["chance_water_above_first_floor"] = round(sum(wet) / len(wet), 2)
             g["from"] = "damage curves"
     rows_sorted = sorted(groups.values(), key=lambda g: -g["buildings"])
+    outlook = None
+    if rows:
+        try:
+            from . import climate
+
+            lon = sum(p[0] for p in ring) / len(ring)
+            lat = sum(p[1] for p in ring) / len(ring)
+            outlook = climate.outlook(rows, classes, index, state, place, lon, lat, range_sd()["hurricane"])
+        except Exception:  # noqa: BLE001  (the square's odds still stand without it)
+            outlook = None
     known = [r["chance_damaged"] for r in rows if r["chance_damaged"] is not None]
     sc = hazards.SCENARIOS[t]
     cat_label = next(c[1] for c in sc["categories"] if c[0] == cid)
@@ -397,6 +407,7 @@ def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", 
                                     if index and classes[index[0]]["odds"][sid][2] is not None else None),
         "rebuild_value_dollars": round(sum(r.get("value") or 0 for r in rows)),
         "range_sd_log": range_sd(),
+        "outlook": outlook,
         "range_means": "90% 'likely between' range for counts: chance from building to building plus how far off Landfall was at 7 surveyed "
                        "hurricane places (eval/research); other disasters are untested, so their range is wider",
         "expected_repair_cost_share_of_value": (round(sum(classes[i]["odds"][sid][2] for i in index) / len(index), 3)

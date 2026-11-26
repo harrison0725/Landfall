@@ -491,6 +491,8 @@ let sqView = "blocks";
 // the disaster type and category the odds are for ("hurricane:cat3"); every
 // square carries every scenario's odds, so switching needs no new request
 let sqScenario = null;
+// "Over the years": how many years ahead to look (10, 30 or 50)
+let outlookYears = 30;
 let sqMenu = [];
 const BLOCKS = 4;
 // a smooth scale, so blocks a few points apart still look different:
@@ -830,6 +832,32 @@ function sqPanel() {
     return `<div class="sqcard${k === sqShown ? " on" : ""}" data-sq="${esc(k)}" role="button" tabindex="0" title="Zoom to this square">
       <div class="sqhead"><b>${esc(k)}</b><span>${st.buildings.toLocaleString()} buildings</span></div>${lines}${here}</div>`;
   };
+  // over the years: chances from every hurricane that came by since 1950
+  const pct = (v) => (v >= 0.995 ? "over 99%" : v < 0.005 ? "less than 1%" : `${Math.round(100 * v)}%`);
+  const ocard = ([k, sq]) => {
+    const o = sq.ev.outlook;
+    if (!o || !o.storms_counted) return `<div class="sqcard"><div class="sqhead"><b>${esc(k)}</b></div><p class="gnote">No hurricane has come near here since ${o ? esc(o.record.slice(0, 4)) : "1950"}.</p></div>`;
+    const P = o.periods[String(outlookYears)];
+    const N = o.buildings.toLocaleString();
+    const rng = (r) => (r && r[1] > r[0] ? ` (likely between ${r[0].toLocaleString()} and ${r[1].toLocaleString()})` : "");
+    const top = o.strongest_here.slice(0, 3).map((s) => `${esc(s.name)} (${s.year}, about ${s.gust_mph} mph gusts${s.surge_ft >= 1 && s.buildings_wet ? `, water at ${s.buildings_wet.toLocaleString()} buildings` : ""})`);
+    const many = (v, what, r) => (v < 0.5 ? `None of the ${N} buildings are expected to ${what}` : `About <b>${Math.round(v).toLocaleString()}</b>${rng(r)} of the ${N} buildings will likely ${what}`);
+    return `<div class="sqcard"><div class="sqhead"><b>${esc(k)}</b><span>${o.storms_counted} storms since ${esc(o.record.slice(0, 4))}</span></div>
+      <ul class="sqfacts">
+        <li>${many(P.expected_damaged, `be damaged by a hurricane at least once in the next ${outlookYears} years`, P.damaged_range_90)}.</li>
+        <li>${many(P.expected_badly_damaged, "be badly damaged or destroyed", P.badly_range_90)}.</li>
+        <li>The chance of hurricane-force gusts here in that time is ${pct(P.chance.hurricane_gusts)}${P.chance.cat3_gusts >= 0.005 ? `, and of Category 3 strength gusts ${pct(P.chance.cat3_gusts)}` : ""}.${P.chance.surge >= 0.005 ? ` The chance storm surge reaches at least a tenth of the buildings is ${pct(P.chance.surge)}.` : ""}</li>
+      </ul>
+      <p class="gnote">Strongest here since ${esc(o.record.slice(0, 4))}: ${top.join(", ")}.</p></div>`;
+  };
+  const withOutlook = sqs.filter(([, sq]) => sq.ev.outlook);
+  const years = withOutlook.length
+    ? `<section class="sqblock"><h4>Over the years</h4>
+        <p class="gnote">From every hurricane that came near since ${esc(withOutlook[0][1].ev.outlook.record.slice(0, 4))}, replayed against today's buildings. These are chances, not a forecast of when.</p>
+        <div class="sqview" role="group" aria-label="Years ahead">${[10, 30, 50].map((y) => `<button type="button" data-years="${y}" class="${y === outlookYears ? "on" : ""}" aria-pressed="${y === outlookYears}">Next ${y} years</button>`).join("")}</div>
+        ${withOutlook.map(ocard).join("")}
+        <p class="gnote">A warming climate (more strong storms, higher seas) isn't in these numbers yet, so they likely run low.</p></section>`
+    : "";
   // side by side, when there is more than one square
   let compare = "";
   if (sqs.length > 1) {
@@ -863,6 +891,7 @@ function sqPanel() {
     ${sqMenu.length ? `<section class="sqblock"><h4><span class="step">1</span>Pick a disaster</h4><div class="sqscen"><label>Type <select id="sq-type">${typeOpts}</select></label><label>Strength <select id="sq-cat"${curType && curType.categories.length < 2 ? " disabled" : ""}>${catOpts}</select></label></div>${curType ? `<p class="gnote">${strength}${esc(curType.note.charAt(0).toUpperCase() + curType.note.slice(1))}.</p>` : ""}</section>` : ""}
     <section class="sqblock"><h4><span class="step">2</span>What to expect</h4>${sqs.map(card).join("")}</section>
     ${compare}
+    ${years}
     <section class="sqblock"><h4><span class="step">3</span>Color the map by</h4>
       <div class="chips" role="group" aria-label="Odds">${chips(["chance", "severe", "loss", "flooded"])}</div>
       <div class="chips quiet" role="group" aria-label="Building facts">${chips(["age", "construction", "green"])}</div>
@@ -872,6 +901,7 @@ function sqPanel() {
     <details class="sqblock"><summary>Where these numbers come from</summary>
       <p class="gnote">Odds${curCat ? ` for ${esc(curType.name.toLowerCase())}, ${esc(curCat.label)},` : ""} come from ${where}.</p>
       <p class="gnote">"Likely damaged" adds up each building's chance, so 0.5 + 0.5 counts as one building. Repair dollars are each building's expected repair share times its rebuild cost from the national structure inventory (the structure only, not land or belongings)${noValue ? `; ${noValue.toLocaleString()} buildings have no cost on record and count as $0` : ""}.</p>
+      ${withOutlook.length ? `<p class="gnote">"Over the years" replays ${esc(withOutlook[0][1].ev.outlook.source)}. Future periods are drawn from that record, with ranges for how often storms come, how strong they are here and how far off the damage curves can be.</p>` : ""}
       <p class="gnote">Year built is from the county tax roll in Florida, elsewhere the block's median year. Material and foundation come from the national structure inventory, which is often wrong. Each square is split into 16 blocks of about a quarter mile.</p>
     </details>`;
   const rescore = () => { paintSquares(); showDots(); sqPanel(); };
@@ -881,6 +911,7 @@ function sqPanel() {
   }
   panel.querySelectorAll("button[data-by]").forEach((bt) => bt.addEventListener("click", () => { sqColorBy = bt.dataset.by; rescore(); }));
   panel.querySelectorAll("button[data-view]").forEach((bt) => bt.addEventListener("click", () => { sqView = bt.dataset.view; rescore(); }));
+  panel.querySelectorAll("button[data-years]").forEach((bt) => bt.addEventListener("click", () => { outlookYears = Number(bt.dataset.years); sqPanel(); }));
   $("sq-clear").addEventListener("click", () => { for (const k of Object.keys(SQ)) delete SQ[k]; squaresLayer.clearLayers(); groupPoints.clearLayers(); $("groups").hidden = true; });
   const zoomTo = (k) => { sqShown = k; sqPanel(); map.fitBounds(SQ[k].bounds, { padding: [30, 30], maxZoom: 17 }); };
   panel.querySelectorAll(".sqcard[data-sq]").forEach((el) => {
