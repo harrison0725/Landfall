@@ -30,3 +30,10 @@ def test_manufactured_homes_fare_worse():
     h = tornadoes.outlook(_square(-97.49, 35.34), -97.49, 35.34, sims=1000)
     m = tornadoes.outlook(_square(-97.49, 35.34, material="manufactured home"), -97.49, 35.34, sims=1000)
     assert m["periods"]["30"]["expected_damaged"] >= h["periods"]["30"]["expected_damaged"]
+
+
+def test_top_wind_covers_a_small_part_of_the_path():
+    s = tornadoes.wind_shares()
+    for r in (2, 3, 4):
+        assert s[r][r] < 0.1  # the rating's own wind, per NWS damage survey maps
+        assert all(a >= b for a, b in zip(s[r], s[r][1:]))  # nested levels

@@ -1,0 +1,46 @@
+{
+ "shares": {
+  "1": [
+   1.0,
+   0.3508
+  ],
+  "2": [
+   0.8409,
+   0.3782,
+   0.0622
+  ],
+  "3": [
+   0.7941,
+   0.411,
+   0.1395,
+   0.0257
+  ],
+  "4": [
+   0.7379,
+   0.5148,
+   0.1885,
+   0.0556,
+   0.0058
+  ],
+  "5": [
+   0.7379,
+   0.5148,
+   0.1885,
+   0.0556,
+   0.0058,
+   0.0
+  ],
+  "0": [
+   1.0
+  ]
+ },
+ "tornadoes": {
+  "1": 595,
+  "2": 207,
+  "3": 56,
+  "4": 18,
+  "5": 18
+ },
+ "matched": 876,
+ "source": "NWS Damage Assessment Toolkit EF contour polygons (2008 on) matched to the SPC tornado record; share of length x largest width at or above each EF level, pooled by rating (EF4 and EF5 together)"
+}
