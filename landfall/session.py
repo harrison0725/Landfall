@@ -273,9 +273,11 @@ class Session:
         from .hazards import menu
 
         self.on_event("groups", square=out["square"], disaster=kind, polygon=self.cell["polygon"], points=out["points"],
-                      scenario=out["scenario"], classes=out["classes"], scenarios=menu(), site=out.get("site"),
+                      scenario=out["scenario"], classes=out["classes"], scenarios=menu(), site=out.get("site"), outlook=out.get("outlook"),
                       groups=[{k: g.get(k) for k in ("group", "age", "construction", "green", "buildings", "chance_damaged", "chance_damaged_90pct", "look_alikes")} for g in out["groups"]])
-        brief = {k: v for k, v in out.items() if k not in ("points", "classes")}
+        brief = {k: v for k, v in out.items() if k not in ("points", "classes", "outlook")}
+        if out.get("outlook"):  # the chart's yearly series are for the map panel, not the model
+            brief["outlook"] = {k: v for k, v in out["outlook"].items() if k not in ("water", "series")}
         brief["groups"] = out["groups"][:15]
         brief["other_groups"] = max(0, len(out["groups"]) - 15)
         return brief

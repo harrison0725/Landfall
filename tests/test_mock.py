@@ -43,3 +43,19 @@ def test_uploaded_photos_are_declined_in_mock_mode():
     s = Session(DEMO)
     text = s.turn("Assess this", box=(-83.036, 29.136, -83.032, 29.139), upload="abc123")
     assert "can't check uploaded photos" in text
+
+
+def test_square_event_carries_the_outlook_for_the_map_panel(monkeypatch):
+    from landfall import odds
+
+    fake = {"square": "Sec 1", "points": [], "scenario": "hurricane:cat3", "classes": [], "site": {}, "groups": [],
+            "outlook": {"periods": {"30": {}}, "water": {"series": [1, 2]}, "tornado": None}}
+    monkeypatch.setattr(odds, "estimate", lambda *a, **k: fake)
+    events = []
+    s = Session(DEMO)
+    s.on_event = lambda kind, **f: events.append((kind, f))
+    s.cell = {"polygon": [[0, 0], [1, 0], [1, 1], [0, 0]], "label": "Sec 1"}
+    brief = s._square()
+    groups = [f for k, f in events if k == "groups"][0]
+    assert groups["outlook"] is fake["outlook"]
+    assert "water" not in brief["outlook"] and "periods" in brief["outlook"]
