@@ -1,0 +1,43 @@
+{
+ "bins": [
+  {
+   "predicted": "0.0%-0.5%",
+   "squares": 203,
+   "mean_predicted": 0.002,
+   "share_crossed": 0.0049
+  },
+  {
+   "predicted": "0.5%-1.0%",
+   "squares": 144,
+   "mean_predicted": 0.0074,
+   "share_crossed": 0.0069
+  },
+  {
+   "predicted": "1.0%-2.0%",
+   "squares": 255,
+   "mean_predicted": 0.0149,
+   "share_crossed": 0.0275
+  },
+  {
+   "predicted": "2.0%-4.0%",
+   "squares": 457,
+   "mean_predicted": 0.0298,
+   "share_crossed": 0.0394
+  },
+  {
+   "predicted": "4.0%-8.0%",
+   "squares": 614,
+   "mean_predicted": 0.058,
+   "share_crossed": 0.0603
+  },
+  {
+   "predicted": "8.0%-100.0%",
+   "squares": 423,
+   "mean_predicted": 0.1166,
+   "share_crossed": 0.0993
+  }
+ ],
+ "squares": 2096,
+ "mean_predicted": 0.0496,
+ "share_crossed": 0.0506
+}

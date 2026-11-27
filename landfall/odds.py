@@ -364,6 +364,13 @@ def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", 
             outlook = climate.outlook(rows, classes, index, state, place, lon, lat, range_sd()["hurricane"])
         except Exception:  # noqa: BLE001  (the square's odds still stand without it)
             outlook = None
+        if outlook is not None and state:  # NOAA's tornado record covers the US only
+            try:
+                from . import tornadoes
+
+                outlook["tornado"] = tornadoes.outlook(rows, lon, lat)
+            except Exception:  # noqa: BLE001
+                outlook["tornado"] = None
     known = [r["chance_damaged"] for r in rows if r["chance_damaged"] is not None]
     sc = hazards.SCENARIOS[t]
     cat_label = next(c[1] for c in sc["categories"] if c[0] == cid)
