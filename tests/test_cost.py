@@ -23,7 +23,7 @@ def test_known_floor_narrows_the_range():
 
 def test_visible_damage_sets_the_floor_of_the_range():
     low, high, why = damage_share("destroyed", None)
-    assert (low, high, why) == (0.75, 1.0, "visible damage")
+    assert (low, high, why) == (0.669, 1.0, "visible damage")
 
 
 def test_taller_buildings_lose_less_to_flood():

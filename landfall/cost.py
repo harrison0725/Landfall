@@ -17,8 +17,15 @@ first floor: below it 0-25%, just above it 25-50%, up to 3 ft above 50-75%,
 over 3 ft 75-100%. Aerial photos don't show the first-floor height, so the
 low end assumes a raised house (floor above the water) and the high end a
 house built at grade (floor about 1 ft above the ground). Visible damage
-gives a range by category (CATEGORY_SHARE, Landfall's planning ranges). A
-building's range is the larger of the two at each end.
+gives a range by category (CATEGORY_SHARE). FEMA's categories describe the
+same steps as Hazus's damage states for houses (Affected: cosmetic, like
+Hazus "slight"; Minor: repairable, not structural, "moderate"; Major:
+structural damage, "extensive"; Destroyed: a total loss, "complete"), and
+Hazus gives each state's repair cost as a share of a house's value (2%,
+10%, 44.7% and 100%; Hazus Earthquake v6.1, single-family homes, building
+only, not contents). Each category's range runs between the
+geometric means of its neighbours' ratios. A building's range is the larger
+of the two at each end.
 
 Outside Florida there is no tax roll to read, so the building value is the
 country's average from the European Commission's Joint Research Centre
@@ -43,16 +50,20 @@ from pathlib import Path
 CADASTRAL = "https://services9.arcgis.com/Gh9awoU677aKree0/arcgis/rest/services/Florida_Statewide_Cadastral/FeatureServer/0/query"
 RESIDENTIAL = ("001", "002", "004", "005", "008")  # single family, mobile home, condo, co-op, multi-family <10
 SQFT_PER_M2 = 10.7639
-STORY_M = 3.2
+STORY_M = 3.2  # m per story from a building's height: a typical floor-to-floor height for homes and offices (2.7-3.0 m ceiling plus floor), as used in global building-height datasets
 SLAB_FT = 1.0  # first floor of a house built at grade, above the ground
 
+# Hazus repair cost ratios for single-family homes by damage state (slight, moderate, extensive,
+# complete; Hazus Earthquake v6.1, as stored in history/hazus_quake.json)
+HAZUS_DS_RATIO = (0.02, 0.10, 0.447, 1.0)
+_EDGES = [round((HAZUS_DS_RATIO[k] * HAZUS_DS_RATIO[k + 1]) ** 0.5, 3) for k in range(3)]  # 0.045, 0.211, 0.669
 # share of the building's value, (low, high), by drafted category
 CATEGORY_SHARE = {
     "none": (0.0, 0.0),
-    "affected": (0.0, 0.10),
-    "minor": (0.10, 0.25),
-    "major": (0.25, 0.75),
-    "destroyed": (0.75, 1.0),
+    "affected": (0.0, _EDGES[0]),
+    "minor": (_EDGES[0], _EDGES[1]),
+    "major": (_EDGES[1], _EDGES[2]),
+    "destroyed": (_EDGES[2], 1.0),
 }
 
 

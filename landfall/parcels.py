@@ -28,6 +28,10 @@ from pathlib import Path
 from .cost import CADASTRAL
 
 NFHL = "https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28/query"
+# NFIP: a building is "pre-FIRM" if built by December 31, 1974 or before the community's first
+# flood map (FIRM), after which new buildings must have the lowest floor at or above the base
+# flood elevation. Most communities' first FIRMs came out between 1974 and the mid-1980s, so a
+# building from 1985 on is taken as built to the map; 1975-1984 depends on the town, so unknown.
 POST_FIRM_YEAR = 1985
 PRE_FIRM_YEAR = 1975
 LOW_FLOOR_FT = (1.0, 3.0)  # slab to crawlspace, Hazus default first-floor heights

@@ -6,9 +6,10 @@ Individual Assistance: Affected, Minor, Major, Destroyed.
 The numeric thresholds below are Landfall's own aerial proxies, not FEMA's
 definitions (FEMA defines categories from on-the-ground inspection, which
 aerial photos can't fully see). They live in one place so they can be tuned
-against the hand-labeled eval set. The 18-inch flood line comes from state
-field guides derived from the PDA Guide; check it against the current PDA
-Guide itself before results are published.
+against the hand-labeled eval set. The 18-inch flood line is FEMA's own: the
+Preliminary Damage Assessment Guide (FEMA, 2021) calls a home Major when the
+waterline is above 18 inches (or above the electrical outlets) in an
+essential living space, and 3 to 18 inches may be Minor or Major.
 """
 
 from __future__ import annotations

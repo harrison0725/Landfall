@@ -181,8 +181,10 @@ def _interp(xs: list[float], ps: list[float], x: float) -> float:
 # V(t) = Vb + (R * V0 - Vb) * exp(-alpha * t), maximum 1-minute wind in knots,
 # t hours after landfall. R is the drop from sea to land at the coast.
 KD_VB_KT, KD_R, KD_ALPHA = 26.7, 0.9, 0.095
-FORWARD_MPH = 12.0  # assumed forward speed of the storm over land (a typical US landfall)
-SLOW_MPH, FAST_MPH = 8.0, 24.0  # the range shown beside it
+# forward speed over land: the median of 174 US hurricane landfalls since 1950 (NHC best tracks,
+# scripts/forward_speed.py); the range shown beside it is their 10th and 90th percentiles
+FORWARD_MPH = 14.0
+SLOW_MPH, FAST_MPH = 6.0, 28.0
 MPH_PER_KT = 1.15078
 
 
@@ -312,7 +314,7 @@ def site(bbox: tuple[float, float, float, float]) -> dict:
     except Exception:  # noqa: BLE001
         mi = 0.0
     gusts = {cid: inland_gust(g, mi) for cid, _l, g in SCENARIOS["hurricane"]["categories"]}
-    # the same storm moving slowly (8 mph, like Ian 2022) or fast (24 mph, like Helene 2024):
+    # the same storm moving slowly or fast (the 10th and 90th percentile of US landfalls):
     # inland this changes the odds a lot (eval/assumption_checks.md), so the panel shows it
     global FORWARD_MPH
     base = FORWARD_MPH
@@ -328,11 +330,49 @@ def site(bbox: tuple[float, float, float, float]) -> dict:
             "surge_checked": mi <= SURGE_INLAND_MI}
 
 
+# ---------------------------------------------------------------- unknown year built
+
+def _decades(state: str | None) -> dict[int, float]:
+    """Share of homes built in each decade (1930 = 1939 or earlier, 2020 = 2020 on), in the
+    state, else the US: Census ACS 2019-2023, table B25034 (scripts/build_housing_age.py)."""
+    t = _table("housing_age.json")
+    return {int(k): v for k, v in (t.get(state or "") or t["US"]).items()}
+
+
+def _years_share(dec: dict[int, float], lo: int, hi: int) -> float:
+    """Share built from lo to hi (inclusive), spreading each decade evenly over its years."""
+    tot = 0.0
+    for d, w in dec.items():
+        a, b = (1900 if d == 1930 else d), (2025 if d == 2020 else d + 9)  # 1939-or-earlier counted as one block
+        overlap = max(0, min(b, hi) - max(a, lo) + 1)
+        tot += w * overlap / (b - a + 1)
+    return tot
+
+
+@lru_cache(maxsize=64)
+def year_weights(state: str | None) -> tuple[tuple[int, float], ...]:
+    """For a building whose year built is unknown: (year, weight) on each side of the years the
+    wind rulesets look at, weighted by when the state's homes were built."""
+    dec = _decades(state)
+    bins = [(1976, 1800, 1976), (1992, 1977, 1992), (1994, 1993, 1994), (2000, 1995, 2000), (2015, 2001, 2015), (2016, 2016, 2100)]
+    return tuple((y, _years_share(dec, lo, hi)) for y, lo, hi in bins)
+
+
+@lru_cache(maxsize=64)
+def era_weights(state: str | None) -> tuple[tuple[int, float], ...]:
+    """(representative year, weight) for the calibration's build eras: before 1976, 1976-2001, 2002 on."""
+    dec = _decades(state)
+    return ((1960, _years_share(dec, 1800, 1975)), (1990, _years_share(dec, 1976, 2001)), (2010, _years_share(dec, 2002, 2100)))
+
+
 # ---------------------------------------------------------------- wind (Hazus hurricane)
 
 WIND_MATERIAL = {"wood frame": "wood", "masonry": "masonry", "concrete": "concrete", "steel": "steel", "manufactured (mobile) home": "manufactured"}
 ASCE_WIND = "https://gis.asce.org/arcgis/rest/services/ASCE/wind2010_A/ImageServer/identify"
-NOW_YEAR = 2026  # the rulesets treat garages on homes under 30 years old as standard
+# ASCE 7-10 Risk Category II design wind across the US interior (Fig. 26.5-1A), used only when
+# ASCE's map service can't be reached and the place is this far from the Gulf or Atlantic coast
+INLAND_DESIGN_MPH, INLAND_DESIGN_MI = 115, 150
+NOW_YEAR = __import__("datetime").date.today().year  # the rulesets treat garages on homes under 30 years old as standard
 
 
 @lru_cache(maxsize=256)
@@ -385,7 +425,9 @@ def wind_configs(mat: str, year: int, stories: int, v: float, flood_zone: str | 
     AssetRepresentationRulesets). Their coin flips become weights; facts
     Landfall can't see take the rulesets' defaults (garage unknown, deck
     sheathing unknown, wood-truss roof on masonry), and roof shape is half
-    gable, half hip."""
+    gable, half hip (no national count of roof shapes exists, and the two
+    are the common shapes, so each gets an even weight; the rulesets
+    themselves draw roof shape from local data where it exists)."""
     h = "2" if stories >= 2 else "1"
     wbd = _wbd(year, v, flood_zone)
     c = _code_speed(year, v)
@@ -419,39 +461,41 @@ def wind_configs(mat: str, year: int, stories: int, v: float, flood_zone: str | 
 
 
 def wind_key(b: dict, state: str | None) -> tuple:
-    mat = WIND_MATERIAL.get(b.get("material") or "", "wood")  # unknown walls: wood frame, the most common
+    mat = WIND_MATERIAL.get(b.get("material") or "", "wood")  # unknown walls: wood frame (about 93% of new US single-family homes, Census Survey of Construction; NSI usually gives the walls)
     land = "70" if (b.get("green") or "").startswith("mostly trees") else "35"
     y = b.get("year_built")
     # the rulesets only look at which side of these years a building falls
     y = None if not y else next((cut for cut in (1976, 1992, 1994, 2000, 2015) if y <= cut), 2016)
     fz = "coastal" if (b.get("flood_zone") or "").upper().startswith(("A", "V")) else None
-    return (mat, y, min(int(b.get("stories") or 1), 2), b.get("v_ult"), fz, land)
+    return (mat, y, min(int(b.get("stories") or 1), 2), b.get("v_ult"), fz, land, None if y else state)
 
 
 @lru_cache(maxsize=4096)
 def _wind_odds(key: tuple) -> tuple[tuple[float, ...], ...]:
     """Chance of damage state 2+ and 3+, and expected repair cost as a share
     of the building's value, at each stored gust speed."""
-    mat, year, stories, v, fz, land = key
+    mat, year, stories, v, fz, land, state = key
     t = _table("hazus_wind.json")
     models = t["models"]
     if mat in ("concrete", "steel"):
         m = models[f"{mat}|{'light trees' if land == '70' else 'suburban'}"]
         return tuple(m[0]), tuple(m[1]), tuple(m[2])
-    years = [year] if year else [1960, 1990, 2010]  # unknown: an even mix of eras
-    speeds = [v] if v else [110, 130, 150]  # unknown design wind: an even mix
+    # unknown year built: the state's homes by when they were built (Census ACS)
+    years = [(year, 1.0)] if year else list(year_weights(state))
+    # unknown design wind (ASCE's map service down near the coast): an even mix over the coastal range
+    speeds = [v] if v else [110, 130, 150]
     acc = [[0.0] * len(t["speeds_mph"]) for _ in range(3)]
     total = 0.0
-    for y in years:
+    for y, wy in years:
         for vv in speeds:
             for mid, w in wind_configs(mat, y, stories, vv, fz, land):
                 m = models.get(mid)
                 if m is None:
                     continue
-                total += w
+                total += w * wy
                 for k in range(3):
                     for i, p in enumerate(m[k]):
-                        acc[k][i] += w * p
+                        acc[k][i] += w * wy * p
     return tuple(tuple(x / total for x in row) for row in acc)
 
 
@@ -462,14 +506,16 @@ CAL_FROM_MPH = 100.0
 CAL_ZERO_MPH = 70.0
 
 
-def _recal(params: list[float], p: float, year: int | None) -> float:
+def _recal(params: list[float], p: float, year: int | None, state: str | None = None) -> float:
     """Hazus odds adjusted to what surveys found (landfall/history/
     calibration.json; scripts/research_eval.py): logit(p) = a + b logit(p) +
-    c [built 2002+] + d [built 1976-2001]."""
+    c [built 2002+] + d [built 1976-2001]. Unknown year built: averaged over
+    the build eras of the state's homes (Census ACS)."""
     a, b, c, d = params
     q = min(max(p, 1e-4), 1 - 1e-4)
-    y = year or 0
-    z = a + b * math.log(q / (1 - q)) + c * (y >= 2002) + d * (1976 <= y < 2002)
+    if not year:
+        return sum(w * _recal(params, p, y) for y, w in era_weights(state))
+    z = a + b * math.log(q / (1 - q)) + c * (year >= 2002) + d * (1976 <= year < 2002)
     return 1 / (1 + math.exp(-z))
 
 
@@ -498,7 +544,7 @@ def wind(gust: float, b: dict, state: str | None) -> tuple[float, float, float]:
     cal = calibration()
     if cal and gust > CAL_ZERO_MPH:
         y = b.get("year_built")
-        cd, cs = _recal(cal["wind"]["damaged"], d, y), _recal(cal["wind"]["severe"], s, y)
+        cd, cs = _recal(cal["wind"]["damaged"], d, y, state), _recal(cal["wind"]["severe"], s, y, state)
         fade = min(1.0, (gust - CAL_ZERO_MPH) / (CAL_FROM_MPH - CAL_ZERO_MPH))
         d, s = d + fade * (cd - d), s + fade * (cs - s)
         s = min(s, d)
@@ -539,7 +585,7 @@ def hurricane(gust: float, depth: float, b: dict, state: str | None) -> tuple[fl
     wd, ws, wl = wind(gust, b, state)
     if not depth:
         return wd, ws, wl, 0.0
-    fd, fs, fl, wet = flood_at([depth], b, surge=True)
+    fd, fs, fl, wet = flood_at([depth], b, surge=True, state=state)
     return 1 - (1 - wd) * (1 - fd), 1 - (1 - ws) * (1 - fs), combine_losses(wl, fl), wet
 
 
@@ -570,25 +616,48 @@ def tornado(gust: float, b: dict) -> tuple[float, float]:
 
 # ---------------------------------------------------------------- earthquake (Hazus)
 
-# seismic design level by region and year built, after the Hazus guidance
-# (high: the western states of UBC zones 3-4; moderate: New Madrid and Charleston)
+# Seismic design level, after the Hazus guidance (high: the old UBC zones 3-4; moderate: zone
+# 2B; low elsewhere), by year built. Where the place is known, the zone comes from the ASCE 7-16
+# seismic design category there (USGS design maps service, site class D, risk category II):
+# category D or above covers the old zones 3 and 4 and category C about zone 2 (FEMA P-749,
+# section 4); otherwise from the state, as a fallback.
 HIGH_SEISMIC = {"CA", "AK", "WA", "OR", "NV", "UT", "HI", "ID", "MT", "WY"}
 MODERATE_SEISMIC = {"SC", "TN", "MO", "AR", "KY"}
+USGS_DESIGN = "https://earthquake.usgs.gov/ws/designmaps/asce7-16.json"
 
 
-def design_level(year: int | None, state: str | None) -> str:
+@lru_cache(maxsize=256)
+def seismic_level(lon: float, lat: float) -> str | None:
+    """"high", "moderate" or "low" from the ASCE 7-16 short-period design acceleration SDS at a
+    place (seismic design category D+ at SDS >= 0.50 g, C at 0.33-0.50, A-B below); None if the
+    service can't be reached."""
+    import requests
+
+    try:
+        r = requests.get(USGS_DESIGN, params={"latitude": lat, "longitude": lon, "riskCategory": "II", "siteClass": "D",
+                                              "title": "landfall"}, timeout=20)
+        sds = r.json()["response"]["data"]["sds"]
+    except Exception:  # noqa: BLE001
+        return None
+    if sds is None:
+        return None
+    return "high" if sds >= 0.50 else "moderate" if sds >= 0.33 else "low"
+
+
+def design_level(year: int | None, state: str | None, seismic: str | None = None) -> str:
     if state is None:  # abroad: Myanmar's first seismic code, 2012
         return "LC" if year and year >= 2012 else "PC"
-    y = year or 1960  # unknown: the middle era
-    if state in HIGH_SEISMIC:
+    zone = seismic or ("high" if state in HIGH_SEISMIC else "moderate" if state in MODERATE_SEISMIC else "low")
+    y = year or 1960
+    if zone == "high":
         return "PC" if y < 1941 else "MC" if y < 1976 else "HC"
-    if state in MODERATE_SEISMIC:
+    if zone == "moderate":
         return "PC" if y < 1941 else "LC" if y < 1976 else "MC"
     return "PC" if y < 1941 else "LC"
 
 
 def quake_model(b: dict, state: str | None) -> str:
-    lvl = design_level(b.get("year_built"), state)
+    lvl = design_level(b.get("year_built"), state, b.get("seismic"))
     m = (b.get("material") or "").lower()
     if "manufactured" in m:
         return f"MH.{lvl}"
@@ -601,7 +670,14 @@ def quake_model(b: dict, state: str | None) -> str:
     return f"W1.{lvl}"
 
 
-def quake(pga: float, b: dict, state: str | None) -> tuple[float, float, float]:  # noqa: D103
+def quake(pga: float, b: dict, state: str | None) -> tuple[float, float, float]:
+    """Unknown year built (US): averaged over the eras the design levels turn on (before 1941,
+    1941-1975, 1976 on), weighted by when the state's homes were built (Census ACS)."""
+    if not b.get("year_built") and state:
+        dec = _decades(state)
+        parts = [(1930, _years_share(dec, 1800, 1940)), (1960, _years_share(dec, 1941, 1975)), (1990, _years_share(dec, 1976, 2100))]
+        got = [quake(pga, {**b, "year_built": y}, state) for y, _w in parts]
+        return tuple(sum(w * g[k] for (_y, w), g in zip(parts, got)) for k in range(3))
     t = _table("hazus_quake.json")
     m = t["models"][quake_model(b, state)]
     p = [_phi(math.log(pga / m[f"ls{k}"][0]) / m[f"ls{k}"][1]) for k in range(1, 5)] + [0.0]
@@ -613,7 +689,7 @@ def quake(pga: float, b: dict, state: str | None) -> tuple[float, float, float]:
 # ---------------------------------------------------------------- flood
 
 
-def flood_at(depths: list[float], b: dict, surge: bool = False) -> tuple[float, float, float, float]:
+def flood_at(depths: list[float], b: dict, surge: bool = False, state: str | None = None) -> tuple[float, float, float, float]:
     """Averaged over the water depths (ft above the ground) and over the
     first-floor heights surveyed for this kind of foundation:
     (chance damaged, chance severe, expected repair cost / value, chance of
@@ -633,14 +709,14 @@ def flood_at(depths: list[float], b: dict, surge: bool = False) -> tuple[float, 
     wd = t["water_damage"]["V" if (v and surge) else "other"]
     tops = [hi for _lo, hi in wd["bins_ft"]]
     y = b.get("year_built") or 0
-    era = (y >= 2002, 1976 <= y < 2002)
+    # unknown year built: the state's homes by build era (Census ACS)
+    eras = [((y >= 2002, 1976 <= y < 2002), 1.0)] if y else [((yy >= 2002, 1976 <= yy < 2002), w) for yy, w in era_weights(state)]
 
     def rate(kind: str, above: float, depth: float) -> float:
         if cal:  # logistic in ft above the floor, ft above the ground (waves), V zone and build era, from three surveyed towns
             c = cal["water"][kind]
-            z = c[0] + c[1] * min(max(above, -10.0), 20.0) + c[2] * min(max(depth, 0.0), 25.0) + c[3] * (v and surge)
-            z += sum(k * e for k, e in zip(c[4:], era))
-            return 1 / (1 + math.exp(-z))
+            z0 = c[0] + c[1] * min(max(above, -10.0), 20.0) + c[2] * min(max(depth, 0.0), 25.0) + c[3] * (v and surge)
+            return sum(w / (1 + math.exp(-(z0 + sum(k * e for k, e in zip(c[4:], era))))) for era, w in eras)
         return wd[kind][min(bisect.bisect_right(tops, above), len(tops) - 1)]
 
     step = max(1, len(floors) // 60)  # every few surveyed floors is plenty for an average
@@ -656,8 +732,8 @@ def flood_at(depths: list[float], b: dict, surge: bool = False) -> tuple[float, 
     return d / n, s / n, loss / n, wet / n
 
 
-def flood(depth_ft: float, b: dict) -> tuple[float, float, float, float]:
-    return flood_at([depth_ft], b)
+def flood(depth_ft: float, b: dict, state: str | None = None) -> tuple[float, float, float, float]:
+    return flood_at([depth_ft], b, state=state)
 
 
 def modeled(t: str, intensity: float, b: dict, state: str | None, depth: float = 0) -> tuple:
@@ -671,7 +747,7 @@ def modeled(t: str, intensity: float, b: dict, state: str | None, depth: float =
     if t == "earthquake":
         return (*quake(intensity, b, state), None)
     if t == "flood":
-        return flood(intensity, b)
+        return flood(intensity, b, state)
     raise ValueError(t)
 
 
