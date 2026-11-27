@@ -464,7 +464,10 @@ def wind_configs(mat: str, year: int, stories: int, v: float, flood_zone: str | 
         swr_p = 0.6 if year > 2000 else 0.0
         deck = rda if year > 2000 else "6d"
         rwc = ("strap" if _hpr(year, v) else "tnail") if year > 2015 else ("strap" if c > 110 else "tnail") if year > 1992 else "tnail"
-        # garage unknown: the ruleset assigns a standard garage, which Hazus ties to no shutters
+        # garage unknown: the ruleset assigns a standard garage, which Hazus ties to no shutters. Kept on
+        # purpose: surveyed houses with garages (41-73% by era, WiSPD) had LESS damage (odds 0.53), the
+        # opposite of Hazus, so a garage marks newer or larger homes rather than a weak spot, and mixing
+        # in the surveyed garage shares made held-out scores slightly worse (scripts/roof_shapes.py)
         for swr, p2 in _either(swr_p, 1, 0):
             out.append((f"W.SF.{h}.{shape}.{swr}.{deck}.{rwc}.std.0.{terrain}", ws * p2))
     return out
@@ -559,7 +562,30 @@ def wind(gust: float, b: dict, state: str | None) -> tuple[float, float, float]:
         d, s = d + fade * (cd - d), s + fade * (cs - s)
         s = min(s, d)
         loss = _matching_loss(xs, rows, d, loss)
+    d = _roof_cover_adjust(d, b)
+    s = min(s, d)
     return d, s, loss
+
+
+def _roof_cover_adjust(p: float, b: dict) -> float:
+    """Hazus has no roof-cover setting. Where the cover is known, the odds of damage move by what
+    the WiSPD surveys found at the same gust and era (tile 0.28x, metal 0.68x, 3-tab shingles 1.49x
+    laminated; history/roof_cover.json, scripts/roof_cover.py), relative to that era's mix of
+    covers, so an unknown cover changes nothing. Only for "damaged": held out by storm it improved
+    log loss (0.635 to 0.620), while for bad damage it made it worse (0.374 to 0.380)."""
+    cover = b.get("roof_cover")
+    if not cover or p <= 0 or p >= 1:
+        return p
+    t = _table("roof_cover.json")
+    odds = t["damaged"]
+    if cover not in odds:
+        return p
+    y = b.get("year_built")
+    era = "to 1976" if y and y <= 1976 else "1977-2000" if y and y <= 2000 else "2001 on" if y else None
+    mixes = [t["era_mix"][era]] if era else list(t["era_mix"].values())
+    avg = sum(math.log(odds[c][0]) * m[c] for m in mixes for c in m) / len(mixes)
+    f = math.exp(math.log(odds[cover][0]) - avg)
+    return p * f / (1 - p + p * f)
 
 
 def _matching_loss(xs: list[float], rows: tuple, d: float, loss: float) -> float:
