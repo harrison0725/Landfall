@@ -493,6 +493,8 @@ let sqView = "blocks";
 let sqScenario = null;
 // "Over the years": how many years ahead to look (10, 30 or 50)
 let outlookYears = 30;
+// ...in the past climate ("past") or with 2050's higher seas and stronger storms ("2050")
+let outlookClimate = "past";
 let sqMenu = [];
 const BLOCKS = 4;
 // a smooth scale, so blocks a few points apart still look different:
@@ -837,7 +839,12 @@ function sqPanel() {
   const ocard = ([k, sq]) => {
     const o = sq.ev.outlook;
     if (!o || !o.storms_counted) return `<div class="sqcard"><div class="sqhead"><b>${esc(k)}</b></div><p class="gnote">No hurricane has come near here since ${o ? esc(o.record.slice(0, 4)) : "1950"}.</p></div>`;
-    const P = o.periods[String(outlookYears)];
+    const P = (outlookClimate === "2050" && o.periods_2050 ? o.periods_2050 : o.periods)[String(outlookYears)];
+    const c50 = o.climate_2050;
+    const f1 = (x) => x.toFixed(1);
+    const why50 = outlookClimate === "2050" && c50
+      ? `<p class="gnote">In 2050: ${o.strongest_here.some((s) => s.buildings_wet) || P.chance.surge > 0 ? `seas about ${f1(c50.sea_level_rise_ft.med)} ft higher here than in the early 1990s (${f1(c50.sea_level_rise_ft.low)} to ${f1(c50.sea_level_rise_ft.high)} ft, NOAA, ${esc(c50.sea_level_rise_ft.where)}), and ` : ""}hurricane winds about ${Math.round(c50.wind_change_pct[1])}% stronger (${c50.wind_change_pct[0]} to ${Math.round(c50.wind_change_pct[2])}%).${o.strongest_here.some((s) => s.buildings_wet) || P.chance.surge > 0 ? "" : " Storm surge doesn't reach here, so higher seas don't change these numbers."}</p>`
+      : "";
     const N = o.buildings.toLocaleString();
     const rng = (r) => (r && r[1] > r[0] ? ` (likely between ${r[0].toLocaleString()} and ${r[1].toLocaleString()})` : "");
     const top = o.strongest_here.slice(0, 3).map((s) => `${esc(s.name)} (${s.year}, about ${s.gust_mph} mph gusts${s.surge_ft >= 1 && s.buildings_wet ? `, water at ${s.buildings_wet.toLocaleString()} buildings` : ""})`);
@@ -848,15 +855,18 @@ function sqPanel() {
         <li>${many(P.expected_badly_damaged, "be badly damaged or destroyed", P.badly_range_90)}.</li>
         <li>The chance of hurricane-force gusts here in that time is ${pct(P.chance.hurricane_gusts)}${P.chance.cat3_gusts >= 0.005 ? `, and of Category 3 strength gusts ${pct(P.chance.cat3_gusts)}` : ""}.${P.chance.surge >= 0.005 ? ` The chance storm surge reaches at least a tenth of the buildings is ${pct(P.chance.surge)}.` : ""}</li>
       </ul>
-      <p class="gnote">Strongest here since ${esc(o.record.slice(0, 4))}: ${top.join(", ")}.</p></div>`;
+      ${why50}<p class="gnote">Strongest here since ${esc(o.record.slice(0, 4))}: ${top.join(", ")}.</p></div>`;
   };
   const withOutlook = sqs.filter(([, sq]) => sq.ev.outlook);
   const years = withOutlook.length
     ? `<section class="sqblock"><h4>Over the years</h4>
         <p class="gnote">From every hurricane that came near since ${esc(withOutlook[0][1].ev.outlook.record.slice(0, 4))}, replayed against today's buildings. These are chances, not a forecast of when.</p>
         <div class="sqview" role="group" aria-label="Years ahead">${[10, 30, 50].map((y) => `<button type="button" data-years="${y}" class="${y === outlookYears ? "on" : ""}" aria-pressed="${y === outlookYears}">Next ${y} years</button>`).join("")}</div>
+        <div class="sqview" role="group" aria-label="Climate">${[["past", "Climate as in the past"], ["2050", "Climate of 2050"]].map(([v, t]) => `<button type="button" data-climate="${v}" class="${v === outlookClimate ? "on" : ""}" aria-pressed="${v === outlookClimate}">${t}</button>`).join("")}</div>
         ${withOutlook.map(ocard).join("")}
-        <p class="gnote">A warming climate (more strong storms, higher seas) isn't in these numbers yet, so they likely run low.</p></section>`
+        <p class="gnote">${outlookClimate === "2050"
+          ? "Climate of 2050 adds higher seas and stronger hurricanes to the past storms. It keeps the number of storms the same, because scientists aren't sure whether there will be more or fewer."
+          : "Climate as in the past leaves out higher seas and stronger storms, so it likely runs low. Pick Climate of 2050 to add them."}</p></section>`
     : "";
   // side by side, when there is more than one square
   let compare = "";
@@ -912,6 +922,7 @@ function sqPanel() {
   panel.querySelectorAll("button[data-by]").forEach((bt) => bt.addEventListener("click", () => { sqColorBy = bt.dataset.by; rescore(); }));
   panel.querySelectorAll("button[data-view]").forEach((bt) => bt.addEventListener("click", () => { sqView = bt.dataset.view; rescore(); }));
   panel.querySelectorAll("button[data-years]").forEach((bt) => bt.addEventListener("click", () => { outlookYears = Number(bt.dataset.years); sqPanel(); }));
+  panel.querySelectorAll("button[data-climate]").forEach((bt) => bt.addEventListener("click", () => { outlookClimate = bt.dataset.climate; sqPanel(); }));
   $("sq-clear").addEventListener("click", () => { for (const k of Object.keys(SQ)) delete SQ[k]; squaresLayer.clearLayers(); groupPoints.clearLayers(); $("groups").hidden = true; });
   const zoomTo = (k) => { sqShown = k; sqPanel(); map.fitBounds(SQ[k].bounds, { padding: [30, 30], maxZoom: 17 }); };
   panel.querySelectorAll(".sqcard[data-sq]").forEach((el) => {

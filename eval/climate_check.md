@@ -61,9 +61,27 @@ Storms with 40-80 mph gusts are common. The calibrated wind curve gave 5-7% of h
 
 The calibration now fades to raw Hazus between 100 and 70 mph instead of between 70 and 40 mph. Scenario numbers change only below 100 mph gusts.
 
+## Climate of 2050
+
+The "Climate of 2050" button replays the same past storms with two changes. Both come from published projections, not a model of our own.
+
+- **Higher seas.** It uses the 2022 Interagency Sea Level Rise Technical Report (Sweet et al. 2022, NOAA NOS 01), Intermediate scenario, at the nearest NOAA tide gauge within 200 miles (otherwise the global average). Each storm that brings surge has its water level raised by the rise in 2050 since 1992, the middle of the tidal epoch that high-tide levels refer to. At Cedar Key that is 1.2 ft (0.9 to 1.5 ft, the 17th to 83rd percentiles); at Galveston it is 1.9 ft and at Grand Isle 2.3 ft, where the land is sinking.
+- **Stronger hurricanes.** Knutson et al. (2020, BAMS) project hurricanes' peak winds rising a median of 5% (1 to 10%) for 2°C of warming over 1986-2005, which is the middle of this storm record. IPCC AR6 puts 2041-2060 about 1.3°C (0.9 to 1.8°C) above 1986-2005 under intermediate emissions, so Landfall uses 0.65 of that change (0.45 to 0.9): each storm's winds are about 3% stronger (0.4 to 9%).
+- **Same number of storms.** Knutson et al. expect somewhat fewer storms overall but rate that with low confidence, so the count stays as in the record. If there are fewer storms, these numbers run a little high.
+
+Each simulated period picks the low, middle or high case for both changes together.
+
+| Cedar Key square, next 30 years | Climate as in the past | Climate of 2050 |
+|---|---|---|
+| Buildings damaged at least once | 191 (16-576) | 254 (44-663) |
+| Badly damaged or destroyed | 95 | 136 |
+| Chance of hurricane-force gusts | 33% | 55% |
+
+The jump in the chance of hurricane-force gusts is mostly threshold crossing. Several past storms brought gusts just under 90 mph to Cedar Key, and 3% stronger winds push them over.
+
 ## Known limits
 
-- **Past climate only.** More strong storms and higher seas are not included, so the numbers likely run low.
+- **Climate of 2050 changes only storm strength and sea level.** It doesn't move storm tracks or change how big storms are.
 - **The wind vortex is simple.** It uses a fixed shape and leaves out the effect of terrain beyond the 0.81 scaling.
 - **The surge rule is fit at one gauge** and misses storm size.
 - **Atlantic storms only.** Squares on the Pacific side get no hurricane history.

@@ -52,6 +52,14 @@ SURGE_REACH_NM = 100
 SURGE_A, SURGE_B, SURGE_SD_FT = -0.1216, 0.005, 1.39
 CAT1_ABOVE_LOWEST_FT = 2.8  # Category 1 worst-case level here = deepest building's Category 1 depth + this (fit to Helene at Cedar Key)
 PERIODS = (10, 30, 50)
+THRESHOLDS = {"hurricane_gusts": 74 * GUST, "cat3_gusts": 111 * GUST}  # 1-minute 74 / 111 mph as gusts
+# A 2050 climate. Knutson et al. (2020, BAMS) give, for 2 C of warming over 1986-2005 (the middle
+# of this storm record), a median +5% (1-10%) in hurricanes' peak winds, +13% in the share reaching
+# Category 4-5, and fewer storms overall with low confidence. IPCC AR6 puts 2041-2060 about 1.3 C
+# (0.9-1.8 C) above 1986-2005 under intermediate emissions (SSP2-4.5), so 0.65 (0.45-0.9) of that:
+# winds x1.033 (x1.005 to x1.09). The number of storms is kept as in the record.
+WIND_2050 = (1 + 0.01 * 0.45, 1 + 0.05 * 0.65, 1 + 0.10 * 0.9)
+SEA_LEVEL_REACH_MI = 200
 # Saffir-Simpson categories by 1-minute wind, kt
 CATS = [(64, 1), (83, 2), (96, 3), (113, 4), (137, 5)]
 
@@ -132,6 +140,23 @@ def storms_here(lon: float, lat: float) -> tuple[list[dict], int]:
     return sorted(out, key=lambda p: -p["gust_mph"]), d["last_year"] - d["first_year"] + 1
 
 
+@lru_cache(maxsize=1)
+def _sea_level() -> dict:
+    return json.loads((HISTORY / "sea_level_2050.json").read_text())
+
+
+def sea_level_2050(lon: float, lat: float) -> dict:
+    """Sea level rise by 2050 (ft above 1992; low, med, high) at the nearest
+    NOAA tide gauge within 200 miles, else the global average."""
+    d = _sea_level()
+    k = math.cos(math.radians(lat))
+    best = min(d["gauges"], key=lambda g: math.hypot((g["lon"] - lon) * k, g["lat"] - lat))
+    miles = math.hypot((best["lon"] - lon) * k, best["lat"] - lat) * 69.17
+    if miles <= SEA_LEVEL_REACH_MI:
+        return {"low": best["low"], "med": best["med"], "high": best["high"], "where": f"{best['name']} tide gauge", "miles": round(miles)}
+    return {**d["global_ft"], "where": "global average", "miles": None}
+
+
 def _era(y: int | None) -> int:
     y = y or 0
     return 2 if y >= 2002 else 1 if y >= 1976 else 0
@@ -174,63 +199,87 @@ def outlook(buildings: list[dict], classes: list[dict], index: list[int], state:
     z = 1.2
     shifts = [(math.exp(-z * LAND_SD_LOG), -z * SURGE_SD_FT), (1.0, 0.0), (math.exp(z * LAND_SD_LOG), z * SURGE_SD_FT)]
     n = len(storms)
-    pd_ = np.zeros((3, n, len(classes)))
-    ps_ = np.zeros((3, n, len(classes)))
-    wet = np.zeros(n)
     cache: dict[tuple, tuple] = {}
     # what hazards.hurricane looks at, so look-alike buildings share one calculation
     kinds = {ci: (hazards.wind_key(b, state), _era(b.get("year_built")), b.get("foundation"), (b.get("stories") or 1) >= 2,
                   (b.get("flood_zone") or "")[:1].upper()) for ci, b in members.items()}
-    for si, st in enumerate(storms):
-        h0 = surge_level(st["surge_kt"], level1)
-        st["surge_ft"] = round(h0, 1)
-        for k, (gf, dh) in enumerate(shifts):
-            g = round(st["gust_mph"] * gf / 2) * 2
-            h = max(0.0, h0 + dh) if h0 > 0 else 0.0
-            for ci, b in members.items():
-                d1 = (b.get("surge") or (0,))[0]
-                depth = round(max(0.0, d1 - (level1 - h)), 1) if d1 and h > 0 else 0.0
-                key = (kinds[ci], g, depth)
-                if key not in cache:
-                    d, sv, _l, _w = hazards.hurricane(g, depth, b, state)
-                    cache[key] = (d, sv)
-                pd_[k, si, ci], ps_[k, si, ci] = cache[key]
-                if k == 1 and depth > 0:
-                    wet[si] += counts[ci]
-    exp_d = (pd_[1] * counts).sum(1) if n else np.zeros(0)
-    rng = np.random.default_rng(seed)
-    per = {}
-    thresholds = {"hurricane_gusts": 74 * GUST, "cat3_gusts": 111 * GUST}
-    gusts = np.array([s["gust_mph"] for s in storms]) if storms else np.zeros(0)
+    for st in storms:
+        st["surge_ft"] = round(surge_level(st["surge_kt"], level1), 1)
+
+    def odds_for(wind_mult: float, rise_ft: float):
+        """Chance each kind of building is damaged (and badly) by each past
+        storm, with its wind and water estimated low, as is, and high."""
+        pd_ = np.zeros((3, n, len(classes)))
+        ps_ = np.zeros((3, n, len(classes)))
+        wet = np.zeros(n)
+        for si, st in enumerate(storms):
+            h0 = st["surge_ft"]
+            for k, (gf, dh) in enumerate(shifts):
+                g = round(st["gust_mph"] * gf * wind_mult / 2) * 2
+                h = max(0.0, h0 + dh) + rise_ft if h0 > 0 else 0.0
+                for ci, b in members.items():
+                    d1 = (b.get("surge") or (0,))[0]
+                    depth = round(max(0.0, d1 - (level1 - h)), 1) if d1 and h > 0 else 0.0
+                    key = (kinds[ci], g, depth)
+                    if key not in cache:
+                        d, sv, _l, _w = hazards.hurricane(g, depth, b, state)
+                        cache[key] = (d, sv)
+                    pd_[k, si, ci], ps_[k, si, ci] = cache[key]
+                    if k == 1 and depth > 0:
+                        wet[si] += counts[ci]
+        return pd_, ps_, wet
+
     total = float(counts.sum())
-    for T in PERIODS:
-        lam = rng.gamma(n + 0.5, 1.0 / years, sims)  # storms a year here: Jeffreys posterior from the record
-        k = rng.poisson(lam * T)
-        dmg = np.zeros(sims)
-        bad = np.zeros(sims)
-        for j in range(sims):
-            if k[j] == 0 or n == 0:
-                continue
-            pick = rng.integers(0, n, k[j])
-            lvl = rng.integers(0, 3, k[j])
-            dmg[j] = (counts * (1 - np.prod(1 - pd_[lvl, pick], axis=0))).sum()
-            bad[j] = (counts * (1 - np.prod(1 - ps_[lvl, pick], axis=0))).sum()
-        spread = np.exp(rng.normal(0, sd_log, sims))
-        dmg, bad = np.minimum(dmg * spread, total), np.minimum(bad * spread, total)
-        chance = {key: round(1 - math.exp(-float((gusts >= g).sum()) / years * T), 3) for key, g in thresholds.items()}
-        chance["surge"] = round(1 - math.exp(-float((wet >= max(1.0, 0.1 * total)).sum()) / years * T), 3)  # water at a tenth of the buildings
-        per[str(T)] = {
-            "years": T,
-            "chance": chance,
-            "expected_damaged": round(float(dmg.mean())),
-            "damaged_range_90": [int(np.percentile(dmg, 5)), int(math.ceil(np.percentile(dmg, 95)))],
-            "expected_badly_damaged": round(float(bad.mean())),
-            "badly_range_90": [int(np.percentile(bad, 5)), int(math.ceil(np.percentile(bad, 95)))],
-        }
+    gusts = np.array([s["gust_mph"] for s in storms]) if storms else np.zeros(0)
+
+    def periods(levels: list[tuple], wind_mult: float) -> dict:
+        """levels: one (pd, ps, wet) per climate level, each equally likely."""
+        rng = np.random.default_rng(seed)
+        out = {}
+        wet = levels[len(levels) // 2][2]
+        for T in PERIODS:
+            lam = rng.gamma(n + 0.5, 1.0 / years, sims)  # storms a year here: Jeffreys posterior from the record
+            k = rng.poisson(lam * T)
+            lev = rng.integers(0, len(levels), sims)
+            dmg = np.zeros(sims)
+            bad = np.zeros(sims)
+            for j in range(sims):
+                if k[j] == 0 or n == 0:
+                    continue
+                pd_, ps_, _w = levels[lev[j]]
+                pick = rng.integers(0, n, k[j])
+                lvl = rng.integers(0, 3, k[j])
+                dmg[j] = (counts * (1 - np.prod(1 - pd_[lvl, pick], axis=0))).sum()
+                bad[j] = (counts * (1 - np.prod(1 - ps_[lvl, pick], axis=0))).sum()
+            spread = np.exp(rng.normal(0, sd_log, sims))
+            dmg, bad = np.minimum(dmg * spread, total), np.minimum(bad * spread, total)
+            chance = {key: round(1 - math.exp(-float((gusts * wind_mult >= g).sum()) / years * T), 3) for key, g in THRESHOLDS.items()}
+            chance["surge"] = round(1 - math.exp(-float((wet >= max(1.0, 0.1 * total)).sum()) / years * T), 3)  # water at a tenth of the buildings
+            out[str(T)] = {
+                "years": T,
+                "chance": chance,
+                "expected_damaged": round(float(dmg.mean())),
+                "damaged_range_90": [int(np.percentile(dmg, 5)), int(math.ceil(np.percentile(dmg, 95)))],
+                "expected_badly_damaged": round(float(bad.mean())),
+                "badly_range_90": [int(np.percentile(bad, 5)), int(math.ceil(np.percentile(bad, 95)))],
+            }
+        return out
+
+    now = odds_for(1.0, 0.0)
+    per = periods([now], 1.0)
+    rise = sea_level_2050(lon, lat)
+    future = [odds_for(w, r) for w, r in zip(WIND_2050, (rise["low"], rise["med"], rise["high"]))]
+    per_2050 = periods(future, WIND_2050[1])
+    exp_d = (now[0][1] * counts).sum(1) if n else np.zeros(0)
+    wet = now[2]
     top = [{**s, "expected_damaged": round(float(exp_d[i])), "buildings_wet": int(wet[i])} for i, s in enumerate(storms[:5])]
     t = tracks()
     return {
         "periods": per,
+        "periods_2050": per_2050,
+        "climate_2050": {"sea_level_rise_ft": rise, "wind_change_pct": [round(100 * (w - 1), 1) for w in WIND_2050],
+                         "means": "2050's higher seas (NOAA 2022 Intermediate scenario, the nearest tide gauge) and stronger hurricanes "
+                                  "(Knutson et al. 2020, scaled to IPCC AR6 warming by 2041-2060); the number of storms stays as in the record"},
         "buildings": int(total),
         "storms_counted": n,
         "years_of_record": years,
@@ -238,7 +287,8 @@ def outlook(buildings: list[dict], classes: list[dict], index: list[int], state:
         "strongest_here": top,
         "source": t["source"] + "; wind at the square from a modified Rankine vortex (Willoughby and Rahn 2004 radii), scaled to "
         "NIST/ARA measured winds of six storms; storm surge as a share of the National Hurricane Center's Category 1 worst case, fit "
-        "to the Cedar Key tide gauge (NOAA 8727520); damage from the same curves as the hurricane scenarios",
-        "means": "Chances come from how often past storms (1950 on) reached here. Future storms are drawn from that record, so a "
-        "warming climate (more strong storms, higher seas) is not in these numbers yet.",
+        "to the Cedar Key tide gauge (NOAA 8727520); damage from the same curves as the hurricane scenarios; 2050: "
+        + _sea_level()["source"] + ", and Knutson et al. (2020) hurricane intensity changes scaled to IPCC AR6 warming",
+        "means": "Chances come from how often past storms (1950 on) reached here. The 2050 numbers add higher seas and stronger "
+        "storms; both keep the number of storms as in the record.",
     }
