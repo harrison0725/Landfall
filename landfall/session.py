@@ -347,7 +347,15 @@ class Session:
         with self.lock:
             if cell is not None:
                 self.cell = cell
-                text = f"{text}\n\n[The user picked the 1-mile grid square {cell.get('label') or 'on the map'}; estimate_square_damage works on it.]"
+                if cell.get("estimate"):
+                    # the map's "estimate damage" button: run the estimate here so the panel always
+                    # opens on it, and give the model the result to explain (it once picked group_buildings)
+                    out = self.call("estimate_square_damage", {})
+                    text = (f"{text}\n\n[The user picked the 1-mile grid square {cell.get('label') or 'on the map'} and estimate_square_damage "
+                            f"has already run on it; the map panel shows it. Its result: {json.dumps(out, default=str)[:30000]}\n"
+                            "Explain this result as the estimate_square_damage instructions say. Don't call group_buildings or estimate_square_damage again.]")
+                else:
+                    text = f"{text}\n\n[The user picked the 1-mile grid square {cell.get('label') or 'on the map'}; estimate_square_damage works on it.]"
             if box is not None:
                 self.box = tuple(round(v, 6) for v in box)
                 self.area = None

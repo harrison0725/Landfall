@@ -59,3 +59,26 @@ def test_square_event_carries_the_outlook_for_the_map_panel(monkeypatch):
     groups = [f for k, f in events if k == "groups"][0]
     assert groups["outlook"] is fake["outlook"]
     assert "water" not in brief["outlook"] and "periods" in brief["outlook"]
+
+
+def test_square_button_always_runs_the_estimate(monkeypatch):
+    from landfall import odds, session as sess
+
+    fake = {"square": "Sec 1", "points": [], "scenario": "hurricane:cat3", "classes": [], "site": {}, "groups": [], "buildings": 3}
+    monkeypatch.setattr(odds, "estimate", lambda *a, **k: fake)
+    seen = {}
+
+    class A:
+        text = "ok"
+
+    def fake_run(messages, tools, call, **k):
+        seen["text"] = messages[-1]["content"]
+        return A()
+
+    monkeypatch.setattr(sess, "run_tools", fake_run)
+    events = []
+    s = Session(DEMO, "cedar_key")
+    s.on_event = lambda kind, **f: events.append((kind, f))
+    s.turn("Group the buildings in Sec 1 and estimate", cell={"polygon": [[0, 0], [1, 0], [1, 1], [0, 0]], "label": "Sec 1", "estimate": True})
+    assert any(k == "groups" for k, _ in events)
+    assert "has already run" in seen["text"] and "Don't call group_buildings" in seen["text"]

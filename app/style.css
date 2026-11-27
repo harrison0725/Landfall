@@ -339,3 +339,8 @@ ul.sources { padding-left: 18px; }
 details.more summary { font-size: 0.74rem; color: var(--muted); cursor: pointer; font-weight: 500; }
 .sqcard .sqhead b { font-size: 0.82rem; }
 @media (min-width: 861px) { body.sq-open .leaflet-bottom.leaflet-right { margin-right: 386px; } }
+/* on a phone the square panel takes the map: the damage legend, photo note and scale would sit on it */
+@media (max-width: 860px) {
+  body.sq-open #legend, body.sq-open .around-note, body.sq-open .leaflet-control-scale { display: none; }
+  body.sq-open .groups { max-height: calc(100% - 230px); }
+}
