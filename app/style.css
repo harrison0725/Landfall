@@ -344,3 +344,9 @@ details.more summary { font-size: 0.74rem; color: var(--muted); cursor: pointer;
   body.sq-open #legend, body.sq-open .around-note, body.sq-open .leaflet-control-scale { display: none; }
   body.sq-open .groups { max-height: calc(100% - 230px); }
 }
+/* what if they were built differently */
+.whatif{border:1px solid var(--line, #2c3440);border-radius:10px;padding:10px 12px;margin:8px 0 10px}
+.whatif h5,.subsec.wi h5{margin:0 0 6px;font-size:13px}
+.whatif .chips{margin:4px 0 2px}
+.subsec.wi{border-top:1px dashed var(--line, #2c3440);margin-top:8px;padding-top:8px}
+.subsec.wi .tile .sub{color:#2a9d8f}

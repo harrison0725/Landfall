@@ -213,3 +213,54 @@ def test_newer_buildings_take_less_water_damage():
     later were damaged less often than older ones."""
     b = {"foundation": "slab", "flood_zone": "AE", "stories": 1}
     assert hazards.flood_at([6], b | {"year_built": 2010}, surge=True)[0] < hazards.flood_at([6], b | {"year_built": 1960}, surge=True)[0]
+
+
+def _house(**kw):
+    b = {"material": "wood frame", "year_built": 1985, "stories": 1, "v_ult": 150, "flood_zone": "AE",
+         "foundation": "slab", "green": None, "surge": (0, 2, 4, 6, 8), "value": 250000}
+    b.update(kw)
+    return b
+
+
+def test_each_what_if_switch_lowers_damage_where_it_should():
+    houses = [_house(), _house(year_built=1960, material="masonry"), _house(year_built=None)]
+    place = {"gusts": {"cat1": 90, "cat2": 105, "cat3": 120, "cat4": 140, "cat5": 160}}
+    w = hazards.what_if(houses, "FL", place)
+    t = w["totals"]
+    ids = [s["id"] for s in w["switches"]]
+    base = t["0"]["hurricane:cat3"]
+    for k, sid in enumerate(ids):
+        one = t[str(1 << k)]["hurricane:cat3"]
+        assert one[0] <= base[0] + 1e-9, sid
+    # roof switches change wind only, the raised floor changes water only
+    assert t[str(1 << ids.index("raised"))]["hurricane:cat3"][3] < base[3]
+    assert t[str(1 << ids.index("hip"))]["hurricane:cat3"][3] == base[3]
+    assert t[str(1 << ids.index("hip"))]["flood:ft3"] == t["0"]["flood:ft3"]
+    assert t[str(1 << ids.index("raised"))]["flood:ft3"][3] < t["0"]["flood:ft3"][3]
+    # all switches together beat any one of them
+    every = t[str((1 << len(ids)) - 1)]["hurricane:cat3"][0]
+    assert every <= min(t[str(1 << k)]["hurricane:cat3"][0] for k in range(len(ids)))
+
+
+def test_what_if_as_built_matches_the_square_odds():
+    houses = [_house(), _house(year_built=2010, stories=2), _house(material="masonry", flood_zone="X", surge=())]
+    place = {"gusts": {"cat1": 90, "cat2": 105, "cat3": 120, "cat4": 140, "cat5": 160}}
+    classes, index = hazards.odds_table(houses, "FL", place)
+    t = hazards.what_if(houses, "FL", place)["totals"]["0"]
+    for sid in ("hurricane:cat1", "hurricane:cat4", "flood:ft3"):
+        assert abs(t[sid][0] - sum(classes[i]["odds"][sid][0] for i in index)) < 0.05
+
+
+def test_hip_roof_matches_the_surveyed_odds_against_gable():
+    b = _house(year_built=1990)
+    hip = hazards.wind(120, {**b, "roof_shape": "hip"}, "FL")[0]
+    gab = hazards.wind(120, {**b, "roof_shape": "gable"}, "FL")[0]
+    mix = hazards.wind(120, b, "FL")[0]
+    assert hip < mix < gab
+    ratio = (hip / (1 - hip)) / (gab / (1 - gab))
+    assert abs(ratio - hazards.HIP_ODDS) < 0.01
+
+
+def test_shutters_pick_shuttered_hazus_models():
+    assert all(".sup.1." in m for m, _ in hazards.wind_configs("wood", 1990, 1, 150, "AE", "35", shutters=True))
+    assert all(m.split(".")[7] == "1" for m, _ in hazards.wind_configs("masonry", 1990, 1, 150, "AE", "35", shutters=True))

@@ -498,6 +498,7 @@ let outlookYears = 30;
 let outlookClimate = "past";
 // which tab of the square panel is open
 let sqTab = "now";
+const sqWhatIf = new Set();  // "what if they were built differently" switches that are on
 let sqMenu = [];
 const BLOCKS = 4;
 // a smooth scale, so blocks a few points apart still look different:
@@ -838,8 +839,38 @@ function sqPanel() {
         </div>`
       : "";
     return `<div class="sqcard${k === sqShown ? " on" : ""}" data-sq="${esc(k)}" role="button" tabindex="0" title="Zoom to this square">
-      ${head(k, `${N.toLocaleString()} buildings`)}${tiles}${facts}</div>`;
+      ${head(k, `${N.toLocaleString()} buildings`)}${tiles}${facts}${ifRow(sq)}</div>`;
   };
+  // what if they were built differently: the switches that can change this disaster, and per square
+  // the change they make (the server's totals for each mix of switches, as a difference from as built)
+  const wiOf = (sq) => sq.ev.what_if;
+  const wiAny = sqs.map(([, sq]) => wiOf(sq)).find(Boolean);
+  const wiOn = wiAny ? wiAny.switches.filter((w) => w.only_for.includes(curT)) : [];
+  const wiMask = wiAny ? wiAny.switches.reduce((m, w, k) => (sqWhatIf.has(w.id) && w.only_for.includes(curT) ? m | (1 << k) : m), 0) : 0;
+  const ifRow = (sq) => {
+    const w = wiOf(sq), st = sq.stats;
+    if (!w || !wiMask || st.avg == null || !w.totals[String(wiMask)] || !w.totals[String(wiMask)][sqScenario]) return "";
+    const a = w.totals["0"][sqScenario], b = w.totals[String(wiMask)][sqScenario];
+    const N = st.buildings;
+    const now = (v, i) => Math.max(0, v + (b[i] - a[i]));  // the tiles above plus the change
+    const fewer = (i) => { const d = b[i] - a[i]; return Math.abs(d) < 1 ? "about the same" : d < 0 ? `${n0(-d)} fewer` : `${n0(d)} more`; };
+    const dollarsLess = st.dollars == null ? "" : Math.abs(b[2] - a[2]) < 500 ? "no change" : b[2] < a[2] ? `${money(a[2] - b[2])} less` : `${money(b[2] - a[2])} more`;
+    return `<div class="subsec wi"><h5>If they were built that way</h5><div class="tiles">
+        ${tile(ofN(now(st.damaged, 0)), "likely damaged", fewer(0), now(st.damaged, 0) / N, "dmg")}
+        ${tile(ofN(now(st.bad, 1)), "badly damaged or destroyed", fewer(1), now(st.bad, 1) / N, "bad")}
+        ${st.dollars == null ? "" : tile(now(st.dollars, 2) < 500 ? "$0" : money(now(st.dollars, 2)), "likely repairs", dollarsLess, st.value ? now(st.dollars, 2) / st.value : null, "money")}
+        ${st.wet != null ? tile(ofN(now(st.wet, 3)), "get water inside", fewer(3), now(st.wet, 3) / N, "wet") : ""}
+      </div></div>`;
+  };
+  const listOf = (xs) => (xs.length < 3 ? xs.join(" and ") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
+  const wiPicked = wiOn.filter((w) => sqWhatIf.has(w.id));
+  const wiBlock = wiOn.length
+    ? `<div class="whatif"><h5>What if they were built differently?</h5>
+        <div class="chips" role="group" aria-label="What if">${wiOn.map((w) => `<button type="button" data-wi="${esc(w.id)}" class="${sqWhatIf.has(w.id) ? "on" : ""}" aria-pressed="${sqWhatIf.has(w.id)}" title="${esc(w.means)}">${esc(w.label)}</button>`).join("")}</div>
+        <p class="gnote">${wiPicked.length ? `Every building with ${listOf(wiPicked.map((w) => esc(w.label.charAt(0).toLowerCase() + w.label.slice(1)).replace("today's", "today&#39;s")))}. The new numbers are under each square.` : "Turn on a change to see how it moves the numbers for every building in the square."}</p>
+        <details class="more"><summary>What these mean and where the numbers come from</summary>${wiOn.map((w) => `<p class="gnote"><b>${esc(w.label)}</b>: ${esc(w.means)}. From ${esc(w.source)}.</p>`).join("")}</details>
+      </div>`
+    : "";
   // tornadoes over the years (US only); the same in both climate views
   const tornBlock = (o) => {
     const t = o && o.tornado;
@@ -964,7 +995,7 @@ function sqPanel() {
   if (!tabs.some(([v]) => v === sqTab)) sqTab = "now";
   const body = {
     now: `${sqMenu.length ? `<div class="sqscen"><label>Disaster <select id="sq-type">${typeOpts}</select></label><label>Strength <select id="sq-cat"${curType && curType.categories.length < 2 ? " disabled" : ""}>${catOpts}</select></label></div>${curType ? `<p class="gnote">${strength}${esc(curType.note.charAt(0).toUpperCase() + curType.note.slice(1))}.</p>` : ""}` : ""}
-      ${sqs.map(card).join("")}${compare}`,
+      ${wiBlock}${sqs.map(card).join("")}${compare}`,
     years,
     water: waterBlock(water),
     map: `<div class="chips" role="group" aria-label="Odds">${chips(["chance", "severe", "loss", "flooded"])}</div>
@@ -991,6 +1022,7 @@ function sqPanel() {
   }
   panel.querySelectorAll("button[data-by]").forEach((bt) => bt.addEventListener("click", () => { sqColorBy = bt.dataset.by; rescore(); }));
   panel.querySelectorAll("button[data-view]").forEach((bt) => bt.addEventListener("click", () => { sqView = bt.dataset.view; rescore(); }));
+  panel.querySelectorAll("button[data-wi]").forEach((bt) => bt.addEventListener("click", () => { const id = bt.dataset.wi; if (sqWhatIf.has(id)) sqWhatIf.delete(id); else sqWhatIf.add(id); sqPanel(); }));
   panel.querySelectorAll("button[data-years]").forEach((bt) => bt.addEventListener("click", () => { outlookYears = Number(bt.dataset.years); sqPanel(); }));
   panel.querySelectorAll("button[data-climate]").forEach((bt) => bt.addEventListener("click", () => { outlookClimate = bt.dataset.climate; sqPanel(); }));
   $("sq-clear").addEventListener("click", () => { for (const k of Object.keys(SQ)) delete SQ[k]; squaresLayer.clearLayers(); groupPoints.clearLayers(); $("groups").hidden = true; document.body.classList.remove("sq-open"); });

@@ -273,9 +273,15 @@ class Session:
         from .hazards import menu
 
         self.on_event("groups", square=out["square"], disaster=kind, polygon=self.cell["polygon"], points=out["points"],
-                      scenario=out["scenario"], classes=out["classes"], scenarios=menu(), site=out.get("site"), outlook=out.get("outlook"),
+                      scenario=out["scenario"], classes=out["classes"], scenarios=menu(), site=out.get("site"), outlook=out.get("outlook"), what_if=out.get("what_if"),
                       groups=[{k: g.get(k) for k in ("group", "age", "construction", "green", "buildings", "chance_damaged", "chance_damaged_90pct", "look_alikes")} for g in out["groups"]])
-        brief = {k: v for k, v in out.items() if k not in ("points", "classes", "outlook")}
+        brief = {k: v for k, v in out.items() if k not in ("points", "classes", "outlook", "what_if")}
+        wi = out.get("what_if")
+        if wi and out["scenario"] in wi["totals"]["0"]:  # the panel's switches; for the model, each one alone in this scenario
+            base = wi["totals"]["0"][out["scenario"]]
+            brief["what_if_built_differently"] = {
+                w["label"]: {"likely_damaged": wi["totals"][str(1 << k)][out["scenario"]][0], "as_built": base[0]}
+                for k, w in enumerate(wi["switches"]) if out["scenario"].split(":")[0] in w["only_for"]}
         if out.get("outlook"):  # the chart's yearly series are for the map panel, not the model
             brief["outlook"] = {k: v for k, v in out["outlook"].items() if k not in ("water", "series")}
         brief["groups"] = out["groups"][:15]

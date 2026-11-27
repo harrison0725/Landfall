@@ -375,6 +375,12 @@ def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", 
                 outlook["tornado"] = tornadoes.outlook(rows, lon, lat)
             except Exception:  # noqa: BLE001
                 outlook["tornado"] = None
+    what_if = None
+    if rows:
+        try:
+            what_if = hazards.what_if(rows, state, place)
+        except Exception:  # noqa: BLE001  (the square's odds still stand without it)
+            what_if = None
     known = [r["chance_damaged"] for r in rows if r["chance_damaged"] is not None]
     sc = hazards.SCENARIOS[t]
     cat_label = next(c[1] for c in sc["categories"] if c[0] == cid)
@@ -419,6 +425,7 @@ def estimate(ring: list[list[float]], kind: str = "hurricane", label: str = "", 
         "rebuild_value_dollars": round(sum(r.get("value") or 0 for r in rows)),
         "range_sd_log": range_sd(),
         "outlook": outlook,
+        "what_if": what_if,
         "range_means": "90% 'likely between' range for counts: chance from building to building plus how far off Landfall was at 7 surveyed "
                        "hurricane places (eval/research); other disasters are untested, so their range is wider",
         "expected_repair_cost_share_of_value": (round(sum(classes[i]["odds"][sid][2] for i in index) / len(index), 3)

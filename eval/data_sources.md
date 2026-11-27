@@ -74,6 +74,19 @@ Guesses that didn't hold up were replaced. They are listed at the end under "Fix
 | Cost by water above the floor | FEMA P-784 (Substantial Damage Estimator) bands | sourced |
 | Cost by damage category | Hazus repair cost per damage state for homes: 2%, 10%, 44.7%, 100% | sourced (new) |
 
+## 5. "What if they were built differently?" switches (square panel)
+
+| Switch | What changes | Where it comes from | Kind |
+|---|---|---|---|
+| Hip roofs | Chance of damage x odds 0.66 against gable, relative to the era's surveyed gable/hip mix | 2,551 surveyed houses (WiSPD, `scripts/roof_shapes.py`) | measured |
+| Metal roofs | Chance of damage x odds 0.68 against laminated shingles, relative to the era's cover mix | 2,804 surveyed houses (WiSPD, `scripts/roof_cover.py`) | measured |
+| Storm shutters | The Hazus wind model of the same house with shutters (and a braced garage door, as the SimCenter rulesets pair them) | Hazus Hurricane v5.1 | sourced, not field-checked (no survey recorded shutters) |
+| Floors 3 ft higher | Every surveyed first-floor height + 3 ft in the water damage model | Helene/Ian water damage fit | measured model, what-if input |
+| Built to today's code | Year built set to this year, so the Hazus code-era details and the surveyed build-era effects apply | Hazus rulesets + calibration (2002 on: roof odds 0.58, less water damage) | sourced + measured |
+
+Roof switches change "damaged" only (like roof cover); repair cost follows the new chance. Results are the
+square's totals for every mix of switches (`hazards.what_if`), shown as the change from the buildings as they are.
+
 ## Fixed in this check
 
 1. **Buildings with no year built were treated as old.** The survey calibration and the water damage
