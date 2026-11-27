@@ -8,12 +8,13 @@ From NOAA's tornado record (scripts/build_tornadoes.py):
 2. Each simulated tornado is one of those, with its own rating, length, width
    and direction, dropped at a random spot within the 50 miles. Most miss the
    square entirely.
-3. Wind across the path: a Rankine vortex, strongest along the center line at
-   a speed within the rating's Enhanced Fujita range, falling off as 1/distance
-   to 65 mph (the bottom of EF0) at the path's edge. So the share of the path
-   with at least v mph is 65/v. The rating's wind is taken to hold along the
-   whole length, which overstates strong tornadoes, whose peak wind usually
-   covers only part of the path.
+3. Wind in the path: NWS damage surveys' EF contour maps of 876 tornadoes
+   (scripts/build_tornado_wind.py) give, for each rating, the share of the
+   recorded length x largest width at or above each EF level. An EF3's own
+   EF3 wind covers about 3% of that box, and EF1 or more about 41%. A
+   building's level is set by how far it is from the center line (stronger
+   levels in narrower strips around it); its wind is anywhere within that
+   level's Enhanced Fujita range.
 4. Damage at each building from the Enhanced Fujita scale's damage indicators
    (hazards.tornado). A building counts once.
 
@@ -30,10 +31,18 @@ HISTORY = Path(__file__).resolve().parent / "history"
 REACH_MI = 50.0
 FROM_YEAR = 1995
 MI_PER_DEG = 69.17
-EDGE_MPH = 65.0
 # Enhanced Fujita 3-second gust ranges, mph (EF5 capped at 230); F-scale ratings before 2007 taken as the same number
 EF_MPH = [(65, 85), (86, 110), (111, 135), (136, 165), (166, 200), (201, 230)]
 PERIODS = (10, 30, 50)
+
+
+@lru_cache(maxsize=1)
+def wind_shares() -> dict:
+    """Rating -> share of the length x width box at or above EF0, EF1, ... (from NWS damage surveys)."""
+    import json
+
+    d = json.loads((HISTORY / "tornado_wind.json").read_text())
+    return {int(k): v for k, v in d["shares"].items()}
 
 
 @lru_cache(maxsize=1)
@@ -97,6 +106,7 @@ def outlook(buildings: list[dict], lon: float, lat: float, sims: int = 4000, see
     total = len(buildings)
     reach_sq = float(np.hypot(bx, by).max()) + 0.01
     tab = _damage_tables()
+    shares = wind_shares()
     pdmg = np.where(manu[None, :], tab["manufactured"][0][:, None], tab["house"][0][:, None])  # [gust, building]
     pbad = np.where(manu[None, :], tab["manufactured"][1][:, None], tab["house"][1][:, None])
 
@@ -107,9 +117,10 @@ def outlook(buildings: list[dict], lon: float, lat: float, sims: int = 4000, see
 
     # share of the 50-mile circle's area that tornado paths covered each year (any rating, and EF2 or stronger)
     area = math.pi * REACH_MI ** 2
-    covered = length * half * 2  # whole path; most of these paths lie inside the circle
-    point_any = float(covered.sum()) / area / years if n else 0.0
-    point_strong = float(covered[mag >= 2].sum()) / area / years if n else 0.0
+    box = length * half * 2  # most of these paths lie inside the circle
+    sh = wind_shares()
+    point_any = float(sum(box[q] * sh[min(int(mag[q]), 5)][0] for q in range(n))) / area / years if n else 0.0
+    point_strong = float(sum(box[q] * sh[min(int(mag[q]), 5)][2] for q in range(n) if mag[q] >= 2)) / area / years if n else 0.0
 
     rng = np.random.default_rng(seed)
     out = {}
@@ -138,10 +149,16 @@ def outlook(buildings: list[dict], lon: float, lat: float, sims: int = 4000, see
                 if not inside.any():
                     continue
                 s = sim_of[j]
-                lo, hi = EF_MPH[min(mag[pick[j]], 5)]
-                vmax = rng.uniform(lo, hi)
-                core = h[j] * EDGE_MPH / vmax
-                v = np.where(cross <= core, vmax, vmax * core / np.maximum(cross, 1e-9))
+                u = cross / h[j]  # 0 on the center line, 1 at the recorded edge
+                lvl = np.full(total, -1)
+                for e, share in enumerate(shares[min(mag[pick[j]], 5)]):
+                    lvl[u <= share] = e
+                inside &= lvl >= 0
+                if not inside.any():
+                    continue
+                lo_v = np.array([EF_MPH[e][0] for e in range(6)])[np.maximum(lvl, 0)]
+                hi_v = np.array([EF_MPH[e][1] for e in range(6)])[np.maximum(lvl, 0)]
+                v = lo_v + (hi_v - lo_v) * rng.random(total)
                 gi = np.clip(np.round(v).astype(int), 0, 240)
                 cols = np.arange(total)
                 pd_ = np.where(inside, pdmg[gi, cols], 0.0)
@@ -149,7 +166,7 @@ def outlook(buildings: list[dict], lon: float, lat: float, sims: int = 4000, see
                 surv_d[s] = surv_d.get(s, np.ones(total)) * (1 - pd_)
                 surv_b[s] = surv_b.get(s, np.ones(total)) * (1 - pb_)
                 hit_any[s] = True
-                hit_strong[s] |= mag[pick[j]] >= 2
+                hit_strong[s] |= bool((inside & (lvl >= 2)).any())  # EF2 or stronger wind at a building
             for s, sv in surv_d.items():
                 dmg[s] = (1 - sv).sum()
                 bad[s] = (1 - surv_b[s]).sum()
@@ -178,8 +195,8 @@ def outlook(buildings: list[dict], lon: float, lat: float, sims: int = 4000, see
         "point_chance_per_year": {"any": point_any, "ef2_plus": point_strong},
         "buildings": total,
         "strongest_within_10mi": strongest,
-        "source": str(r["source"]) + "; wind across each path from a Rankine vortex (65 mph at the edge), damage from the "
-        "Enhanced Fujita scale's damage indicators",
+        "source": str(r["source"]) + "; how much of each path gets each EF level from NWS damage survey maps of 876 tornadoes; "
+        "damage from the Enhanced Fujita scale's damage indicators",
         "means": "Chances come from how often tornadoes came within 50 miles since 1995, each dropped at random spots nearby. "
-        "The rating's wind is taken to hold along the whole path, so strong-tornado damage likely runs high.",
+        "A tornado's top wind covers only a small part of its path, as NWS damage surveys show.",
     }
