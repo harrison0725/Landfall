@@ -18,8 +18,10 @@ Guesses that didn't hold up were replaced. They are listed at the end under "Fix
 | When homes were built, by state (for buildings with no year built) | US Census ACS 2019-2023, table B25034 (`scripts/build_housing_age.py`) | sourced (new) |
 | Unknown walls taken as wood frame | Census Survey of Construction: about 93-95% of new US single-family homes are wood. Rarely used, because NSI almost always has walls. In Florida, where concrete block is common, this guess would be wrong, so it only covers the few buildings NSI misses | guess, reasoned |
 | Floors from building height: 3.2 m per story | Typical floor-to-floor height (2.7-3.0 m ceiling plus the floor), as used in global building-height datasets | guess, reasoned |
-| First floor 1-3 ft above ground (old or X-zone houses) | Hazus default first-floor heights for slab and crawlspace | sourced |
-| Built 1985 on: floor at the base flood elevation; before 1975: not | NFIP rules: buildings from before December 31, 1974 (or before the town's first flood map) are "pre-FIRM". Most towns got their first map between 1974 and the mid-1980s, so 1975-1984 is left unknown | sourced rule, reasoned cutoff |
+| First floor 1-3 ft above ground (old houses outside flood zones, X zones) | Hazus default first-floor heights for slab and crawlspace | sourced |
+| Old (pre-1975) houses in A and V zones: 0.4-6.8 ft above ground | Middle half of 2,004 such houses surveyed after Helene and Ian; only 16% were 1-3 ft, because many were raised later (`scripts/first_floors.py`) | measured (new) |
+| Houses from 1985 on: floor 2-5 ft above the base flood elevation | Middle half of 35 FEMA elevation certificates in Fort Myers Beach (median 3.9 ft above), not at it | measured (new) |
+| Which years count as built to the flood map: 1985 on yes, before 1975 no | NFIP rules: buildings from before December 31, 1974 (or before the town's first flood map) are "pre-FIRM". Most towns got their first map between 1974 and the mid-1980s, so 1975-1984 is left unknown | sourced rule, reasoned cutoff |
 
 ## 2. How strong the disaster is
 
@@ -55,6 +57,8 @@ Guesses that didn't hold up were replaced. They are listed at the end under "Fix
 | Water damage for river floods | Measured on the coast (A zones, where waves were small). River floods are slower and carry no salt, so this probably runs a little high for them | measured elsewhere, noted |
 | Repair cost from water | FEMA FIA depth-damage curves | sourced |
 | Wind + water combined | Hazus combination table | sourced |
+| Roof cover, where known (tile 0.28x, metal 0.68x, 3-tab shingles 1.49x the odds of damage of laminated shingles) | 2,804 houses in the WiSPD surveys, same wind, era and storm (`scripts/roof_cover.py`). Used for "damaged" only: held out by storm it improved log loss (0.635 to 0.620) but not for bad damage | measured (new) |
+| Garage: the ruleset's standard garage | Surveyed: 41% of homes to 1976 have one, 57% 1977-2000, 73% after. But homes with garages had less damage (odds 0.53), the opposite of Hazus, and mixing the shares in scored worse, so the default stays | measured, default kept |
 | Tornado damage | Enhanced Fujita damage indicators 2 and 3 (homes and manufactured homes) | sourced |
 | Earthquake damage | Hazus Earthquake v6.1 curves | sourced |
 | Wildfire, Helene-like surge | Share of look-alike buildings damaged in the LA 2025 fires and Cedar Key | measured |
@@ -94,10 +98,22 @@ Guesses that didn't hold up were replaced. They are listed at the end under "Fix
 9. **The 18-inch flood line cited state guides "to be checked".** Checked against FEMA's 2021 PDA
    Guide and cited directly.
 
+## Also learned from the surveys (Nov 27)
+
+- **FEMA's own ratings count water.** Lee County's FEMA inspections after Ian rated 98% of 2,973 Fort
+  Myers Beach buildings Minor or worse and 71% Major or worse, while the survey's structural damage
+  states found 48% damaged. Most of the gap is water inside, which Landfall states as flooding, not
+  damage. Landfall's chance of damage still ranks the buildings FEMA called Destroyed well (AUC 0.76).
+- **Walls and windows:** in the wind-only surveys, 85% of damaged houses had roof damage; 10% had only
+  wall or window damage, which the wind ratings Landfall is calibrated to already include.
+- **Wildfire:** in the LA fires, homes built before 1990 burned more in Eaton (53% destroyed vs 23-26%
+  for newer). Landfall already matches on age. Vents, eaves and siding are in CAL FIRE's data, but
+  Landfall can't know them for a new place without reading street photos.
+
 ## Still open
 
-- The rulesets' other defaults (garage, roof deck nails) are reasoned guesses, not measured. Garages could be
-  read from the Mapillary street photos (149 of 150 Cedar Key buildings); roof nails can't be seen.
+- Roof deck nails and the rulesets' other hidden details can't be seen or found in any survey.
+- Roof cover is used only where it is known; nothing reads it yet. Aerial or street photos could.
 - Roof shapes come from Gulf Coast surveys (FL, TX, LA); Louisiana's houses had far more hip roofs (35% gable).
 - NSI fills in walls and foundation from regional patterns where it has no record; Landfall can't
   tell which ones those are.
