@@ -454,7 +454,7 @@ map.on("click", (e) => {
   const sq = squareAt(e.latlng);
   cellLayer.clearLayers();
   if (!sq) return;
-  state.cell = { ...sq, pending: false };
+  state.cell = { ...sq, pending: false, estimate: false };
   cellLayer.addLayer(L.polygon(sq.polygon.map(([x, y]) => [y, x]), { color: "#ff9f1c", weight: 4, fill: true, fillOpacity: 0.06, interactive: false }));
   const box = document.createElement("div");
   box.className = "cellpick";
@@ -463,6 +463,7 @@ map.on("click", (e) => {
     map.closePopup();
     if (state.busy) return;
     state.cell.pending = true;
+    state.cell.estimate = true;  // the button always runs the estimate; the assistant only explains it
     const kind = ((state.storms || []).find((x) => x.key === $("storm").value) || {}).kind || "hurricane";
     $("input").value = `Group the buildings in ${sq.label} by age, how they were built and the green around them, and estimate each group's chance of damage in a ${kind} from past disasters with similar buildings.`;
     send();
@@ -1490,8 +1491,8 @@ async function send(e) {
     // no code: the server replays the nearest finished example instead (mock mode, no AI calls)
   }
   const storm = $("storm").value === EVENT ? null : $("storm").value || null;
-  const cell = state.cell && state.cell.pending ? { label: state.cell.label, polygon: state.cell.polygon, storm: $("storm").value || "" } : null;
-  if (state.cell) state.cell.pending = false;
+  const cell = state.cell && state.cell.pending ? { label: state.cell.label, polygon: state.cell.polygon, storm: $("storm").value || "", estimate: !!state.cell.estimate } : null;
+  if (state.cell) { state.cell.pending = false; state.cell.estimate = false; }
   const body = { text, cell, lang: lang(), box: state.box, storm: state.box ? storm : null, access_code: code, upload: state.box && state.upload ? state.upload.id : null, event: state.box && state.upload ? state.upload.event : null };
   if (state.box) { outlines.clearLayers(); state.features = {}; }
   if (state.box && state.upload && !state.findUpload) {
