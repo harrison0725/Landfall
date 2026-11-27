@@ -16,15 +16,15 @@
    "damaged": {
     "buildings": 313,
     "found": 226,
-    "predicted": 92.0,
+    "predicted": 92.1,
     "ratio": 0.41,
     "ratio_90": [
      0.38,
      0.44
     ],
-    "auc": 0.462,
-    "logloss": 1.0762,
-    "brier": 0.4105
+    "auc": 0.463,
+    "logloss": 1.0747,
+    "brier": 0.41
    },
    "badly_damaged": {
     "buildings": 313,
@@ -35,7 +35,7 @@
      0.26,
      0.33
     ],
-    "auc": 0.472,
+    "auc": 0.471,
     "logloss": 1.2076,
     "brier": 0.4165
    },
@@ -48,9 +48,9 @@
      0.03,
      0.05
     ],
-    "auc": 0.623,
-    "logloss": 1.3035,
-    "brier": 0.2633
+    "auc": 0.624,
+    "logloss": 1.2928,
+    "brier": 0.2631
    },
    "water_inside": {
     "buildings": 299,
@@ -79,7 +79,7 @@
      1.11
     ],
     "auc": 0.685,
-    "logloss": 0.4629,
+    "logloss": 0.4623,
     "brier": 0.1431
    },
    "badly_damaged": {
@@ -99,13 +99,13 @@
     "buildings": 342,
     "found": 9,
     "predicted": 0.3,
-    "ratio": 0.03,
+    "ratio": 0.04,
     "ratio_90": [
      0.02,
      0.07
     ],
-    "auc": 0.619,
-    "logloss": 0.1953,
+    "auc": 0.594,
+    "logloss": 0.1927,
     "brier": 0.0263
    },
    "water_inside": {
@@ -128,41 +128,41 @@
    "damaged": {
     "buildings": 3407,
     "found": 1652,
-    "predicted": 1070.3,
+    "predicted": 1074.6,
     "ratio": 0.65,
     "ratio_90": [
      0.63,
      0.67
     ],
-    "auc": 0.643,
-    "logloss": 0.7285,
-    "brier": 0.2619
+    "auc": 0.644,
+    "logloss": 0.7269,
+    "brier": 0.2613
    },
    "badly_damaged": {
     "buildings": 3407,
     "found": 1089,
-    "predicted": 545.4,
+    "predicted": 545.7,
     "ratio": 0.5,
     "ratio_90": [
      0.48,
      0.52
     ],
     "auc": 0.709,
-    "logloss": 0.6528,
+    "logloss": 0.6526,
     "brier": 0.2209
    },
    "roof_damaged_wind_only": {
     "buildings": 814,
     "found": 198,
-    "predicted": 14.4,
-    "ratio": 0.07,
+    "predicted": 15.3,
+    "ratio": 0.08,
     "ratio_90": [
      0.07,
-     0.08
+     0.09
     ],
-    "auc": 0.592,
-    "logloss": 1.0995,
-    "brier": 0.2336
+    "auc": 0.597,
+    "logloss": 1.0828,
+    "brier": 0.2329
    },
    "water_inside": {
     "buildings": 3109,
@@ -184,41 +184,41 @@
    "damaged": {
     "buildings": 1133,
     "found": 538,
-    "predicted": 402.6,
-    "ratio": 0.75,
+    "predicted": 412.0,
+    "ratio": 0.77,
     "ratio_90": [
-     0.71,
-     0.79
+     0.73,
+     0.8
     ],
-    "auc": 0.722,
-    "logloss": 0.7343,
-    "brier": 0.2314
+    "auc": 0.718,
+    "logloss": 0.7304,
+    "brier": 0.23
    },
    "badly_damaged": {
     "buildings": 1133,
     "found": 228,
-    "predicted": 161.7,
-    "ratio": 0.71,
+    "predicted": 170.4,
+    "ratio": 0.75,
     "ratio_90": [
-     0.65,
-     0.78
+     0.69,
+     0.82
     ],
-    "auc": 0.797,
-    "logloss": 0.4478,
-    "brier": 0.1451
+    "auc": 0.799,
+    "logloss": 0.4384,
+    "brier": 0.1425
    },
    "roof_damaged_wind_only": {
     "buildings": 1087,
     "found": 500,
-    "predicted": 378.6,
-    "ratio": 0.76,
+    "predicted": 387.4,
+    "ratio": 0.77,
     "ratio_90": [
-     0.72,
-     0.8
+     0.74,
+     0.82
     ],
-    "auc": 0.719,
-    "logloss": 0.7361,
-    "brier": 0.2306
+    "auc": 0.714,
+    "logloss": 0.7328,
+    "brier": 0.2295
    }
   },
   "Irma 2017": {
@@ -227,41 +227,41 @@
    "damaged": {
     "buildings": 836,
     "found": 297,
-    "predicted": 86.5,
-    "ratio": 0.29,
+    "predicted": 90.6,
+    "ratio": 0.31,
     "ratio_90": [
-     0.27,
-     0.32
+     0.28,
+     0.33
     ],
-    "auc": 0.69,
-    "logloss": 0.9738,
-    "brier": 0.2769
+    "auc": 0.688,
+    "logloss": 0.963,
+    "brier": 0.2746
    },
    "badly_damaged": {
     "buildings": 836,
     "found": 105,
-    "predicted": 14.0,
-    "ratio": 0.13,
+    "predicted": 15.0,
+    "ratio": 0.14,
     "ratio_90": [
-     0.11,
-     0.16
+     0.12,
+     0.17
     ],
-    "auc": 0.707,
-    "logloss": 0.5812,
-    "brier": 0.1197
+    "auc": 0.711,
+    "logloss": 0.5709,
+    "brier": 0.1192
    },
    "roof_damaged_wind_only": {
     "buildings": 752,
     "found": 252,
-    "predicted": 72.3,
-    "ratio": 0.29,
+    "predicted": 75.5,
+    "ratio": 0.3,
     "ratio_90": [
-     0.26,
-     0.31
+     0.27,
+     0.33
     ],
-    "auc": 0.692,
-    "logloss": 0.9271,
-    "brier": 0.265
+    "auc": 0.689,
+    "logloss": 0.9178,
+    "brier": 0.2633
    }
   },
   "Michael 2018": {
@@ -270,41 +270,41 @@
    "damaged": {
     "buildings": 547,
     "found": 300,
-    "predicted": 309.6,
-    "ratio": 1.03,
+    "predicted": 311.6,
+    "ratio": 1.04,
     "ratio_90": [
-     0.96,
-     1.11
+     0.97,
+     1.12
     ],
     "auc": 0.572,
-    "logloss": 0.899,
+    "logloss": 0.9007,
     "brier": 0.3173
    },
    "badly_damaged": {
     "buildings": 547,
     "found": 108,
-    "predicted": 204.7,
-    "ratio": 1.9,
+    "predicted": 206.9,
+    "ratio": 1.92,
     "ratio_90": [
-     1.67,
-     2.22
+     1.69,
+     2.24
     ],
-    "auc": 0.693,
-    "logloss": 0.6712,
-    "brier": 0.225
+    "auc": 0.69,
+    "logloss": 0.6754,
+    "brier": 0.2262
    },
    "roof_damaged_wind_only": {
     "buildings": 447,
     "found": 235,
-    "predicted": 219.3,
-    "ratio": 0.93,
+    "predicted": 221.1,
+    "ratio": 0.94,
     "ratio_90": [
      0.86,
-     1.02
+     1.03
     ],
-    "auc": 0.509,
-    "logloss": 0.9211,
-    "brier": 0.3336
+    "auc": 0.508,
+    "logloss": 0.9218,
+    "brier": 0.3335
    }
   },
   "Laura 2020": {
@@ -313,41 +313,41 @@
    "damaged": {
     "buildings": 424,
     "found": 136,
-    "predicted": 133.1,
+    "predicted": 133.8,
+    "ratio": 0.98,
+    "ratio_90": [
+     0.89,
+     1.11
+    ],
+    "auc": 0.785,
+    "logloss": 0.546,
+    "brier": 0.1809
+   },
+   "badly_damaged": {
+    "buildings": 424,
+    "found": 34,
+    "predicted": 39.7,
+    "ratio": 1.17,
+    "ratio_90": [
+     0.91,
+     1.56
+    ],
+    "auc": 0.794,
+    "logloss": 0.2388,
+    "brier": 0.0664
+   },
+   "roof_damaged_wind_only": {
+    "buildings": 423,
+    "found": 136,
+    "predicted": 133.7,
     "ratio": 0.98,
     "ratio_90": [
      0.89,
      1.1
     ],
     "auc": 0.784,
-    "logloss": 0.5464,
-    "brier": 0.1811
-   },
-   "badly_damaged": {
-    "buildings": 424,
-    "found": 34,
-    "predicted": 39.1,
-    "ratio": 1.15,
-    "ratio_90": [
-     0.9,
-     1.54
-    ],
-    "auc": 0.796,
-    "logloss": 0.2385,
-    "brier": 0.0662
-   },
-   "roof_damaged_wind_only": {
-    "buildings": 423,
-    "found": 136,
-    "predicted": 133.0,
-    "ratio": 0.98,
-    "ratio_90": [
-     0.88,
-     1.09
-    ],
-    "auc": 0.784,
-    "logloss": 0.5475,
-    "brier": 0.1815
+    "logloss": 0.5471,
+    "brier": 0.1813
    }
   }
  },
@@ -358,28 +358,28 @@
    "damaged": {
     "buildings": 313,
     "found": 226,
-    "predicted": 163.1,
+    "predicted": 162.7,
     "ratio": 0.72,
     "ratio_90": [
-     0.69,
+     0.68,
      0.76
     ],
-    "auc": 0.734,
-    "logloss": 0.6227,
-    "brier": 0.2181
+    "auc": 0.733,
+    "logloss": 0.6244,
+    "brier": 0.2189
    },
    "badly_damaged": {
     "buildings": 313,
     "found": 165,
-    "predicted": 98.2,
-    "ratio": 0.6,
+    "predicted": 97.9,
+    "ratio": 0.59,
     "ratio_90": [
      0.55,
-     0.65
+     0.64
     ],
-    "auc": 0.764,
-    "logloss": 0.686,
-    "brier": 0.2486
+    "auc": 0.763,
+    "logloss": 0.6881,
+    "brier": 0.2495
    },
    "roof_damaged_wind_only": {
     "buildings": 127,
@@ -390,9 +390,9 @@
      0.58,
      0.95
     ],
-    "auc": 0.612,
-    "logloss": 0.5891,
-    "brier": 0.1992
+    "auc": 0.596,
+    "logloss": 0.5909,
+    "brier": 0.1997
    },
    "water_inside": {
     "buildings": 299,
@@ -414,41 +414,41 @@
    "damaged": {
     "buildings": 771,
     "found": 139,
-    "predicted": 243.2,
+    "predicted": 243.9,
     "ratio": 1.75,
     "ratio_90": [
-     1.55,
-     2.0
+     1.56,
+     2.01
     ],
-    "auc": 0.705,
-    "logloss": 0.5025,
-    "brier": 0.1657
+    "auc": 0.706,
+    "logloss": 0.5032,
+    "brier": 0.1659
    },
    "badly_damaged": {
     "buildings": 771,
     "found": 82,
-    "predicted": 144.7,
-    "ratio": 1.76,
+    "predicted": 143.8,
+    "ratio": 1.75,
     "ratio_90": [
-     1.51,
-     2.09
+     1.5,
+     2.08
     ],
-    "auc": 0.753,
-    "logloss": 0.3326,
-    "brier": 0.0981
+    "auc": 0.754,
+    "logloss": 0.3319,
+    "brier": 0.098
    },
    "roof_damaged_wind_only": {
     "buildings": 342,
     "found": 9,
-    "predicted": 42.3,
-    "ratio": 4.7,
+    "predicted": 42.7,
+    "ratio": 4.75,
     "ratio_90": [
-     3.01,
-     10.45
+     3.04,
+     10.55
     ],
-    "auc": 0.728,
-    "logloss": 0.1795,
-    "brier": 0.0358
+    "auc": 0.729,
+    "logloss": 0.1806,
+    "brier": 0.036
    },
    "water_inside": {
     "buildings": 654,
@@ -470,41 +470,41 @@
    "damaged": {
     "buildings": 3407,
     "found": 1652,
-    "predicted": 2320.6,
-    "ratio": 1.4,
+    "predicted": 2321.4,
+    "ratio": 1.41,
     "ratio_90": [
      1.37,
      1.44
     ],
-    "auc": 0.676,
-    "logloss": 0.7415,
-    "brier": 0.2669
+    "auc": 0.675,
+    "logloss": 0.742,
+    "brier": 0.267
    },
    "badly_damaged": {
     "buildings": 3407,
     "found": 1089,
-    "predicted": 1664.0,
+    "predicted": 1663.7,
     "ratio": 1.53,
     "ratio_90": [
      1.47,
      1.59
     ],
     "auc": 0.713,
-    "logloss": 0.6504,
-    "brier": 0.227
+    "logloss": 0.6503,
+    "brier": 0.2269
    },
    "roof_damaged_wind_only": {
     "buildings": 814,
     "found": 198,
-    "predicted": 167.4,
+    "predicted": 167.8,
     "ratio": 0.85,
     "ratio_90": [
-     0.76,
+     0.77,
      0.94
     ],
-    "auc": 0.628,
-    "logloss": 0.5459,
-    "brier": 0.181
+    "auc": 0.63,
+    "logloss": 0.5452,
+    "brier": 0.1808
    },
    "water_inside": {
     "buildings": 3109,
@@ -526,7 +526,7 @@
    "damaged": {
     "buildings": 1133,
     "found": 538,
-    "predicted": 468.5,
+    "predicted": 468.3,
     "ratio": 0.87,
     "ratio_90": [
      0.83,
@@ -534,25 +534,25 @@
     ],
     "auc": 0.703,
     "logloss": 0.6263,
-    "brier": 0.2186
+    "brier": 0.2185
    },
    "badly_damaged": {
     "buildings": 1133,
     "found": 228,
-    "predicted": 179.4,
+    "predicted": 179.2,
     "ratio": 0.79,
     "ratio_90": [
      0.72,
      0.86
     ],
     "auc": 0.813,
-    "logloss": 0.4169,
-    "brier": 0.1369
+    "logloss": 0.4172,
+    "brier": 0.137
    },
    "roof_damaged_wind_only": {
     "buildings": 1087,
     "found": 500,
-    "predicted": 443.9,
+    "predicted": 443.7,
     "ratio": 0.89,
     "ratio_90": [
      0.85,
@@ -560,7 +560,7 @@
     ],
     "auc": 0.697,
     "logloss": 0.6255,
-    "brier": 0.2183
+    "brier": 0.2182
    }
   },
   "Irma 2017": {
@@ -569,40 +569,40 @@
    "damaged": {
     "buildings": 836,
     "found": 297,
-    "predicted": 289.8,
-    "ratio": 0.98,
+    "predicted": 289.3,
+    "ratio": 0.97,
     "ratio_90": [
      0.9,
      1.05
     ],
     "auc": 0.674,
-    "logloss": 0.6256,
-    "brier": 0.2148
+    "logloss": 0.6261,
+    "brier": 0.2149
    },
    "badly_damaged": {
     "buildings": 836,
     "found": 105,
-    "predicted": 104.8,
-    "ratio": 1.0,
+    "predicted": 105.6,
+    "ratio": 1.01,
     "ratio_90": [
      0.87,
-     1.17
+     1.18
     ],
-    "auc": 0.696,
-    "logloss": 0.351,
-    "brier": 0.1042
+    "auc": 0.695,
+    "logloss": 0.3513,
+    "brier": 0.1043
    },
    "roof_damaged_wind_only": {
     "buildings": 752,
     "found": 252,
-    "predicted": 255.7,
+    "predicted": 255.2,
     "ratio": 1.01,
     "ratio_90": [
      0.94,
-     1.11
+     1.1
     ],
     "auc": 0.673,
-    "logloss": 0.6112,
+    "logloss": 0.6115,
     "brier": 0.2091
    }
   },
@@ -619,26 +619,26 @@
      1.07
     ],
     "auc": 0.588,
-    "logloss": 0.6926,
+    "logloss": 0.6927,
     "brier": 0.2506
    },
    "badly_damaged": {
     "buildings": 547,
     "found": 108,
-    "predicted": 128.7,
+    "predicted": 128.2,
     "ratio": 1.19,
     "ratio_90": [
      1.04,
      1.37
     ],
-    "auc": 0.695,
+    "auc": 0.694,
     "logloss": 0.4723,
-    "brier": 0.1486
+    "brier": 0.1485
    },
    "roof_damaged_wind_only": {
     "buildings": 447,
     "found": 235,
-    "predicted": 225.4,
+    "predicted": 225.3,
     "ratio": 0.96,
     "ratio_90": [
      0.89,
@@ -655,15 +655,15 @@
    "damaged": {
     "buildings": 424,
     "found": 136,
-    "predicted": 191.7,
+    "predicted": 191.8,
     "ratio": 1.41,
     "ratio_90": [
      1.27,
      1.59
     ],
     "auc": 0.784,
-    "logloss": 0.609,
-    "brier": 0.2089
+    "logloss": 0.6094,
+    "brier": 0.2091
    },
    "badly_damaged": {
     "buildings": 424,
@@ -674,37 +674,37 @@
      1.22,
      2.05
     ],
-    "auc": 0.788,
+    "auc": 0.787,
     "logloss": 0.2664,
     "brier": 0.0731
    },
    "roof_damaged_wind_only": {
     "buildings": 423,
     "found": 136,
-    "predicted": 191.4,
+    "predicted": 191.5,
     "ratio": 1.41,
     "ratio_90": [
      1.26,
      1.59
     ],
     "auc": 0.784,
-    "logloss": 0.6095,
-    "brier": 0.2092
+    "logloss": 0.6099,
+    "brier": 0.2094
    }
   }
  },
  "v2_fit_on_all": {
   "wind_damaged": [
-   0.17720933229262992,
-   0.3189617054618651,
-   -0.36837370455641955,
-   0.21368926000944
+   0.13667945907353649,
+   0.3193814803740743,
+   -0.3241392974123397,
+   0.24005856720692864
   ],
   "wind_badly": [
-   -0.2904081083072283,
-   0.24548366165866803,
-   -1.612267882178075,
-   -0.3198320899299915
+   -0.33524087176745426,
+   0.24411970010662978,
+   -1.5670460522447986,
+   -0.29290397862871953
   ],
   "water": {
    "model": "logistic: const, ft above first floor (clipped -10..20), ft above ground (0..25), V zone, built 2002 or later, built 1976-2001",
@@ -748,51 +748,51 @@
     ],
     "found": 226,
     "inside": true,
-    "model_sd_log_from_other_places": 0.307,
+    "model_sd_log_from_other_places": 0.308,
     "buildings": 313
    },
    "Helene 2024, Cedar Key": {
-    "predicted": 243,
+    "predicted": 244,
     "range_90": [
-     131,
+     130,
      454
     ],
     "found": 139,
     "inside": true,
-    "model_sd_log_from_other_places": 0.245,
+    "model_sd_log_from_other_places": 0.246,
     "buildings": 771
    },
    "Ian 2022, Fort Myers Beach": {
     "predicted": 2321,
     "range_90": [
-     1180,
+     1177,
      3381
     ],
     "found": 1652,
     "inside": true,
-    "model_sd_log_from_other_places": 0.305,
+    "model_sd_log_from_other_places": 0.306,
     "buildings": 3407
    },
    "Harvey 2017": {
     "predicted": 468,
     "range_90": [
-     211,
-     846
+     209,
+     847
     ],
     "found": 538,
     "inside": true,
-    "model_sd_log_from_other_places": 0.33,
+    "model_sd_log_from_other_places": 0.331,
     "buildings": 1133
    },
    "Irma 2017": {
-    "predicted": 290,
+    "predicted": 289,
     "range_90": [
      102,
      608
     ],
     "found": 297,
     "inside": true,
-    "model_sd_log_from_other_places": 0.335,
+    "model_sd_log_from_other_places": 0.336,
     "buildings": 836
    },
    "Michael 2018": {
@@ -803,96 +803,96 @@
     ],
     "found": 300,
     "inside": true,
-    "model_sd_log_from_other_places": 0.335,
+    "model_sd_log_from_other_places": 0.336,
     "buildings": 547
    },
    "Laura 2020": {
     "predicted": 192,
     "range_90": [
      88,
-     372
+     374
     ],
     "found": 136,
     "inside": true,
-    "model_sd_log_from_other_places": 0.304,
+    "model_sd_log_from_other_places": 0.305,
     "buildings": 424
    }
   },
   "log_ratio_held_out": {
-   "Helene 2024, Horseshoe Beach": -0.326,
-   "Helene 2024, Cedar Key": 0.559,
+   "Helene 2024, Horseshoe Beach": -0.329,
+   "Helene 2024, Cedar Key": 0.562,
    "Ian 2022, Fort Myers Beach": 0.34,
-   "Harvey 2017": -0.138,
-   "Irma 2017": -0.025,
+   "Harvey 2017": -0.139,
+   "Irma 2017": -0.026,
    "Michael 2018": -0.0,
-   "Laura 2020": 0.343
+   "Laura 2020": 0.344
   },
-  "model_sd_log_all": 0.31,
-  "app_sd_log": 0.382
+  "model_sd_log_all": 0.311,
+  "app_sd_log": 0.383
  },
  "baselines": {
   "models": {
    "Landfall v1 (today)": {
     "auc_within_place": 0.66,
-    "logloss_mean_of_places": 0.7744,
-    "count_error_median": 0.288,
+    "logloss_mean_of_places": 0.772,
+    "count_error_median": 0.261,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.462,
-      "logloss": 1.0762,
+      "auc": 0.463,
+      "logloss": 1.0747,
       "ratio": 0.41
      },
      "Helene 2024, Cedar Key": {
       "auc": 0.685,
-      "logloss": 0.4629,
+      "logloss": 0.4623,
       "ratio": 0.97
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.643,
-      "logloss": 0.7285,
+      "auc": 0.644,
+      "logloss": 0.7269,
       "ratio": 0.65
      },
      "Harvey 2017": {
-      "auc": 0.722,
-      "logloss": 0.7343,
-      "ratio": 0.75
+      "auc": 0.718,
+      "logloss": 0.7304,
+      "ratio": 0.77
      },
      "Irma 2017": {
-      "auc": 0.69,
-      "logloss": 0.9738,
-      "ratio": 0.29
+      "auc": 0.688,
+      "logloss": 0.963,
+      "ratio": 0.31
      },
      "Michael 2018": {
       "auc": 0.572,
-      "logloss": 0.899,
-      "ratio": 1.03
+      "logloss": 0.9007,
+      "ratio": 1.04
      },
      "Laura 2020": {
-      "auc": 0.784,
-      "logloss": 0.5464,
+      "auc": 0.785,
+      "logloss": 0.546,
       "ratio": 0.98
      }
     }
    },
    "Landfall v2 (learned from other places)": {
     "auc_within_place": 0.685,
-    "logloss_mean_of_places": 0.6315,
+    "logloss_mean_of_places": 0.632,
     "count_error_median": 0.329,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.734,
-      "logloss": 0.6227,
+      "auc": 0.733,
+      "logloss": 0.6244,
       "ratio": 0.72
      },
      "Helene 2024, Cedar Key": {
-      "auc": 0.705,
-      "logloss": 0.5025,
+      "auc": 0.706,
+      "logloss": 0.5032,
       "ratio": 1.75
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.676,
-      "logloss": 0.7415,
-      "ratio": 1.4
+      "auc": 0.675,
+      "logloss": 0.742,
+      "ratio": 1.41
      },
      "Harvey 2017": {
       "auc": 0.703,
@@ -901,40 +901,40 @@
      },
      "Irma 2017": {
       "auc": 0.674,
-      "logloss": 0.6256,
-      "ratio": 0.98
+      "logloss": 0.6261,
+      "ratio": 0.97
      },
      "Michael 2018": {
       "auc": 0.588,
-      "logloss": 0.6926,
+      "logloss": 0.6927,
       "ratio": 1.0
      },
      "Laura 2020": {
       "auc": 0.784,
-      "logloss": 0.609,
+      "logloss": 0.6094,
       "ratio": 1.41
      }
     }
    },
    "v2 without walls": {
     "auc_within_place": 0.684,
-    "logloss_mean_of_places": 0.6333,
+    "logloss_mean_of_places": 0.6339,
     "count_error_median": 0.342,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.73,
-      "logloss": 0.6314,
+      "auc": 0.729,
+      "logloss": 0.6327,
       "ratio": 0.71
      },
      "Helene 2024, Cedar Key": {
-      "auc": 0.7,
-      "logloss": 0.5031,
-      "ratio": 1.74
+      "auc": 0.701,
+      "logloss": 0.5042,
+      "ratio": 1.75
      },
      "Ian 2022, Fort Myers Beach": {
       "auc": 0.675,
-      "logloss": 0.7451,
-      "ratio": 1.41
+      "logloss": 0.7456,
+      "ratio": 1.42
      },
      "Harvey 2017": {
       "auc": 0.703,
@@ -943,39 +943,39 @@
      },
      "Irma 2017": {
       "auc": 0.674,
-      "logloss": 0.6256,
-      "ratio": 0.98
+      "logloss": 0.6261,
+      "ratio": 0.97
      },
      "Michael 2018": {
       "auc": 0.588,
-      "logloss": 0.6926,
+      "logloss": 0.6927,
       "ratio": 1.0
      },
      "Laura 2020": {
       "auc": 0.784,
-      "logloss": 0.609,
+      "logloss": 0.6094,
       "ratio": 1.41
      }
     }
    },
    "v2 without foundation": {
-    "auc_within_place": 0.685,
-    "logloss_mean_of_places": 0.6319,
+    "auc_within_place": 0.684,
+    "logloss_mean_of_places": 0.6325,
     "count_error_median": 0.329,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.733,
-      "logloss": 0.6231,
+      "auc": 0.732,
+      "logloss": 0.6249,
       "ratio": 0.72
      },
      "Helene 2024, Cedar Key": {
-      "auc": 0.705,
-      "logloss": 0.5022,
+      "auc": 0.706,
+      "logloss": 0.5029,
       "ratio": 1.75
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.675,
-      "logloss": 0.7445,
+      "auc": 0.674,
+      "logloss": 0.745,
       "ratio": 1.41
      },
      "Harvey 2017": {
@@ -985,39 +985,39 @@
      },
      "Irma 2017": {
       "auc": 0.674,
-      "logloss": 0.6256,
-      "ratio": 0.98
+      "logloss": 0.6261,
+      "ratio": 0.97
      },
      "Michael 2018": {
       "auc": 0.588,
-      "logloss": 0.6926,
+      "logloss": 0.6927,
       "ratio": 1.0
      },
      "Laura 2020": {
       "auc": 0.784,
-      "logloss": 0.609,
+      "logloss": 0.6094,
       "ratio": 1.41
      }
     }
    },
    "v2 without stories": {
     "auc_within_place": 0.684,
-    "logloss_mean_of_places": 0.6329,
+    "logloss_mean_of_places": 0.6335,
     "count_error_median": 0.322,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.73,
-      "logloss": 0.6306,
+      "auc": 0.729,
+      "logloss": 0.6322,
       "ratio": 0.71
      },
      "Helene 2024, Cedar Key": {
       "auc": 0.714,
-      "logloss": 0.4935,
-      "ratio": 1.69
+      "logloss": 0.4943,
+      "ratio": 1.7
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.67,
-      "logloss": 0.7352,
+      "auc": 0.669,
+      "logloss": 0.7358,
       "ratio": 1.38
      },
      "Harvey 2017": {
@@ -1027,81 +1027,81 @@
      },
      "Irma 2017": {
       "auc": 0.683,
-      "logloss": 0.627,
+      "logloss": 0.6276,
       "ratio": 0.92
      },
      "Michael 2018": {
       "auc": 0.568,
-      "logloss": 0.7047,
+      "logloss": 0.7048,
       "ratio": 0.95
      },
      "Laura 2020": {
       "auc": 0.783,
-      "logloss": 0.6111,
+      "logloss": 0.6116,
       "ratio": 1.4
      }
     }
    },
    "v2 without year built": {
-    "auc_within_place": 0.662,
-    "logloss_mean_of_places": 0.6667,
+    "auc_within_place": 0.661,
+    "logloss_mean_of_places": 0.6672,
     "count_error_median": 0.186,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.558,
-      "logloss": 0.6636,
+      "auc": 0.556,
+      "logloss": 0.6654,
       "ratio": 0.83
      },
      "Helene 2024, Cedar Key": {
       "auc": 0.695,
-      "logloss": 0.5551,
+      "logloss": 0.5558,
       "ratio": 1.99
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.658,
-      "logloss": 0.8183,
-      "ratio": 1.52
+      "auc": 0.657,
+      "logloss": 0.8188,
+      "ratio": 1.53
      },
      "Harvey 2017": {
       "auc": 0.703,
-      "logloss": 0.6243,
-      "ratio": 0.91
+      "logloss": 0.6259,
+      "ratio": 0.9
      },
      "Irma 2017": {
-      "auc": 0.674,
-      "logloss": 0.6321,
+      "auc": 0.673,
+      "logloss": 0.6329,
       "ratio": 1.03
      },
      "Michael 2018": {
       "auc": 0.56,
-      "logloss": 0.7002,
-      "ratio": 1.11
+      "logloss": 0.6991,
+      "ratio": 1.1
      },
      "Laura 2020": {
       "auc": 0.71,
-      "logloss": 0.6733,
-      "ratio": 1.58
+      "logloss": 0.6726,
+      "ratio": 1.57
      }
     }
    },
    "v2 without flood zone": {
     "auc_within_place": 0.655,
-    "logloss_mean_of_places": 0.6341,
-    "count_error_median": 0.223,
+    "logloss_mean_of_places": 0.6347,
+    "count_error_median": 0.231,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
-      "auc": 0.786,
-      "logloss": 0.6798,
-      "ratio": 0.62
+      "auc": 0.784,
+      "logloss": 0.6819,
+      "ratio": 0.61
      },
      "Helene 2024, Cedar Key": {
-      "auc": 0.668,
-      "logloss": 0.4525,
-      "ratio": 1.25
+      "auc": 0.667,
+      "logloss": 0.4532,
+      "ratio": 1.26
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.615,
-      "logloss": 0.7527,
+      "auc": 0.614,
+      "logloss": 0.7531,
       "ratio": 1.35
      },
      "Harvey 2017": {
@@ -1111,59 +1111,59 @@
      },
      "Irma 2017": {
       "auc": 0.674,
-      "logloss": 0.6256,
-      "ratio": 0.98
+      "logloss": 0.6261,
+      "ratio": 0.97
      },
      "Michael 2018": {
       "auc": 0.588,
-      "logloss": 0.6926,
+      "logloss": 0.6927,
       "ratio": 1.0
      },
      "Laura 2020": {
       "auc": 0.784,
-      "logloss": 0.609,
+      "logloss": 0.6094,
       "ratio": 1.41
      }
     }
    },
    "v2, nothing known about the building": {
     "auc_within_place": 0.615,
-    "logloss_mean_of_places": 0.6569,
-    "count_error_median": 0.262,
+    "logloss_mean_of_places": 0.6577,
+    "count_error_median": 0.27,
     "by_place": {
      "Helene 2024, Horseshoe Beach": {
       "auc": 0.507,
-      "logloss": 0.6914,
+      "logloss": 0.693,
       "ratio": 0.71
      },
      "Helene 2024, Cedar Key": {
       "auc": 0.667,
-      "logloss": 0.4503,
-      "ratio": 1.3
+      "logloss": 0.4512,
+      "ratio": 1.31
      },
      "Ian 2022, Fort Myers Beach": {
-      "auc": 0.557,
-      "logloss": 0.8196,
-      "ratio": 1.46
+      "auc": 0.556,
+      "logloss": 0.8205,
+      "ratio": 1.47
      },
      "Harvey 2017": {
       "auc": 0.728,
-      "logloss": 0.6267,
-      "ratio": 0.87
+      "logloss": 0.6289,
+      "ratio": 0.85
      },
      "Irma 2017": {
       "auc": 0.705,
-      "logloss": 0.6299,
+      "logloss": 0.631,
       "ratio": 0.97
      },
      "Michael 2018": {
       "auc": 0.531,
-      "logloss": 0.7047,
-      "ratio": 1.06
+      "logloss": 0.7041,
+      "ratio": 1.05
      },
      "Laura 2020": {
       "auc": 0.696,
-      "logloss": 0.6757,
+      "logloss": 0.6751,
       "ratio": 1.57
      }
     }
@@ -1443,7 +1443,7 @@
       0.065,
       0.135
      ],
-     "hazus": 0.005
+     "hazus": 0.006
     },
     "1976-2001": {
      "buildings": 505,
@@ -1452,7 +1452,7 @@
       0.163,
       0.221
      ],
-     "hazus": 0.009
+     "hazus": 0.01
     },
     "2002 or later": {
      "buildings": 313,
@@ -1472,7 +1472,7 @@
       0.22,
       0.304
      ],
-     "hazus": 0.07
+     "hazus": 0.078
     },
     "1976-2001": {
      "buildings": 576,
@@ -1481,7 +1481,7 @@
       0.337,
       0.403
      ],
-     "hazus": 0.084
+     "hazus": 0.087
     },
     "2002 or later": {
      "buildings": 381,
@@ -1501,7 +1501,7 @@
       0.532,
       0.626
      ],
-     "hazus": 0.489
+     "hazus": 0.515
     },
     "1976-2001": {
      "buildings": 415,
@@ -1510,7 +1510,7 @@
       0.585,
       0.663
      ],
-     "hazus": 0.536
+     "hazus": 0.545
     },
     "2002 or later": {
      "buildings": 781,
@@ -1519,7 +1519,7 @@
       0.392,
       0.45
      ],
-     "hazus": 0.294
+     "hazus": 0.293
     }
    },
    "140-175 mph": {
@@ -1530,7 +1530,7 @@
       0.539,
       0.734
      ],
-     "hazus": 0.908
+     "hazus": 0.912
     },
     "2002 or later": {
      "buildings": 73,
@@ -1539,7 +1539,7 @@
       0.201,
       0.375
      ],
-     "hazus": 0.797
+     "hazus": 0.795
     }
    }
   },
@@ -1563,20 +1563,20 @@
   },
   "beyond_hazus_odds_ratios": {
    "built_2002_or_later": {
-    "odds_ratio": 0.67,
+    "odds_ratio": 0.76,
     "ci95": [
-     0.2,
-     2.27
+     0.22,
+     2.56
     ],
-    "p": 0.5175
+    "p": 0.6556
    },
    "built_1976_2001": {
-    "odds_ratio": 2.02,
+    "odds_ratio": 2.18,
     "ci95": [
-     1.29,
-     3.16
+     1.39,
+     3.42
     ],
-    "p": 0.0021
+    "p": 0.0007
    }
   },
   "buildings": 3952,

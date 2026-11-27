@@ -50,7 +50,7 @@ Guesses that didn't hold up were replaced. They are listed at the end under "Fix
 | Wind damage | Hazus Hurricane v5.1 curves (NHERI SimCenter library), building details from the SimCenter rulesets | sourced |
 | Wind damage adjusted to what surveys found | Fit to field surveys of 7 places, 7,431 buildings | measured |
 | Calibration fades out below 100 mph, gone at 70 | The surveys' lowest wind band (80-90 mph) found 0-3% of roofs damaged, below the fitted curve | measured |
-| Roof shape: half gable, half hip | No national count of roof shapes exists; these are the two common shapes, so each gets equal weight | guess, reasoned |
+| Roof shape: gable or hip by year built (69% gable before 1976, 56% 1976-2001, 47% 2002 on) | 2,551 houses whose roof shape field surveys recorded (WiSPD, PRJ-4186; `scripts/roof_shapes.py`). Hip roofs had 0.66 times the odds of roof damage at the same wind (0.54-0.81), as Hazus expects | measured (new) |
 | Water damage | Helene survey (DesignSafe PRJ-6245) and two more surveyed towns, by water above the floor | measured |
 | Water damage for river floods | Measured on the coast (A zones, where waves were small). River floods are slower and carry no salt, so this probably runs a little high for them | measured elsewhere, noted |
 | Repair cost from water | FEMA FIA depth-damage curves | sourced |
@@ -90,13 +90,15 @@ Guesses that didn't hold up were replaced. They are listed at the end under "Fix
 6. **No rule for design wind far inland when ASCE's tool fails.** Now 115 mph, ASCE 7-10's interior
    value.
 7. **The year was fixed at 2026 in the code.** Now it reads today's date.
-8. **The 18-inch flood line cited state guides "to be checked".** Checked against FEMA's 2021 PDA
+8. **Roof shape was half gable, half hip.** Now the shares surveyed on 2,551 houses, by year built. The calibration was refit: Hazus alone now gets counts closer (median count error 29% to 26%); the calibrated model is unchanged (log loss 0.632).
+9. **The 18-inch flood line cited state guides "to be checked".** Checked against FEMA's 2021 PDA
    Guide and cited directly.
 
 ## Still open
 
-- Roof shape and the rulesets' other defaults (garage, roof deck nails) are reasoned guesses, not
-  measured. Street photos could check them.
+- The rulesets' other defaults (garage, roof deck nails) are reasoned guesses, not measured. Garages could be
+  read from the Mapillary street photos (149 of 150 Cedar Key buildings); roof nails can't be seen.
+- Roof shapes come from Gulf Coast surveys (FL, TX, LA); Louisiana's houses had far more hip roofs (35% gable).
 - NSI fills in walls and foundation from regional patterns where it has no record; Landfall can't
   tell which ones those are.
 - JRC values outside the US are in 2010 prices.

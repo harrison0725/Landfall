@@ -418,16 +418,25 @@ def _either(p: float, yes, no) -> list[tuple]:
     return [(yes, p), (no, 1 - p)] if 0 < p < 1 else [(yes if p >= 1 else no, 1.0)]
 
 
+# Share of gable roofs (the rest hip) by year built, from 2,551 houses whose roof shape field
+# surveys recorded (WiSPD, DesignSafe PRJ-4186: Harvey, Irma, Michael, Laura; a hip-and-gable
+# roof counts half; scripts/roof_shapes.py). Newer houses have more hip roofs, and at the same
+# gust a hip roof had 0.66 times the odds of roof damage (0.54-0.81), as Hazus expects.
+ROOF_GABLE_SHARE = ((1976, 0.691), (2000, 0.562), (9999, 0.469))  # by the rulesets' cut years (1976, 2000)
+
+
+def roof_gable_share(year: int) -> float:
+    return next(g for top, g in ROOF_GABLE_SHARE if year <= top)
+
+
 def wind_configs(mat: str, year: int, stories: int, v: float, flood_zone: str | None, terrain: str) -> list[tuple[str, float]]:
     """The Hazus wind models a building may be, with weights, by the NHERI
     SimCenter asset representation rulesets (WSF: Lake Charles testbed;
     MSF and MH: Atlantic County testbed, github.com/NHERI-SimCenter/
     AssetRepresentationRulesets). Their coin flips become weights; facts
     Landfall can't see take the rulesets' defaults (garage unknown, deck
-    sheathing unknown, wood-truss roof on masonry), and roof shape is half
-    gable, half hip (no national count of roof shapes exists, and the two
-    are the common shapes, so each gets an even weight; the rulesets
-    themselves draw roof shape from local data where it exists)."""
+    sheathing unknown, wood-truss roof on masonry), and roof shape is
+    gable or hip in the shares surveyed by build era (roof_gable_share)."""
     h = "2" if stories >= 2 else "1"
     wbd = _wbd(year, v, flood_zone)
     c = _code_speed(year, v)
@@ -444,19 +453,20 @@ def wind_configs(mat: str, year: int, stories: int, v: float, flood_zone: str | 
         return out
     shutter_p = (1.0 if wbd else 0.0) if year > 2000 else (0.45 if wbd else 0.0)
     rda = ("8s" if c > (130 if year >= 2016 else 100) else "8d")
-    for shape in ("gab", "hip"):
+    g = roof_gable_share(year)
+    for shape, ws in (("gab", g), ("hip", 1 - g)):
         if mat == "masonry":
             rwc = "strap" if _hpr(year, v) else "tnail"
             for sh, p1 in _either(shutter_p if year < 2000 else (1.0 if wbd else 0.0), 1, 0):
                 for swr, p2 in _either(0.6, 1, 0):
-                    out.append((f"M.SF.{h}.{shape}.{rwc}.trs.{rda}.{sh}.{swr}.no.1.null.{terrain}", 0.5 * p1 * p2))
+                    out.append((f"M.SF.{h}.{shape}.{rwc}.trs.{rda}.{sh}.{swr}.no.1.null.{terrain}", ws * p1 * p2))
             continue
         swr_p = 0.6 if year > 2000 else 0.0
         deck = rda if year > 2000 else "6d"
         rwc = ("strap" if _hpr(year, v) else "tnail") if year > 2015 else ("strap" if c > 110 else "tnail") if year > 1992 else "tnail"
         # garage unknown: the ruleset assigns a standard garage, which Hazus ties to no shutters
         for swr, p2 in _either(swr_p, 1, 0):
-            out.append((f"W.SF.{h}.{shape}.{swr}.{deck}.{rwc}.std.0.{terrain}", 0.5 * p2))
+            out.append((f"W.SF.{h}.{shape}.{swr}.{deck}.{rwc}.std.0.{terrain}", ws * p2))
     return out
 
 
