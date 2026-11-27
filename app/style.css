@@ -256,6 +256,7 @@ ul.sources { padding-left: 18px; }
 .sstkey.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); opacity: 0.55; }
 .sstkey.avg { height: 2px; background: var(--accent); }
 .sstkey.band { background: #d9480f; opacity: 0.35; }
+.sqsub { margin: 4px 0 0; font-size: 0.9rem; }
 .sqfacts { margin: 0; padding-left: 16px; display: grid; gap: 5px; line-height: 1.4; }
 .sqfacts b { font-variant-numeric: tabular-nums; }
 .sqfacts .money { color: var(--accent); }

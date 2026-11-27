@@ -836,9 +836,26 @@ function sqPanel() {
   };
   // over the years: chances from every hurricane that came by since 1950
   const pct = (v) => (v >= 0.995 ? "over 99%" : v < 0.005 ? "less than 1%" : `${Math.round(100 * v)}%`);
+  // tornadoes over the years (US only); the same in both climate views
+  const tornLines = (o) => {
+    const t = o && o.tornado;
+    if (!t) return "";
+    const P = t.periods[String(outlookYears)], N = t.buildings.toLocaleString();
+    const rate = t.tornadoes_per_year >= 1 ? `About ${Math.round(t.tornadoes_per_year)} tornado${Math.round(t.tornadoes_per_year) === 1 ? "" : "es"} a year` : `About 1 tornado every ${Math.round(1 / Math.max(t.tornadoes_per_year, 0.01))} years`;
+    const rated = (x) => `${x.year >= 2007 ? "EF" : "F"}${x.rating}`;
+    const dmg = P.damaged_range_90[1] < 1
+      ? `None of the ${N} buildings are likely to be damaged by a tornado in that time.`
+      : `Averaged over many possible futures, about <b>${P.expected_damaged < 1 ? "1 or fewer" : Math.round(P.expected_damaged).toLocaleString()}</b> of the ${N} buildings would be damaged by a tornado. ${P.damaged_range_90[0] === 0 ? `Most likely none are, because most tornadoes miss, but a direct hit could damage up to about ${P.damaged_range_90[1].toLocaleString()}.` : `Likely between ${P.damaged_range_90[0].toLocaleString()} and ${P.damaged_range_90[1].toLocaleString()}.`}`;
+    const top = t.strongest_within_10mi[0];
+    return `<p class="sqsub"><b>Tornadoes</b></p><ul class="sqfacts">
+        <li>${t.tornadoes_counted ? `${rate} came within ${t.reach_miles} miles of here since ${esc(t.record.slice(0, 4))}.` : `No tornado came within ${t.reach_miles} miles of here since ${esc(t.record.slice(0, 4))}.`}${t.tornadoes_counted ? ` The chance one crosses this square in the next ${outlookYears} years is ${pct(P.chance_path_crosses)}${P.chance_strong_path_crosses >= 0.005 ? `, and one rated EF2 or stronger ${pct(P.chance_strong_path_crosses)}` : ""}.` : ""}</li>
+        ${t.tornadoes_counted ? `<li>${dmg}</li>` : ""}
+        ${top ? `<li>The strongest within 10 miles since 1950 was rated ${rated(top)}, in ${top.year}, ${top.miles < 0.75 ? "less than a mile" : top.miles < 1.5 ? "about a mile" : `${Math.round(top.miles)} miles`} away.</li>` : ""}
+      </ul>`;
+  };
   const ocard = ([k, sq]) => {
     const o = sq.ev.outlook;
-    if (!o || !o.storms_counted) return `<div class="sqcard"><div class="sqhead"><b>${esc(k)}</b></div><p class="gnote">No hurricane has come near here since ${o ? esc(o.record.slice(0, 4)) : "1950"}.</p></div>`;
+    if (!o || !o.storms_counted) return `<div class="sqcard"><div class="sqhead"><b>${esc(k)}</b></div><p class="gnote">No hurricane has come near here since ${o ? esc(o.record.slice(0, 4)) : "1950"}.</p>${tornLines(o)}</div>`;
     const P = (outlookClimate === "2050" && o.periods_2050 ? o.periods_2050 : o.periods)[String(outlookYears)];
     const c50 = o.climate_2050;
     const f1 = (x) => x.toFixed(1);
@@ -849,13 +866,13 @@ function sqPanel() {
     const rng = (r) => (r && r[1] > r[0] ? ` (likely between ${r[0].toLocaleString()} and ${r[1].toLocaleString()})` : "");
     const top = o.strongest_here.slice(0, 3).map((s) => `${esc(s.name)} (${s.year}, about ${s.gust_mph} mph gusts${s.surge_ft >= 1 && s.buildings_wet ? `, water at ${s.buildings_wet.toLocaleString()} buildings` : ""})`);
     const many = (v, what, r) => (v < 0.5 ? `None of the ${N} buildings are expected to ${what}` : `About <b>${Math.round(v).toLocaleString()}</b>${rng(r)} of the ${N} buildings will likely ${what}`);
-    return `<div class="sqcard"><div class="sqhead"><b>${esc(k)}</b><span>${o.storms_counted} storms since ${esc(o.record.slice(0, 4))}</span></div>
+    return `<div class="sqcard"><div class="sqhead"><b>${esc(k)}</b><span>${o.storms_counted} storm${o.storms_counted === 1 ? "" : "s"} since ${esc(o.record.slice(0, 4))}</span></div>
       <ul class="sqfacts">
         <li>${many(P.expected_damaged, `be damaged by a hurricane at least once in the next ${outlookYears} years`, P.damaged_range_90)}.</li>
         <li>${many(P.expected_badly_damaged, "be badly damaged or destroyed", P.badly_range_90)}.</li>
         <li>The chance of hurricane-force gusts here in that time is ${pct(P.chance.hurricane_gusts)}${P.chance.cat3_gusts >= 0.005 ? `, and of Category 3 strength gusts ${pct(P.chance.cat3_gusts)}` : ""}.${P.chance.surge >= 0.005 ? ` The chance storm surge reaches at least a tenth of the buildings is ${pct(P.chance.surge)}.` : ""}</li>
       </ul>
-      ${why50}<p class="gnote">Strongest here since ${esc(o.record.slice(0, 4))}: ${top.join(", ")}.</p></div>`;
+      ${why50}<p class="gnote">Strongest here since ${esc(o.record.slice(0, 4))}: ${top.join(", ")}.</p>${tornLines(o)}</div>`;
   };
   // warmer water: hurricane-season sea temperature near the first square, 1950 on, and the models' 2041-2060 value
   const waterChart = (w) => {
@@ -901,7 +918,7 @@ function sqPanel() {
         ${withOutlook.map(ocard).join("")}
         ${waterBlock(withOutlook.map(([, sq]) => sq.ev.outlook.water).find(Boolean))}
         <p class="gnote">${outlookClimate === "2050"
-          ? "Climate of 2050 adds higher seas and stronger hurricanes to the past storms. It keeps the number of storms the same, because scientists aren't sure whether there will be more or fewer."
+          ? "Climate of 2050 adds higher seas and stronger hurricanes to the past storms. It keeps the number of storms the same, because scientists aren't sure whether there will be more or fewer. Tornadoes stay as in the past, because scientists can't yet say how warming changes them in one place."
           : "Climate as in the past leaves out higher seas and stronger storms, so it likely runs low. Pick Climate of 2050 to add them."}</p></section>`
     : "";
   // side by side, when there is more than one square
@@ -947,7 +964,7 @@ function sqPanel() {
     <details class="sqblock"><summary>Where these numbers come from</summary>
       <p class="gnote">Odds${curCat ? ` for ${esc(curType.name.toLowerCase())}, ${esc(curCat.label)},` : ""} come from ${where}.</p>
       <p class="gnote">"Likely damaged" adds up each building's chance, so 0.5 + 0.5 counts as one building. Repair dollars are each building's expected repair share times its rebuild cost from the national structure inventory (the structure only, not land or belongings)${noValue ? `; ${noValue.toLocaleString()} buildings have no cost on record and count as $0` : ""}.</p>
-      ${withOutlook.length ? `<p class="gnote">"Over the years" replays ${esc(withOutlook[0][1].ev.outlook.source)}.${withOutlook[0][1].ev.outlook.water ? ` Warmer water: ${esc(withOutlook[0][1].ev.outlook.water.source)}.` : ""} Future periods are drawn from that record, with ranges for how often storms come, how strong they are here and how far off the damage curves can be.</p>` : ""}
+      ${withOutlook.length ? `<p class="gnote">"Over the years" replays ${esc(withOutlook[0][1].ev.outlook.source)}.${withOutlook[0][1].ev.outlook.water ? ` Warmer water: ${esc(withOutlook[0][1].ev.outlook.water.source)}.` : ""}${withOutlook[0][1].ev.outlook.tornado ? ` Tornadoes: ${esc(withOutlook[0][1].ev.outlook.tornado.source)}. ${esc(withOutlook[0][1].ev.outlook.tornado.means)}` : ""} Future periods are drawn from that record, with ranges for how often storms come, how strong they are here and how far off the damage curves can be.</p>` : ""}
       <p class="gnote">Year built is from the county tax roll in Florida, elsewhere the block's median year. Material and foundation come from the national structure inventory, which is often wrong. Each square is split into 16 blocks of about a quarter mile.</p>
     </details>`;
   const rescore = () => { paintSquares(); showDots(); sqPanel(); };
