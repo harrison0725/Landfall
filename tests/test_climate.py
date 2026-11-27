@@ -30,3 +30,17 @@ def test_outlook_grows_with_the_years():
     assert p["30"]["damaged_range_90"][0] <= p["30"]["expected_damaged"] <= p["30"]["damaged_range_90"][1]
     assert 0 < p["30"]["chance"]["hurricane_gusts"] < 1
     assert o["strongest_here"] and o["storms_counted"] > 10
+
+
+def test_2050_has_higher_seas_and_more_damage():
+    r = climate.sea_level_2050(-83.035, 29.138)
+    assert r["where"] == "Cedar Key tide gauge" and 0.5 < r["low"] < r["med"] < r["high"] < 3
+    assert climate.sea_level_2050(-30.0, 40.0)["where"] == "global average"
+    b = {"lon": -83.035, "lat": 29.138, "material": "wood frame", "foundation": "slab", "stories": 1, "year_built": 1970,
+         "flood_zone": "AE", "v_ult": 140, "green": None, "surge": (6, 9, 12, 15, 18)}
+    rows = [dict(b) for _ in range(20)]
+    place = {"surge_checked": True}
+    classes, index = hazards.odds_table(rows, "FL", place)
+    o = climate.outlook(rows, classes, index, "FL", place, -83.035, 29.138, 0.38, sims=800)
+    assert o["periods_2050"]["30"]["expected_damaged"] >= o["periods"]["30"]["expected_damaged"]
+    assert o["climate_2050"]["wind_change_pct"][0] < o["climate_2050"]["wind_change_pct"][2]
