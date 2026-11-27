@@ -242,6 +242,20 @@ ul.sources { padding-left: 18px; }
 .sqcard.on { border-color: #ff9f1c; box-shadow: inset 3px 0 0 #ff9f1c; }
 .sqhead { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .sqhead span { color: var(--muted); font-size: 0.75rem; }
+.sstchart { cursor: default; }
+.sstchart:hover { border-color: var(--line); }
+.sstchart svg { width: 100%; height: auto; display: block; }
+.sstchart .ssttxt { font: 9px var(--mono, monospace); fill: var(--muted); }
+.sstchart .sstgrid { stroke: var(--line); stroke-width: 0.6; }
+.sstchart .sstref { stroke: #d9480f; stroke-width: 0.8; stroke-dasharray: 3 3; }
+.sstchart .sstdot { fill: var(--muted); opacity: 0.55; }
+.sstchart .sstavg { fill: none; stroke: var(--accent); stroke-width: 2; }
+.sstchart .sstband { fill: #d9480f; opacity: 0.25; }
+.sstchart .sstmed { stroke: #d9480f; stroke-width: 2; }
+.sstkey { display: inline-block; width: 12px; height: 8px; vertical-align: middle; margin-right: 3px; border-radius: 2px; }
+.sstkey.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); opacity: 0.55; }
+.sstkey.avg { height: 2px; background: var(--accent); }
+.sstkey.band { background: #d9480f; opacity: 0.35; }
 .sqfacts { margin: 0; padding-left: 16px; display: grid; gap: 5px; line-height: 1.4; }
 .sqfacts b { font-variant-numeric: tabular-nums; }
 .sqfacts .money { color: var(--accent); }

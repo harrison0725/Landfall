@@ -44,3 +44,12 @@ def test_2050_has_higher_seas_and_more_damage():
     o = climate.outlook(rows, classes, index, "FL", place, -83.035, 29.138, 0.38, sims=800)
     assert o["periods_2050"]["30"]["expected_damaged"] >= o["periods"]["30"]["expected_damaged"]
     assert o["climate_2050"]["wind_change_pct"][0] < o["climate_2050"]["wind_change_pct"][2]
+
+
+def test_water_near_has_warmed_and_models_expect_more():
+    w = climate.water_near(-83.035, 29.138)  # Cedar Key
+    assert len(w["years"]) == 76 and w["years"][0] == 1950
+    assert 80 < w["first10_f"] < w["last10_f"] < 90
+    assert w["f_2050"]["low"] < w["f_2050"]["med"] < w["f_2050"]["high"]
+    assert w["f_2050"]["med"] > w["first10_f"] and w["models"] >= 30
+    assert climate.water_near(-118.13, 34.19) is None  # Altadena: no Atlantic water nearby

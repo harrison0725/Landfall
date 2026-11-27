@@ -79,6 +79,21 @@ Each simulated period picks the low, middle or high case for both changes togeth
 
 The jump in the chance of hurricane-force gusts is mostly threshold crossing. Several past storms brought gusts just under 90 mph to Cedar Key, and 3% stronger winds push them over.
 
+## Warmer water
+
+The "Warmer water" chart shows the hurricane-season (August to October) sea surface temperature within 250 miles of the square, from `scripts/build_sst.py`:
+
+- **Measured:** NOAA's ERSST v5 (Huang et al. 2017) on its 2-degree grid, for every year from 1950 to 2025.
+- **2041-2060:** 41 CMIP6 climate models (the model set the IPCC AR6 report draws on), under SSP2-4.5, the middle emissions path. Each model gives its own change from 1995-2014 to 2041-2060, using one run per model. That change is added to ERSST's measured 1995-2014 average. The range is the 17th to 83rd percentile across models, which is how the IPCC states a "likely" range. Each model's change is kept in `eval/sst_models/`.
+
+| Sea near | 1950-1959 | 2016-2025 | Warmest year | 2041-2060 (likely range) |
+|---|---|---|---|---|
+| Cedar Key | 83.4°F | 84.5°F | 2023, 85.3°F | 85.7°F (85.1-86.3) |
+| Galveston | 83.6°F | 85.1°F | 2023, 85.9°F | 85.8°F (85.4-86.4) |
+| New York | 69.4°F | 71.6°F | 2016, 73.4°F | 72.6°F (71.9-74.0) |
+
+Across the grid, the models' median change is about 1.1°C (about 1.9°F). The chart doesn't change any numbers. The Climate of 2050 view already carries warmer water's effect through Knutson et al.'s stronger winds, and counting it again would double count. Places with no Atlantic water within 600 miles (Altadena) get no chart.
+
 ## Known limits
 
 - **Climate of 2050 changes only storm strength and sea level.** It doesn't move storm tracks or change how big storms are.

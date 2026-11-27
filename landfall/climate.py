@@ -157,6 +157,71 @@ def sea_level_2050(lon: float, lat: float) -> dict:
     return {**d["global_ft"], "where": "global average", "miles": None}
 
 
+SST_REACH_MI = 250
+HURRICANE_WATER_F = 80.0  # about 26.5 C: water warm enough to feed a hurricane (Gray 1968)
+
+
+@lru_cache(maxsize=1)
+def _sst() -> dict:
+    return json.loads((HISTORY / "sst.json").read_text())
+
+
+def _c_to_f(c: float) -> float:
+    return c * 9 / 5 + 32
+
+
+def water_near(lon: float, lat: float) -> dict | None:
+    """Hurricane-season (August-October) sea surface temperature of the water near a
+    place: ERSST v5 cells within 250 miles (else the 4 nearest), each year since 1950,
+    and CMIP6's 2041-2060 value (low, med, high), in degrees F."""
+    d = _sst()
+    k = math.cos(math.radians(lat))
+    lon360 = lon % 360
+    cells = []
+    for i, la in enumerate(d["lat"]):
+        for j, lo in enumerate(d["lon"]):
+            if d["change_2050"]["med"][i][j] is None:
+                continue
+            miles = math.hypot((lo - lon360) * k, la - lat) * 69.17
+            cells.append((miles, i, j, math.cos(math.radians(la))))
+    if not cells:
+        return None
+    cells.sort()
+    near = [c for c in cells if c[0] <= SST_REACH_MI] or cells[:4]
+    if near[0][0] > 600:  # nowhere near the Atlantic
+        return None
+
+    def avg(grid) -> float | None:
+        v = [(grid[i][j], w) for _, i, j, w in near if grid[i][j] is not None]
+        return sum(x * w for x, w in v) / sum(w for _, w in v) / 100 if v else None
+
+    years = list(range(d["first_year"], d["last_year"] + 1))
+    temps = [avg(g) for g in d["measured"]]
+    by_year = {y: t for y, t in zip(years, temps) if t is not None}
+    b0, b1 = d["base_years"]
+    base = sum(by_year[y] for y in range(b0, b1 + 1)) / (b1 - b0 + 1)
+    f = lambda c: round(_c_to_f(c), 2)  # noqa: E731
+    first10 = [by_year[y] for y in years[:10]]
+    last10 = [by_year[y] for y in years[-10:]]
+    import numpy as np
+
+    slope = float(np.polyfit(list(by_year), list(by_year.values()), 1)[0])
+    warmest = max(by_year, key=by_year.get)
+    return {
+        "years": list(by_year),
+        "temp_f": [f(t) for t in by_year.values()],
+        "first10_f": f(sum(first10) / 10), "last10_f": f(sum(last10) / 10),
+        "first10": f"{years[0]}-{years[9]}", "last10": f"{years[-10]}-{years[-1]}",
+        "trend_f_per_decade": round(slope * 9 / 5 * 10, 2),
+        "warmest_year": warmest, "warmest_f": f(by_year[warmest]),
+        "f_2050": {q: f(base + avg(d["change_2050"][q])) for q in ("low", "med", "high")},
+        "future_years": d["future_years"], "models": len(d["models"]),
+        "hurricane_water_f": HURRICANE_WATER_F,
+        "cells": len(near), "miles": SST_REACH_MI if near[0][0] <= SST_REACH_MI else round(near[-1][0]),
+        "source": d["source"],
+    }
+
+
 def _era(y: int | None) -> int:
     y = y or 0
     return 2 if y >= 2002 else 1 if y >= 1976 else 0
@@ -274,8 +339,13 @@ def outlook(buildings: list[dict], classes: list[dict], index: list[int], state:
     wet = now[2]
     top = [{**s, "expected_damaged": round(float(exp_d[i])), "buildings_wet": int(wet[i])} for i, s in enumerate(storms[:5])]
     t = tracks()
+    try:
+        water = water_near(lon, lat)
+    except (OSError, ValueError, KeyError, ZeroDivisionError):
+        water = None
     return {
         "periods": per,
+        "water": water,
         "periods_2050": per_2050,
         "climate_2050": {"sea_level_rise_ft": rise, "wind_change_pct": [round(100 * (w - 1), 1) for w in WIND_2050],
                          "means": "2050's higher seas (NOAA 2022 Intermediate scenario, the nearest tide gauge) and stronger hurricanes "

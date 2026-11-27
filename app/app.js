@@ -857,6 +857,41 @@ function sqPanel() {
       </ul>
       ${why50}<p class="gnote">Strongest here since ${esc(o.record.slice(0, 4))}: ${top.join(", ")}.</p></div>`;
   };
+  // warmer water: hurricane-season sea temperature near the first square, 1950 on, and the models' 2041-2060 value
+  const waterChart = (w) => {
+    const W = 320, H = 150, L = 34, R = 10, T = 10, B = 22;
+    const lo = Math.floor(Math.min(...w.temp_f, w.f_2050.low) - 0.3), hi = Math.ceil(Math.max(...w.temp_f, w.f_2050.high) + 0.3);
+    const x = (y) => L + ((y - 1950) / 100) * (W - L - R), y = (t) => T + ((hi - t) / (hi - lo)) * (H - T - B);
+    const avg = w.years.map((yr, i) => { const s = w.temp_f.slice(Math.max(0, i - 4), i + 6); return [yr, s.reduce((a, b) => a + b, 0) / s.length]; }).filter((_, i) => i >= 4 && i <= w.years.length - 6);
+    const dots = w.years.map((yr, i) => `<circle cx="${x(yr).toFixed(1)}" cy="${y(w.temp_f[i]).toFixed(1)}" r="1.6" class="sstdot"/>`).join("");
+    const line = avg.map(([yr, t], i) => `${i ? "L" : "M"}${x(yr).toFixed(1)},${y(t).toFixed(1)}`).join("");
+    const [f0, f1] = w.future_years, F = w.f_2050;
+    const ticks = [lo, Math.round((lo + hi) / 2), hi].filter((t, i, a) => a.indexOf(t) === i);
+    const hw = w.hurricane_water_f >= lo && w.hurricane_water_f <= hi
+      ? `<line x1="${L}" x2="${W - R}" y1="${y(w.hurricane_water_f)}" y2="${y(w.hurricane_water_f)}" class="sstref"/><text x="${W - R}" y="${y(w.hurricane_water_f) - 3}" text-anchor="end" class="ssttxt">80°F, warm enough to feed a hurricane</text>` : "";
+    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Hurricane-season sea temperature near here, ${w.years[0]} to ${w.years[w.years.length - 1]}, and the expected range for ${f0} to ${f1}">
+      ${ticks.map((t) => `<line x1="${L}" x2="${W - R}" y1="${y(t)}" y2="${y(t)}" class="sstgrid"/><text x="${L - 4}" y="${y(t) + 3}" text-anchor="end" class="ssttxt">${t}°F</text>`).join("")}
+      ${[1950, 2000, 2050].map((yr) => `<text x="${x(yr)}" y="${H - 6}" text-anchor="middle" class="ssttxt">${yr}</text>`).join("")}
+      ${hw}${dots}<path d="${line}" class="sstavg"/>
+      <rect x="${x(f0)}" y="${y(F.high)}" width="${x(f1) - x(f0)}" height="${Math.max(2, y(F.low) - y(F.high))}" class="sstband"/>
+      <line x1="${x(f0)}" x2="${x(f1)}" y1="${y(F.med)}" y2="${y(F.med)}" class="sstmed"/>
+    </svg>`;
+  };
+  const waterBlock = (w) => {
+    if (!w) return "";
+    const f1 = (v) => v.toFixed(1);
+    const feeds = w.last10_f >= w.hurricane_water_f
+      ? "Hurricanes need water of about 80°F or warmer. Warmer water lets them grow stronger, which is why Climate of 2050 makes hurricane winds a few percent stronger."
+      : "The sea here is usually cooler than the 80°F hurricanes need, so storms that reach here are usually weakening. They grow strongest over the warmer water to the south.";
+    return `<div class="sqcard sstchart"><div class="sqhead"><b>Warmer water</b><span>sea within ${w.miles} miles</span></div>
+      ${waterChart(w)}
+      <p class="gnote"><span class="sstkey dot"></span> each year's average &nbsp; <span class="sstkey avg"></span> 10-year average &nbsp; <span class="sstkey band"></span> expected ${w.future_years[0]}-${w.future_years[1]}</p>
+      <ul class="sqfacts">
+        <li>In hurricane season (August to October), the sea near here averaged <b>${f1(w.first10_f)}°F</b> in ${w.first10} and <b>${f1(w.last10_f)}°F</b> in ${w.last10}. The warmest year was ${w.warmest_year}, at ${f1(w.warmest_f)}°F.</li>
+        <li>${w.models} of the climate models behind the IPCC reports expect about <b>${f1(w.f_2050.med)}°F</b> in ${w.future_years[0]}-${w.future_years[1]} (likely ${f1(w.f_2050.low)} to ${f1(w.f_2050.high)}°F), if emissions follow a middle path.</li>
+        <li>${feeds} Warm water alone doesn't decide how many storms form or where they go, so this chart explains the 2050 view rather than adding to it.</li>
+      </ul></div>`;
+  };
   const withOutlook = sqs.filter(([, sq]) => sq.ev.outlook);
   const years = withOutlook.length
     ? `<section class="sqblock"><h4>Over the years</h4>
@@ -864,6 +899,7 @@ function sqPanel() {
         <div class="sqview" role="group" aria-label="Years ahead">${[10, 30, 50].map((y) => `<button type="button" data-years="${y}" class="${y === outlookYears ? "on" : ""}" aria-pressed="${y === outlookYears}">Next ${y} years</button>`).join("")}</div>
         <div class="sqview" role="group" aria-label="Climate">${[["past", "Climate as in the past"], ["2050", "Climate of 2050"]].map(([v, t]) => `<button type="button" data-climate="${v}" class="${v === outlookClimate ? "on" : ""}" aria-pressed="${v === outlookClimate}">${t}</button>`).join("")}</div>
         ${withOutlook.map(ocard).join("")}
+        ${waterBlock(withOutlook.map(([, sq]) => sq.ev.outlook.water).find(Boolean))}
         <p class="gnote">${outlookClimate === "2050"
           ? "Climate of 2050 adds higher seas and stronger hurricanes to the past storms. It keeps the number of storms the same, because scientists aren't sure whether there will be more or fewer."
           : "Climate as in the past leaves out higher seas and stronger storms, so it likely runs low. Pick Climate of 2050 to add them."}</p></section>`
@@ -911,7 +947,7 @@ function sqPanel() {
     <details class="sqblock"><summary>Where these numbers come from</summary>
       <p class="gnote">Odds${curCat ? ` for ${esc(curType.name.toLowerCase())}, ${esc(curCat.label)},` : ""} come from ${where}.</p>
       <p class="gnote">"Likely damaged" adds up each building's chance, so 0.5 + 0.5 counts as one building. Repair dollars are each building's expected repair share times its rebuild cost from the national structure inventory (the structure only, not land or belongings)${noValue ? `; ${noValue.toLocaleString()} buildings have no cost on record and count as $0` : ""}.</p>
-      ${withOutlook.length ? `<p class="gnote">"Over the years" replays ${esc(withOutlook[0][1].ev.outlook.source)}. Future periods are drawn from that record, with ranges for how often storms come, how strong they are here and how far off the damage curves can be.</p>` : ""}
+      ${withOutlook.length ? `<p class="gnote">"Over the years" replays ${esc(withOutlook[0][1].ev.outlook.source)}.${withOutlook[0][1].ev.outlook.water ? ` Warmer water: ${esc(withOutlook[0][1].ev.outlook.water.source)}.` : ""} Future periods are drawn from that record, with ranges for how often storms come, how strong they are here and how far off the damage curves can be.</p>` : ""}
       <p class="gnote">Year built is from the county tax roll in Florida, elsewhere the block's median year. Material and foundation come from the national structure inventory, which is often wrong. Each square is split into 16 blocks of about a quarter mile.</p>
     </details>`;
   const rescore = () => { paintSquares(); showDots(); sqPanel(); };
