@@ -303,3 +303,39 @@ ul.sources { padding-left: 18px; }
 .tcard.wide { width: 310px; }
 .tkhead { margin-top: 2px; color: var(--muted); font-size: 11px; }
 .tkind { grid-template-columns: 36px 1fr; }
+/* square panel: tabs, number tiles, short fact chips */
+.groups { width: min(372px, calc(100% - 24px)); gap: 8px; }
+.sqtabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin: 2px -12px 0; padding: 0 8px; }
+.sqtabs button { flex: 1 1 auto; padding: 7px 6px 6px; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted); font: inherit; font-size: 0.78rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.sqtabs button:hover { color: var(--ink); }
+.sqtabs button.on { color: var(--ink); border-bottom-color: #ff9f1c; }
+.sqtabs button:focus-visible { outline: 2px solid #ff9f1c; outline-offset: -2px; }
+.sqbody { display: grid; gap: 8px; }
+.sqbody > .gnote:first-child { margin-top: 0; }
+.ctrls { display: grid; gap: 6px; }
+.ctrls .sqview { margin: 0; }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.tiles.three { grid-template-columns: repeat(3, 1fr); }
+.tile { background: var(--panel); border: 1px solid var(--line); border-radius: 7px; padding: 7px 9px 8px; display: grid; align-content: start; gap: 1px; min-width: 0; }
+.tile .big { font-size: 1.35rem; font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.tiles.three .tile .big { font-size: 1.05rem; }
+.tile .lab { font-size: 0.74rem; line-height: 1.25; color: var(--ink); }
+.tile .sub { font-size: 0.68rem; line-height: 1.25; color: var(--muted); }
+.tile .tbar { height: 4px; border-radius: 2px; background: var(--line); margin-top: 5px; overflow: hidden; }
+.tile .tbar i { display: block; height: 100%; background: #e8833a; border-radius: 2px; }
+.tile.bad .tbar i { background: var(--major); }
+.tile.money .big { color: var(--accent); }
+.tile.money .tbar i { background: var(--accent); }
+.tile.wet .tbar i { background: #3f7fbf; }
+.tile.future .big { color: #d9480f; }
+.facts { display: flex; flex-wrap: wrap; gap: 4px; }
+.facts span { font-size: 0.7rem; padding: 2px 7px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line); color: var(--muted); }
+.subsec { display: grid; gap: 5px; border-top: 1px dashed var(--line); padding-top: 7px; }
+.subsec h5 { margin: 0; font-size: 0.78rem; }
+.strong { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.strong li { display: grid; grid-template-columns: 1fr 2.6em 10.5em; gap: 8px; font-size: 0.74rem; font-variant-numeric: tabular-nums; }
+.strong li span { color: var(--muted); text-align: right; }
+
+details.more summary { font-size: 0.74rem; color: var(--muted); cursor: pointer; font-weight: 500; }
+.sqcard .sqhead b { font-size: 0.82rem; }
+@media (min-width: 861px) { body.sq-open .leaflet-bottom.leaflet-right { margin-right: 386px; } }
