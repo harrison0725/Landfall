@@ -28,9 +28,19 @@ from pathlib import Path
 from .cost import CADASTRAL
 
 NFHL = "https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28/query"
+# NFIP: a building is "pre-FIRM" if built by December 31, 1974 or before the community's first
+# flood map (FIRM), after which new buildings must have the lowest floor at or above the base
+# flood elevation. Most communities' first FIRMs came out between 1974 and the mid-1980s, so a
+# building from 1985 on is taken as built to the map; 1975-1984 depends on the town, so unknown.
 POST_FIRM_YEAR = 1985
 PRE_FIRM_YEAR = 1975
 LOW_FLOOR_FT = (1.0, 3.0)  # slab to crawlspace, Hazus default first-floor heights
+# Measured on the coast (scripts/first_floors.py): pre-1975 homes in A and V zones surveyed after
+# Helene and Ian (2,004) sit 0.4-6.8 ft above the ground (middle half; many were raised later),
+# not 1-3 ft; and homes from 1985 on with FEMA elevation certificates in Fort Myers Beach (35) have
+# the floor 2.0-5.2 ft above the BFE (middle half; median 3.9), not at it
+OLD_COASTAL_FLOOR_FT = (0.4, 6.8)
+ABOVE_BFE_FT = (2.0, 5.2)
 PARCEL_FIELDS = "DOR_UC,ACT_YR_BLT,EFF_YR_BLT,TOT_LVG_AR,NO_RES_UNT,NO_BULDNG,JV,LND_VAL,ASMNT_YR"
 
 
@@ -141,9 +151,13 @@ def first_floor(year: int | None, zone: str | None, bfe: float | None, ground_ft
     if ground_ft is None:
         return {"floor_low_ft": None, "floor_high_ft": None, "basis": "ground elevation unknown"}
     if year and year >= POST_FIRM_YEAR and bfe is not None and bfe > ground_ft:
-        h = round(bfe - ground_ft, 1)
-        return {"floor_low_ft": h, "floor_high_ft": h, "basis": f"built {year}, after flood rules: floor at the BFE ({bfe:g} ft NAVD88, zone {zone})"}
+        h = bfe - ground_ft
+        return {"floor_low_ft": round(h + ABOVE_BFE_FT[0], 1), "floor_high_ft": round(h + ABOVE_BFE_FT[1], 1),
+                "basis": f"built {year}, after flood rules: floor likely 2-5 ft above the BFE ({bfe:g} ft NAVD88, zone {zone}), as FEMA elevation certificates show"}
     if year and year < PRE_FIRM_YEAR:
+        if zone and zone.upper().startswith(("A", "V")):
+            return {"floor_low_ft": OLD_COASTAL_FLOOR_FT[0], "floor_high_ft": OLD_COASTAL_FLOOR_FT[1],
+                    "basis": f"built {year}, before flood rules, zone {zone}: likely 0.4-6.8 ft above ground (many older coastal homes were raised later)"}
         return {"floor_low_ft": LOW_FLOOR_FT[0], "floor_high_ft": LOW_FLOOR_FT[1], "basis": f"built {year}, before flood rules: likely 1-3 ft above ground"}
     if zone and zone.upper().startswith("X"):
         return {"floor_low_ft": LOW_FLOOR_FT[0], "floor_high_ft": LOW_FLOOR_FT[1], "basis": f"zone {zone}, no elevation required: likely 1-3 ft above ground"}

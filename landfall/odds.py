@@ -202,9 +202,13 @@ def buildings_in(ring: list[list[float]], kind: str = "hurricane") -> dict:
     from . import hazards
 
     v = hazards.design_wind(round((bbox[0] + bbox[2]) / 2, 3), round((bbox[1] + bbox[3]) / 2, 3)) if rows else None
+    place = hazards.site(bbox)
+    if v is None and rows and place["coast_miles"] > hazards.INLAND_DESIGN_MI:
+        v = hazards.INLAND_DESIGN_MPH  # ASCE's service down, far inland: the code's speed for the US interior
+    seismic = hazards.seismic_level(round((bbox[0] + bbox[2]) / 2, 2), round((bbox[1] + bbox[3]) / 2, 2)) if rows and state else None
     for r in rows:
         r["v_ult"] = v  # ASCE 7 design wind speed at the square's center
-    place = hazards.site(bbox)
+        r["seismic"] = seismic  # ASCE 7 seismic design category there (USGS), for the Hazus design level
     if rows and place["surge_checked"]:
         bands = hazards.surge_bands(bbox, [(r["lon"], r["lat"]) for r in rows])
         place["surge_map_read"] = bands is not None  # without the live map, the 160 m depth data alone

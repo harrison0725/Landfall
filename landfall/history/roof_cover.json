@@ -1,0 +1,80 @@
+{
+ "source": "WiSPD v1.0 field surveys (DesignSafe PRJ-4186; Harvey, Irma, Michael, Laura): odds of StEER wind damage rating 2+ (damaged) and 3+ (badly damaged) by roof cover against laminated shingles, at the same gust, build era and storm; [odds ratio, 95% low, 95% high]",
+ "houses": 2804,
+ "damaged": {
+  "laminated shingles": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "3-tab shingles": [
+   1.489,
+   1.204,
+   1.842
+  ],
+  "metal": [
+   0.682,
+   0.539,
+   0.864
+  ],
+  "tile": [
+   0.284,
+   0.19,
+   0.426
+  ]
+ },
+ "severe": {
+  "laminated shingles": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "3-tab shingles": [
+   0.918,
+   0.692,
+   1.218
+  ],
+  "metal": [
+   1.021,
+   0.755,
+   1.38
+  ],
+  "tile": [
+   0.101,
+   0.036,
+   0.279
+  ]
+ },
+ "era_mix": {
+  "1977-2000": {
+   "laminated shingles": 0.389,
+   "3-tab shingles": 0.245,
+   "metal": 0.243,
+   "tile": 0.123
+  },
+  "2001 on": {
+   "laminated shingles": 0.602,
+   "3-tab shingles": 0.223,
+   "metal": 0.14,
+   "tile": 0.036
+  },
+  "to 1976": {
+   "laminated shingles": 0.374,
+   "3-tab shingles": 0.269,
+   "metal": 0.282,
+   "tile": 0.076
+  }
+ },
+ "held_out": {
+  "damaged": {
+   "logloss_without": 0.6346,
+   "logloss_with": 0.62,
+   "houses": 2804
+  },
+  "badly damaged": {
+   "logloss_without": 0.3742,
+   "logloss_with": 0.3801,
+   "houses": 2804
+  }
+ }
+}

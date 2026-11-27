@@ -23,7 +23,7 @@ def test_known_floor_narrows_the_range():
 
 def test_visible_damage_sets_the_floor_of_the_range():
     low, high, why = damage_share("destroyed", None)
-    assert (low, high, why) == (0.75, 1.0, "visible damage")
+    assert (low, high, why) == (0.669, 1.0, "visible damage")
 
 
 def test_taller_buildings_lose_less_to_flood():
@@ -31,8 +31,9 @@ def test_taller_buildings_lose_less_to_flood():
 
 
 def test_first_floor_from_records():
-    assert first_floor(1995, "AE", 12.0, 4.0)["floor_low_ft"] == 8.0
-    assert first_floor(1950, "AE", 12.0, 4.0)["floor_high_ft"] == 3.0
+    assert first_floor(1995, "AE", 12.0, 4.0)["floor_low_ft"] == 10.0  # BFE 8 ft above ground, plus the 2 ft certificates show at least (middle half)
+    assert first_floor(1950, "AE", 12.0, 4.0)["floor_high_ft"] == 6.8  # old coastal homes: many were raised later
+    assert first_floor(1950, "X", 12.0, 4.0)["floor_high_ft"] == 3.0
     assert first_floor(None, "AE", 12.0, 4.0)["floor_high_ft"] is None
     assert stories(7.0) == 2 and stories(None) == 1
 
