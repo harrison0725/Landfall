@@ -429,14 +429,16 @@ def roof_gable_share(year: int) -> float:
     return next(g for top, g in ROOF_GABLE_SHARE if year <= top)
 
 
-def wind_configs(mat: str, year: int, stories: int, v: float, flood_zone: str | None, terrain: str) -> list[tuple[str, float]]:
+def wind_configs(mat: str, year: int, stories: int, v: float, flood_zone: str | None, terrain: str,
+                 shutters: bool = False) -> list[tuple[str, float]]:
     """The Hazus wind models a building may be, with weights, by the NHERI
     SimCenter asset representation rulesets (WSF: Lake Charles testbed;
     MSF and MH: Atlantic County testbed, github.com/NHERI-SimCenter/
     AssetRepresentationRulesets). Their coin flips become weights; facts
     Landfall can't see take the rulesets' defaults (garage unknown, deck
     sheathing unknown, wood-truss roof on masonry), and roof shape is
-    gable or hip in the shares surveyed by build era (roof_gable_share)."""
+    gable or hip in the shares surveyed by build era (roof_gable_share).
+    shutters=True is the what-if of every window covered (WHAT_IF)."""
     h = "2" if stories >= 2 else "1"
     wbd = _wbd(year, v, flood_zone)
     c = _code_speed(year, v)
@@ -444,20 +446,20 @@ def wind_configs(mat: str, year: int, stories: int, v: float, flood_zone: str | 
     if mat == "manufactured":
         if year <= 1994:
             tag = "PHUD" if year <= 1976 else "76HUD"
-            for sh, p1 in _either(0.45 if wbd else 0.0, 1, 0):
+            for sh, p1 in _either(1.0 if shutters else 0.45 if wbd else 0.0, 1, 0):
                 for td, p2 in _either(0.45, 1, 0):
                     out.append((f"MH.{tag}.{sh}.{td}.{terrain}", p1 * p2))
         else:  # HUD wind zone by design speed (an approximation of the HUD zone map)
             zone = "III" if v >= 150 else "II" if v >= 130 else "I"
             out.append((f"MH.94HUD{zone}.{int(c >= 100)}.{int(c >= 70)}.{terrain}", 1.0))
         return out
-    shutter_p = (1.0 if wbd else 0.0) if year > 2000 else (0.45 if wbd else 0.0)
+    shutter_p = 1.0 if shutters else (1.0 if wbd else 0.0) if year > 2000 else (0.45 if wbd else 0.0)
     rda = ("8s" if c > (130 if year >= 2016 else 100) else "8d")
     g = roof_gable_share(year)
     for shape, ws in (("gab", g), ("hip", 1 - g)):
         if mat == "masonry":
             rwc = "strap" if _hpr(year, v) else "tnail"
-            for sh, p1 in _either(shutter_p if year < 2000 else (1.0 if wbd else 0.0), 1, 0):
+            for sh, p1 in _either(shutter_p if year < 2000 or shutters else (1.0 if wbd else 0.0), 1, 0):
                 for swr, p2 in _either(0.6, 1, 0):
                     out.append((f"M.SF.{h}.{shape}.{rwc}.trs.{rda}.{sh}.{swr}.no.1.null.{terrain}", ws * p1 * p2))
             continue
@@ -468,8 +470,10 @@ def wind_configs(mat: str, year: int, stories: int, v: float, flood_zone: str | 
         # purpose: surveyed houses with garages (41-73% by era, WiSPD) had LESS damage (odds 0.53), the
         # opposite of Hazus, so a garage marks newer or larger homes rather than a weak spot, and mixing
         # in the surveyed garage shares made held-out scores slightly worse (scripts/roof_shapes.py)
+        # shutters: the rulesets give a shuttered house with a garage a braced ("sup") garage door
+        garage = "sup.1" if shutters else "std.0"
         for swr, p2 in _either(swr_p, 1, 0):
-            out.append((f"W.SF.{h}.{shape}.{swr}.{deck}.{rwc}.std.0.{terrain}", ws * p2))
+            out.append((f"W.SF.{h}.{shape}.{swr}.{deck}.{rwc}.{garage}.{terrain}", ws * p2))
     return out
 
 
@@ -480,14 +484,14 @@ def wind_key(b: dict, state: str | None) -> tuple:
     # the rulesets only look at which side of these years a building falls
     y = None if not y else next((cut for cut in (1976, 1992, 1994, 2000, 2015) if y <= cut), 2016)
     fz = "coastal" if (b.get("flood_zone") or "").upper().startswith(("A", "V")) else None
-    return (mat, y, min(int(b.get("stories") or 1), 2), b.get("v_ult"), fz, land, None if y else state)
+    return (mat, y, min(int(b.get("stories") or 1), 2), b.get("v_ult"), fz, land, None if y else state, bool(b.get("shutters")))
 
 
 @lru_cache(maxsize=4096)
 def _wind_odds(key: tuple) -> tuple[tuple[float, ...], ...]:
     """Chance of damage state 2+ and 3+, and expected repair cost as a share
     of the building's value, at each stored gust speed."""
-    mat, year, stories, v, fz, land, state = key
+    mat, year, stories, v, fz, land, state, shutters = key
     t = _table("hazus_wind.json")
     models = t["models"]
     if mat in ("concrete", "steel"):
@@ -501,7 +505,7 @@ def _wind_odds(key: tuple) -> tuple[tuple[float, ...], ...]:
     total = 0.0
     for y, wy in years:
         for vv in speeds:
-            for mid, w in wind_configs(mat, y, stories, vv, fz, land):
+            for mid, w in wind_configs(mat, y, stories, vv, fz, land, shutters):
                 m = models.get(mid)
                 if m is None:
                     continue
@@ -560,11 +564,31 @@ def wind(gust: float, b: dict, state: str | None) -> tuple[float, float, float]:
         cd, cs = _recal(cal["wind"]["damaged"], d, y, state), _recal(cal["wind"]["severe"], s, y, state)
         fade = min(1.0, (gust - CAL_ZERO_MPH) / (CAL_FROM_MPH - CAL_ZERO_MPH))
         d, s = d + fade * (cd - d), s + fade * (cs - s)
-        s = min(s, d)
-        loss = _matching_loss(xs, rows, d, loss)
-    d = _roof_cover_adjust(d, b)
+    d0 = d
+    d = _roof_shape_adjust(_roof_cover_adjust(d, b), b, state)
     s = min(s, d)
+    if cal and gust > CAL_ZERO_MPH or d != d0:
+        loss = _matching_loss(xs, rows, d, loss)
     return d, s, loss
+
+
+# Odds of roof damage for a hip roof against a gable roof at the same gust, era and storm: 0.66
+# (0.54-0.81), 2,551 surveyed houses (WiSPD, PRJ-4186; scripts/roof_shapes.py)
+HIP_ODDS = 0.66
+
+
+def _roof_shape_adjust(p: float, b: dict, state: str | None) -> float:
+    """Where the roof shape is known (the what-if switch), the odds of damage move by what the surveys
+    found, relative to the era's surveyed mix of gable and hip roofs, which the wind curves already
+    average over (wind_configs), so an unknown shape changes nothing. Only for "damaged", like roof cover."""
+    shape = b.get("roof_shape")
+    if shape not in ("hip", "gable") or p <= 0 or p >= 1:
+        return p
+    y = b.get("year_built")
+    g = roof_gable_share(y) if y else sum(w * roof_gable_share(yy) for yy, w in year_weights(state)) / sum(w for _, w in year_weights(state))
+    # mix: log odds (1 - g) log(HIP_ODDS) above gable; hip is log(HIP_ODDS) above gable
+    f = math.exp(math.log(HIP_ODDS) * ((1 if shape == "hip" else 0) - (1 - g)))
+    return p * f / (1 - p + p * f)
 
 
 def _roof_cover_adjust(p: float, b: dict) -> float:
@@ -739,6 +763,8 @@ def flood_at(depths: list[float], b: dict, surge: bool = False, state: str | Non
     cal = calibration()
     all_floors = cal["first_floor_ft"] if cal else t["first_floor_ft"]
     floors = all_floors.get(b.get("foundation") or "") or all_floors["any"]
+    if b.get("raise_ft"):  # what-if: every surveyed first floor this much higher
+        floors = [f + b["raise_ft"] for f in floors]
     two = (b.get("stories") or 1) >= 2
     v = (b.get("flood_zone") or "").upper().startswith("V")
     xs, ps = t["fia_structure_loss"][("two_floors" if two else "one_floor") + ("_v" if v else "")]
@@ -865,3 +891,91 @@ def by_category(buildings: list[dict], classes: list[dict], index: list[int], t:
             if vals[0][2] is not None else None,
         })
     return out
+
+
+# ---------------------------------------------------------------- what if they were built differently
+
+# Switches the map panel can flip for every building in a square. Each one changes only what the
+# named source supports; "only_for" lists the scenarios it can change at all.
+WHAT_IF = [
+    {"id": "hip", "label": "Hip roofs", "means": "a roof that slopes down on all four sides, instead of a gable roof with two flat end walls",
+     "set": {"roof_shape": "hip"}, "only_for": ["hurricane"],
+     "source": "surveyed after Harvey, Irma, Michael and Laura: hip roofs had 0.66 times the odds of roof damage at the same wind (2,551 houses, WiSPD)"},
+    {"id": "metal", "label": "Metal roofs", "means": "metal roof panels instead of asphalt shingles or tile",
+     "set": {"roof_cover": "metal"}, "only_for": ["hurricane"],
+     "source": "surveyed after the same storms: metal roofs had 0.68 times the odds of damage of laminated shingles at the same wind (2,804 houses, WiSPD)"},
+    {"id": "shutters", "label": "Storm shutters", "means": "every window and glass door covered, and the garage door braced",
+     "set": {"shutters": True}, "only_for": ["hurricane"],
+     "source": "FEMA Hazus Hurricane curves for the same house with shutters (no survey recorded shutters, so this one isn't field-checked)"},
+    {"id": "raised", "label": "Floors 3 ft higher", "means": "the first floor raised 3 feet, as many coastal houses were after past floods",
+     "set": {"raise_ft": 3}, "only_for": ["hurricane", "flood"],
+     "source": "the same water damage measured after Helene, with every surveyed first-floor height 3 ft higher"},
+    {"id": "code", "label": "Built to today's code", "means": "every building rebuilt now, to the current building code",
+     "set": {"year_built": NOW_YEAR}, "only_for": ["hurricane", "flood"],
+     "source": "Hazus curves for a new house, adjusted by the surveys: homes built 2002 on had 0.58 times the odds of roof damage and less water damage at the same water"},
+]
+
+
+def what_if(buildings: list[dict], state: str | None, place: dict | None = None) -> dict:
+    """The square's totals in every hurricane and flood scenario for each mix of WHAT_IF switches.
+    totals[mask][scenario] = [likely damaged, badly damaged, repair dollars, water above the
+    first floor], where bit k of mask is WHAT_IF[k]; mask 0 is the buildings as they are."""
+    groups: dict[tuple, list] = {}
+    for b in buildings:
+        g = groups.setdefault(class_key(b, state), [b, 0, 0.0])
+        g[1] += 1
+        g[2] += b.get("value") or 0
+    # wind depends on the roof, shutter and code switches, water on the floor and code switches, so
+    # each part is worked out once per mix of its own switches and the mixes are put together
+    wind_bits = [k for k, w in enumerate(WHAT_IF) if any(f in w["set"] for f in ("roof_shape", "roof_cover", "shutters", "year_built"))]
+    water_bits = [k for k, w in enumerate(WHAT_IF) if any(f in w["set"] for f in ("raise_ft", "year_built"))]
+    cats = SCENARIOS["hurricane"]["categories"]
+    floods = SCENARIOS["flood"]["categories"]
+    gust = {cid: (place or {}).get("gusts", {}).get(cid, x) for cid, _l, x in cats}
+
+    def changed(b: dict, mask: int) -> dict:
+        b2 = dict(b)
+        for k, w in enumerate(WHAT_IF):
+            if mask >> k & 1:
+                b2.update(w["set"])
+        return b2
+
+    def sub(mask: int, bits: list[int]) -> int:
+        return sum(1 << k for k in bits if mask >> k & 1)
+
+    memo: dict[tuple, tuple] = {}
+    totals: dict[str, dict] = {}
+    for mask in range(1 << len(WHAT_IF)):
+        wm, fm = sub(mask, wind_bits), sub(mask, water_bits)
+        out = {f"{t}:{c[0]}": [0.0, 0.0, 0.0, 0.0] for t in ("hurricane", "flood") for c in SCENARIOS[t]["categories"]}
+        for gi, (b, n, value) in enumerate(groups.values()):
+            surge = b.get("surge") or ()
+            for ci, (cid, _l, _x) in enumerate(cats):
+                kw = ("w", gi, wm, cid)
+                if kw not in memo:
+                    memo[kw] = wind(gust[cid], changed(b, wm), state)
+                wd, ws, wl = memo[kw]
+                depth = surge[list(SURGE_LAYERS).index(cid)] if surge else 0
+                fd = fs = fl = wet = 0.0
+                if depth:
+                    kf = ("s", gi, fm, depth)
+                    if kf not in memo:
+                        memo[kf] = flood_at([depth], changed(b, fm), surge=True, state=state)
+                    fd, fs, fl, wet = memo[kf]
+                acc = out[f"hurricane:{cid}"]
+                acc[0] += (1 - (1 - wd) * (1 - fd)) * n
+                acc[1] += (1 - (1 - ws) * (1 - fs)) * n
+                acc[2] += (combine_losses(wl, fl) if depth else wl) * value
+                acc[3] += wet * n
+            for cid, _l, x in floods:
+                kf = ("f", gi, fm, x)
+                if kf not in memo:
+                    memo[kf] = flood(x, changed(b, fm), state)
+                d, sv, loss, wet = memo[kf]
+                acc = out[f"flood:{cid}"]
+                acc[0] += d * n
+                acc[1] += sv * n
+                acc[2] += loss * value
+                acc[3] += wet * n
+        totals[str(mask)] = {k: [round(v[0], 1), round(v[1], 1), round(v[2]), round(v[3], 1)] for k, v in out.items()}
+    return {"switches": [{k: w[k] for k in ("id", "label", "means", "only_for", "source")} for w in WHAT_IF], "totals": totals}
